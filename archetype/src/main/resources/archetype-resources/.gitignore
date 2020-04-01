@@ -1,8 +1,10 @@
-/bin/
-target/
-/.classpath
+.project
+**/target/
+target/**
+target/*
 /.project
-/.gradle/
-.idea
+/.classpath
+.idea/
 *.iml
-/output-library
+*.class
+.settings
