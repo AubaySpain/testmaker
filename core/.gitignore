@@ -7,3 +7,4 @@ target/
 *.iml
 /output-library
 /debug.log
+.settings
