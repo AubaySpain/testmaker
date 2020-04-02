@@ -3,13 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jorge2m</groupId>
 	<artifactId>testmaker</artifactId>
-	<version>1.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
 	<modules>
 		<module>archetype</module>
 		<module>core</module>
 		<module>example-test</module>
-  </modules>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

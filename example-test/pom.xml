@@ -5,7 +5,7 @@
 	<groupId>org.jorge2m</groupId>
 	<artifactId>example-test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>testaubay</name>
+	<name>example-test</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>org.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.0</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
