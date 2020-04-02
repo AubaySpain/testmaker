@@ -3,9 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
  
+ 	<parent>
+		<groupId>org.jorge2m</groupId>
+		<artifactId>testmaker</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+ 
     <groupId>org.mng</groupId>
     <artifactId>testmaker-archetype</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <name>Custom Maven Archetype</name>
     <packaging>maven-archetype</packaging>
  
