@@ -1,14 +1,14 @@
-package org.aubay.testmaker.boundary.aspects.test.remote;
+package org.jorge2m.testmaker.boundary.aspects.test.remote;
 
 import java.net.URL;
 import java.util.Arrays;
 
-import org.aubay.testmaker.boundary.remotetest.RemoteTest;
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.boundary.remotetest.RemoteTest;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,12 +1,12 @@
-package org.aubay.testmaker.domain.util;
+package org.jorge2m.testmaker.domain.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.aubay.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import org.aubay.testmaker.domain.util.RoundRobin;
+import org.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
+import org.jorge2m.testmaker.domain.util.RoundRobin;
 import org.junit.Test;
 
 public class RoundRobinTest {

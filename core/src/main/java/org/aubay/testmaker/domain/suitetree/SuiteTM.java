@@ -1,20 +1,20 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.ConstantesTM;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.SenderMailEndSuiteI;
-import org.aubay.testmaker.domain.StateExecution;
-import org.aubay.testmaker.domain.SuitesExecuted;
-import org.aubay.testmaker.service.TestMaker;
-import org.aubay.testmaker.service.webdriver.pool.PoolWebDrivers;
-import org.aubay.testmaker.testreports.html.GenerateReports;
+import org.jorge2m.testmaker.conf.ConstantesTM;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.SenderMailEndSuiteI;
+import org.jorge2m.testmaker.domain.StateExecution;
+import org.jorge2m.testmaker.domain.SuitesExecuted;
+import org.jorge2m.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.service.webdriver.pool.PoolWebDrivers;
+import org.jorge2m.testmaker.testreports.html.GenerateReports;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 

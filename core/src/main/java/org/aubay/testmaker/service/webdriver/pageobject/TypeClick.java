@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.pageobject;
+package org.jorge2m.testmaker.service.webdriver.pageobject;
 
 public enum TypeClick {
     webdriver, 

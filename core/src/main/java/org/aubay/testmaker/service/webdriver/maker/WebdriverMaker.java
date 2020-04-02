@@ -1,10 +1,10 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.testreports.stepstore.NettrafficStorer;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogType;

@@ -1,6 +1,6 @@
-package org.aubay.testmaker.service.webdriver.maker.brwstack;
+package org.jorge2m.testmaker.service.webdriver.maker.brwstack;
 
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackSO.PlatformDesktopBS;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackSO.PlatformDesktopBS;
 
 public interface BrowserStackDesktop {
 

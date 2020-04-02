@@ -1,9 +1,9 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.State;
+import org.jorge2m.testmaker.conf.State;
 
 public class TestCaseBean {
 

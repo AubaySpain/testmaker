@@ -1,11 +1,11 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
 import java.awt.Toolkit;
 
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;

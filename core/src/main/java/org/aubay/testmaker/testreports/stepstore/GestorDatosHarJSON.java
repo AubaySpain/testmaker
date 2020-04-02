@@ -1,10 +1,10 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
 import java.io.FileReader;
 import java.util.Iterator;
 
 import org.json.simple.JSONObject;
-import org.aubay.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 

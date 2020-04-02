@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf;
+package org.jorge2m.testmaker.conf;
 
 public enum State  {
     Undefined(0, "black"),

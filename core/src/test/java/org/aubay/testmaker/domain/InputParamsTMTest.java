@@ -1,13 +1,13 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.TestCaseParams;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.TestCaseParams;
 import org.junit.Test;
 
 public class InputParamsTMTest {

@@ -1,15 +1,15 @@
-package org.aubay.example_test.test.testcase.script;
+package org.jorge2m.example_test.test.testcase.script;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
-import org.aubay.testmaker.boundary.aspects.step.Step;
-import org.aubay.testmaker.boundary.aspects.validation.Validation;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
-import static org.aubay.testmaker.service.webdriver.pageobject.PageObjTM.*;
-import static org.aubay.testmaker.service.webdriver.pageobject.StateElement.State.*;
+import org.jorge2m.testmaker.boundary.aspects.step.Step;
+import org.jorge2m.testmaker.boundary.aspects.validation.Validation;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import static org.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM.*;
+import static org.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
 public class BuscarWithoutRefactor {
 

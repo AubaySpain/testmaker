@@ -5,7 +5,7 @@ import ${package}.test.testcase.stpv.ResultsGooglePageStpV;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class Buscar {
 

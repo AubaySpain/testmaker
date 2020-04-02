@@ -1,12 +1,12 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.testreports.html.GetterResources.Directory;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.testreports.html.GetterResources.Directory;
 
 public class ResourcesExtractor {
 	

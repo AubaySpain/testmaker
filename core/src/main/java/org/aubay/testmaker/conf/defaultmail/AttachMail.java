@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf.defaultmail;
+package org.jorge2m.testmaker.conf.defaultmail;
 
 
 public class AttachMail {

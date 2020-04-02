@@ -1,14 +1,14 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.StateExecution;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
-import org.aubay.testmaker.testreports.stepstore.EvidenceStorer;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.StateExecution;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
+import org.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
 import org.testng.ITestContext;
 import org.testng.TestRunner;
 import org.testng.xml.XmlGroups;

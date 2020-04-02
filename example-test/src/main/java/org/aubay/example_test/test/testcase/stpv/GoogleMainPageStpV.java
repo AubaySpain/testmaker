@@ -1,10 +1,10 @@
-package org.aubay.example_test.test.testcase.stpv;
+package org.jorge2m.example_test.test.testcase.stpv;
 
-import org.aubay.example_test.test.testcase.pageobject.GoogleMainPage;
-import org.aubay.example_test.test.testcase.pageobject.ResultsGooglePage;
+import org.jorge2m.example_test.test.testcase.pageobject.GoogleMainPage;
+import org.jorge2m.example_test.test.testcase.pageobject.ResultsGooglePage;
 import org.openqa.selenium.WebDriver;
 
-import org.aubay.testmaker.boundary.aspects.step.Step;
+import org.jorge2m.testmaker.boundary.aspects.step.Step;
 
 public class GoogleMainPageStpV {
 	

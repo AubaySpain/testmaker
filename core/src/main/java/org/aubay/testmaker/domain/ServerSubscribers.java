@@ -1,10 +1,10 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.net.URL;
 
-import org.aubay.testmaker.boundary.remotetest.RemoteTest;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
-import org.aubay.testmaker.domain.util.RoundRobin;
+import org.jorge2m.testmaker.boundary.remotetest.RemoteTest;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.util.RoundRobin;
 
 public class ServerSubscribers {
 

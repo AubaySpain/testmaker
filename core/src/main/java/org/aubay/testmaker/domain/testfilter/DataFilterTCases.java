@@ -1,8 +1,8 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Channel;
 
 public class DataFilterTCases {
 

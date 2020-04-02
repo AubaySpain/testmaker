@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf.defaultmail;
+package org.jorge2m.testmaker.conf.defaultmail;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -6,7 +6,7 @@ import javax.activation.*;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.logging.log4j.Level;
-import org.aubay.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.conf.Log4jConfig;
 
 import java.util.*;
 

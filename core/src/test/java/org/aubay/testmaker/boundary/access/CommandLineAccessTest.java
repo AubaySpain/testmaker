@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.access;
+package org.jorge2m.testmaker.boundary.access;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.apache.commons.cli.ParseException;
-import org.aubay.testmaker.boundary.access.CmdLineMaker;
-import org.aubay.testmaker.boundary.access.MessageError;
-import org.aubay.testmaker.boundary.access.OptionTMaker;
-import org.aubay.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.boundary.access.CmdLineMaker;
+import org.jorge2m.testmaker.boundary.access.MessageError;
+import org.jorge2m.testmaker.boundary.access.OptionTMaker;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
 
 public class CommandLineAccessTest {
 	

@@ -1,10 +1,10 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Channel;
 
 public class GroupsChannelApps {
 	

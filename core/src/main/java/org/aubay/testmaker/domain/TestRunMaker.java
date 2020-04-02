@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
-import org.aubay.testmaker.domain.testfilter.FilterTestsSuiteXML;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
-import org.aubay.testmaker.testreports.stepstore.EvidenceStorer;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
+import org.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlDependencies;
 import org.testng.xml.XmlGroups;

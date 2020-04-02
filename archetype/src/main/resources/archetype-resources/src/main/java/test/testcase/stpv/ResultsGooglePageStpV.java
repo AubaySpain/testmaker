@@ -4,8 +4,8 @@ import ${package}.test.testcase.pageobject.GoogleMainPage;
 import ${package}.test.testcase.pageobject.ResultsGooglePage;
 import org.openqa.selenium.WebDriver;
 
-import org.aubay.testmaker.boundary.aspects.validation.Validation;
-import org.aubay.testmaker.conf.State;
+import org.jorge2m.testmaker.boundary.aspects.validation.Validation;
+import org.jorge2m.testmaker.conf.State;
 
 public class ResultsGooglePageStpV {
 

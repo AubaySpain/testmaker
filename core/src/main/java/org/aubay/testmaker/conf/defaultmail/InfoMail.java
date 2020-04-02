@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf.defaultmail;
+package org.jorge2m.testmaker.conf.defaultmail;
 
 import java.util.ArrayList;
 import java.util.List;

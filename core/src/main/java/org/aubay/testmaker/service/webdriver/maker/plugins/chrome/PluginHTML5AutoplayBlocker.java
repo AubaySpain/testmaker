@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.maker.plugins.chrome;
+package org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome;
 
 import org.openqa.selenium.chrome.ChromeOptions;
 

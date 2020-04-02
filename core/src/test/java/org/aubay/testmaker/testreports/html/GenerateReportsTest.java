@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -6,12 +6,12 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import org.aubay.testmaker.domain.suitetree.ChecksTM;
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
-import org.aubay.testmaker.domain.suitetree.TestRunBean;
-import org.aubay.testmaker.testreports.html.GenerateReports;
+import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import org.jorge2m.testmaker.testreports.html.GenerateReports;
 import org.junit.Test;
 import org.mockito.Mockito;
 

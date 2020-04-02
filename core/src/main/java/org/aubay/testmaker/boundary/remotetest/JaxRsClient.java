@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.remotetest;
+package org.jorge2m.testmaker.boundary.remotetest;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

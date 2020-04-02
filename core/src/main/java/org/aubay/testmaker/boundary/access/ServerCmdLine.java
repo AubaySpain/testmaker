@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.access;
+package org.jorge2m.testmaker.boundary.access;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
-import org.aubay.testmaker.conf.ConstantesTM;
+import org.jorge2m.testmaker.conf.ConstantesTM;
 
 public class ServerCmdLine {
 

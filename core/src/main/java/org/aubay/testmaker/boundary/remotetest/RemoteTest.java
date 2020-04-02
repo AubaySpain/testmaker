@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.remotetest;
+package org.jorge2m.testmaker.boundary.remotetest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -15,13 +15,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import org.aubay.testmaker.domain.suitetree.ChecksTM;
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
+import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class RemoteTest extends JaxRsClient {
 	

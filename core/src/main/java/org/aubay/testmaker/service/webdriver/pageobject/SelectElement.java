@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.pageobject;
+package org.jorge2m.testmaker.service.webdriver.pageobject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;

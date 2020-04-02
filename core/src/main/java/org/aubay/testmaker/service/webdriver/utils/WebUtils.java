@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.utils;
+package org.jorge2m.testmaker.service.webdriver.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.net.ssl.*;
 import org.testng.*;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.service.TestMaker;
-import org.aubay.testmaker.testreports.html.ResultadoErrores;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.testreports.html.ResultadoErrores;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;

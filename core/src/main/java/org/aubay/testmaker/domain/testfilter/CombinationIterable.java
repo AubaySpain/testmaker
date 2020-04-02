@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

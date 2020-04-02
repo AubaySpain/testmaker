@@ -1,9 +1,9 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 
 public class SuitesExecuted {
 

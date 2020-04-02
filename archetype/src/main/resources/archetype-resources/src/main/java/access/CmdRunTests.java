@@ -2,9 +2,9 @@ package ${package}.access;
 
 import ${package}.access.datatmaker.Apps;
 import ${package}.access.datatmaker.Suites;
-import org.aubay.testmaker.boundary.access.CmdLineMaker;
-import org.aubay.testmaker.domain.CreatorSuiteRun;
-import org.aubay.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.boundary.access.CmdLineMaker;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
 
 public class CmdRunTests {
 

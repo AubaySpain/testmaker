@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.maker.brwstack;
+package org.jorge2m.testmaker.service.webdriver.maker.brwstack;
 
 
 public class BrowserStackSO {

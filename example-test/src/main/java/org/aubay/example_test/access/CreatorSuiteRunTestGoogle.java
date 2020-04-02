@@ -1,13 +1,13 @@
-package org.aubay.example_test.access;
+package org.jorge2m.example_test.access;
 
 import java.util.Arrays;
 
-import org.aubay.example_test.access.datatmaker.Suites;
-import org.aubay.example_test.test.suite.SmokeTestSuite;
+import org.jorge2m.example_test.access.datatmaker.Suites;
+import org.jorge2m.example_test.test.suite.SmokeTestSuite;
 
-import org.aubay.testmaker.domain.CreatorSuiteRun;
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.SuiteMaker;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.SuiteMaker;
 
 public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 

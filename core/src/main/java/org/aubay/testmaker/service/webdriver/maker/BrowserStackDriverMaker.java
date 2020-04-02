@@ -1,13 +1,13 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import org.aubay.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
+import org.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;

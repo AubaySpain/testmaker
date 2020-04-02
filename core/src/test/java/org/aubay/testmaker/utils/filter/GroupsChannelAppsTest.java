@@ -1,11 +1,11 @@
-package org.aubay.testmaker.utils.filter;
+package org.jorge2m.testmaker.utils.filter;
 
 import static org.junit.Assert.*;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.testfilter.GroupsChannelApps;
-import org.aubay.testmaker.unittestdata.AppEcom;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.testfilter.GroupsChannelApps;
+import org.jorge2m.testmaker.unittestdata.AppEcom;
 import org.junit.Test;
 
 public class GroupsChannelAppsTest {

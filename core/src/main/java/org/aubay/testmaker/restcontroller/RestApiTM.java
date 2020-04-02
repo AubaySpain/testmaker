@@ -1,4 +1,4 @@
-package org.aubay.testmaker.restcontroller;
+package org.jorge2m.testmaker.restcontroller;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -22,21 +22,21 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.aubay.testmaker.boundary.access.CmdLineMaker;
-import org.aubay.testmaker.boundary.access.MessageError;
-import org.aubay.testmaker.boundary.access.ResultCheckOptions;
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.CreatorSuiteRun;
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.ServerSubscribers;
-import org.aubay.testmaker.domain.InputParamsTM.TypeAccess;
-import org.aubay.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.testfilter.TestMethodData;
-import org.aubay.testmaker.service.TestMaker;
-import org.aubay.testmaker.service.FilterSuites.SetSuiteRun;
+import org.jorge2m.testmaker.boundary.access.CmdLineMaker;
+import org.jorge2m.testmaker.boundary.access.MessageError;
+import org.jorge2m.testmaker.boundary.access.ResultCheckOptions;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.ServerSubscribers;
+import org.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
+import org.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.testfilter.TestMethodData;
+import org.jorge2m.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 
 @Path("/")
 public class RestApiTM {

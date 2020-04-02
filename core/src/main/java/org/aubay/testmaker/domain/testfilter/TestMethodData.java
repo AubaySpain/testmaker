@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

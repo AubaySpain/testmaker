@@ -1,15 +1,15 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
-import org.aubay.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
-import org.aubay.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
-import org.aubay.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

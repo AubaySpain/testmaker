@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import java.net.URL;
 import java.net.URLDecoder;

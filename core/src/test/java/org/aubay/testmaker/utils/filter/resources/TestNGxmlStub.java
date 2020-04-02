@@ -1,4 +1,4 @@
-package org.aubay.testmaker.utils.filter.resources;
+package org.jorge2m.testmaker.utils.filter.resources;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.SuiteMaker;
-import org.aubay.testmaker.domain.TestRunMaker;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.SuiteMaker;
+import org.jorge2m.testmaker.domain.TestRunMaker;
 
 public class TestNGxmlStub extends SuiteMaker {
 

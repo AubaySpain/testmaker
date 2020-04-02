@@ -1,11 +1,11 @@
-package org.aubay.example_test.test.testcase.script;
+package org.jorge2m.example_test.test.testcase.script;
 
-import org.aubay.example_test.test.testcase.stpv.GoogleMainPageStpV;
-import org.aubay.example_test.test.testcase.stpv.ResultsGooglePageStpV;
+import org.jorge2m.example_test.test.testcase.stpv.GoogleMainPageStpV;
+import org.jorge2m.example_test.test.testcase.stpv.ResultsGooglePageStpV;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class Buscar {
 

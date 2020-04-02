@@ -1,6 +1,6 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
-import org.aubay.testmaker.conf.State;
+import org.jorge2m.testmaker.conf.State;
 
 
 

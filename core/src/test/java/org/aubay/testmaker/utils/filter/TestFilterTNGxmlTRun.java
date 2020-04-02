@@ -1,16 +1,16 @@
-package org.aubay.testmaker.utils.filter;
+package org.jorge2m.testmaker.utils.filter;
 
 import static org.junit.Assert.*;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.testfilter.TestMethod;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
-import org.aubay.testmaker.unittestdata.AppEcom;
-import org.aubay.testmaker.unittestdata.Suites;
-import org.aubay.testmaker.utils.filter.resources.TestNGxmlStub;
-import org.aubay.testmaker.utils.filter.resources.TestNGxmlStub.TypeStubTest;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.testfilter.TestMethod;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.unittestdata.AppEcom;
+import org.jorge2m.testmaker.unittestdata.Suites;
+import org.jorge2m.testmaker.utils.filter.resources.TestNGxmlStub;
+import org.jorge2m.testmaker.utils.filter.resources.TestNGxmlStub.TypeStubTest;
 import org.junit.Test;
 
 import java.util.ArrayList;

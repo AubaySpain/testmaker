@@ -1,9 +1,9 @@
-package org.aubay.testmaker.boundary.aspects.validation;
+package org.jorge2m.testmaker.boundary.aspects.validation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.aubay.testmaker.conf.State;
+import org.jorge2m.testmaker.conf.State;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;

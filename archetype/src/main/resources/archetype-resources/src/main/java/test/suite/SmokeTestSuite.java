@@ -7,9 +7,9 @@ import ${package}.test.testcase.script.Buscar;
 import ${package}.test.testcase.script.BuscarWithoutRefactor;
 import org.testng.xml.XmlSuite.ParallelMode;
 
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.SuiteMaker;
-import org.aubay.testmaker.domain.TestRunMaker;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.SuiteMaker;
+import org.jorge2m.testmaker.domain.TestRunMaker;
 
 public class SmokeTestSuite extends SuiteMaker {
 

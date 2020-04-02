@@ -1,4 +1,4 @@
-package org.aubay.testmaker.repository.jdbc.dao;
+package org.jorge2m.testmaker.repository.jdbc.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 
 public class TestCasesDAO {

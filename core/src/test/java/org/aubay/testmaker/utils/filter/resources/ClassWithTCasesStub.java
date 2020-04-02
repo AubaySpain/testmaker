@@ -1,4 +1,4 @@
-package org.aubay.testmaker.utils.filter.resources;
+package org.jorge2m.testmaker.utils.filter.resources;
 
 import java.lang.reflect.Method;
 

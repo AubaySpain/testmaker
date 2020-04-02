@@ -1,11 +1,11 @@
-package org.aubay.testmaker.service.testab.manager;
+package org.jorge2m.testmaker.service.testab.manager;
 
 import java.util.List;
 import java.util.Random;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.testab.TestABGoogleExp;
-import org.aubay.testmaker.service.testab.TestABactData;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.testab.TestABGoogleExp;
+import org.jorge2m.testmaker.service.testab.TestABactData;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 

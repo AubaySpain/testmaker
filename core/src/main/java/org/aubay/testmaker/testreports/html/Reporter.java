@@ -1,8 +1,8 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import java.util.*;
 
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import org.testng.IReporter;
 import org.testng.ISuite;
 import org.testng.xml.XmlSuite;

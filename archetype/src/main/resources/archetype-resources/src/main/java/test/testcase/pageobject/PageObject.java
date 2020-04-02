@@ -1,6 +1,6 @@
 package ${package}.test.testcase.pageobject;
 
-import org.aubay.testmaker.service.webdriver.pageobject.PageObjTM;
+import org.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
 
 import org.openqa.selenium.WebDriver;
 

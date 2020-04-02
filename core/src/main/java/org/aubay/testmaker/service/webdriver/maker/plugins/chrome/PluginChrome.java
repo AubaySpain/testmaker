@@ -1,11 +1,11 @@
-package org.aubay.testmaker.service.webdriver.maker.plugins.chrome;
+package org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.aubay.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.conf.Log4jConfig;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;

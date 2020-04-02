@@ -1,14 +1,14 @@
-package org.aubay.testmaker.boundary.aspects.validation;
+package org.jorge2m.testmaker.boundary.aspects.validation;
 
 import java.lang.reflect.Method;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.aubay.testmaker.boundary.aspects.MatcherWithMethodParams;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.suitetree.Check;
-import org.aubay.testmaker.domain.suitetree.ChecksTM;
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.boundary.aspects.MatcherWithMethodParams;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.suitetree.Check;
+import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class InfoValidation {
 

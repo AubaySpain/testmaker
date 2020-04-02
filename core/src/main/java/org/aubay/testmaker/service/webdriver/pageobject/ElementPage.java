@@ -1,6 +1,6 @@
-package org.aubay.testmaker.service.webdriver.pageobject;
+package org.jorge2m.testmaker.service.webdriver.pageobject;
 
-import org.aubay.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Channel;
 import org.openqa.selenium.By;
 
 public interface ElementPage {

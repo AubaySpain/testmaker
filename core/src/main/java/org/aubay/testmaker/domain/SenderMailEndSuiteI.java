@@ -1,6 +1,6 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 
 public interface SenderMailEndSuiteI {
 

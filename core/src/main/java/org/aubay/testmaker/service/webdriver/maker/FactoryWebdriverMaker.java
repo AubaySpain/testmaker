@@ -1,7 +1,7 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
 public class FactoryWebdriverMaker {
 

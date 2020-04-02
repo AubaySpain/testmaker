@@ -1,10 +1,10 @@
-package org.aubay.testmaker.service.testab.manager;
+package org.jorge2m.testmaker.service.testab.manager;
 
 import static org.junit.Assert.*;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.testab.manager.TestABGoogleExpManager;
-import org.aubay.testmaker.unittestdata.AppEcom;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.testab.manager.TestABGoogleExpManager;
+import org.jorge2m.testmaker.unittestdata.AppEcom;
 import org.junit.Test;
 import org.mockito.Mockito;
 

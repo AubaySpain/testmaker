@@ -4,7 +4,7 @@ import ${package}.test.testcase.pageobject.GoogleMainPage;
 import ${package}.test.testcase.pageobject.ResultsGooglePage;
 import org.openqa.selenium.WebDriver;
 
-import org.aubay.testmaker.boundary.aspects.step.Step;
+import org.jorge2m.testmaker.boundary.aspects.step.Step;
 
 public class GoogleMainPageStpV {
 	

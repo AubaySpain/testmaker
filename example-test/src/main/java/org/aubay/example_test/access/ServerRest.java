@@ -1,15 +1,15 @@
-package org.aubay.example_test.access;
+package org.jorge2m.example_test.access;
 
-import org.aubay.example_test.access.datatmaker.Apps;
+import org.jorge2m.example_test.access.datatmaker.Apps;
 
-import org.aubay.example_test.access.CreatorSuiteRunTestGoogle;
-import org.aubay.example_test.access.datatmaker.Apps;
-import org.aubay.example_test.access.datatmaker.Suites;
+import org.jorge2m.example_test.access.CreatorSuiteRunTestGoogle;
+import org.jorge2m.example_test.access.datatmaker.Apps;
+import org.jorge2m.example_test.access.datatmaker.Suites;
 
-import org.aubay.testmaker.boundary.access.ServerCmdLine;
-import org.aubay.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
-import org.aubay.testmaker.domain.CreatorSuiteRun;
-import org.aubay.testmaker.restcontroller.ServerRestTM;
+import org.jorge2m.testmaker.boundary.access.ServerCmdLine;
+import org.jorge2m.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.restcontroller.ServerRestTM;
 
 public class ServerRest {
 

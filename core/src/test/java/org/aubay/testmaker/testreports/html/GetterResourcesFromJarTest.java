@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 
-import org.aubay.testmaker.testreports.html.GetterResourcesFromJar;
-import org.aubay.testmaker.testreports.html.GetterResources.Directory;
+import org.jorge2m.testmaker.testreports.html.GetterResourcesFromJar;
+import org.jorge2m.testmaker.testreports.html.GetterResources.Directory;
 import org.junit.Test;
 import org.mockito.Mockito;
 

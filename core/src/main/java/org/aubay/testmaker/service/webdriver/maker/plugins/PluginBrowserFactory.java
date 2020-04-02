@@ -1,10 +1,10 @@
-package org.aubay.testmaker.service.webdriver.maker.plugins; 
+package org.jorge2m.testmaker.service.webdriver.maker.plugins; 
 
-import org.aubay.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
-import org.aubay.testmaker.service.webdriver.maker.plugins.chrome.PluginHTML5AutoplayBlocker;
-import org.aubay.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
-import org.aubay.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox;
-import org.aubay.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox.typePluginFirefox;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginHTML5AutoplayBlocker;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox;
+import org.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox.typePluginFirefox;
 
 
 public class PluginBrowserFactory {

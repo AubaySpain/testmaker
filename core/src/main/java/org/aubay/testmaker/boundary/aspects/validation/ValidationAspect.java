@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.aspects.validation;
+package org.jorge2m.testmaker.boundary.aspects.validation;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -6,10 +6,10 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aubay.testmaker.domain.suitetree.ChecksTM;
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
-import org.aubay.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.service.TestMaker;
 
 
 @Aspect

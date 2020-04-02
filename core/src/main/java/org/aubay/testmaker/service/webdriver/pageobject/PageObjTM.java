@@ -1,9 +1,9 @@
-package org.aubay.testmaker.service.webdriver.pageobject;
+package org.jorge2m.testmaker.service.webdriver.pageobject;
 
-import org.aubay.testmaker.service.webdriver.pageobject.ClickElement.BuilderClick;
-import org.aubay.testmaker.service.webdriver.pageobject.SelectElement.BuilderSelect;
-import org.aubay.testmaker.service.webdriver.pageobject.StateElement.BuilderState;
-import org.aubay.testmaker.service.webdriver.pageobject.StateElement.State;
+import org.jorge2m.testmaker.service.webdriver.pageobject.ClickElement.BuilderClick;
+import org.jorge2m.testmaker.service.webdriver.pageobject.SelectElement.BuilderSelect;
+import org.jorge2m.testmaker.service.webdriver.pageobject.StateElement.BuilderState;
+import org.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

@@ -1,6 +1,6 @@
-package org.aubay.testmaker.service.webdriver.pool;
+package org.jorge2m.testmaker.service.webdriver.pool;
 
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 import org.openqa.selenium.WebDriver;
 
 public class StoredWebDrv {

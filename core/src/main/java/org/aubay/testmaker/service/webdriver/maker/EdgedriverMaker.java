@@ -1,6 +1,6 @@
-package org.aubay.testmaker.service.webdriver.maker;
+package org.jorge2m.testmaker.service.webdriver.maker;
 
-import org.aubay.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Channel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;

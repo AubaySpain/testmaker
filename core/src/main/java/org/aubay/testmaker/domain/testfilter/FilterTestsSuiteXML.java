@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
-import org.aubay.testmaker.domain.util.TestNameUtils;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.domain.util.TestNameUtils;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;

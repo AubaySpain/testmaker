@@ -1,12 +1,12 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.testfilter.TestMethod;
-import org.aubay.testmaker.domain.testfilter.TestMethodData;
-import org.aubay.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.testfilter.TestMethod;
+import org.jorge2m.testmaker.domain.testfilter.TestMethodData;
+import org.jorge2m.testmaker.service.TestMaker;
 
 public abstract class CreatorSuiteRun {
 	

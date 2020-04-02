@@ -1,4 +1,4 @@
-package org.aubay.testmaker.restcontroller;
+package org.jorge2m.testmaker.restcontroller;
 
 import java.net.InetAddress;
 
@@ -7,9 +7,9 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.aubay.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
-import org.aubay.testmaker.boundary.remotetest.JaxRsClient;
-import org.aubay.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
+import org.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;

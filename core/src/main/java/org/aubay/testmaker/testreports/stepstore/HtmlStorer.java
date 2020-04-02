@@ -1,6 +1,6 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
-import org.aubay.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
 
 public class HtmlStorer extends EvidenceStorer {
 

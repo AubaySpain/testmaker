@@ -1,8 +1,8 @@
-package org.aubay.testmaker.boundary.aspects.step;
+package org.jorge2m.testmaker.boundary.aspects.step;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.aubay.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
 
 public class InfoStep {
 

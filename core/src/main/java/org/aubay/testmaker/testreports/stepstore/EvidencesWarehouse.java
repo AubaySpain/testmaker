@@ -1,11 +1,11 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
 public class EvidencesWarehouse {
 	

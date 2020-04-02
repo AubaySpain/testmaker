@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.aspects.step;
+package org.jorge2m.testmaker.boundary.aspects.step;
 
 public enum SaveWhen {
 	Always, 

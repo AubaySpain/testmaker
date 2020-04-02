@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,8 +11,8 @@ import java.io.Writer;
 import java.util.LinkedList;
 
 import org.apache.commons.compress.utils.IOUtils;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;

@@ -1,12 +1,12 @@
-package org.aubay.testmaker.service.testab.manager;
+package org.jorge2m.testmaker.service.testab.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.testab.TestABGoogleExp;
-import org.aubay.testmaker.unittestdata.AppEcom;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.testab.TestABGoogleExp;
+import org.jorge2m.testmaker.unittestdata.AppEcom;
 
 public enum TestABGoogleExpImpl implements TestABGoogleExp {
 

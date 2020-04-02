@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -6,14 +6,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.aubay.testmaker.boundary.listeners.InvokeListener;
-import org.aubay.testmaker.boundary.listeners.MyTransformer;
-import org.aubay.testmaker.conf.defaultmail.DefaultMailEndSuite;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.testfilter.FilterTestsSuiteXML;
-import org.aubay.testmaker.domain.testfilter.TestMethod;
-import org.aubay.testmaker.service.webdriver.pageobject.SeleniumUtils;
-import org.aubay.testmaker.testreports.html.Reporter;
+import org.jorge2m.testmaker.boundary.listeners.InvokeListener;
+import org.jorge2m.testmaker.boundary.listeners.MyTransformer;
+import org.jorge2m.testmaker.conf.defaultmail.DefaultMailEndSuite;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
+import org.jorge2m.testmaker.domain.testfilter.TestMethod;
+import org.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils;
+import org.jorge2m.testmaker.testreports.html.Reporter;
 import org.testng.xml.XmlTest;
 import org.testng.xml.XmlSuite.ParallelMode;
 

@@ -1,7 +1,7 @@
-package org.aubay.testmaker.service;
+package org.jorge2m.testmaker.service;
 
-import static org.aubay.testmaker.conf.Channel.*;
-import static org.aubay.testmaker.domain.StateExecution.*;
+import static org.jorge2m.testmaker.conf.Channel.*;
+import static org.jorge2m.testmaker.domain.StateExecution.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.RepositoryI;
-import org.aubay.testmaker.domain.StateExecution;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.service.FilterSuites;
-import org.aubay.testmaker.service.FilterSuites.SetSuiteRun;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.RepositoryI;
+import org.jorge2m.testmaker.domain.StateExecution;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.service.FilterSuites;
+import org.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 import org.junit.Test;
 import org.mockito.Mockito;
 

@@ -1,10 +1,10 @@
-package org.aubay.testmaker.repository.jdbc;
+package org.jorge2m.testmaker.repository.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.aubay.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.service.TestMaker;
 
 
 public class ManageBD {

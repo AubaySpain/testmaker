@@ -1,15 +1,15 @@
-package org.aubay.example_test.test.suite;
+package org.jorge2m.example_test.test.suite;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.aubay.example_test.test.testcase.script.Buscar;
-import org.aubay.example_test.test.testcase.script.BuscarWithoutRefactor;
+import org.jorge2m.example_test.test.testcase.script.Buscar;
+import org.jorge2m.example_test.test.testcase.script.BuscarWithoutRefactor;
 import org.testng.xml.XmlSuite.ParallelMode;
 
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.SuiteMaker;
-import org.aubay.testmaker.domain.TestRunMaker;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.SuiteMaker;
+import org.jorge2m.testmaker.domain.TestRunMaker;
 
 public class SmokeTestSuite extends SuiteMaker {
 

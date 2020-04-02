@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.html;
+package org.jorge2m.testmaker.testreports.html;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,17 +14,17 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.aubay.testmaker.conf.ConstantesTM;
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.InputParamsTM.TypeAccess;
-import org.aubay.testmaker.domain.suitetree.ChecksTM;
-import org.aubay.testmaker.domain.suitetree.StepTM;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
-import org.aubay.testmaker.domain.suitetree.TestRunBean;
-import org.aubay.testmaker.testreports.stepstore.StepEvidence;
+import org.jorge2m.testmaker.conf.ConstantesTM;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
+import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import org.jorge2m.testmaker.testreports.stepstore.StepEvidence;
 import org.testng.ISuite;
 import org.testng.reporters.EmailableReporter;
 import org.testng.xml.XmlSuite;

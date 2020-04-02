@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.testab;
+package org.jorge2m.testmaker.service.testab;
 
 public interface TestABGoogleExp extends TestAB {
 

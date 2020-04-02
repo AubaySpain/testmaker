@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf.defaultmail;
+package org.jorge2m.testmaker.conf.defaultmail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,16 +9,16 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import javax.mail.internet.*;
 
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.conf.defaultstorer.RepositorySQLite;
-import org.aubay.testmaker.domain.RepositoryI;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
-import org.aubay.testmaker.service.TestMaker;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.conf.defaultstorer.RepositorySQLite;
+import org.jorge2m.testmaker.domain.RepositoryI;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.service.TestMaker;
 
 
 public class CorreoReport {

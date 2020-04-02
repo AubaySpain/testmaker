@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 public class TestCaseParams {
 

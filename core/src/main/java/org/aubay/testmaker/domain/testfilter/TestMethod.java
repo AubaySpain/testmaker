@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.testfilter;
+package org.jorge2m.testmaker.domain.testfilter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

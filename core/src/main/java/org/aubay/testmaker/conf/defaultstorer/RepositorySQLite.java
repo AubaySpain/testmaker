@@ -1,4 +1,4 @@
-package org.aubay.testmaker.conf.defaultstorer;
+package org.jorge2m.testmaker.conf.defaultstorer;
 
 import java.io.File;
 import java.sql.Connection;
@@ -7,18 +7,18 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.ConstantesTM;
-import org.aubay.testmaker.domain.RepositoryI;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
-import org.aubay.testmaker.domain.suitetree.TestCaseBean;
-import org.aubay.testmaker.domain.suitetree.TestCaseTM;
-import org.aubay.testmaker.domain.suitetree.TestRunTM;
-import org.aubay.testmaker.repository.jdbc.dao.ConnectorBD;
-import org.aubay.testmaker.repository.jdbc.dao.SuitesDAO;
-import org.aubay.testmaker.repository.jdbc.dao.TestCasesDAO;
-import org.aubay.testmaker.repository.jdbc.dao.TestRunsDAO;
-import org.aubay.testmaker.testreports.html.ResourcesExtractor;
+import org.jorge2m.testmaker.conf.ConstantesTM;
+import org.jorge2m.testmaker.domain.RepositoryI;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import org.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import org.jorge2m.testmaker.repository.jdbc.dao.ConnectorBD;
+import org.jorge2m.testmaker.repository.jdbc.dao.SuitesDAO;
+import org.jorge2m.testmaker.repository.jdbc.dao.TestCasesDAO;
+import org.jorge2m.testmaker.repository.jdbc.dao.TestRunsDAO;
+import org.jorge2m.testmaker.testreports.html.ResourcesExtractor;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteConfig.LockingMode;
 

@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
-import org.aubay.testmaker.boundary.access.OptionTMaker;
+import org.jorge2m.testmaker.boundary.access.OptionTMaker;
 
 public class InputParamsBasic extends InputParamsTM {
 	

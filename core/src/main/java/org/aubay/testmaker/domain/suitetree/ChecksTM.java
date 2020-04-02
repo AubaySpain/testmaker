@@ -1,11 +1,11 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.util.ParsePathClass;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.util.ParsePathClass;
 
 public class ChecksTM {
 	

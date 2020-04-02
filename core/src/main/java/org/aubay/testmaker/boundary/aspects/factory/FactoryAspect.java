@@ -1,12 +1,12 @@
-package org.aubay.testmaker.boundary.aspects.factory;
+package org.jorge2m.testmaker.boundary.aspects.factory;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 
 import java.util.ArrayList;
 import java.util.Arrays;

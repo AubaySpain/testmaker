@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain;
+package org.jorge2m.testmaker.domain;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,12 +13,12 @@ import java.util.regex.Pattern;
 import javax.ws.rs.FormParam;
 
 import org.apache.commons.cli.CommandLine;
-import org.aubay.testmaker.boundary.access.OptionTMaker;
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.conf.ConstantesTM;
-import org.aubay.testmaker.domain.testfilter.DataFilterTCases;
-import org.aubay.testmaker.domain.util.TestNameUtils;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.boundary.access.OptionTMaker;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.ConstantesTM;
+import org.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
+import org.jorge2m.testmaker.domain.util.TestNameUtils;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 
 public abstract class InputParamsTM {
 

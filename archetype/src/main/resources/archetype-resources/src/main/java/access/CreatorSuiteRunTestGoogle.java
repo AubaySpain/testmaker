@@ -5,9 +5,9 @@ import java.util.Arrays;
 import ${package}.access.datatmaker.Suites;
 import ${package}.test.suite.SmokeTestSuite;
 
-import org.aubay.testmaker.domain.CreatorSuiteRun;
-import org.aubay.testmaker.domain.InputParamsBasic;
-import org.aubay.testmaker.domain.SuiteMaker;
+import org.jorge2m.testmaker.domain.CreatorSuiteRun;
+import org.jorge2m.testmaker.domain.InputParamsBasic;
+import org.jorge2m.testmaker.domain.SuiteMaker;
 
 public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 

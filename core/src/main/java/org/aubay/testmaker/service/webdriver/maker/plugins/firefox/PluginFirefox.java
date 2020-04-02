@@ -1,4 +1,4 @@
-package org.aubay.testmaker.service.webdriver.maker.plugins.firefox;
+package org.jorge2m.testmaker.service.webdriver.maker.plugins.firefox;
 
 import java.io.File;
 import java.io.InputStream;

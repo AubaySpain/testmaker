@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.util;
+package org.jorge2m.testmaker.domain.util;
 
 import java.util.List;
 

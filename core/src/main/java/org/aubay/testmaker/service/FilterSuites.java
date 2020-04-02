@@ -1,15 +1,15 @@
-package org.aubay.testmaker.service;
+package org.jorge2m.testmaker.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.domain.RepositoryI;
-import org.aubay.testmaker.domain.SuitesExecuted;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.domain.RepositoryI;
+import org.jorge2m.testmaker.domain.SuitesExecuted;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 
 public class FilterSuites {
 

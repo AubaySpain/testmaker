@@ -1,4 +1,4 @@
-package org.aubay.testmaker.boundary.access;
+package org.jorge2m.testmaker.boundary.access;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.aubay.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.InputParamsTM;
 
 public class CmdLineMaker { 
 

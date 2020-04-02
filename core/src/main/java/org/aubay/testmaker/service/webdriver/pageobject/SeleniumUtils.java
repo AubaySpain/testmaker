@@ -1,6 +1,6 @@
-package org.aubay.testmaker.service.webdriver.pageobject;
+package org.jorge2m.testmaker.service.webdriver.pageobject;
 
-import static org.aubay.testmaker.service.webdriver.pageobject.StateElement.State.*;
+import static org.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;

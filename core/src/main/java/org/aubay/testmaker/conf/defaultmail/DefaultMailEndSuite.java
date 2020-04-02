@@ -1,15 +1,15 @@
-package org.aubay.testmaker.conf.defaultmail;
+package org.jorge2m.testmaker.conf.defaultmail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
-import org.aubay.testmaker.conf.Log4jConfig;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.SenderMailEndSuiteI;
-import org.aubay.testmaker.domain.suitetree.SuiteTM;
+import org.jorge2m.testmaker.conf.Log4jConfig;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.SenderMailEndSuiteI;
+import org.jorge2m.testmaker.domain.suitetree.SuiteTM;
 
 public class DefaultMailEndSuite implements SenderMailEndSuiteI {
 	

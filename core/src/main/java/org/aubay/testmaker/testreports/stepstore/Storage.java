@@ -1,4 +1,4 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
 public enum Storage {
 

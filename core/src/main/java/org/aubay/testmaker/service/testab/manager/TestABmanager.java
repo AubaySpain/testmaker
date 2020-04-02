@@ -1,16 +1,16 @@
-package org.aubay.testmaker.service.testab.manager;
+package org.jorge2m.testmaker.service.testab.manager;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.service.testab.TestAB;
-import org.aubay.testmaker.service.testab.TestABGoogleExp;
-import org.aubay.testmaker.service.testab.TestABOptimize;
-import org.aubay.testmaker.service.testab.TestABactData;
-import org.aubay.testmaker.service.testab.TestAB.TypeTestAB;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.service.testab.TestAB;
+import org.jorge2m.testmaker.service.testab.TestABGoogleExp;
+import org.jorge2m.testmaker.service.testab.TestABOptimize;
+import org.jorge2m.testmaker.service.testab.TestABactData;
+import org.jorge2m.testmaker.service.testab.TestAB.TypeTestAB;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 

@@ -1,8 +1,8 @@
-package org.aubay.testmaker.testreports.stepstore;
+package org.jorge2m.testmaker.testreports.stepstore;
 
 import java.io.File;
 
-import org.aubay.testmaker.domain.suitetree.StepTM;
+import org.jorge2m.testmaker.domain.suitetree.StepTM;
 
 public enum StepEvidence {
 	imagen("png"), 

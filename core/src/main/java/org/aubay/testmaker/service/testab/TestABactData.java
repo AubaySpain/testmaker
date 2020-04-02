@@ -1,8 +1,8 @@
-package org.aubay.testmaker.service.testab;
+package org.jorge2m.testmaker.service.testab;
 
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.Channel;
 
 public class TestABactData {
 

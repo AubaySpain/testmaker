@@ -1,4 +1,4 @@
-package org.aubay.testmaker.repository.jdbc.dao;
+package org.jorge2m.testmaker.repository.jdbc.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.Channel;
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.StateExecution;
-import org.aubay.testmaker.domain.suitetree.SuiteBean;
-import org.aubay.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import org.jorge2m.testmaker.conf.Channel;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.StateExecution;
+import org.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import org.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 
 
 public class SuitesDAO {

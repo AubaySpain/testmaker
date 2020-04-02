@@ -1,4 +1,4 @@
-package org.aubay.testmaker.domain.suitetree;
+package org.jorge2m.testmaker.domain.suitetree;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,10 +10,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.aubay.testmaker.conf.State;
-import org.aubay.testmaker.domain.InputParamsTM;
-import org.aubay.testmaker.domain.StateExecution;
-import org.aubay.testmaker.domain.SuitesExecuted;
+import org.jorge2m.testmaker.conf.State;
+import org.jorge2m.testmaker.domain.InputParamsTM;
+import org.jorge2m.testmaker.domain.StateExecution;
+import org.jorge2m.testmaker.domain.SuitesExecuted;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
