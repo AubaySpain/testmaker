@@ -56,14 +56,24 @@ public class EvidencesWarehouse {
 	private void storeEvidence(StepEvidence evidence, Storage typeStorage) {
 		EvidenceStorer evidenceStorer = evidenceStorerFactory(evidence);
 		if (evidenceStorer!=null) {
-			evidenceStorer.captureAndStoreContent(step);
-			if (typeStorage.inFile()) {
+			if (typeStorage.inFile() && !evidenceStorer.existsFileEvidence(step)) {
+				evidenceStorer.captureAndStoreContent(step);
 				evidenceStorer.storeContentInFile(step);
 			}
-			if (typeStorage.inMemory()) {
+			if (typeStorage.inMemory() && !existsEvidenceInMemory(evidence)) {
+				evidenceStorer.captureAndStoreContent(step);
 				addEvidence(new StepEvidenceContent(evidence, evidenceStorer.getContent()));
 			}
 		}
+	}
+	
+	private boolean existsEvidenceInMemory(StepEvidence evidenceType) {
+		for (StepEvidenceContent stepEvidence : storedEvidences) {
+			if (stepEvidence.getStepEvidence()==evidenceType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void moveContentEvidencesToFile() {
