@@ -34,6 +34,7 @@ public abstract class InputParamsTM {
 	public static final String VersionNameParam = "version";
 	public static final String URLNameParam = "url";
 	public static final String TCaseNameParam = "tcases";
+	public static final String ThreadsParam = "threads";
 	public static final String ServerDNSNameParam = "serverDNS";
 	public static final String AsyncExecParam = "asyncexec";
 	public static final String RemoteParam = "remote";
@@ -77,6 +78,9 @@ public abstract class InputParamsTM {
 
 	@FormParam(TCaseNameParam)
 	String tcasesCommaSeparated;
+	
+	@FormParam(ThreadsParam)
+	String threads;
 
 	@FormParam(ServerDNSNameParam)
 	String serverDNS;
@@ -191,6 +195,13 @@ public abstract class InputParamsTM {
 			.pattern(patternTestCaseItem)
 			.desc("List of testcases comma separated (p.e. OTR001,BOR001,FIC001{6-2})")
 			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.ThreadsParam)
+			.required(false)
+			.hasArgs()
+			.pattern("[0-9]+")
+			.desc("Number or threads for paralelize TestCases")
+			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.VersionNameParam)
 			.required(false)
@@ -291,6 +302,7 @@ public abstract class InputParamsTM {
 		if (mails!=null) {
 			mailsCommaSeparated = String.join(",", mails);
 		}
+		threads = cmdLine.getOptionValue(ThreadsParam);
 		reciclewd = cmdLine.getOptionValue(RecicleWDParam);
 		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
 		remote = cmdLine.getOptionValue(RemoteParam);
@@ -310,6 +322,7 @@ public abstract class InputParamsTM {
 		Version(VersionNameParam),
 		Url(URLNameParam),
 		Tcases(TCaseNameParam),
+		Threads(ThreadsParam),
 		ServerDNS(ServerDNSNameParam),
 		RecicleWD(RecicleWDParam),
 		AsyncExec(AsyncExecParam),
@@ -357,6 +370,8 @@ public abstract class InputParamsTM {
 			return this.url;
 		case Tcases:
 			return this.tcasesCommaSeparated;
+		case Threads:
+			return this.threads;
 		case ServerDNS:
 			return this.serverDNS;
 		case RecicleWD:
@@ -515,6 +530,18 @@ public abstract class InputParamsTM {
 		return null;
 	}
 	
+	public String getThreads() {
+		return threads;
+	}
+	public Integer getThreadsNum() {
+		if (threads!=null) {
+			return Integer.valueOf(threads);
+		}
+		return null;
+	}
+	public void setThreads(String threads) {
+		this.threads = threads;
+	}
 	public List<String> getMails() {
 		if (mailsCommaSeparated!=null) {
 			String[] mails = mailsCommaSeparated.split(",");
