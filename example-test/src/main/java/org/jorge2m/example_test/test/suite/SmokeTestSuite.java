@@ -18,7 +18,7 @@ public class SmokeTestSuite extends SuiteMaker {
 		setParameters(new HashMap<>());
 		TestRunMaker testRun = TestRunMaker.from(
 				iParams.getSuiteName(), 
-				Arrays.asList(BuscarWithoutRefactor.class/*Buscar.class*/));
+				Arrays.asList(/*BuscarWithoutRefactor.class*/Buscar.class));
 		addTestRun(testRun);
 		setParallelMode(ParallelMode.METHODS);
 		setThreadCount(3);

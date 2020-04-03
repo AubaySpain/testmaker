@@ -8,3 +8,4 @@ target/*
 *.iml
 *.class
 .settings
+/output-library
