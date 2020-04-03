@@ -12,7 +12,7 @@ public class SearchFactory {
 	private final List<String> searchValues;
 	
 	public SearchFactory() {
-		searchValues = Arrays.asList(
+		searchValues = Arrays.asList( 
 			"Zelda Breath of The Wild",
 			"Enter the gungeon",
 			"Xenoblade Chronicles",
