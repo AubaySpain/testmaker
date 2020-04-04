@@ -15,6 +15,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jorge2m.testmaker.domain.InputParamsTM;
 
+/**
+ * @author jorge.muñoz
+ * Implementa el acceso a través de la línea de comandos
+ */
 public class CmdLineMaker { 
 
 	private final String[] args;

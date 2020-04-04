@@ -9,7 +9,6 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
  
-    <groupId>org.mng</groupId>
     <artifactId>testmaker-archetype</artifactId>
     <name>Custom Maven Archetype</name>
     <packaging>maven-archetype</packaging>
