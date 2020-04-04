@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.jorge2m.example_test.test.factory.SearchFactory;
-import org.jorge2m.example_test.test.testcase.script.Buscar;
+import org.jorge2m.example_test.test.testcase.script.BuscarRefactored;
 import org.jorge2m.example_test.test.testcase.script.BuscarWithoutRefactor;
 import org.testng.xml.XmlSuite.ParallelMode;
 
