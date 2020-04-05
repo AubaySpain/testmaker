@@ -6,6 +6,11 @@ import org.jorge2m.testmaker.boundary.access.CmdLineMaker;
 import org.jorge2m.testmaker.domain.CreatorSuiteRun;
 import org.jorge2m.testmaker.domain.InputParamsBasic;
 
+/**
+ * Main class that implements access via Command Line
+ * @author jorge.muñoz
+ *
+ */
 public class CmdRunTests {
 
 	public static void main(String[] args) throws Exception { 
