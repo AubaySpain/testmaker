@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.jorge2m.testmaker.domain.StateExecution;
 import org.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import org.jorge2m.testmaker.domain.suitetree.StepTM;
 import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
@@ -56,6 +57,10 @@ public class ValidationAspect {
     		checksResult.getStepParent().setNOKstateByDefault();
     	}
     	checksResult.checkValidations();
-    	//step.storeEvidencies();
+    	if (step.getState()==StateExecution.Finished) {
+    		//Nos encontramos en una Validación asociada a un @Step pero posterior a él
+    		boolean exceptionInStep = step.isExcepExists() || exceptionThrown;
+    		step.end(exceptionInStep);
+    	}
     }
 }

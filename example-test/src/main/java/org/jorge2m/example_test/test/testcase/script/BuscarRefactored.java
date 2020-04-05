@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import org.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
-public class Buscar {
+public class BuscarRefactored {
 
 	@Test (
 		groups={"Buscar", "Canal:desktop_App:google"}, alwaysRun=true, 

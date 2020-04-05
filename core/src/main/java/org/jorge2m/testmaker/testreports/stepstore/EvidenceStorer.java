@@ -29,6 +29,11 @@ public abstract class EvidenceStorer {
 		this.content = step.getEvidencesWarehouse().getEvidenceContent(evidenceType);
 	}
 
+	public boolean existsFileEvidence(StepTM step) {
+		String pathFile = getPathFile(step);
+		return new File(pathFile).exists();
+	}
+	
 	public void storeContentInFile(StepTM step) {
 		String pathFile = getPathFile(step);
 		if (!new File(pathFile).exists()) {

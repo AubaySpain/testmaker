@@ -81,13 +81,16 @@ public class TestCaseTM  {
 	}
 	
 	public String getNameWithInputData() {
-		return getName() + getSpecificInputData();
+		if ("".compareTo(getSpecificInputData())!=0) {
+			return getName() + " (" + getSpecificInputData() + ")";
+		}
+		return getName();
 	}
 	
 	public String getNameUnique() {
 		String nameTest = getNameWithInputData();
 		if (getInvocationCount()>1) {
-			nameTest+="(" + getInvocationCount() + ")";
+			nameTest+=" (" + getInvocationCount() + ")";
 		}
 		return nameTest;
 	}
@@ -164,6 +167,9 @@ public class TestCaseTM  {
 			}
 		}
 		return null;
+	}
+	public static WebDriver getDriverTestCase() {
+		return TestCaseTM.getTestCaseInExecution().getDriver();
 	}
 	
 	public ITestResult getResult() {
@@ -260,9 +266,12 @@ public class TestCaseTM  {
 		return this.specificInputData;
 	}
 	
-	public void setSpecificInputData(String specificInputData) {
-		this.specificInputData = specificInputData;
+	public void addSufixToName(String sufix) {
+		this.specificInputData = sufix;
 		updateInvocationCount();
+	}
+	public static void addNameSufix(String sufix) {
+		TestCaseTM.getTestCaseInExecution().addSufixToName(sufix);
 	}
 	
 	public TestCaseBean getTestCaseBean() {
