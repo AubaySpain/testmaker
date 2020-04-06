@@ -12,6 +12,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM.*;
+import static com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils.getElementWeb;
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
 import java.util.regex.Matcher;
@@ -121,17 +122,17 @@ public class BuscarWithoutRefactor {
 	public boolean checkMoreResulstsInGoogle(float numResultsGoogle, float numResultsBing) {
 		return (numResultsGoogle > numResultsBing);
 	}
-
-	private long getNumResultsGoogle(WebDriver driver) {
+	
+	public static long getNumResultsGoogle(WebDriver driver) {
 		WebElement numResultsElem = getElementWeb(By.id("result-stats"), driver);
 		return getLongFromElement(numResultsElem);
 	}
 	
-	private long getNumResultsBing(WebDriver driver) {
+	public static long getNumResultsBing(WebDriver driver) {
 		WebElement numResultsElem = getElementWeb(By.xpath("//span[@class='sb_count']"), driver);
 		return getLongFromElement(numResultsElem);
 	}
-	private long getLongFromElement(WebElement element) {
+	private static long getLongFromElement(WebElement element) {
 		if (element!=null && "".compareTo(element.getText())!=0) {
 			Pattern pattern = Pattern.compile("([\\d.]+)");
 			Matcher matcher = pattern.matcher(element.getText());
