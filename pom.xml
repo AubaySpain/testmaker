@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.jorge2m</groupId>
 	<artifactId>testmaker</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>testmaker</name> 
@@ -31,12 +31,6 @@
 		<developerConnection>scm:git:ssh://github.com:jorge2m/testmaker.git</developerConnection>
 		<url>http://github.com/jorge2m/testmaker/tree/master</url>
 	</scm>
-
-	<modules>
-		<module>archetype</module>
-		<module>core</module>
-		<!-- <module>example-test</module>-->
-	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -76,8 +70,23 @@
 	</dependencies>
 
 	<profiles>
+		<profile>
+			<id>develop</id>
+			<modules>
+				<module>archetype</module>
+				<module>core</module>
+				<module>example-test</module>
+			</modules>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
 		<profile> 
 			<id>release</id>
+			<modules>
+				<module>archetype</module>
+				<module>core</module>
+			</modules>
 			<build>
 				<plugins>
 					<plugin>

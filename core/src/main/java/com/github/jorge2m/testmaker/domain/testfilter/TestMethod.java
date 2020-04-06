@@ -1,6 +1,5 @@
 package com.github.jorge2m.testmaker.domain.testfilter;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.testng.annotations.Factory;
