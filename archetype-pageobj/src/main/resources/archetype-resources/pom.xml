@@ -1,14 +1,10 @@
-<?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-		<parent>
-		<groupId>com.github.jorge2m</groupId>
-		<artifactId>testmaker</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>example-test</artifactId>
-	<name>example-test</name>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<name>${artifactId}</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,7 +14,7 @@
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -74,7 +70,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>com.github.jorge2m.testgoogle.access.CmdRunTests</mainClass>
+									<mainClass>${package}.access.CmdRunTests</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
@@ -87,4 +83,3 @@
 		</plugins>	
   </build>	
 </project>
-

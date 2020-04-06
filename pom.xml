@@ -74,6 +74,7 @@
 			<id>develop</id>
 			<modules>
 				<module>archetype</module>
+				<module>archetype-pageobj</module>
 				<module>core</module>
 				<module>example-test</module>
 			</modules>

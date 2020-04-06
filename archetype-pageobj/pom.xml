@@ -6,12 +6,12 @@
  	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
  
-    <artifactId>testmaker-archetype</artifactId>
-    <name>Custom Maven Archetype</name>
-    <packaging>maven-archetype</packaging>
+	<artifactId>testmaker-archetype-pageobj</artifactId>
+	<name>Custom Maven Archetype</name>
+	<packaging>maven-archetype</packaging>
  
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
