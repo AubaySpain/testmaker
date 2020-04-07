@@ -5,17 +5,16 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
 public class FactoryWebdriverMaker {
 
-	public enum WebDriverType { 
+	public enum EmbebdedDriver { 
 		firefox(false), 
 		firefoxhless(true), 
 		chrome(false), 
 		chromehless(true),
 		edge(false),
-		safari(false),
 		browserstack(false);
 		
 		boolean headless;
-		private WebDriverType(boolean headless) {
+		private EmbebdedDriver(boolean headless) {
 			this.headless = headless;
 		}
 		
@@ -24,18 +23,30 @@ public class FactoryWebdriverMaker {
 		}
 	}	
 
-	public static WebdriverMaker make(WebDriverType webDriverType, TestRunTM testRun) {
+	public static DriverMaker make(TestRunTM testRun) {
 		InputParamsTM inputParams = testRun.getSuiteParent().getInputParams();
-		switch (webDriverType) {
+		String browser = inputParams.getBrowser();
+		DriverMaker driverMakerUser = testRun.getDriverMakerUser();
+		if (driverMakerUser!=null) {
+			return driverMakerUser;
+		}
+		return getEmbebdedDriverMaker(browser, testRun);
+	}
+	
+	private static DriverMaker getEmbebdedDriverMaker(String browser, TestRunTM testRun) {
+		EmbebdedDriver driverType = EmbebdedDriver.valueOf(browser);
+		switch (driverType) {
 		case firefox:
-			return (FirefoxdriverMaker.getNew(webDriverType, inputParams.getGeckoDriverVersion()));
+		case firefoxhless:
+			return (new FirefoxdriverMaker(driverType.isHeadless()));
 		case browserstack:
-			return (BrowserStackDriverMaker.getNew(testRun));
+			return (new BrowserStackDriverMaker(testRun));
 		case edge:
-			return (EdgedriverMaker.getNew());
+			return (new EdgedriverMaker());
 		case chrome:
+		case chromehless:
 		default:
-			return (ChromedriverMaker.getNew(webDriverType, inputParams.getChromeDriverVersion()));
+			return (new ChromedriverMaker(driverType.isHeadless()));
 		}
 	}
 }

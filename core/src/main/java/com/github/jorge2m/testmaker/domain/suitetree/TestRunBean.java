@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.github.jorge2m.testmaker.conf.State;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 
 public class TestRunBean {
 
@@ -18,7 +17,7 @@ public class TestRunBean {
 	private Date finDate;
 	private float durationMillis;
 	private int numberTestCases;
-	private WebDriverType webDriverType;
+	private String browser;
 	
 	public String getIdExecSuite() {
 		return idExecSuite;
@@ -74,11 +73,11 @@ public class TestRunBean {
 	public void setNumberTestCases(int numberTestCases) {
 		this.numberTestCases = numberTestCases;
 	}
-	public WebDriverType getWebDriverType() {
-		return webDriverType;
+	public String getBrowser() {
+		return browser;
 	}
-	public void setWebDriverType(WebDriverType webDriverType) {
-		this.webDriverType = webDriverType;
+	public void setBrowser(String browser) {
+		this.browser = browser;
 	}
 	public List<TestCaseBean> getListTestCase() {
 		return listTestCase;

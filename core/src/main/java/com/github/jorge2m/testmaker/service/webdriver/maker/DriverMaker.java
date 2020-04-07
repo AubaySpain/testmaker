@@ -13,19 +13,37 @@ import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 
 import net.lightbody.bmp.client.ClientUtil;
 
-public interface WebdriverMaker {
+public abstract class DriverMaker {
 
-	abstract public WebdriverMaker setChannel(Channel channel);
-	abstract public WebdriverMaker setNettraffic(boolean nettraffic);
+	Channel channel = Channel.desktop;
+	boolean nettraffic = false;
+	
+	abstract public String getTypeDriver();
+	abstract public void setupDriverVersion(String driverVersion);
 	abstract public WebDriver build();
 	
-	default Proxy getProxyForNettraffic() {
+	public DriverMaker setChannel(Channel channel) {
+		this.channel = channel;
+		return this;
+	}
+
+	public DriverMaker setNettraffic(boolean nettraffic) {
+		this.nettraffic = nettraffic;
+		return this;
+	}
+	
+	public DriverMaker setupDriverVersionFluent(String driverVersion) {
+		setupDriverVersion(driverVersion);
+		return this;
+	}
+	
+	Proxy getProxyForNettraffic() {
 		new NettrafficStorer();
 		Proxy seleniumProxy = ClientUtil.createSeleniumProxy(NettrafficStorer.getProxy());
 		return seleniumProxy;
 	}
 
-	default LoggingPreferences getLogsWebDriverEnabled() {
+	LoggingPreferences getLogsWebDriverEnabled() {
 		//Configuramos la recopilación de logs a nivel de WebDriver
 		LoggingPreferences logs = new LoggingPreferences();
 		logs.enable(LogType.BROWSER, Level.SEVERE);
@@ -37,7 +55,7 @@ public interface WebdriverMaker {
 		return logs;
 	}
 
-	static void deleteCookiesAndSetTimeouts(WebDriver driver) {
+	void deleteCookiesAndSetTimeouts(WebDriver driver) {
 		if (driver!=null) {
 			driver.manage().deleteAllCookies();
 			driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);

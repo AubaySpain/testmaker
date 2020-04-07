@@ -214,7 +214,7 @@ public class SuiteTM extends XmlSuite {
 		suiteBean.setVersion(inputParams.getVersion());
 		suiteBean.setChannel(inputParams.getChannel());
 		suiteBean.setApp(inputParams.getApp().toString());
-		suiteBean.setWebDriverType(inputParams.getWebDriverType());
+		suiteBean.setBrowser(inputParams.getBrowser());
 		suiteBean.setResult(getResult());
 		suiteBean.setInicioDate(getInicio());
 		suiteBean.setFinDate(getFin());

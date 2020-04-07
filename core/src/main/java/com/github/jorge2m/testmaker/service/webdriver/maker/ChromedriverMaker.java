@@ -13,55 +13,51 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 
-class ChromedriverMaker implements WebdriverMaker {
+class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
-	final static String ChromeDriverVersionDefault = "80.0.3987.106";
-	final WebDriverType webDriverType;
-	boolean isHeadless;
-	ChromeOptions options = new ChromeOptions();
-	Channel channel = Channel.desktop;
-	boolean nettraffic = false;
+	private final boolean isHeadless;
+	private final static String ChromeDriverVersionDefault = "80.0.3987.106";
+	private ChromeOptions options = new ChromeOptions();
 	
-	private ChromedriverMaker(WebDriverType webDriverType, String chromeDriverVersion) {
-		this.webDriverType = webDriverType;
-		this.isHeadless = webDriverType.isHeadless();
-		initialConfig();
-		setDriverChrome(chromeDriverVersion);
-	}
-	
-	static ChromedriverMaker getNew(WebDriverType WebDriverType, String chromeDriverVersion) {
-		return (new ChromedriverMaker(WebDriverType, chromeDriverVersion));
+	public ChromedriverMaker(boolean isHeadless) {
+		this.isHeadless = isHeadless;
 	}
 	
 	@Override
-	public WebdriverMaker setChannel(Channel channel) {
-		this.channel = channel;
-		return this;
+	public String getTypeDriver() {
+		if (isHeadless) {
+			return EmbebdedDriver.chromehless.name();
+		}
+		return EmbebdedDriver.chrome.name();
 	}
-
+	
 	@Override
-	public WebdriverMaker setNettraffic(boolean nettraffic) {
-		this.nettraffic = nettraffic;
-		return this;
+	public void setupDriverVersion(String driverVersion) {
+		if (driverVersion!=null && "".compareTo(driverVersion)!=0) {
+			ChromeDriverManager.chromedriver().version(driverVersion).setup();
+		} else {
+			ChromeDriverManager.chromedriver().version(ChromeDriverVersionDefault).setup();
+		}
 	}
-
+	
 	@Override
 	public WebDriver build() {
+		initialConfig();
 		preBuildConfig();
 		ChromeDriver driver = new ChromeDriver(options);
 		if (channel==Channel.desktop) {
 			driver.manage().window().maximize();
 		}
 
-		WebdriverMaker.deleteCookiesAndSetTimeouts(driver);
+		deleteCookiesAndSetTimeouts(driver);
 		return driver;
 	}
 
@@ -77,39 +73,14 @@ class ChromedriverMaker implements WebdriverMaker {
 		options.setCapability(CapabilityType.LOGGING_PREFS, logs);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 	}
-
-	private void setDriverChrome(String chromeDriverVersion) {
-		if (chromeDriverVersion!=null) {
-			ChromeDriverManager.chromedriver().version(chromeDriverVersion).setup();
-		} else {
-			ChromeDriverManager.chromedriver().version(ChromeDriverVersionDefault).setup();
-		}
-	}
-	
-//	private boolean isDesktopInVirtualMachine() {
-//		if (channel!=Channel.movil_web) {
-//			java.awt.Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//			if (screenSize.height<=1024) {
-//				return true;
-//			}
-//		}
-//		
-//		return false;
-//	}
 	
 	private void preBuildConfig() {
-//		if (isDesktopInVirtualMachine()) {
-//			//Esta ñapa es la única que se ha encontrado para solventar el problema del Chrome (no-headless) 
-//			//cuando se ejecuta contra una máquina virtual con un Tomcat as a Service. En ese contexto se abre un Chrome 
-//			//con resolución de 1024x768 y no hay forma de modificarlo. En cambio con headless funciona correctamente.  
-//			isHeadless=true;
-//		}
 		if (channel!=Channel.movil_web && isHeadless) {
 			options.addArguments("--window-size=1920x1080");
 		}
 		
 		options.setHeadless(isHeadless);
-		addPlugins();
+		addPlugins(isHeadless);
 		if (nettraffic) {
 			configNettrafficSnifer();
 		}
@@ -121,7 +92,7 @@ class ChromedriverMaker implements WebdriverMaker {
 	/**
 	 * Da de alta/asocia en chrome una lista de plugins
 	 */
-	private void addPlugins() {
+	private void addPlugins(boolean isHeadless) {
 		if (!isHeadless) {
 			//TODO Desde Chrome61 ya es posible desactivar el autoplay directamente desde el navegador (chrome://flags/#autoplay-policy)
 			//options.addArguments("--autoplay-policy", "--document-user-activation-required");        

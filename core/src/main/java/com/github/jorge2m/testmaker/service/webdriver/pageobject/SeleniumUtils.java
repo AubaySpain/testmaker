@@ -27,7 +27,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.github.jorge2m.testmaker.conf.Log4jConfig;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
 
 public class SeleniumUtils { 
 
@@ -412,10 +412,10 @@ public class SeleniumUtils {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElem);
     }
     
-    public static WebDriverType getTypeDriver(WebDriver driver) {
+    public static EmbebdedDriver getTypeDriver(WebDriver driver) {
     	Capabilities caps = ((RemoteWebDriver) driver).getCapabilities();
     	String browserName = caps.getBrowserName();
-    	return WebDriverType.valueOf(browserName);
+    	return EmbebdedDriver.valueOf(browserName);
     }    
     
     public static void waitMillis(int milliseconds) {

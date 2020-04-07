@@ -18,7 +18,7 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethod;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
 import com.github.jorge2m.testmaker.unittestdata.AppEcom;
 import com.github.jorge2m.testmaker.unittestdata.Suites;
 import com.github.jorge2m.testmaker.utils.filter.resources.TestNGxmlStub;
@@ -176,7 +176,7 @@ public class TestFilterTNGxmlTRun {
     	inputParams.setSuite(Suites.SuiteForUnitTest);
     	inputParams.setApp(AppEcom.shop);
     	inputParams.setUrlBase("https://shop.mango.com/preHome.faces");
-    	inputParams.setWebDriverType(WebDriverType.chrome);
+    	inputParams.setBrowser(EmbebdedDriver.chrome.name());
     	return inputParams;
     }
     

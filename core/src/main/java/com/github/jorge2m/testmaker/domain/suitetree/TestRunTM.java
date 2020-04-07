@@ -12,6 +12,7 @@ import org.testng.xml.XmlTest;
 
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
+import com.github.jorge2m.testmaker.service.webdriver.maker.DriverMaker;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
 import com.github.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
@@ -27,7 +28,9 @@ public class TestRunTM extends XmlTest {
 	private List<TestCaseTM> listTestCases = new ArrayList<>();
 	private BrowserStackDesktop browserStackDesktop = null;
 	private BrowserStackMobil browserStackMobil = null;
-	
+	private DriverMaker driverMakerUser = null;
+
+
 	public TestRunTM(XmlSuite suite, int index) {
 		super(suite, index);
 	}
@@ -101,6 +104,14 @@ public class TestRunTM extends XmlTest {
 		this.x_xmlGroupsVisible = xmlGroups;
 	}
 	
+	
+	public DriverMaker getDriverMakerUser() {
+		return driverMakerUser;
+	}
+	public void setDriverMakerUser(DriverMaker driverMakerUser) {
+		this.driverMakerUser = driverMakerUser;
+	}
+	
 	public List<TestCaseTM> getListTestCases() {
 		return listTestCases;
 	}
@@ -160,7 +171,7 @@ public class TestRunTM extends XmlTest {
 			testRunBean.setDurationMillis(fin.getTime() - inicio.getTime());
 		}
 		testRunBean.setNumberTestCases(getNumTestCases());
-		testRunBean.setWebDriverType(suite.getInputParams().getWebDriverType());
+		testRunBean.setBrowser(suite.getInputParams().getBrowser());
 		
 		List<TestCaseBean> listTestCase = new ArrayList<>();
 		for (TestCaseTM testCase : getListTestCases()) {
