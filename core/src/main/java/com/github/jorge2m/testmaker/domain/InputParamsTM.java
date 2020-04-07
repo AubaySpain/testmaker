@@ -159,7 +159,7 @@ public abstract class InputParamsTM {
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserNameParam)
 			.required(true)
 			.hasArg()
-			.possibleValues(EmbebdedDriver.class)
+			//.possibleValues(EmbebdedDriver.class)
 			.desc("Browser to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbebdedDriver.values()))
 			.build());
 

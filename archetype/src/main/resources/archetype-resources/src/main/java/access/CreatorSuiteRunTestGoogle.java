@@ -45,11 +45,15 @@ public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 	}
 	
 	private void setWebDriverVersion() {
-		if (inputParams.getChromeDriverVersion()==null) {
-			inputParams.setChromeDriverVersion(ChromeDriverVersionDefault);
-		}
-		if (inputParams.getGeckoDriverVersion()==null) {
-			inputParams.setGeckoDriverVersion(GeckoDriverVersionDefault);
+		if (inputParams.getDriverVersion()==null) {
+			switch (inputParams.getBrowser()) {
+			case "firefox":
+				inputParams.setDriverVersion(GeckoDriverVersionDefault);
+				break;
+			case "chrome":
+				inputParams.setDriverVersion(ChromeDriverVersionDefault);
+				break;
+			}
 		}
 	}
 }
