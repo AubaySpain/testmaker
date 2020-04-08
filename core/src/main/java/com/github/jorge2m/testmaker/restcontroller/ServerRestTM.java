@@ -144,10 +144,12 @@ public class ServerRestTM extends JaxRsClient {
 			response = builder.delete();
 		}
 		
+		String action = (subscription) ? "subscripting" : "unsubscripting";
 		if (response.getStatus() >= 400) {
-			String action = (subscription) ? "subscripting" : "unsubscripting";
 			System.out.println("Problem " + action + " server slave in url " + urlServerSlave + " with server hub in url " + urlServerHub);
 			System.out.println(response);
+		} else {
+			System.out.println("Result OK " + action + " server slave in url " + urlServerSlave + " with server hub in url " + urlServerHub);
 		}
 	}
 	

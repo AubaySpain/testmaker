@@ -97,18 +97,18 @@ public class TestCaseTM  {
 	}
 	
 	public void end(State state) {
-    	stopTest();
-    	this.state = state;
+		stopTest();
+		this.state = state;
 	}
 	
 	public void end() {
 		stopTest();
-    	this.state = getStateFromSteps();
+		this.state = getStateFromSteps();
 	}
 	
 	private void stopTest() {
-    	setStateRun(StateExecution.Finished);
-    	suiteParent.getPoolWebDrivers().quitWebDriver(driver, testRunParent);
+		setStateRun(StateExecution.Finished);
+		suiteParent.getPoolWebDrivers().quitWebDriver(driver, testRunParent);
 	}
 	
 	public int getIndexInTestRun() {
@@ -231,7 +231,7 @@ public class TestCaseTM  {
 		WebDriver driver = suiteParent
 				.getPoolWebDrivers()
 				.getWebDriver(
-						inputData.getWebDriverType(), 
+						inputData.getBrowser(), 
 						inputData.getChannel(), 
 						testRunParent);
 		driver.manage().deleteAllCookies();

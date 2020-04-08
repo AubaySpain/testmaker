@@ -6,7 +6,6 @@ import java.util.List;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
 
 public class SuiteBean {
 
@@ -18,7 +17,7 @@ public class SuiteBean {
 	private String version;
 	private Channel channel;
 	private String app;
-	private WebDriverType webDriverType;
+	private String browser;
 	private Date inicioDate;
 	private Date finDate;
 	private float durationMillis;
@@ -49,8 +48,8 @@ public class SuiteBean {
 	public String getApp() {
 		return app;
 	}
-	public WebDriverType getWebDriverType() {
-		return webDriverType;
+	public String getBrowser() {
+		return browser;
 	}
 	public State getResult() {
 		return result;
@@ -98,8 +97,8 @@ public class SuiteBean {
 	public void setApp(String app) {
 		this.app = app;
 	}
-	public void setWebDriverType(WebDriverType webDriverType) {
-		this.webDriverType = webDriverType;
+	public void setBrowser(String browser) {
+		this.browser = browser;
 	}
 	public void setResult(State result) {
 		this.result = result;

@@ -19,7 +19,7 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
 
 public abstract class InputParamsTM {
 
@@ -44,8 +44,7 @@ public abstract class InputParamsTM {
 	public static final String StoreParam = "store";
 	public static final String MailsParam = "mails";
 	public static final String TypeAccessParam = "typeAccess";
-	public static final String ChromeDriverVersionParam = "chromedriverVersion";
-	public static final String GeckoDriverVersionParam = "geckodriverVersion";
+	public static final String DriverVersionParam = "driverVersion";
 	public static final String TestObjectParam = "testobject";
 	
 	public static final String patternTestCaseItem = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
@@ -107,11 +106,8 @@ public abstract class InputParamsTM {
 	@FormParam(TypeAccessParam)
 	String typeAccess = TypeAccess.CmdLine.name();
 	
-	@FormParam(ChromeDriverVersionParam)
-	String chromeDriverVersion;
-	
-	@FormParam(GeckoDriverVersionParam)
-	String geckoDriverVersion;	
+	@FormParam(DriverVersionParam)
+	String driverVersion;
 	
 	@FormParam(TestObjectParam)
 	String testObject;
@@ -163,8 +159,8 @@ public abstract class InputParamsTM {
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserNameParam)
 			.required(true)
 			.hasArg()
-			.possibleValues(WebDriverType.class)
-			.desc("Browser to launch the Suite of Tests. Possible values: " + Arrays.asList(WebDriverType.values()))
+			//.possibleValues(EmbebdedDriver.class)
+			.desc("Browser to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbebdedDriver.values()))
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.ChannelNameParam)
@@ -266,18 +262,11 @@ public abstract class InputParamsTM {
 			.desc("Type of access. Posible values: " + Arrays.asList(TypeAccess.values()))
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ChromeDriverVersionParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.DriverVersionParam)
 			.required(false)
 			.hasArgs()
 			.pattern("\\d+(\\.\\d+)*")
-			.desc("Version of ChromeDriver to use")
-			.build());
-
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.GeckoDriverVersionParam)
-			.required(false)
-			.hasArgs()
-			.pattern("\\d+(\\.\\d+)*")
-			.desc("Version of GeckoDriver (Firefox) to use")
+			.desc("Version of Driver (ChromeDriver, Geckodriver...) to use")
 			.build());
 
 		return optionsTM;
@@ -310,8 +299,7 @@ public abstract class InputParamsTM {
 		net = cmdLine.getOptionValue(NetAnalysisParam);
 		store = cmdLine.getOptionValue(StoreParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
-		chromeDriverVersion = cmdLine.getOptionValue(ChromeDriverVersionParam);
-		geckoDriverVersion = cmdLine.getOptionValue(GeckoDriverVersionParam);
+		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
 	}
 
 	private enum ParamTM {
@@ -332,8 +320,7 @@ public abstract class InputParamsTM {
 		Store(StoreParam),
 		Mails(MailsParam),
 		TypeAccess(TypeAccessParam),
-		ChromeDriverVersion(ChromeDriverVersionParam),
-		GeckoDriverVersion(GeckoDriverVersionParam),
+		DriverVersion(DriverVersionParam),
 		TestObject(TestObjectParam);
 		
 		public String nameParam;
@@ -389,10 +376,8 @@ public abstract class InputParamsTM {
 			return this.mailsCommaSeparated;
 		case TypeAccess:
 			return this.typeAccess;
-		case ChromeDriverVersion:
-			return this.chromeDriverVersion;
-		case GeckoDriverVersion:
-			return this.geckoDriverVersion;
+		case DriverVersion:
+			return this.driverVersion;
 		default:
 			return "";
 		}
@@ -455,15 +440,12 @@ public abstract class InputParamsTM {
 	public void setUrlBase(String urlBase) {
 		this.url = urlBase;
 	}
-    public String getDnsUrlAcceso() throws URISyntaxException {
-        URI uri = new URI(getUrlBase());
-        return (uri.getScheme() + "://" + uri.getHost());
-    }
-	public WebDriverType getWebDriverType() {
-		return (WebDriverType.valueOf(browser));
+	public String getDnsUrlAcceso() throws URISyntaxException {
+		URI uri = new URI(getUrlBase());
+		return (uri.getScheme() + "://" + uri.getHost());
 	}
-	public void setWebDriverType(WebDriverType webDriverType) {
-		this.browser = webDriverType.name();
+	public String getBrowser() {
+		return this.browser;
 	}
 	public void setBrowser(String browser) {
 		this.browser = browser;
@@ -631,18 +613,11 @@ public abstract class InputParamsTM {
 		this.typeAccess = typeAccess.name();
 	}
 	
-	public String getChromeDriverVersion() {
-		return chromeDriverVersion;
+	public String getDriverVersion() {
+		return driverVersion;
 	}
-	public void setChromeDriverVersion(String chromeDriverVersion) {
-		this.chromeDriverVersion = chromeDriverVersion;
-	}
-	
-	public String getGeckoDriverVersion() {
-		return geckoDriverVersion;
-	}
-	public void setGeckoDriverVersion(String geckoDriverVersion) {
-		this.geckoDriverVersion = geckoDriverVersion;
+	public void setDriverVersion(String driverVersion) {
+		this.driverVersion = driverVersion;
 	}
 
 	public String getTestObject() {

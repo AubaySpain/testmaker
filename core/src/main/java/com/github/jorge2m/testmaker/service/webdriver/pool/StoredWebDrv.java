@@ -2,26 +2,26 @@ package com.github.jorge2m.testmaker.service.webdriver.pool;
 
 import org.openqa.selenium.WebDriver;
 
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.WebDriverType;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
 
 public class StoredWebDrv {
 
     public enum stateWd {busy, free}
     
-    private WebDriverType typeWdrv = WebDriverType.firefox;
+    private String browser = EmbebdedDriver.chrome.name();
     private String moreDataWdrv = "";
     private WebDriver webdriver;
     private stateWd state = stateWd.free;
 
-    public StoredWebDrv(WebDriver webdriver, stateWd state, WebDriverType typeWdrv, String moreDataWdrv) {
-        this.webdriver   = webdriver;
-        this.state       = state;
-        this.typeWdrv    = typeWdrv;
+    public StoredWebDrv(WebDriver webdriver, stateWd state, String browser, String moreDataWdrv) {
+        this.webdriver = webdriver;
+        this.state = state;
+        this.browser = browser;
         this.moreDataWdrv = moreDataWdrv;
     }
     
-    public WebDriverType getTypeWdrv() {
-        return this.typeWdrv;
+    public String getBrowser() {
+        return this.browser;
     }
     
     public String getMoreDataWdrv() {
