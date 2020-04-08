@@ -37,46 +37,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<dependencies> 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.10.0</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.5.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.7.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.7.3</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
 	<profiles>
 		<profile>
 			<id>develop</id>
 			<modules>
-				<module>archetype</module>
-				<module>archetype-pageobj</module>
+				<module>archetypes</module>
 				<module>core</module>
-				<module>example-test</module>
+				<module>examples</module>
 			</modules>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -85,7 +52,7 @@
 		<profile> 
 			<id>release</id>
 			<modules>
-				<module>archetype</module>
+				<module>archetypes</module>
 				<module>core</module>
 			</modules>
 			<build>
@@ -196,4 +163,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+  <modules>
+    <module>archetypes</module>
+  </modules>
 </project>
