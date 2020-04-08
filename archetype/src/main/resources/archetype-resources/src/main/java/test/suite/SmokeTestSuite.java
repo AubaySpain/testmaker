@@ -4,17 +4,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jorge2m.testarchetype.test.suite.SmokeTestSuite.ChromeDriverMaker;
-import org.jorge2m.testarchetype.test.suite.SmokeTestSuite.FirefoxDriverMaker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.xml.XmlSuite.ParallelMode;
 
-import $
+import ${package}.test.factory.SearchFactory;
+import ${package}.test.testcase.script.BuscarWithoutRefactor;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
-import ${package}.test.testcase.script.BuscarWithoutRefactor;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.SuiteMaker;
 import com.github.jorge2m.testmaker.domain.TestRunMaker;
