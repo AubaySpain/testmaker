@@ -79,12 +79,19 @@ public class TestRunMaker {
 		this.browserStackMobil = browserStackMobil;
 	}
 	
-
 	public DriverMaker getDriverMaker() {
 		return driverMakerUser;
 	}
-	public void setDriverMaker(DriverMaker driverMaker) {
-		this.driverMakerUser = driverMaker;
+	public void setDriverMaker(DriverMaker driverMakerUser) {
+		this.driverMakerUser = driverMakerUser;
+	}
+	public void setDriverMaker(String browser, List<DriverMaker> listDriverMaker) {
+		for (DriverMaker driverMaker : listDriverMaker) {
+			if (driverMaker.getTypeDriver().compareTo(browser)==0) {
+				this.driverMakerUser = driverMaker;
+				return;
+			}
+		}
 	} 
 
 	public TestRunTM createTestRun(XmlSuite suite, FilterTestsSuiteXML filterSuiteXML, InputParamsTM inputData) {

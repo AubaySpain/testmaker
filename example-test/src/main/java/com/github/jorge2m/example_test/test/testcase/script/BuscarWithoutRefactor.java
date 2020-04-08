@@ -15,11 +15,14 @@ import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjT
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils.getElementWeb;
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class BuscarWithoutRefactor {
+public class BuscarWithoutRefactor implements Serializable {
+	
+	private static final long serialVersionUID = 7458665307721500197L;
 
 	private final String itemToSearch;
 	private final boolean factory;

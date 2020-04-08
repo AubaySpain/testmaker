@@ -11,7 +11,9 @@ import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
-public class BuscarPatternPageObject {
+public class BuscarPatternPageObject implements Serializable {
+	
+	private static final long serialVersionUID = 7458665307721500197L;
 
 	private final String itemToSearch;
 	private final boolean factory;
