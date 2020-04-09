@@ -35,7 +35,7 @@ public class NettrafficStorer extends EvidenceStorer {
 	final static String nameProxyInContext = "BrowserMobProxy";
 	
 	public NettrafficStorer() {
-		super(StepEvidence.har);
+		super(StepEvidence.Har);
 		if (proxyInThread==null) {
 			proxyInThread = new ThreadLocal<>();
 		}
@@ -86,7 +86,7 @@ public class NettrafficStorer extends EvidenceStorer {
 	
 	private void copyHarToHarp(String nameFileHar) throws Exception {
 		File fileHar = new File(nameFileHar);
-		File fileHarp = new File(nameFileHar.replace(StepEvidence.har.fileExtension, StepEvidence.harp.fileExtension));
+		File fileHarp = new File(nameFileHar.replace(StepEvidence.Har.fileExtension, StepEvidence.Harp.fileExtension));
 		InputStream inHar = new FileInputStream(fileHar);
 		OutputStream outHarp = new FileOutputStream(fileHarp);
 		outHarp.write("onInputData(".getBytes());

@@ -5,7 +5,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 public class HtmlStorer extends EvidenceStorer {
 
 	public HtmlStorer() {
-		super(StepEvidence.html);
+		super(StepEvidence.Html);
 	}
 	
 	@Override

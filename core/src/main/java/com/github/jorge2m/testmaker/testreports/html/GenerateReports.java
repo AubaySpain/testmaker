@@ -29,6 +29,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
+import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReports extends EmailableReporter {
 	
@@ -39,6 +40,9 @@ public class GenerateReports extends EmailableReporter {
     private List<Integer> treeTable;
     private String outputDirectory = "";
     private String reportHtml = "";
+    
+    private String output_library = "../..";
+    private String pathStatics = output_library + "/static";
     
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
@@ -93,8 +97,7 @@ public class GenerateReports extends EmailableReporter {
             "    <th rowspan=\"2\">Sons</th>" + 
             "    <th rowspan=\"2\">Result</th>" + 
             "    <th rowspan=\"2\">Time</th>" + 
-            "    <th rowspan=\"2\">HardCopy</th>" + 
-            "    <th rowspan=\"2\">HTML</th>" + 
+            "    <th rowspan=\"2\">Evidences</th>" + 
             "    <th class=\"size20\" rowspan=\"2\">Description / Action / Validation</th>" + 
             "    <th class=\"size15\" rowspan=\"2\">Result expected</th>" +
             "    <th rowspan=\"2\">Init</th>" + 
@@ -106,9 +109,6 @@ public class GenerateReports extends EmailableReporter {
     }
     
     public void pintaCabeceraHTML() {
-        String output_library = "../..";
-        String pathStatics = output_library + "/static";
-
         reportHtml+="<html>\n";
         reportHtml+="<head>\n";
         reportHtml+="<meta charset=\"utf-8\">\n";
@@ -169,7 +169,6 @@ public class GenerateReports extends EmailableReporter {
 				"  <td>" + testRun.getNumberTestCases() + "</td>" + 
 				"  <td><div class=\"result" + testRun.getResult() + "\">" + testRun.getResult() + "</div></td>" + 
 				"  <td>" + testRun.getDurationMillis() + "</td>" + "               <td></td>" + 
-				"  <td><br><br></td>" + 
 				"  <td></td>" + 
 				"  <td></td>" +
 				"  <td>" + format.format(testRun.getInicioDate()) + "</td>" + 
@@ -195,7 +194,6 @@ public class GenerateReports extends EmailableReporter {
 				"  <td>" + testCase.getNumberSteps() + "</td>" + 
 				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
 				"  <td>" + testCase.getDurationMillis() + "</td>" + 
-				"  <td></td>" + 
 				"  <td><br><br></td>" + 
 				"  <td colspan=2>" + testCase.getDescription() + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getInicioDate()) + "</td>" + 
@@ -212,82 +210,98 @@ public class GenerateReports extends EmailableReporter {
 		}
 	}
 
-    private boolean pintaStepsOfTestCase(TestCaseBean testCase) {
-    	boolean timeout = false;
-    	int stepNumber = 0;
-        for (StepTM step : testCase.getListStep()) {
-            stepNumber+=1;
-            String ImageFileStep = StepEvidence.imagen.getPathFile(step);
-            File indexFile = new File(ImageFileStep);
-            String litPNGNewStep = "";
-            String PNGNewStep = "#";
-            if (indexFile.exists()) {
-                litPNGNewStep = "HardCopy";
-                PNGNewStep = getRelativePathEvidencia(step, StepEvidence.imagen);
-            }
+	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {
+		boolean timeout = false;
+		int stepNumber = 0;
+		for (StepTM step : testCase.getListStep()) {
+			stepNumber+=1;
 
-            String ErrorFileStep = StepEvidence.errorpage.getPathFile(step);
-            indexFile = new File(ErrorFileStep);
-            String linkErrorNew = "";
-            if (indexFile.exists()) {
-                linkErrorNew = " \\ <a href=\"" + getRelativePathEvidencia(step, StepEvidence.errorpage) + "\" target=\"_blank\">ErrorPage</a>";
-            }
+			String ImageFileStep = Imagen.getPathFile(step);
+			File indexFile = new File(ImageFileStep);
+			String linkHardcopy = "";
+			if (indexFile.exists()) {
+				linkHardcopy = 
+					"<a href=\"" + getRelativePathEvidencia(step, Imagen) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Imagen.getNameIcon() + "\" title=\"" + Imagen.getTagInfo() + "\"/>" +
+					"</a>";
+			}
+			
+			String HtmlFileStep = Html.getPathFile(step);
+			indexFile = new File(HtmlFileStep);
+			String linkHtml = "";
+			if (indexFile.exists()) {
+				linkHtml = 
+					"<a href=\"" + getRelativePathEvidencia(step, Html) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Html.getNameIcon() + "\" title=\"" + Html.getTagInfo() + "\"/>" +
+					"</a>";
+			}
 
-            String HARPFileStep = StepEvidence.harp.getPathFile(step);
-            indexFile = new File(HARPFileStep);
-            String linkHarpNew = "";
-            if (indexFile.exists()) {
-                String pathHARP = getDnsOfFileReport(
-                		indexFile.getAbsolutePath(), 
-                		inputParamsSuite.getWebAppDNS(), 
-                		inputParamsSuite.getTypeAccess()).replace('\\', '/');
-                linkHarpNew = " \\ <a href=\"" + ConstantesTM.URL_SOFTWAREISHARD + pathHARP + "\" target=\"_blank\">NetTraffic</a>";
-            }
-            
-            String HARFileStep = StepEvidence.har.getPathFile(step);
-            String linkHarNew = "";
-            indexFile = new File(HARFileStep);
-            if (indexFile.exists()) {
-                linkHarNew = " \\ <a href=\"" + getRelativePathEvidencia(step, StepEvidence.har) + "\" target=\"_blank\">NetJSON</a>";
-            }
+			String ErrorFileStep = ErrorPage.getPathFile(step);
+			indexFile = new File(ErrorFileStep);
+			String linkError = "";
+			if (indexFile.exists()) {
+				linkError = 
+					"<a href=\"" + getRelativePathEvidencia(step, ErrorPage) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + ErrorPage.getNameIcon() + "\" title=\"" + ErrorPage.getTagInfo() + "\"/>" +
+					"</a>";
+			}
 
-            String HtmlFileStep = StepEvidence.html.getPathFile(step);
-            indexFile = new File(HtmlFileStep);
-            String linkHtmlNew = "";
-            if (indexFile.exists()) {
-                linkHtmlNew = "<a href=\"" + getRelativePathEvidencia(step, StepEvidence.html) + "\">HTML Page</a>";
-            }
+			String HARPFileStep = Harp.getPathFile(step);
+			indexFile = new File(HARPFileStep);
+			String linkHarp = "";
+			if (indexFile.exists()) {
+				String pathHARP = getDnsOfFileReport(
+					indexFile.getAbsolutePath(), 
+					inputParamsSuite.getWebAppDNS(), 
+					inputParamsSuite.getTypeAccess()).replace('\\', '/');
+				
+				linkHarp = 
+					" \\ <a href=\"" + ConstantesTM.URL_SOFTWAREISHARD + pathHARP + "\" target=\"_blank\">" +
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Harp.getNameIcon() + "\" title=\"" + Harp.getTagInfo() + "\"/>" +
+					"</a>";
+			}
 
-            long diffInMillies = step.getHoraFin().getTime() - step.getHoraInicio().getTime();
-            String tdClassDate = "<td>";
-            if (diffInMillies > 30000) {
-                tdClassDate = "<td><font class=\"timeout\">";
-                timeout = true;
-            }
+			String HARFileStep = Har.getPathFile(step);
+			String linkHar = "";
+			indexFile = new File(HARFileStep);
+			if (indexFile.exists()) {
+				linkHar = " \\ <a href=\"" + getRelativePathEvidencia(step, Har) + "\" target=\"_blank\">NetJSON</a>";
+				
+				linkHar = 
+					" \\ <a href=\"" + getRelativePathEvidencia(step, Har) + "\" target=\"_blank\">" +
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Har.getNameIcon() + "\" title=\"" + Har.getTagInfo() + "\"/>" +
+					"</a>";
+			}
 
-            DateFormat format = DateFormat.getDateTimeInstance();
-            reportHtml+=
-                "<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
-                "     <td style=\"display:none;\"></td>\n" +
-                "     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
-                "     <td></td>" + 
-                "     <td>" + step.getNumChecksTM() + "</td>" + 
-                "     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
-                "     <td>" + diffInMillies + "</td>" + 
-                "     <td><a href=\"" + PNGNewStep + "\" target=\"_blank\">" + litPNGNewStep + "</a>" + linkErrorNew + linkHarpNew + linkHarNew + "</td>" + 
-                "     <td>" + linkHtmlNew + "</td>" +
-                "     <td>" + step.getDescripcion() + "</td>" + 
-                "     <td>" + step.getResExpected() + "</td>" +
-                tdClassDate + format.format(step.getHoraInicio()) + "</td>" + 
-                tdClassDate + format.format(step.getHoraFin()) + "</td>" +
-                "     <td>" + step.getNameClass() + " / " + step.getNameMethod() + "</td>" +
-                "</tr>\n";
+			long diffInMillies = step.getHoraFin().getTime() - step.getHoraInicio().getTime();
+			String tdClassDate = "<td>";
+			if (diffInMillies > 30000) {
+				tdClassDate = "<td><font class=\"timeout\">";
+				timeout = true;
+			}
 
-            pintaValidacionesStep(step);
-        }        
-        
-        return timeout;
-    }
+			DateFormat format = DateFormat.getDateTimeInstance();
+			reportHtml+=
+				"<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
+				"     <td style=\"display:none;\"></td>\n" +
+				"     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
+				"     <td></td>" + 
+				"     <td>" + step.getNumChecksTM() + "</td>" + 
+				"     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
+				"     <td>" + diffInMillies + "</td>" + 
+				"     <td class=\"nowrap\">" + linkHardcopy + linkHtml + linkError + linkHarp + linkHar + "</td>" + 
+				"     <td>" + step.getDescripcion() + "</td>" + 
+				"     <td>" + step.getResExpected() + "</td>" +
+				tdClassDate + format.format(step.getHoraInicio()) + "</td>" + 
+				tdClassDate + format.format(step.getHoraFin()) + "</td>" +
+				"     <td>" + step.getNameClass() + " / " + step.getNameMethod() + "</td>" +
+				"</tr>\n";
+
+			pintaValidacionesStep(step);
+		}
+
+		return timeout;
+	}
 
 	private String getRelativePathEvidencia(StepTM step, StepEvidence evidence) {
 		String fileName = evidence.getNameFileEvidence(step);
@@ -309,9 +323,8 @@ public class GenerateReports extends EmailableReporter {
 				"    <td><div class=\"result" + checksResult.getStateValidation() + "\">" + checksResult.getStateValidation() + "</div></td>" + 
 				"    <td></td>" + 
 				"    <td></td>" + 
-				"    <td></td>" + 
 				"    <td>" + descriptValid + "</td>" + 
-				"    <td></td>" +
+				"    <td></td>" + 
 				"    <td></td>" + 
 				"    <td></td>" +                        
 				"    <td>" + checksResult.getNameClass() + " / " + checksResult.getNameMethod() + "</td>" + 
@@ -319,14 +332,14 @@ public class GenerateReports extends EmailableReporter {
 		}
 	}
 
-    public void pintaCierreHTML() {
-    	reportHtml+=
-        	"</tbody>" + 
-            "</table><br />\n" +
-            "</body>\n" +
-            "</html>\n";
-    }    
-    
+	public void pintaCierreHTML() {
+		reportHtml+=
+			"</tbody>" + 
+			"</table><br />\n" +	
+			"</body>\n" +
+			"</html>\n";
+	}
+
     public void createFileReportHTML() {
         String fileReport = suite.getPathReportHtml();;
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileReport), "UTF8"))) {

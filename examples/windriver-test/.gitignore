@@ -9,3 +9,4 @@ target/*
 *.class
 .settings
 /output-library
+/pom.xml.versionsBackup

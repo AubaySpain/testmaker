@@ -96,14 +96,14 @@ public class EvidencesWarehouse {
 	
 	private EvidenceStorer evidenceStorerFactory(StepEvidence evidence) {
 		switch (evidence) {
-		case har:
+		case Har:
 			return new NettrafficStorer();
-		case imagen:
+		case Imagen:
 			return new HardcopyStorer();
-		case errorpage:
+		case ErrorPage:
 			TestRunTM testRun = step.getTestRunParent();
 			return testRun.getStorerErrorEvidence();
-		case html:
+		case Html:
 			return new HtmlStorer();
 		default:
 			return null;
