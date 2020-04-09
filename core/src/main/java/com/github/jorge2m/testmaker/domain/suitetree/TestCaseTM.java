@@ -14,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 
+import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
@@ -234,9 +235,17 @@ public class TestCaseTM  {
 						inputData.getBrowser(), 
 						inputData.getChannel(), 
 						testRunParent);
-		driver.manage().deleteAllCookies();
-		driver.get(inputData.getUrlBase());
+		initDriverContent(driver, inputData.getUrlBase());
 		return driver;
+	}
+	private void initDriverContent(WebDriver driver, String urlBase) {
+		try {
+			driver.manage().deleteAllCookies();
+			driver.get(urlBase);
+		} 
+		catch (Exception e) {
+			Log4jConfig.pLogger.warn("Problem initializing Driver content ", e.getMessage());
+		}
 	}
 	
 	public WebDriver getDriver() {

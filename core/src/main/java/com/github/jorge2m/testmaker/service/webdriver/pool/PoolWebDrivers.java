@@ -46,7 +46,7 @@ public class PoolWebDrivers {
         ManagementWebdriver managementWdrv = inputData.getTypeManageWebdriver();
         switch (managementWdrv) {
         case recycle:
-            driver.manage().deleteAllCookies();
+        	deleteAllCookies(driver);
             markWebDriverAsFreeInPool(driver);
             break;
         case discard:
@@ -60,6 +60,14 @@ public class PoolWebDrivers {
             	Log4jConfig.pLogger.error("Problem deleging WebDriver",  e);
             }
         }
+    }
+    private void deleteAllCookies(WebDriver driver) {
+		try {
+			driver.manage().deleteAllCookies();
+		} 
+		catch (Exception e) {
+			Log4jConfig.pLogger.warn("Problem deleting cookies for reciclye webdriver ", e.getMessage());
+		}
     }
 
 	private WebDriver createAndStoreNewWebDriver(String browser, Channel channel, TestRunTM testRun, String moreDataWdrv) {

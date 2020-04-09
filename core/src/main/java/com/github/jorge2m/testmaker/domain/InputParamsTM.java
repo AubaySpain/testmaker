@@ -178,7 +178,7 @@ public abstract class InputParamsTM {
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.URLNameParam)
-			.required(true)
+			.required(false)
 			.hasArg()
 			.pattern(ConstantesTM.URL_Pattern)
 			.desc("Initial URL of the application Web to test")
