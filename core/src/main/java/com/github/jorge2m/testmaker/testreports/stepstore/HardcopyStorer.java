@@ -17,7 +17,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 public class HardcopyStorer extends EvidenceStorer {
 	
 	public HardcopyStorer() {
-		super(StepEvidence.imagen);
+		super(StepEvidence.Imagen);
 	}
 	
 	@Override

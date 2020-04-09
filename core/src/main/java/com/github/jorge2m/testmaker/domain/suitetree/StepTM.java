@@ -255,14 +255,14 @@ public class StepTM {
 	}
 	public SaveWhen getWhenSave(StepEvidence evidencia) {
 		switch (evidencia) {
-		case html:
+		case Html:
 			return saveHtmlPage;
-		case errorpage:
+		case ErrorPage:
 			return saveErrorPage;
-		case har:
-		case harp:
+		case Har:
+		case Harp:
 			return saveNettraffic;
-		case imagen:
+		case Imagen:
 		default:
 			return saveImagePage;
 		}

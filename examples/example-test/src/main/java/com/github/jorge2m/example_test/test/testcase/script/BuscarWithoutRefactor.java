@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
@@ -98,7 +99,9 @@ public class BuscarWithoutRefactor implements Serializable {
 	
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
-		expected="Aparecen resultados de búsqueda")
+		expected="Aparecen resultados de búsqueda",
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public void searchInBing(String textToSearch, WebDriver driver) {
 		By byInputInicio = By.id("sb_form_q");
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
