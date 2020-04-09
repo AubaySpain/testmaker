@@ -10,7 +10,7 @@
 	<description>Framework for the construction of End To End Testcases based on Selenium WebDriver</description>
 	<url>http://github.com/jorge2m/testmaker</url>
 	
-	<licenses>
+	<licenses> 
 		<license>
 			<name>GPL-v3.0</name>
 			<url>http://github.com/jorge2m/testmaker/blob/master/LICENSE</url>
