@@ -7,10 +7,19 @@
 		<artifactId>examples</artifactId>
 		<version>1.3.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>example-test</artifactId>
-	<name>example-test</name>
+	<artifactId>winappdriver-test</artifactId>
+	<name>winappdriver-test</name>
 	<url>http://maven.apache.org</url>
+	
+	<dependencies>
+		<dependency>
+			<groupId>io.appium</groupId>
+			<artifactId>java-client</artifactId>
+			<version>7.3.0</version>
+		</dependency>
+	</dependencies>
 
+	<!-- 
 	<build>
 		<plugins>
 			<plugin>
@@ -37,5 +46,6 @@
 			</plugin>
 		</plugins>	
   </build>	
+  -->
 </project>
 

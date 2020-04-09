@@ -3,6 +3,7 @@ package com.github.jorge2m.testmaker.domain;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public abstract class SuiteMaker {
 	private final InputParamsTM inputData;
 	private final FilterTestsSuiteXML filterSuiteXML;
 
-	private Map<String,String> parameters;
+	private Map<String,String> parameters = new HashMap<>();
 	private SenderMailEndSuiteI senderMail = new DefaultMailEndSuite();
 
 	private List<TestRunMaker> listTestRuns = new ArrayList<>();
