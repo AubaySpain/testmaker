@@ -186,7 +186,7 @@ public class MyCreatorSuiteRun extends CreatorSuiteRun {
 }
 ```
 
-#SuiteSmokeTest.java
+### SuiteSmokeTest.java
 Class that must extend from SuiteMaker and that creates a specific TestSuite.
 ```java
 package org.github.jorge2m.test;
@@ -207,10 +207,15 @@ public class SuiteSmokeTest extends SuiteMaker {
 		super(iParams);
 		TestRunMaker testRun = TestRunMaker.from(
 				iParams.getSuiteName(), 
-				Arrays.asList(GoogleTests.class));
+				Arrays.asList(TestsGoogle.class));
 		
 		//Assignate the TestRun to the suite
 		addTestRun(testRun);
 	}
 }
 ```
+
+### TestsGoogle.java
+Finally in that class we implement the @Test that must be executed structured in @Step's and @Validation's. In that example there is only a @Test but there may be as many as necessary an can be filtered in the moment of the execution with the user-parameter 'tests'.
+
+
