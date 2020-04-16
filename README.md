@@ -177,6 +177,8 @@ public class MySuiteRunCreator extends CreatorSuiteRun {
 		case SmokeTest:
 			return (new SmokeTestSuite(inputParams)); 
 		default:
+			//That shouldn't happen because the access via CommandLine/RestApi validates 
+			//that the parameter 'suite' is a value of the Suites enum.
 			System.out.println("Suite Name not valid. Posible values: " + Arrays.asList(Suites.values()));
 			return null;
 		}
