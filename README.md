@@ -159,15 +159,15 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.SuiteMaker;
 import com.github.jorge2m.testmaker.domain.TestRunMaker;
 
-public class MySuiteRunCreator extends CreatorSuiteRun {
+public class MyCreatorSuiteRun extends CreatorSuiteRun {
 
 	//from CmdLineAccess
-	public MySuiteRunCreator(InputParamsBasic inputParams) throws Exception {
+	public MyCreatorSuiteRun(InputParamsBasic inputParams) throws Exception {
 		super(inputParams);
 	}
 	
 	//from RestApiAccess
-	public MySuiteRunCreator() throws Exception {
+	public MyCreatorSuiteRun() throws Exception {
 		super();
 	}
 	
@@ -175,7 +175,7 @@ public class MySuiteRunCreator extends CreatorSuiteRun {
 	public SuiteMaker getSuiteMaker() throws Exception {
 		switch ((Suites)inputParams.getSuite()) {
 		case SmokeTest:
-			return (new SmokeTestSuite(inputParams)); 
+			return (new SuiteSmokeTest(inputParams)); 
 		default:
 			//That shouldn't happen because the access via CommandLine/RestApi validates 
 			//that the parameter 'suite' is a value of the Suites enum.
@@ -184,4 +184,33 @@ public class MySuiteRunCreator extends CreatorSuiteRun {
 		}
 	}
 }
-``
+```
+
+#SuiteSmokeTest.java
+Class that must extend from SuiteMaker and that creates a specific TestSuite.
+```java
+package org.github.jorge2m.test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.testng.xml.XmlSuite.ParallelMode;
+
+import com.github.jorge2m.testmaker.domain.InputParamsTM;
+import com.github.jorge2m.testmaker.domain.SuiteMaker;
+import com.github.jorge2m.testmaker.domain.TestRunMaker;
+
+public class SuiteSmokeTest extends SuiteMaker {
+
+	//Creation of the TestRun indicating the name of the suite and the classes with the @Test's to execute.
+	public SuiteSmokeTest(InputParamsTM iParams) {
+		super(iParams);
+		TestRunMaker testRun = TestRunMaker.from(
+				iParams.getSuiteName(), 
+				Arrays.asList(GoogleTests.class));
+		
+		//Assignate the TestRun to the suite
+		addTestRun(testRun);
+	}
+}
+```
