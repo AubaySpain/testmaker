@@ -68,7 +68,7 @@ A possible pom.xml can be:
   </build>	
 </project>
 ```
-### CmdLineAccess
+### CmdLineAccess.java
 With that class we'll implement the user access via Command Line.
 
 ```java
@@ -97,10 +97,44 @@ public class CmdLineAccess {
 		//Checks the user input parameters
 		if (cmdLineAccess.checkOptionsValue().isOk()) {
 			
-			//Creates and executes the Suite of Test based in the user input parameters.
+			//Creates and executes the TestSuite based in the user input parameters.
 			CreatorSuiteRun creatorSuiteRun = MySuiteRunCreator.getNew(inputParams);
 			creatorSuiteRun.execTestSuite(false);
 		}
 	}
 }
-'''
+```
+### RestApiAccess.java
+If we want manage the execution of the tests via the TestMaker RestAPI we cand implement a class like this:
+
+```java
+package org.github.jorge2m.test;
+
+import org.github.jorge2m.test.CmdLineAccess.Apps;
+import org.github.jorge2m.test.CmdLineAccess.Suites;
+
+import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine;
+import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
+import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
+import com.github.jorge2m.testmaker.restcontroller.ServerRestTM;
+
+public class RestApiAccess {
+
+	public static void main(String[] args) throws Exception {
+		
+		//Parse and check of the input parameters for the Server-Rest-Api Start 
+		ResultCmdServer result = ServerCmdLine.parse(args);
+		if (result!=null && result.isOk()) {
+			
+			//Defines the creator of TestSuites
+			CreatorSuiteRun creatorSuiteRun = MySuiteRunCreator.getNew();
+			
+			//Start the server that exposes a Rest Api for the management of the tests (execution, consult, stop...)
+			ServerRestTM serverRest = new ServerRestTM.Builder(creatorSuiteRun, Suites.class, Apps.class)
+				.setWithParams(result)
+				.build();
+			serverRest.start();
+		}
+	}
+}
+```
