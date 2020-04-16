@@ -105,7 +105,7 @@ public class CmdLineAccess {
 }
 ```
 ### RestApiAccess.java
-If we want manage the execution of the tests via the TestMaker RestAPI we cand implement a class like this:
+If we also want manage the execution of the tests via the a RestAPI we can implement a class like this:
 
 ```java
 package org.github.jorge2m.test;
