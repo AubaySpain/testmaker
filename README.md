@@ -142,7 +142,7 @@ public class RestApiAccess {
 ```
 
 ### MySuiteRunCreator.java
-That class invoqued previously from CmdLineAccess and RestApiAccess.java must extend from CreatorSuiteRun and only has to override the metod getSuiteMaker() that returns a TestSuite in function of the 'suite' parameter:
+That class invoqued previously from CmdLineAccess and RestApiAccess.java must extend from CreatorSuiteRun and only has to override the metod getSuiteMaker() that returns a TestSuite in function of the 'suite' parameter introduced by the user:
 ```java
 
 package org.github.jorge2m.test;
