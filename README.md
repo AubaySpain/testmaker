@@ -9,7 +9,7 @@ Lets go build a new Maven Project that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use the many parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
-That project will include a pom.xml plus 4 Java Classes. 
+That project will include a pom.xml plus a few Java Classes, for simplicity I include all that clases in a same package.
 
 ### pom.xml
 The pom.xml has to include:
@@ -68,6 +68,7 @@ A possible pom.xml can be:
   </build>	
 </project>
 ```
+
 ### CmdLineAccess.java
 With that class we'll implement the user access via Command Line.
 
@@ -104,8 +105,9 @@ public class CmdLineAccess {
 	}
 }
 ```
-### RestApiAccess.java
-If we also want manage the execution of the tests via the a RestAPI we can implement a class like this:
+
+### RestApiAccess.java (optional)
+If we also want manage the execution of the tests via the a HttpRestAPI we must implement a class like this:
 
 ```java
 package org.github.jorge2m.test;
@@ -138,3 +140,46 @@ public class RestApiAccess {
 	}
 }
 ```
+
+### MySuiteRunCreator.java
+That class invoqued previously from CmdLineAccess and RestApiAccess.java must extend from CreatorSuiteRun and only has to override the metod getSuiteMaker() that returns a TestSuite in function of the 'suite' parameter:
+```java
+
+package org.github.jorge2m.test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.github.jorge2m.test.CmdLineAccess.Suites;
+import org.testng.xml.XmlSuite.ParallelMode;
+
+import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
+import com.github.jorge2m.testmaker.domain.InputParamsBasic;
+import com.github.jorge2m.testmaker.domain.InputParamsTM;
+import com.github.jorge2m.testmaker.domain.SuiteMaker;
+import com.github.jorge2m.testmaker.domain.TestRunMaker;
+
+public class MySuiteRunCreator extends CreatorSuiteRun {
+
+	//from CmdLineAccess
+	public MySuiteRunCreator(InputParamsBasic inputParams) throws Exception {
+		super(inputParams);
+	}
+	
+	//from RestApiAccess
+	public MySuiteRunCreator() throws Exception {
+		super();
+	}
+	
+	@Override
+	public SuiteMaker getSuiteMaker() throws Exception {
+		switch ((Suites)inputParams.getSuite()) {
+		case SmokeTest:
+			return (new SmokeTestSuite(inputParams)); 
+		default:
+			System.out.println("Suite Name not valid. Posible values: " + Arrays.asList(Suites.values()));
+			return null;
+		}
+	}
+}
+``
