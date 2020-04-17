@@ -5,13 +5,13 @@ Under construction...
 
 
 ## Basic Example
-Lets go build a new Maven Project that will:
+Lets go build a new Maven Project based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
 That project will include a pom.xml plus a few Java Classes, for simplicity I include all that clases in a same package.
 
-### pom.xml
+#### pom.xml
 The pom.xml has to include:
 - The dependency to the testmaker artifact
 - The artifact maven-compiler-plugin with a Java Version >= 1.8
@@ -282,4 +282,4 @@ public class TestsGoogle {
 	}
 }
 ```
-
+### Execution
