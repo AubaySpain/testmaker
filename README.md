@@ -289,7 +289,7 @@ Execute a "maven clean compile" and then you are ready for execute the automatic
 In the case of access via Command Line you must run the main class CmdLineAccess. Yo can use different parameters for configure execution, here I leave several possibilities:
 #### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com
 Executes the TestCase BUS001 in desktop mode against Chrome.
-### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com
+#### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com
 Executes 4 times the TestCase BUS001 in desktop mode against Chrome executing 2 browsers/testcases in parallell.
-### -suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com
+#### -suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com
 Executes 4 times the TestCase BUS001 in desktop mode against Firefox executing 2 browsers in parallel. The TestsCases reuse the browsers yet started then the speed is increased.
