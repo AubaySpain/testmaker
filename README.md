@@ -4,11 +4,12 @@ Under construction...
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
 
 
-## Basic Example
+# Basic Example
 Lets go build a new Maven Project based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
+## Components to build
 That project will include a pom.xml plus a few Java Classes, for simplicity I include all that clases in a same package.
 
 #### pom.xml
@@ -282,4 +283,13 @@ public class TestsGoogle {
 	}
 }
 ```
-### Execution
+## Execution
+Execute a "maven clean compile" and then you are ready for execute the automatic test via Command Line or Rest API. 
+
+In the case of access via Command Line you must run the main class CmdLineAccess. Yo can use different parameters for configure execution, here I leave several possibilities:
+#### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com
+Executes the TestCase BUS001 in desktop mode against Chrome.
+### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com
+Executes 4 times the TestCase BUS001 in desktop mode against Chrome executing 2 browsers/testcases in parallell.
+### -suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com
+Executes 4 times the TestCase BUS001 in desktop mode against Firefox executing 2 browsers in parallel. The TestsCases reuse the browsers yet started then the speed is increased.
