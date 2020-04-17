@@ -130,7 +130,7 @@ public class CmdLineAccess {
 }
 ```
 
-### RestApiAccess.java (optional)
+### RestApiAccess.java
 If we also want manage the execution of the tests via the a HttpRestAPI we must implement a class like this:
 
 ```java
