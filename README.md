@@ -19,53 +19,77 @@ The pom.xml has to include:
 
 A possible pom.xml can be:
 ```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.jorge2m</groupId>
-  <artifactId>hello-world-example</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-	
-  <dependencies>
-    <dependency>
-      <groupId>com.github.jorge2m</groupId>
-      <artifactId>testmaker-core</artifactId>
-      <version>1.3.2</version>
-    </dependency>
-  </dependencies>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>examples</artifactId>
+	<groupId>com.github.jorge2m</groupId>
+	<version>1.3.3</version>
+	<packaging>pom</packaging>
+	<name>examples</name>
+	<url>http://maven.apache.org</url>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>  
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<modules>
+		<module>example-test</module>
+		<module>windriver-test</module>
+	</modules>
 		
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.11</version>
-        <configuration>
-          <weaveDependencies>
-            <weaveDependency> 
-              <groupId>com.github.jorge2m</groupId>
-              <artifactId>testmaker-core</artifactId>
-            </weaveDependency>
-          </weaveDependencies>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>	
-  </build>	
+	<dependencies>
+		<dependency>
+			<groupId>com.github.jorge2m</groupId>
+			<artifactId>testmaker-core</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<!-- Seguramente si lo ejecuto sin testmaker se quejará de que no encuentra el aspectj en .m2 -->
+			<!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=562209 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.11</version>
+				<configuration>
+					<complianceLevel>1.8</complianceLevel>
+					<source>1.8</source>
+					<target>1.8</target>
+					<showWeaveInfo>false</showWeaveInfo>
+					<verbose>true</verbose>
+					<Xlint>ignore</Xlint>
+					<encoding>UTF-8 </encoding>
+					<weaveDependencies>
+						<weaveDependency> 
+							<groupId>com.github.jorge2m</groupId>
+							<artifactId>testmaker-core</artifactId>
+						</weaveDependency>
+					</weaveDependencies>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>  
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>
 ```
 
