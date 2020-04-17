@@ -292,11 +292,18 @@ Execute a "maven clean compile" and then you are ready for execute the automatic
 
 ### Execution via Command Line.
 run the main class **CmdLineAccess**. Yo can use different parameters for configure execution, here I leave several possibilities:
-#### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com
-Executes the TestCase BUS001 in desktop mode against Chrome.
-#### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com
-Executes 4 times the TestCase BUS001 in desktop mode against Chrome executing 2 browsers/testcases in parallell.
-#### -suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com
-Idem that anterior execution but against Firefox and reusing the browsers then increasing speed of execution.
+
++ Execution TestCase BUS001 in desktop mode against Chrome
+
+> `-suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com`
+
++ 4 times execution TestCase BUS001 in desktop mode against Chrome paralellizing 2 browsers/testcases
+
+> `-suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com`
+
++ Idem to previous execution but against Firefox and reusing the browsers then increasing speed of execution
+
+> `-suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com`
+
 
 Then a *ReportTSuite.html* with the results of the execution will appear in the directory *output-library/SmokeTest/[timestamp]*
