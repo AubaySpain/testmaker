@@ -1,0 +1,48 @@
+.body { margin:2px; }
+div#divShow {float:right;font: 9pt Arial; padding: 15px 8px 0px 0px;}
+div.divTestNG {float:right;font: 9pt Arial; padding: 15px 15px 0px 0px;}
+a#linkShow {color:#05f105;}
+a.linkTestNG {color:blue;}
+#subTitleReport {font-size:1.30em; color: #ff8832; float:left;}
+#col1 {width:2%;}
+br.clear {clear:left;}
+.collapsed { display: none !important; }
+.tablemain {width: 100%; font: normal 8pt Arial; margin: -8px 0px 0px 0px; background-color:#000000;border-collapse: collapse; border: solid 3px #000000; text-align: left; float:left;}
+.tablemain th.head {text-align:center; font: bold 10pt Arial;border:solid 1px; background-color:#04B486; color:white;}
+.tablemain div#titleReport {font-size:1.30em; float:left;}
+.tablemain tr#header2 {background-color:#088A68; color:white;}
+.tablemain th {font: bold 9pt Arial; padding: 10px 4px 10px 4px; border: solid 1px;}
+.tablemain span#browser {margin-left:10px; color:#FFBF00;}
+.tablemain a#urlLink {margin-left:10px; color:#00FFFF; text-decoration:none;}
+.tablemain th.size15 {width:15%;}
+.tablemain th.size20 {width:20%;}
+.tablemain td {margin-left:3px;border:solid 1px;}
+.tablemain div#device {color:#7401DF;}
+
+#treet2 {background-color:#91ff91; border:solid 1px;}
+#treet2 td div.resultNOK {font-size:12px; color:red; font-weight:bold;}
+#treet2 td div.resultDefect {font-size:12px; color:crimson; font-weight:bold;}
+#treet2 td div.resultWarn {font-size:12px; color:#8000ff;}
+#treet2 td div.resultINFO {font-size:12px; color:darkblue;}
+#treet2 td div.resultOK {font-size:12px; color:blue;}
+#treet2 td div.resultSKIP {font-size:12px; color:darkGrey;}
+#treet2 td div.diffsSi {color:red;}
+#treet2 td div.diffsNo {}
+#treet2 tr.testrun {font: normal 8pt Arial; background-color:#11f411; border:solid 1px;}
+#treet2 tr.method {font: normal 8pt Arial; background-color:#91ff91; border:solid 1px;}
+#treet2 tr.step {font: normal 8pt Arial; background-color:#d5ffd5; border:solid 1px;}
+#treet2 font.timeout {color:darkOrange;}
+#treet2 tr.validation {font: normal 8pt Arial; background-color:#f3fff3; border:solid 1px;}
+#treet2 tr td.row {color: #00c100; font: normal 8pt Arial; border-color:#000000;}
+#treet2 td {padding: 0px 5px 0px 5px; cursor: pointer; border:solid 1px;}
+#treet2 td.nowrap {white-space:nowrap;}
+#treet2 tr.testrun td.nowrap, #treet2 tr.method td.nowrap {white-space:nowrap; font: bold 8pt Arial;}
+
+.adeimg, .ttimage, .parimg, .preimg { border: none; margin-right: 2px; padding: 0px; vertical-align: top;}
+.adeimg, .parimg {cursor: pointer;}
+.even { background-color: #ddd;}
+
+.overTestrun, .overMethod, .overStep, .overValidation {background-color: #40e040; border:solid 1px;}
+.overTestrun td.nowrap, .overMethod td.nowrap {white-space:nowrap; font: bold 8pt Arial;}
+
+a.link-sort-table {color:#00FFFF;}

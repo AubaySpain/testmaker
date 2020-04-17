@@ -1,0 +1,292 @@
+(function(jq){
+  jq.fn.jqTreeTable=function(map, options){
+    var opts = jq.extend({openImg:"",shutImg:"",leafImg:"",lastOpenImg:"",lastShutImg:"",lastLeafImg:"",vertLineImg:"",blankImg:"",collapse:false,column:0,striped:false,highlight:false,state:true},options),
+    mapa=[],mapb=[],tid=this.attr("id"),collarr=[],
+	  stripe=function(){
+      //if(opts.striped){
+  		  //$("#"+tid+" tr:visible").filter(":even").addClass("even").end().filter(":odd").removeClass("even");
+      //}
+	  },
+    buildText = function(parno, preStr){//Recursively build up the text for the images that make it work
+      var mp=mapa[parno], ro=0, pre="", pref, img;
+      for (var y=0,yl=mp.length;y<yl;y++){
+        ro = mp[y];
+        if (mapa[ro]){//It's a parent as well. Build it's string and move on to it's children
+          pre=(y==yl-1)? opts.blankImg: opts.vertLineImg;
+          img=(y==yl-1)? opts.lastOpenImg: opts.openImg;
+          mapb[ro-1] = preStr + '<img src="'+img+'" class="parimg" id="'+tid+ro+'">';
+          pref = preStr + '<img src="'+pre+'" class="preimg">';
+          arguments.callee(ro, pref);
+        }else{//it's a child
+          img = (y==yl-1)? opts.lastLeafImg: opts.leafImg;//It's the last child, It's child will have a blank field behind it
+          mapb[ro-1] = preStr + '<img src="'+img+'" class="ttimage" id="'+tid+ro+'">';
+        }
+      }
+    },
+    expandKids = function(num, last){//Expands immediate children, and their uncollapsed children
+      jq("#"+tid+num).attr("src", (last)? opts.lastOpenImg: opts.openImg);//
+      for (var x=0, xl=mapa[num].length;x<xl;x++){
+        var mnx = mapa[num][x];
+        jq("#"+tid+mnx).parents("tr").removeClass("collapsed");
+  			if (mapa[mnx] && opts.state && jq.inArray(mnx, collarr)<0){////If it is a parent and its number is not in the collapsed array
+          arguments.callee(mnx,(x==xl-1));//Expand it. More intuitive way of displaying the tree
+        }
+      }
+    },
+    collapseKids = function(num, last){//Recursively collapses all children and their children and change icon
+      jq("#"+tid+num).attr("src", (last)? opts.lastShutImg: opts.shutImg);
+      for (var x=0, xl=mapa[num].length;x<xl;x++){
+        var mnx = mapa[num][x];
+        jq("#"+tid+mnx).parents("tr").addClass("collapsed");
+        if (mapa[mnx]){//If it is a parent
+          arguments.callee(mnx,(x==xl-1));
+        }
+      }
+    },
+  	creset = function(num, exp){//Resets the collapse array
+  		var o = (exp)? collarr.splice(jq.inArray(num, collarr), 1): collarr.push(num);
+      cset(tid,collarr);
+  	},
+  	cget = function(n){
+	  	var v='',c=' '+document.cookie+';',s=c.indexOf(' '+n+'=');
+	  	//JORGE'S MODIFICATION - INI
+	  	if (document.cookie==(n+'=')) s=-1;
+	  	//JORGE'S MODIFICATION - FIN
+	    if (s>=0) {
+	    	s+=n.length+2; //c=" treet1=;"
+	      v=(c.substring(s,c.indexOf(';',s))).split("|");
+	    }
+	    return v||0;
+  	},
+    cset = function (n,v) {
+  		jq.unique(v);
+	  	document.cookie = n+"="+v.join("|")+";";
+	  };
+    for (var x=0,xl=map.length; x<xl;x++){//From map of parents, get map of kids
+      num = map[x];
+      if (!mapa[num]){
+        mapa[num]=[];
+      }
+      mapa[num].push(x+1);
+    }
+    buildText(0,"");
+    jq("tr", this).each(function(i){//Inject the images into the column to make it work
+      jq(this).children("td").eq(opts.column).prepend(mapb[i]);
+      //jq(this).children("td").eq(4).prepend("["+((mapa[i+1])? mapa[i+1]: "Child")+"]");//REMOVE THIS for production
+    });
+		collarr = cget(tid)||opts.collapse||collarr;
+		if (collarr.length){
+			cset(tid,collarr);
+	    for (var y=0,yl=collarr.length;y<yl;y++){
+	      collapseKids(collarr[y],($("#"+collarr[y]+ " .parimg").attr("src")==opts.lastOpenImg));
+	    }
+		}
+    stripe();
+    jq(".parimg", this).each(function(i){
+      var jqt = jq(this),last;
+      jqt.click(function(){
+        var num = parseInt(jqt.attr("id").substr(tid.length));//Number of the row
+        if (jqt.parents("tr").next().is(".collapsed")){//If the table row directly below is collapsed
+          expandKids(num, (jqt.attr("src")==opts.lastShutImg));//Then expand all children not in collarr
+					if(opts.state){creset(num,true);}//If state is set, store in cookie
+        }else{//Collapse all and set image to opts.shutImg or opts.lastShutImg on parents
+          collapseKids(num, (jqt.attr("src")==opts.lastOpenImg));
+					if(opts.state){creset(num,false);}//If state is set, store in cookie
+        }
+        stripe();//Restripe the rows
+      });
+    });
+    if (opts.highlight){//This is where it highlights the rows
+      jq("tr", this).hover(
+      	//JORGE'S MODIFICATION - INI
+        function(){
+        	var classToDelete=jq(this).attr("class");
+         	jq(this).removeClass(classToDelete);
+         	if (classToDelete=="method1") classToAdd="overMethod1";
+         	if (classToDelete=="method2") classToAdd="overMethod2";
+         	if (classToDelete=="method3") classToAdd="overMethod3";
+         	if (classToDelete=="step1") classToAdd="overStep1";
+         	if (classToDelete=="step2") classToAdd="overStep2";
+         	if (classToDelete=="step3") classToAdd="overStep3";
+         	if (classToDelete=="validation1") classToAdd="overValidation1";
+         	if (classToDelete=="validation2") classToAdd="overValidation2";
+         	if (classToDelete=="validation3") classToAdd="overValidation3";
+        	jq(this).addClass(classToAdd);
+        },
+        function(){
+        	var classToDelete=jq(this).attr("class");
+         	jq(this).removeClass(classToDelete);
+         	if (classToDelete=="overMethod1") classToAdd="method1";
+         	if (classToDelete=="overMethod2") classToAdd="method2";
+         	if (classToDelete=="overMethod3") classToAdd="method3";
+         	if (classToDelete=="overStep1") classToAdd="step1";
+         	if (classToDelete=="overStep2") classToAdd="step2";
+         	if (classToDelete=="overStep3") classToAdd="step3";
+         	if (classToDelete=="overValidation1") classToAdd="validation1";
+         	if (classToDelete=="overValidation2") classToAdd="validation2";
+         	if (classToDelete=="overValidation3") classToAdd="validation3";
+        	jq(this).addClass(classToAdd);
+        }
+        //JORGE'S MODIFICATION - FIN
+      );
+    };
+  };
+  return this;
+})(jQuery);
+
+//JORGE'S MODIFICATION - INI
+
+  var sBrowser; 
+  var sVersion; 
+ 
+  function setBrowserType(){ 
+    var aBrowFull = new Array("opera", "msie", "netscape", "gecko", "mozilla"); 
+    var aBrowVers = new Array("opera", "msie", "netscape", "rv",    "mozilla"   ); 
+    var aBrowAbrv = new Array("op",    "ie",   "ns",       "mo",    "ns"   ); 
+    var sInfo = navigator.userAgent.toLowerCase();; 
+ 
+    sBrowser = ""; 
+    for (var i = 0; i < aBrowFull.length; i++){ 
+     if ((sBrowser == "") && (sInfo.indexOf(aBrowFull[i]) != -1)){ 
+      sBrowser = aBrowAbrv[i]; 
+      sVersion = String(parseFloat(sInfo.substr(sInfo.indexOf(aBrowVers[i]) + aBrowVers[i].length + 1))); 
+     } 
+    } 
+  } 
+
+  function getBrowserName(){ 
+    return sBrowser; 
+  } 
+ 
+  function getBrowserVersion(){ 
+    return sVersion; 
+  } 
+  
+  var sTableOrigin;
+  function setSizeTable() { 
+    sTableOrigin = (document.getElementById('tableMain').scrollWidth);
+  } 
+
+  function show_hide_column(id_table, classToModify, do_show) {
+
+    var stl; 
+    var str;
+    var classStep;
+    var factorIncrease=1;
+    
+    if (do_show) {
+    	if (getBrowserName()=='ie') {
+    		stl = 'block';
+    		str = 'block';
+    	}
+    	else {
+    		stl = 'table-cell';
+    		str = 'table-row';
+    	}
+    	sta = 'none';
+    	nextCompare = false;
+    	factorIncrease = 1.25;
+    }
+    else {
+    	stl = 'none';
+    	str = 'none';
+    	sta = 'block';
+    	nextCompare = true;
+    	factorIncrease = 1.00;
+    }
+
+    var subTitle = document.getElementById('subTitleReport');
+	  if (subTitle!=null) 
+    	subTitle.style.display=stl;
+    	
+    var tbl  = document.getElementById(id_table);
+
+    var rows = tbl.getElementsByTagName('tr');
+    for (var row=0; row<rows.length; row++) {
+      var cels = rows[row].getElementsByTagName('th')
+      for (var cel=0; cel<cels.length; cel++) {
+      	if (cels[cel].className=='compare' || cels[cel].className=='rowHead' || cels[cel].className=='rowOld' || cels[cel].className=='rowNew' || cels[cel].className=='rowCom') 
+      		cels[cel].style.display=stl;
+      }
+    }
+   
+    var rows = tbl.getElementsByTagName('tr');
+    for (var row=0; row<rows.length; row++) {
+    	if (rows[row].className=='method2' || rows[row].className=='step2' || rows[row].className=='validation2') {
+     		rows[row].style.display=str;
+    	}
+      var cels = rows[row].getElementsByTagName('td')
+      for (var cel=0; cel<cels.length; cel++) {
+      	if (cels[cel].className=='compare' || cels[cel].className=='rowHead' || cels[cel].className=='rowOld' || cels[cel].className=='rowNew' || cels[cel].className=='rowCom') 
+      		cels[cel].style.display=stl;
+      }
+    }
+    
+    document.getElementById('compare').href = "javascript:show_hide_column('tableMain','compare',"+nextCompare+");";
+    
+    if (!do_show) {
+    	document.getElementById('compare').innerHTML='Compare Report';
+    	document.getElementById('compare').style.color='#ff9842';
+    	document.getElementById('compare').style.backgroundImage='url(../../../static/images/compare_report.gif)';
+    }
+    else {
+    	document.getElementById('compare').innerHTML='Single Report';
+    	document.getElementById('compare').style.color='#05f105';
+    	document.getElementById('compare').style.backgroundImage='url(../../../static/images/single_report.gif)';
+    }
+    	
+    document.getElementById('comparedSuite').style.display=sta;	
+    document.getElementById(id_table).width=Math.round(sTableOrigin*factorIncrease);
+ 
+  }
+  
+  function show_hide_all(id_table, do_show) {
+
+    var tbl  = document.getElementById(id_table);
+    var rows = tbl.getElementsByTagName('tr');
+    var imagesRow = null;
+    var imgOpen = "../../../static/images/fopen.gif";
+    var imgShut = "../../../static/images/fshut.gif";
+    
+    for (var row=0; row<rows.length; row++) {
+    	
+    	if (rows[row].className=='method1' || rows[row].className=='method2' || rows[row].className=='method3') {
+    		imagesRow = rows[row].getElementsByTagName('img');
+    		for (var img=0; img<imagesRow.length; img++) 
+    			if (imagesRow[img].className=='parimg') {
+    				if (doShow) imagesRow[img].src=imgOpen;
+    				else imagesRow[img].src=imgShut;
+    			}
+    		}	
+    	
+    	if (rows[row].className=='step1 collapsed' || rows[row].className=='step2 collapsed' || rows[row].className=='step3 collapsed')
+    		if (do_show) {
+    		  rows[row].className=rows[row].className.replace(' collapsed', '');
+    		  imagesRow = rows[row].getElementsByTagName('img');
+    		  for (var img=0; img<imagesRow.length; img++) 
+    		  	if (imagesRow[img].className=='parimg') imagesRow[img].src=imgOpen;
+    		}
+    		
+    	if (rows[row].className=='step1' || rows[row].className=='step2' || rows[row].className=='step3')
+    		if (!do_show) {
+    			rows[row].className=rows[row].className+' collapsed';
+    			imagesRow = rows[row].getElementsByTagName('img');
+    		  for (var img=0; img<imagesRow.length; img++) 
+    		  	if (imagesRow[img].className=='parimg') imagesRow[img].src=imgShut;
+    		}
+    		
+    	if (rows[row].className=='validation1 collapsed' || rows[row].className=='validation2 collapsed' || rows[row].className=='validation3 collapsed')
+    		if (do_show) 
+    		  rows[row].className=rows[row].className.replace(' collapsed', '');
+    	if (rows[row].className=='validation1' || rows[row].className=='validation2' || rows[row].className=='validation3')
+    		if (!do_show)
+    			rows[row].className=rows[row].className+' collapsed';
+    }
+    
+    if (do_show) 
+    	document.getElementById('divShow').innerHTML = '<A id=linkShow href="javascript:show_hide_all(\'tableMain\',false);">Hide All</A>';
+  	else 
+  		document.getElementById('divShow').innerHTML = '<A id=linkShow href="javascript:show_hide_all(\'tableMain\',true);">Show All</A>';
+	}  
+//JORGE'S MODIFICATION - FIN 
+
