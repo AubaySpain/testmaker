@@ -262,7 +262,9 @@ public class TestsGoogle {
 	
 	@Step (
 		description="Input the text <b>#{textToSearch}</b> and click button \"Search with Google\"",
-		expected="At leas one entry with the text #{textToSearch} appears")
+		expected="At leas one entry with the text #{textToSearch} appears",
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
 		//Input Text to Search
 		By byInputSearch = By.xpath("//input[@name='q']");
@@ -283,13 +285,18 @@ public class TestsGoogle {
 	}
 }
 ```
-## Execution
-Execute a "maven clean compile" and then you are ready for execute the automatic test via Command Line or Rest API. 
 
-In the case of access via Command Line you must run the main class CmdLineAccess. Yo can use different parameters for configure execution, here I leave several possibilities:
+
+## Execution
+Execute a "maven clean compile" and then you are ready for execute the automatic test.
+
+### Execution via Command Line.
+run the main class **CmdLineAccess**. Yo can use different parameters for configure execution, here I leave several possibilities:
 #### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com
 Executes the TestCase BUS001 in desktop mode against Chrome.
 #### -suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com
 Executes 4 times the TestCase BUS001 in desktop mode against Chrome executing 2 browsers/testcases in parallell.
 #### -suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com
-Executes 4 times the TestCase BUS001 in desktop mode against Firefox executing 2 browsers in parallel. The TestsCases reuse the browsers yet started then the speed is increased.
+Idem that anterior execution but against Firefox and reusing the browsers then increasing speed of execution.
+
+Then a *ReportTSuite.html* with the results of the execution will appear in the directory *output-library/SmokeTest/[timestamp]*
