@@ -59,7 +59,7 @@ public void searchInGoogle(String textToSearch, WebDriver driver) {
 ## Get detailed report about the execution
 
 Report that shows in detail all the Steps and Validations executed in each TestCase, including links to each Step-Evidence and classifying the result in many levels: `NOK`, `Defect`, `Warn`, `Info` and `OK`.
-![](https://github.com/Jorge2M/testmaker/blob/master/doc_images/ResultExample.png?raw=true)
+![](https://github.com/Jorge2M/testmaker/blob/master/images_doc/ResultExample.png?raw=true)
 
 
 ## Parallelize
@@ -417,4 +417,4 @@ The execution will return a response that includes an attribute '*idExecSuite*' 
 
 ### Result Report
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
-![](https://github.com/Jorge2M/testmaker/blob/master/doc_images/ResultHelloWorld.png?raw=true)
+![](https://github.com/Jorge2M/testmaker/blob/master/images_doc/ResultHelloWorld.png?raw=true)
