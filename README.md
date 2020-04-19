@@ -1,21 +1,87 @@
 Under construction... 
 
+# Test Maker
 [![Maven](https://img.shields.io/maven-central/v/com.github.jorge2m/testmaker.svg?label=Maven%20Central)](https://search.maven.org/#search|ga|1|com.github.jorge2m.testmaker)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
 
+A Java artifact that serves as a framework for the development of e2e tests based on WebDriver allowing its structuring in TestsCases / Steps / Validations and automatically providing additional functionalities such as evidence capture, generation of detailed reports, exposition of execution from command line and rest api, parallelization, distributed execution in many machines and more.
+
+## Structure your tests
+
+Easily structure your Test Cases with the **@Test**, **@Step** and **@Validation** annotations. 
+```java
+@Test (
+	groups={"Canal:desktop_App:google"},
+	description="Type \"Hello World!\" and Check the result")
+public void BUS001_GoogleSearchHelloWorld() {
+	WebDriver driver = TestCaseTM.getDriverTestCase();
+	searchInGoogle("Hello World!", driver);
+}
+	
+@Step (
+	description="Input the text #{textToSearch} and click button Search with Google",
+	expected="At leas one entry with the text #{textToSearch} appears")
+public void searchInGoogle(String textToSearch, WebDriver driver) {
+	//Input Text to Search
+	By byInputSearch = By.xpath("//input[@name='q']");
+	driver.findElement(byInputSearch).sendKeys(textToSearch);
+		
+	//Click Search Button
+	By buttonSearchBy = By.xpath("//input[@class='gNO89b']");
+	click(buttonSearchBy, driver).exec();
+	checkSearch(textToSearch, 2, driver);
+}
+
+@Validation (
+	description="Appears at least an entry that contains the text #{textSearched}",
+	level=State.Defect)
+public boolean checkSearch(String textSearched, int maxWait, WebDriver driver) {
+	By entryWithTextBy = By.xpath("//h3[text()[contains(.,'" + textSearched + "')]]");
+	return state(Visible, entryWithTextBy, driver).wait(maxWait).check();
+}
+```
+
+## Capture evidences
+
+Automatic capture page hardcopy when a problem is detected or configure each @Step for capture each type of evidence (Image, Html and Nettraffic) as needed.
+```java
+@Step (
+	description="Input the text #{textToSearch} and click button \"Search with Google\"",
+	expected="At leas one entry with the text #{textToSearch} appears",
+	saveImagePage=SaveWhen.Always,
+	saveHtmlPage=SaveWhen.IfProblem,
+	saveNettraffic=SaveWhen.Always)
+public void searchInGoogle(String textToSearch, WebDriver driver) {
+```
 
 
 
+## Get detailed report about the execution
+
+Report that shows in detail all the Steps and Validations executed in each TestCase, including links to each Step-Evidence and classifying the result in many levels: `NOK`, `Defect`, `Warn`, `Info` and `OK`.
+![](https://github.com/Jorge2M/testmaker/blob/master/doc_images/ResultExample.png?raw=true)
 
 
+## Parallelize
 
-# Main features in Basic Example
+## Expose execution Command Line
+## Expose execution API REST
+
+## Run it distributed in many machines
+
+## And more...
+- Link with Browser Stack
+- Google Test ABs management
+- Reciclation of WebDrivers
+- @Factory
+
+# Getting Started
 
 Lets go build a new Maven Project based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
-**Note**. this example is available cloning the git repository  https://github.com/Jorge2M/testmaker.git, the project in question named '*hello-world-example*' Is located in the folder */examples*. Further, inside that project you can view a example of a execution-result browsing the file */output-library/SmokeTest/200417_173529760/ReportTSuite.html*  
+**Note**. this example is available cloning the git repository  https://github.com/Jorge2M/testmaker.git, the project in question named '*hello-world-example*' Is located in the folder */examples*. Further, inside that project you can view a example of a execution-result browsing the file */output-library/SmokeTest/200419_123930335/ReportTSuite.html*  
 
 
 ## Components to build
@@ -28,7 +94,7 @@ The pom.xml has to include:
 - The artifact TestMaker is based in AspectJ technology, then we need to include the aspectj-maven-plugin for weave the aspects from TestMaker.
 
 A possible pom.xml can be:
-```xml
+​```xml
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -43,7 +109,7 @@ A possible pom.xml can be:
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	
 	<modules>
 		<module>example-test</module>
 		<module>windriver-test</module>
@@ -88,7 +154,7 @@ A possible pom.xml can be:
 					</execution>
 				</executions>
 			</plugin>
-
+	
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>  
@@ -99,14 +165,14 @@ A possible pom.xml can be:
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
 ```
 
 ### CmdLineAccess.java
 That class implements the user access via Command Line.
 
-```java
+​```java
 package org.github.jorge2m.test;
 
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
@@ -350,5 +416,5 @@ Then you must invoke the POST resource '*suiterun*' with body parameters similar
 The execution will return a response that includes an attribute '*idExecSuite*' with the identificator of the test in timestamp format. You can find the HTML result in the same directory that in the case of the execution via command line or you can visualize it calling to the resource of the API Rest: http://localhost:8888/suiterun/[idExecSuite]/report (for example, http://localhost:80/suiterun/200418_192217511/report). If you run that URL form a browser you'll obtain the HTML report.
 
 ### Result Report
-In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of a typlical execution:
-![](https://github.com/Jorge2M/testmaker/blob/master/examples/hello-world-example/ResultExample.png?raw=true)
+In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
+![](https://github.com/Jorge2M/testmaker/blob/master/doc_images/ResultHelloWorld.png?raw=true)

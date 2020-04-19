@@ -20,10 +20,7 @@ public class TestsGoogle {
 		groups={"Canal:desktop_App:google"},
 		description="Type \"Hello World!\" and Check the result")
 	public void BUS001_CheckGoogleMoreResults() {
-		//Get the WebDriver associated to the @Test with a initial URL defined in the 'url' user-parameter
 		WebDriver driver = TestCaseTM.getDriverTestCase();
-		
-		//Execution of a Step/Validation
 		searchInGoogle("Hello World!", driver);
 	}
 	
@@ -31,7 +28,7 @@ public class TestsGoogle {
 		description="Input the text <b>#{textToSearch}</b> and click button \"Search with Google\"",
 		expected="At leas one entry with the text #{textToSearch} appears",
 		saveImagePage=SaveWhen.Always,
-		saveHtmlPage=SaveWhen.Always)
+		saveHtmlPage=SaveWhen.IfProblem)
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
 		//Input Text to Search
 		By byInputSearch = By.xpath("//input[@name='q']");
@@ -44,9 +41,7 @@ public class TestsGoogle {
 	}
 	
 	@Validation (
-		description=
-			"Appears at least an entry that contains the text #{textSearched}<br>" +
-			"(waiting for it up to #{maxWait} seconds)",
+		description="Appears at least an entry that contains the text #{textSearched}",
 		level=State.Defect)
 	public boolean checkTextSearched(String textSearched, int maxWait, WebDriver driver) {
 		By entryWithTextBy = By.xpath("//h3[text()[contains(.,'" + textSearched + "')]]");
