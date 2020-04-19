@@ -4,13 +4,16 @@ Under construction...
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
 
 
-# Basic Example
+# Main features in Basic Example
 Lets go build a new Maven Project based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
+**Note**. this example is available cloning the git repository  https://github.com/Jorge2M/testmaker.git, the project in question named '*hello-world-example*' Is located in the folder */examples*. Further, inside that project you can view a example of a execution-result browsing the file */output-library/SmokeTest/200417_173529760/ReportTSuite.html*  
+
+
 ## Components to build
-That project will include a pom.xml plus a few Java Classes, for simplicity I include all that clases in a same package.
+That project will include a pom.xml in addition to a few Java Classes, for simplicity I include all that clases in a same package.
 
 #### pom.xml
 The pom.xml has to include:
@@ -95,7 +98,7 @@ A possible pom.xml can be:
 ```
 
 ### CmdLineAccess.java
-With that class we'll implement the user access via Command Line.
+That class implements the user access via Command Line.
 
 ```java
 package org.github.jorge2m.test;
@@ -228,6 +231,9 @@ public class SuiteSmokeTest extends SuiteMaker {
 	}
 }
 ```
+**Tip** by default 3 is the number ot tests in parallell that TestMaker will execute for each suite but yo can modify it in two ways.
+1. In the present class using the method setThreadCount(int threadCount) of the parent class
+2. Using the user parameter 'threads', for example -threads 5 for the access via command line. This method takes precedence over point one.
 
 ### TestsGoogle.java
 Finally in that class we implement the @Test that must be executed structured in @Step's and @Validation's. In that example there is only a @Test but there may be as many as necessary an can be filtered in the moment of the execution with the user-parameter 'tests'.
@@ -285,13 +291,18 @@ public class TestsGoogle {
 	}
 }
 ```
+**Note** the label "*Canal:desktop_App:google*" in the attribute '*groups*' of the *@Test* is used for label the channel and application to witch belongs the test. That is useful to be able of filter the tests to execute via the user parameters '*channel*' and '*application*' respectively. If you want that a @Test not to be filtered, you must use a label of type "*Canal:all_App:all*"
+
+**Tip.** In the text associated to the attribute '*description*' of the *@Step* and *@Validation* annotations you can print any parameter from the method associated throught tye syntax #{nameParameter}. Yo also can get a innermost value using #{nameParameter.getX()} or #{nameParameter.getX().getY()}
+
+**Note.** By default TestMaker gets a Hardcopy of the browser-page associated with a @Step only when a problem happens (tipically a @Validation fails). In the example we use the method saveImagePage=SaveWhen.Always to force the capture of the page in all cases, including the Ok one.
 
 
 ## Execution
-Execute a "maven clean compile" and then you are ready for execute the automatic test.
+Build the project via a "*maven clean install*" and then you are ready for execute the automatic test.
 
 ### Execution via Command Line.
-run the main class **CmdLineAccess**. Yo can use different parameters for configure execution, here I leave several possibilities:
+Run the class **CmdLineAccess**. Yo can use different parameters for configure execution, here I leave several possibilities:
 
 + Execution TestCase BUS001 in desktop mode against Chrome
 
@@ -305,5 +316,32 @@ run the main class **CmdLineAccess**. Yo can use different parameters for config
 
 > `-suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com`
 
+Then a *ReportTSuite.html* with the results of the execution will appear in the directory  */output-library/SmokeTest/idTestTimestamp* inside the project.
 
-Then a *ReportTSuite.html* with the results of the execution will appear in the directory *output-library/SmokeTest/[timestamp]*
+**Note** TestMaker uses default versions for the webdriver of Chrome (*ChromeDriver*) and Firefox (*GeckoDriver*). But perhaps that versions of the drivers doesn't support the version of chrome/firefox installed in your machine so the execution will fail. In this case you will have to locate the correct version number of the driver (you don't have to download anyting, only get the version number) in the oficial pages for *ChromeDriver* (https://sites.google.com/a/chromium.org/chromedriver/downloads) and *GeckoDriver* (https://github.com/mozilla/geckodriver/releases)  and enter it as a new parameter '*driverVersion*'. For example:
+
+> -suite SmokeTest -browser chrome -driverVersion 83.0.4103.14 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+> -suite SmokeTest -browser firefox -driverVersion 0.26.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+
+### Execution via Http Rest API
+Run the class **RestApiAccess** with the parameter -port 80 (if you what to expose a secure port use the parameter -secureport). If the server starts correctly you'll see the message:
+> Started Jetty Server!
+> HttpPort: 80
+
+Then you must invoke the POST resource '*suiterun*' with body parameters similar to those defined in the access via command line, only with the diference that you must add the parameter store=true for persist the resource asociated to the suiterun. For example, call to http://localhost:80/suiterun/ using the body parameters:
+
+| parameter                    | value            |
+|:-----------------------------|:----------------------------|
+| suite                  | SmokeTest |
+| browser | chrome |
+| channel | desktop |
+| application    | google |
+| tcases          | BUS001{4-2} |
+| url                | https://www.google.com |
+| store | true |
+(Adding the parameter *driverVersion* if necessary)
+
+The execution will return a response that includes an attribute '*idExecSuite*' with the identificator of the test in timestamp format. You can find the HTML result in the same directory that in the case of the execution via command line or you can visualize it calling to the resource of the API Rest: http://localhost:8888/suiterun/[idExecSuite]/report (for example, http://localhost:80/suiterun/200418_192217511/report). If you run that URL form a browser you'll obtain the HTML report.
+
+### Result Report
+In both executions the 
