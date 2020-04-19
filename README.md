@@ -4,7 +4,13 @@ Under construction...
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
 
 
+
+
+
+
+
 # Main features in Basic Example
+
 Lets go build a new Maven Project based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
@@ -29,7 +35,7 @@ A possible pom.xml can be:
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>examples</artifactId>
 	<groupId>com.github.jorge2m</groupId>
-	<version>1.3.3</version>
+	<version>1.3.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>examples</name>
 	<url>http://maven.apache.org</url>
@@ -47,7 +53,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.3</version>
+			<version>1.3.4-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	
@@ -344,4 +350,5 @@ Then you must invoke the POST resource '*suiterun*' with body parameters similar
 The execution will return a response that includes an attribute '*idExecSuite*' with the identificator of the test in timestamp format. You can find the HTML result in the same directory that in the case of the execution via command line or you can visualize it calling to the resource of the API Rest: http://localhost:8888/suiterun/[idExecSuite]/report (for example, http://localhost:80/suiterun/200418_192217511/report). If you run that URL form a browser you'll obtain the HTML report.
 
 ### Result Report
-In both executions the 
+In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of a typlical execution:
+![](https://github.com/Jorge2M/testmaker/blob/master/examples/hello-world-example/ResultExample.png?raw=true)

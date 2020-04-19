@@ -1,0 +1,59 @@
+<html>
+<head>
+<meta charset="utf-8">
+       <title>JQTreeTable</title>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>       <script type="text/javascript" src="../../static/js/ReportLibrary.js"></script>
+<script type="text/javascript">
+$(function(){//I       AS + nitialise the treetable
+  var map2=[0, 1, 2, 3, 1, 5, 6, 1, 8, 9, 1, 11, 12];
+  var options1 = {openImg: "../../static/images/tv-collapsable.gif", shutImg: "../../static/images/tv-expandable.gif", leafImg: "../../static/images/tv-item.gif", lastOpenImg: "../../static/images/tv-collapsable-last.gif", lastShutImg: "../../static/images/tv-expandable-last.gif", lastLeafImg: "../../static/images/tv-item-last.gif", vertLineImg: "../../static/images/vertline.gif", blankImg: "../../static/images/blank.gif", collapse: false, column: 1, striped: true, highlight: true, state:true};
+  $("#treet2").jqTreeTable(map2, {openImg: "../../static/images/fopen.gif", shutImg: "../../static/images/fshut.gif", leafImg: "../../static/images/new.gif", lastOpenImg: "../../static/images/fopen.gif", lastShutImg: "../../static/images/fshut.gif", lastLeafImg: "../../static/images/new.gif", vertLineImg: "../../static/images/blank.gif", blankImg: "../../static/images/blank.gif", collapse: false, column: 1, striped: true, highlight: true, state:false});
+});
+var outputReports = '../..';</script>
+       <link href="../../static/css/Report.css" rel="stylesheet" type="text/css">
+</head>
+<body class="body" onload="setBrowserType();setSizeTable();">
+<div id="divShow">
+   <a href="javascript:show_hide_all('tableMain',true, outputReports);" id="linkShow">Show All</a>
+</div>
+<div class="divTestNG">  <a href="emailable-report.html" target="_blank" class="linkTestNG">Emailable Report</a></div>
+<div class="divTestNG">  <a href="robottest.log" target="_blank" class="linkTestNG">robottest.log</a></div><br>
+<br>
+<table id="tableMain" class="tablemain"><thead>
+  <tr id="header1">
+    <th colspan="13" class="head">      <div id="titleReport">SmokeTest - google, desktop (Id: 200419_123930335)        <span id="descrVersion">V1</span>        <span id="browser">firefox</span>        <span id="url"><a id="urlLink" href="https://www.google.com">https://www.google.com</a></span>      </div>    </th>
+  </tr>
+  <tr id="header2">    <th style="display:none;"></th>
+    <th rowspan="2">Methods Sort: <a href="#" class="link-sort-table asc">A-Z</a> <a href="#" class="link-sort-table desc">Z-A</a> <a href="#" onclick="location.reload()" class="link-sort-table reset">Reset</a></th>    <th rowspan="2">Sons</th>    <th rowspan="2">Result</th>    <th rowspan="2">Time</th>    <th rowspan="2">Evidences</th>    <th class="size20" rowspan="2">Description / Action / Validation</th>    <th class="size15" rowspan="2">Result expected</th>    <th rowspan="2">Init</th>    <th rowspan="2">End</th>    <th rowspan="2">Class / Method</th>  </tr>
+  <tr></tr>
+   </thead>
+<tbody id="treet2">
+<tr class="testrun">  <td style="display:none;"></td>
+  <td class="nowrap">SmokeTest-V1-google-desktop-firefox</td>  <td>4</td>  <td><div class="resultOk">Ok</div></td>  <td>17714.0</td>               <td></td>  <td></td>  <td></td>  <td>19-abr-2020 12:39:31</td>  <td>19-abr-2020 12:39:48</td>  <td></td></tr>
+<tr class="method" met="0">  <td style="display:none;"></td>
+  <td class="nowrap">BUS001_CheckGoogleMoreResults</td>  <td>1</td>  <td><div class="resultOk">Ok</div></td>  <td>7333.0</td>  <td><br><br></td>  <td colspan=2>Type "Hello World!" and Check the result</td>  <td><font>19-abr-2020 12:39:31</td>  <td><font>19-abr-2020 12:39:38</td>  <td>org.github.jorge2m.test.TestsGoogle</td></tr>
+<tr class="step collapsed" met="0">     <td style="display:none;"></td>
+     <td class="nowrap">Step 1</td>     <td>1</td>     <td><div class="resultOk">Ok</div></td>     <td>1419</td>     <td class="nowrap"><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults/Step-1.png" target="_blank"><img width="22" src="../../static/images/icon-hardcopy.png" title="Page Hardcopy"/></a><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults/Step-1.html" target="_blank"><img width="22" src="../../static/images/icon-html.png" title="Page Html"/></a></td>     <td>Input the text <b>Hello World!</b> and click button "Search with Google"</td>     <td>At leas one entry with the text Hello World! appears</td><td>19-abr-2020 12:39:37</td><td>19-abr-2020 12:39:38</td>     <td>TestsGoogle / searchInGoogle</td></tr>
+<tr class="validation collapsed" met="0">    <td style="display:none;"></td>
+    <td class="nowrap">Validation 1</td>    <td></td>    <td><div class="resultOk">Ok</div></td>    <td></td>    <td></td>    <td><validac style="color:green">Appears at least an entry that contains the text Hello World!<br>(waiting for it up to 2 seconds)</validac></td>    <td></td>    <td></td>    <td></td>    <td>TestsGoogle / checkTextSearched</td></tr>
+<tr class="method" met="1">  <td style="display:none;"></td>
+  <td class="nowrap">BUS001_CheckGoogleMoreResults (2)</td>  <td>1</td>  <td><div class="resultOk">Ok</div></td>  <td>8876.0</td>  <td><br><br></td>  <td colspan=2>Type "Hello World!" and Check the result</td>  <td><font>19-abr-2020 12:39:31</td>  <td><font>19-abr-2020 12:39:39</td>  <td>org.github.jorge2m.test.TestsGoogle</td></tr>
+<tr class="step collapsed" met="1">     <td style="display:none;"></td>
+     <td class="nowrap">Step 1</td>     <td>1</td>     <td><div class="resultOk">Ok</div></td>     <td>1441</td>     <td class="nowrap"><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (2)/Step-1.png" target="_blank"><img width="22" src="../../static/images/icon-hardcopy.png" title="Page Hardcopy"/></a><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (2)/Step-1.html" target="_blank"><img width="22" src="../../static/images/icon-html.png" title="Page Html"/></a></td>     <td>Input the text <b>Hello World!</b> and click button "Search with Google"</td>     <td>At leas one entry with the text Hello World! appears</td><td>19-abr-2020 12:39:38</td><td>19-abr-2020 12:39:39</td>     <td>TestsGoogle / searchInGoogle</td></tr>
+<tr class="validation collapsed" met="1">    <td style="display:none;"></td>
+    <td class="nowrap">Validation 1</td>    <td></td>    <td><div class="resultOk">Ok</div></td>    <td></td>    <td></td>    <td><validac style="color:green">Appears at least an entry that contains the text Hello World!<br>(waiting for it up to 2 seconds)</validac></td>    <td></td>    <td></td>    <td></td>    <td>TestsGoogle / checkTextSearched</td></tr>
+<tr class="method" met="2">  <td style="display:none;"></td>
+  <td class="nowrap">BUS001_CheckGoogleMoreResults (3)</td>  <td>1</td>  <td><div class="resultOk">Ok</div></td>  <td>6274.0</td>  <td><br><br></td>  <td colspan=2>Type "Hello World!" and Check the result</td>  <td><font>19-abr-2020 12:39:39</td>  <td><font>19-abr-2020 12:39:45</td>  <td>org.github.jorge2m.test.TestsGoogle</td></tr>
+<tr class="step collapsed" met="2">     <td style="display:none;"></td>
+     <td class="nowrap">Step 1</td>     <td>1</td>     <td><div class="resultOk">Ok</div></td>     <td>1322</td>     <td class="nowrap"><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (3)/Step-1.png" target="_blank"><img width="22" src="../../static/images/icon-hardcopy.png" title="Page Hardcopy"/></a><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (3)/Step-1.html" target="_blank"><img width="22" src="../../static/images/icon-html.png" title="Page Html"/></a></td>     <td>Input the text <b>Hello World!</b> and click button "Search with Google"</td>     <td>At leas one entry with the text Hello World! appears</td><td>19-abr-2020 12:39:44</td><td>19-abr-2020 12:39:45</td>     <td>TestsGoogle / searchInGoogle</td></tr>
+<tr class="validation collapsed" met="2">    <td style="display:none;"></td>
+    <td class="nowrap">Validation 1</td>    <td></td>    <td><div class="resultOk">Ok</div></td>    <td></td>    <td></td>    <td><validac style="color:green">Appears at least an entry that contains the text Hello World!<br>(waiting for it up to 2 seconds)</validac></td>    <td></td>    <td></td>    <td></td>    <td>TestsGoogle / checkTextSearched</td></tr>
+<tr class="method" met="3">  <td style="display:none;"></td>
+  <td class="nowrap">BUS001_CheckGoogleMoreResults (4)</td>  <td>1</td>  <td><div class="resultOk">Ok</div></td>  <td>6649.0</td>  <td><br><br></td>  <td colspan=2>Type "Hello World!" and Check the result</td>  <td><font>19-abr-2020 12:39:41</td>  <td><font>19-abr-2020 12:39:47</td>  <td>org.github.jorge2m.test.TestsGoogle</td></tr>
+<tr class="step collapsed" met="3">     <td style="display:none;"></td>
+     <td class="nowrap">Step 1</td>     <td>1</td>     <td><div class="resultOk">Ok</div></td>     <td>1284</td>     <td class="nowrap"><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (4)/Step-1.png" target="_blank"><img width="22" src="../../static/images/icon-hardcopy.png" title="Page Hardcopy"/></a><a href="./SmokeTest-V1-google-desktop-firefox/BUS001_CheckGoogleMoreResults (4)/Step-1.html" target="_blank"><img width="22" src="../../static/images/icon-html.png" title="Page Html"/></a></td>     <td>Input the text <b>Hello World!</b> and click button "Search with Google"</td>     <td>At leas one entry with the text Hello World! appears</td><td>19-abr-2020 12:39:46</td><td>19-abr-2020 12:39:47</td>     <td>TestsGoogle / searchInGoogle</td></tr>
+<tr class="validation collapsed" met="3">    <td style="display:none;"></td>
+    <td class="nowrap">Validation 1</td>    <td></td>    <td><div class="resultOk">Ok</div></td>    <td></td>    <td></td>    <td><validac style="color:green">Appears at least an entry that contains the text Hello World!<br>(waiting for it up to 2 seconds)</validac></td>    <td></td>    <td></td>    <td></td>    <td>TestsGoogle / checkTextSearched</td></tr>
+</tbody></table><br />
+</body>
+</html>

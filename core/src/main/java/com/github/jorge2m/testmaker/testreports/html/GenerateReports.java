@@ -93,7 +93,6 @@ public class GenerateReports extends EmailableReporter {
             "  <tr id=\"header2\">" + 
             "    <th style=\"display:none;\"></th>\n" + 
             "    <th rowspan=\"2\">Methods Sort: <a href=\"#\" class=\"link-sort-table asc\">A-Z</a> <a href=\"#\" class=\"link-sort-table desc\">Z-A</a> <a href=\"#\" onclick=\"location.reload()\" class=\"link-sort-table reset\">Reset</a></th>" + 
-            "    <th rowspan=\"2\">Data</th>" + 
             "    <th rowspan=\"2\">Sons</th>" + 
             "    <th rowspan=\"2\">Result</th>" + 
             "    <th rowspan=\"2\">Time</th>" + 
@@ -161,11 +160,14 @@ public class GenerateReports extends EmailableReporter {
 		reportHtml+="<tbody id=\"treet2\">\n";
 		for (TestRunBean testRun : suite.getListTestRun()) {
 			DateFormat format = DateFormat.getDateTimeInstance();
+			String deviceInfo = "";
+			if ("".compareTo(testRun.getDevice())!=0) {
+				deviceInfo = " [" + testRun.getDevice() + "]";
+			}
 			reportHtml+= 
 				"<tr class=\"testrun\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
-				"  <td class=\"nowrap\">" + testRun.getName() + "</td>" + 
-				"  <td class=\"nowrap\"><div id=\"device\">" + testRun.getDevice() + "</div></td>" + 
+				"  <td class=\"nowrap\">" + testRun.getName() + deviceInfo + "</td>" + 
 				"  <td>" + testRun.getNumberTestCases() + "</td>" + 
 				"  <td><div class=\"result" + testRun.getResult() + "\">" + testRun.getResult() + "</div></td>" + 
 				"  <td>" + testRun.getDurationMillis() + "</td>" + "               <td></td>" + 
@@ -190,7 +192,6 @@ public class GenerateReports extends EmailableReporter {
 				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
 				"  <td class=\"nowrap\">" + testCase.getNameUnique() + "</td>" + 
-				"  <td class=\"nowrap\"></td>" + 
 				"  <td>" + testCase.getNumberSteps() + "</td>" + 
 				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
 				"  <td>" + testCase.getDurationMillis() + "</td>" + 
@@ -285,7 +286,6 @@ public class GenerateReports extends EmailableReporter {
 				"<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"     <td style=\"display:none;\"></td>\n" +
 				"     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
-				"     <td></td>" + 
 				"     <td>" + step.getNumChecksTM() + "</td>" + 
 				"     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
 				"     <td>" + diffInMillies + "</td>" + 
@@ -318,7 +318,6 @@ public class GenerateReports extends EmailableReporter {
 				"<tr class=\"validation collapsed\"" + " met=\"" + step.getTestCaseParent().getIndexInTestRun() + "\">" +
 				"    <td style=\"display:none;\"></td>\n" + 
 				"    <td class=\"nowrap\">Validation " + checksResult.getPositionInStep() + "</td>" + 
-				"    <td></td>" + 
 				"    <td></td>" + 
 				"    <td><div class=\"result" + checksResult.getStateValidation() + "\">" + checksResult.getStateValidation() + "</div></td>" + 
 				"    <td></td>" + 

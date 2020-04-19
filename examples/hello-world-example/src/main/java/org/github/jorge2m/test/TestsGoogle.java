@@ -40,14 +40,16 @@ public class TestsGoogle {
 		//Click Search Button
 		By buttonSearchBy = By.xpath("//input[@class='gNO89b']");
 		click(buttonSearchBy, driver).exec();
-		checkTextSearched(textToSearch, driver);
+		checkTextSearched(textToSearch, 2, driver);
 	}
 	
 	@Validation (
-		description="Appears at least an entry that contains the text #{textSearched}",
+		description=
+			"Appears at least an entry that contains the text #{textSearched}<br>" +
+			"(waiting for it up to #{maxWait} seconds)",
 		level=State.Defect)
-	public boolean checkTextSearched(String textSearched, WebDriver driver) {
+	public boolean checkTextSearched(String textSearched, int maxWait, WebDriver driver) {
 		By entryWithTextBy = By.xpath("//h3[text()[contains(.,'" + textSearched + "')]]");
-		return state(Visible, entryWithTextBy, driver).check();
+		return state(Visible, entryWithTextBy, driver).wait(maxWait).check();
 	}
 }
