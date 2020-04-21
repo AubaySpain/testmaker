@@ -1,10 +1,12 @@
 Under construction... 
 
-# Test Maker
-[![Maven](https://img.shields.io/maven-central/v/com.github.jorge2m/testmaker.svg?label=Maven%20Central)](https://search.maven.org/#search|ga|1|com.github.jorge2m.testmaker)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
+# TestMaker
+[![Maven](https://img.shields.io/maven-central/v/com.github.jorge2m/testmaker.svg?label=Maven%20Central)](https://search.maven.org/#search|ga|1|com.github.jorge2m.testmaker) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Jorge2M/testmaker/blob/master/LICENSE)
 
-A Java artifact that serves as a framework for the development of e2e tests based on WebDriver allowing its structuring in TestsCases / Steps / Validations and automatically providing additional functionalities such as evidence capture, generation of detailed reports, exposition of execution from command line and rest api, parallelization, distributed execution in many machines and more.
+A Java artifact that serves as a framework for the development of e2e tests based on WebDriver allowing its *structuring* in TestsCases / Steps / Validations and automatically providing additional functionalities such as *evidence capture*, generation of *detailed reports*, exposition of execution from *command line* and *API REST*, *parallelization*, *distributed execution* in many machines and more.
+
+![](/images_doc/MinimumSchema.png?raw=true)
+
 
 ## Structure your tests
 
@@ -59,21 +61,71 @@ public void searchInGoogle(String textToSearch, WebDriver driver) {
 ## Get detailed report about the execution
 
 Report that shows in detail all the Steps and Validations executed in each TestCase, including links to each Step-Evidence and classifying the result in many levels: `NOK`, `Defect`, `Warn`, `Info` and `OK`.
-![](https://github.com/Jorge2M/testmaker/blob/master/images_doc/ResultExample.png?raw=true)
+![](/images_doc/ResultExample.png?raw=true)
+
+## Expose execution from Command Line
+
+Allows you to launch a new Test Suite execution from Command Line and the use of parameters for configure that execution: select the *suite* to execute, *driver* to use, *channel*, list of *testcases*, initial *url* and many more.
+
+`-suite SmokeTest -driver chrome -channel desktop -application google -tcases BUS002,BUS001{4-2} -url https://www.google.com`
+
+**Note** in that case the content of the `tcases` parameter indicates the execution of the two TestCases identificated by codes `BUS002` and `BUS001` but it will execute the `BUS001` 4 times parallelizing it in 2 diferent chrome browsers.   
+
+## Expose API REST for manage Test Suite execution
+
+Manage the execution of the Test Suites using the many services exposed by the TestMaker API REST that includes:
+
++ Execution of new parametrized Test Suite.
++ Consult Test Suite executed
++ Get Report HTML of Test Suite executed
++ Stop Test Suite in execution
++ Add/Remove TestMaker slaves installed in other machines
+
+... and more.
 
 
 ## Parallelize
 
-## Expose execution Command Line
-## Expose execution API REST
+Parallelize the execution of your TestCases using the parameter `threads`for indicate the max number of tests in parallel. 
+
+TestMaker will launch the tests on the machine it is running on, if the resources of that machine at the CPU/memory level are not enough for support that number of drivers/browser in parallel, there is the possibility of easily connecting other machines as where TestMaker is also running as a slaves.
+
 
 ## Run it distributed in many machines
 
+After built your proyect based on TestMaker you'll have the possibility to start it as a Server with that we will expose an API REST from wich you can execute your TestSuites or connect Server-TestMaker-slaves.
+
+For example, if you have your project based on TestMaker packaged in `myTestsUnderTM.jar` and distributed in three diferent machines,  you can start your project as a server-TestMaker and connect those of the machines 2 and 3 to the server of the machine 1 as follows.
+
+`machine-1 > java -jar myTestsUnderTM.jar -port 80 `
+
+`machine-2 > java -jar myTestsUnderTM.jar -port 80 -urlhub http://ip-machine-1:80  `
+
+`machine-3 > java -jar myTestsUnderTM.jar -port 80 -urlhub http://ip-machine-1:80  `
+
+Then, you can use the API REST exposed in the machine-1 for execute a TestSuite against this server-1 that will automatically take the rol of hub and distribute remotely each of the TestCases in the TestMaker-Servers running in the machines 2 and 3. When the TestSuite Run finishes all the results will be ubicated in the machine-1 as if all tests had been run on that machine.
+
+![](/images_doc/RemoteDistribution.png?raw=true)
+
 ## And more...
-- Link with Browser Stack
-- Google Test ABs management
-- Reciclation of WebDrivers
-- @Factory
+
+#### Reuse of WebDriver / Browsers
+
+By default *TestMaker* creates a new *WebDriver* for each TestCase, this means that the WebDriver start/stop time is added to the total test time, in the case of Firefox or Chrome this time is usually between 4 or 5 seconds. Further, starting a browser consumes very CPU with what affects performance of the machine that hosts TestMaker and can reduce the maximum number of parallel TestCases that can be run on that machine.
+
+TestMaker has an execution mode in wich it stores the WebDriver/Browsers already started for reuse them in the new TestCases that are created, this increases the speed of the tests and improves the performance of the host machine. 
+
+To activate this mode, simply add the parameter `-reciclewd true` to the execution of a new TestSuite.
+
+#### Google Test A/Bs management
+
+Tests A/Bs that randomize the aspect of your GUI in the search for the variant most suitable for real users can be a real headcache for an automatic TestCase that uses that GUI. Imagine that you have a Test AB that randomly shows 3 visual variants of a HTML Page with a 33% probability for each one, then an Automatic Test than only supports one variant will fail 66% of the times it runs.
+
+One solution is to modify the Test to indentify and support all three variants of the page. Sometimes this may be feasible but other times the costs of implementing and maintaining these adaptations can be really high.
+
+TestMaker brings a solution for those Test AB's backed by **Google Experiments** and **Google Optimize** giving the option of establish a certain variant of each Test AB in each execution of an Automatic Test. For this you only need to create an object with the TestAB data and pass it to TestMaker along with the variant that you want to active.
+
+#### Integración con BrowserStack
 
 # Getting Started
 
@@ -378,22 +430,22 @@ Run the class **CmdLineAccess**. Yo can use different parameters for configure e
 
 + Execution TestCase BUS001 in desktop mode against Chrome
 
-> `-suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com`
+> `-suite SmokeTest -driver chrome -channel desktop -application google -tcases BUS001 -url https://www.google.com`
 
 + 4 times execution TestCase BUS001 in desktop mode against Chrome paralellizing 2 browsers/testcases
 
-> `-suite SmokeTest -browser chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com`
+> 
 
 + Idem to previous execution but against Firefox and reusing the browsers then increasing speed of execution
 
-> `-suite SmokeTest -browser firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com`
+> `-suite SmokeTest -driver firefox -channel desktop -application google -tcases BUS001{4-2} -reciclewd true -url https://www.google.com`
 
 Then a *ReportTSuite.html* with the results of the execution will appear in the directory  */output-library/SmokeTest/idTestTimestamp* inside the project.
 
 **Note** TestMaker uses default versions for the webdriver of Chrome (*ChromeDriver*) and Firefox (*GeckoDriver*). But perhaps that versions of the drivers doesn't support the version of chrome/firefox installed in your machine so the execution will fail. In this case you will have to locate the correct version number of the driver (you don't have to download anyting, only get the version number) in the oficial pages for *ChromeDriver* (https://sites.google.com/a/chromium.org/chromedriver/downloads) and *GeckoDriver* (https://github.com/mozilla/geckodriver/releases)  and enter it as a new parameter '*driverVersion*'. For example:
 
-> -suite SmokeTest -browser chrome -driverVersion 83.0.4103.14 -channel desktop -application google -tcases BUS001 -url https://www.google.com
-> -suite SmokeTest -browser firefox -driverVersion 0.26.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+> -suite SmokeTest -driver chrome -driverVersion 83.0.4103.14 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+> -suite SmokeTest -driver firefox -driverVersion 0.26.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
 
 ### Execution via Http Rest API
 Run the class **RestApiAccess** with the parameter -port 80 (if you what to expose a secure port use the parameter -secureport). If the server starts correctly you'll see the message:
@@ -405,7 +457,7 @@ Then you must invoke the POST resource '*suiterun*' with body parameters similar
 | parameter                    | value            |
 |:-----------------------------|:----------------------------|
 | suite                  | SmokeTest |
-| browser | chrome |
+| driver | chrome |
 | channel | desktop |
 | application    | google |
 | tcases          | BUS001{4-2} |
@@ -417,4 +469,4 @@ The execution will return a response that includes an attribute '*idExecSuite*' 
 
 ### Result Report
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
-![](https://github.com/Jorge2M/testmaker/blob/master/images_doc/ResultHelloWorld.png?raw=true)
+![](/images_doc/ResultHelloWorld.png?raw=true)

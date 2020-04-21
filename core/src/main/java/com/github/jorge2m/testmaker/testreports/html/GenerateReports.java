@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -85,7 +86,7 @@ public class GenerateReports extends EmailableReporter {
             "    <th colspan=\"13\" class=\"head\">" + 
             "      <div id=\"titleReport\">" + suite.getName() + " - " + suite.getApp() + ", " + suite.getChannel() + " (Id: " + suite.getIdExecSuite() + ")" +
             "        <span id=\"descrVersion\">" + suite.getVersion() + "</span>" +
-            "        <span id=\"browser\">" + suite.getBrowser() + "</span>" + 
+            "        <span id=\"browser\">" + suite.getDriver() + "</span>" + 
             "        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>" + 
             "      </div>" + 
             "    </th>\n" + 
@@ -187,7 +188,7 @@ public class GenerateReports extends EmailableReporter {
 		String TagTimeout = "@TIMEOUTSTEP";
 		for (int i=0; i<listTestCases.size(); i++) {
 			TestCaseBean testCase = listTestCases.get(i);
-			DateFormat format = DateFormat.getDateTimeInstance();
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 			reportHtml+= 
 				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
@@ -281,7 +282,7 @@ public class GenerateReports extends EmailableReporter {
 				timeout = true;
 			}
 
-			DateFormat format = DateFormat.getDateTimeInstance();
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 			reportHtml+=
 				"<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"     <td style=\"display:none;\"></td>\n" +

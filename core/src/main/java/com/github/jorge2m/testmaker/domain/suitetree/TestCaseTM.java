@@ -232,7 +232,7 @@ public class TestCaseTM  {
 		WebDriver driver = suiteParent
 				.getPoolWebDrivers()
 				.getWebDriver(
-						inputData.getBrowser(), 
+						inputData.getDriver(), 
 						inputData.getChannel(), 
 						testRunParent);
 		initDriverContent(driver, inputData.getUrlBase());

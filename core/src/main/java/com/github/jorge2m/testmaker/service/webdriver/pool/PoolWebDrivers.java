@@ -24,53 +24,53 @@ import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
  */
 
 public class PoolWebDrivers {
-    
-    private final List<StoredWebDrv> poolWebDrivers = new CopyOnWriteArrayList<>();
-    
-    public WebDriver getWebDriver(String browser, Channel channel, TestRunTM testRun) {
-        String moreDataWdrv = getMoreDataWdrv(browser, testRun);
-        WebDriver driver = getFreeWebDriverFromPool(browser, moreDataWdrv);
-        if (driver != null) {
-            return driver;
-        }
-        return createAndStoreNewWebDriver(browser, channel, testRun, moreDataWdrv);
-    }   
-    
-    public void quitWebDriver(WebDriver driver, TestRunTM testRun) {
-    	InputParamsTM inputData = testRun.getSuiteParent().getInputParams();
-        boolean netAnalysis = inputData.isNetAnalysis();
-    	if (netAnalysis) {
-        	NettrafficStorer.stopNetTrafficThread();
-    	}
-        
-        ManagementWebdriver managementWdrv = inputData.getTypeManageWebdriver();
-        switch (managementWdrv) {
-        case recycle:
-        	deleteAllCookies(driver);
-            markWebDriverAsFreeInPool(driver);
-            break;
-        case discard:
-            removeWebDriverFromPool(driver);
-            try {
-                if (driver!=null) {
-                    driver.quit();
-                }
-            }
-            catch (Exception e) {
-            	Log4jConfig.pLogger.error("Problem deleging WebDriver",  e);
-            }
-        }
-    }
-    private void deleteAllCookies(WebDriver driver) {
+
+	private final List<StoredWebDrv> poolWebDrivers = new CopyOnWriteArrayList<>();
+
+	public WebDriver getWebDriver(String driverId, Channel channel, TestRunTM testRun) {
+		String moreDataWdrv = getMoreDataWdrv(driverId, testRun);
+		WebDriver driver = getFreeWebDriverFromPool(driverId, moreDataWdrv);
+		if (driver != null) {
+			return driver;
+		}
+		return createAndStoreNewWebDriver(driverId, channel, testRun, moreDataWdrv);
+	}
+
+	public void quitWebDriver(WebDriver driver, TestRunTM testRun) {
+		InputParamsTM inputData = testRun.getSuiteParent().getInputParams();
+		boolean netAnalysis = inputData.isNetAnalysis();
+		if (netAnalysis) {
+			NettrafficStorer.stopNetTrafficThread();
+		}
+
+		ManagementWebdriver managementWdrv = inputData.getTypeManageWebdriver();
+		switch (managementWdrv) {
+		case recycle:
+			deleteAllCookies(driver);
+			markWebDriverAsFreeInPool(driver);
+			break;
+		case discard:
+			removeWebDriverFromPool(driver);
+			try {
+				if (driver!=null) {
+					driver.quit();
+				}
+			}
+			catch (Exception e) {
+				Log4jConfig.pLogger.error("Problem deleging WebDriver",  e);
+			}
+		}
+	}
+	private void deleteAllCookies(WebDriver driver) {
 		try {
 			driver.manage().deleteAllCookies();
 		} 
 		catch (Exception e) {
 			Log4jConfig.pLogger.warn("Problem deleting cookies for reciclye webdriver ", e.getMessage());
 		}
-    }
+	}
 
-	private WebDriver createAndStoreNewWebDriver(String browser, Channel channel, TestRunTM testRun, String moreDataWdrv) {
+	private WebDriver createAndStoreNewWebDriver(String driverId, Channel channel, TestRunTM testRun, String moreDataWdrv) {
 		InputParamsTM inputParams = testRun.getSuiteParent().getInputParams();
 		boolean netAnalysis = testRun.getSuiteParent().getInputParams().isNetAnalysis();
 		String driverVersion = inputParams.getDriverVersion();
@@ -81,7 +81,7 @@ public class PoolWebDrivers {
 				.setupDriverVersionFluent(driverVersion)
 				.build();
 
-		storeWebDriver(driver, StoredWebDrv.stateWd.busy, browser, moreDataWdrv);
+		storeWebDriver(driver, StoredWebDrv.stateWd.busy, driverId, moreDataWdrv);
 		return driver;
 	}
 
@@ -92,15 +92,15 @@ public class PoolWebDrivers {
 	 *                     actualmente sólo viene informado para el caso de 'BrowserStack' (especificamos el modelo de 'device' documentado en BrowserStack)
 	 *                     en el resto de casos viene a "".
 	 */
-	private synchronized WebDriver getFreeWebDriverFromPool(String browser, String moreDataWdrv) {
+	private synchronized WebDriver getFreeWebDriverFromPool(String driverId, String moreDataWdrv) {
 		WebDriver webdriverFree = null;
 		Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
-		Log4jConfig.pLogger.debug(": Buscando WebDriver free. Type {}, moreDataWrdrv {}", browser, moreDataWdrv);
+		Log4jConfig.pLogger.debug(": Buscando WebDriver free. Type {}, moreDataWrdrv {}", driverId, moreDataWdrv);
 		boolean encontrado = false;
 		while (itStrWd.hasNext() && !encontrado) {
 			StoredWebDrv strWd = itStrWd.next();
 			if (strWd.isFree() &&
-				strWd.getBrowser().compareTo(browser)==0 &&
+				strWd.getDriver().compareTo(driverId)==0 &&
 				strWd.getMoreDataWdrv().compareTo(moreDataWdrv) == 0) {
 
 				//Lo obtenemos
@@ -110,13 +110,13 @@ public class PoolWebDrivers {
 				//Le cambiamos el estado a 'busy' en el gestor
 				strWd.markAsBusy();
 				Log4jConfig.pLogger.debug(
-					"Encontrado -> Mark as Busy WebDriver: {} (state: {}, browser: {}, moreDataWdrv: {})", 
-					strWd.getWebDriver(), strWd.getState(), strWd.getBrowser(), strWd.getMoreDataWdrv());
+					"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
+					strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 			}
 		}
 
 		if (!encontrado) {
-			Log4jConfig.pLogger.debug("No encontrado Webdriver free. Type: {}, moreDataWrdrv: {}", browser, moreDataWdrv);
+			Log4jConfig.pLogger.debug("No encontrado Webdriver free. Type: {}, moreDataWrdrv: {}", driverId, moreDataWdrv);
 		}
 		return webdriverFree;
 	}
@@ -126,8 +126,8 @@ public class PoolWebDrivers {
 		if (strWd != null) {
 			strWd.markAsFree();
 			Log4jConfig.pLogger.debug(
-				"Mark as Free WebDriver: {} (state: {}, browser: {}, moreDataWdrv: {})", 
-				strWd.getWebDriver(), strWd.getState(), strWd.getBrowser(), strWd.getMoreDataWdrv());
+				"Mark as Free WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
+				strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 		}
 	}
 
@@ -142,7 +142,7 @@ public class PoolWebDrivers {
 		poolWebDrivers.remove(strWd);
 		Log4jConfig.pLogger.debug(
 			"Removed Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", 
-			strWd.getWebDriver(), strWd.getState(), strWd.getBrowser(), strWd.getMoreDataWdrv());
+			strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 	}
 
 	/**
@@ -153,50 +153,50 @@ public class PoolWebDrivers {
 	 *                    actualmente sólo viene informado para el caso de 'browserstack' (especificamos el modelo de 'device' documentado en browserstack)
 	 *                    en el resto de casos viene a "". 
 	 */
-	private void storeWebDriver(WebDriver driver, stateWd state, String browser, String moreDataWdrv) {
-		StoredWebDrv strWd = new StoredWebDrv(driver, state, browser, moreDataWdrv);
+	private void storeWebDriver(WebDriver driver, stateWd state, String driverId, String moreDataWdrv) {
+		StoredWebDrv strWd = new StoredWebDrv(driver, state, driverId, moreDataWdrv);
 		poolWebDrivers.add(strWd);
-		Log4jConfig.pLogger.debug("Alta Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", driver, state, browser, moreDataWdrv);
+		Log4jConfig.pLogger.debug("Alta Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", driver, state, driverId, moreDataWdrv);
 	}
 
-    private StoredWebDrv searchWebDriver(WebDriver driver) {
-        StoredWebDrv strWdRet = null;
-        Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
-        boolean encontrado = false;
-        while (itStrWd.hasNext() && !encontrado) {
-            StoredWebDrv strWd = itStrWd.next();
-            if (strWd.getWebDriver() == driver) {
-                strWdRet = strWd;
-                encontrado = true;
-            }
-        }
-        return strWdRet;
-    }
+	private StoredWebDrv searchWebDriver(WebDriver driver) {
+		StoredWebDrv strWdRet = null;
+		Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
+		boolean encontrado = false;
+		while (itStrWd.hasNext() && !encontrado) {
+			StoredWebDrv strWd = itStrWd.next();
+			if (strWd.getWebDriver() == driver) {
+				strWdRet = strWd;
+				encontrado = true;
+			}
+		}
+		return strWdRet;
+	}
 
-    public void removeAllStrWd() {
-        List<StoredWebDrv> strWdToDelete = new ArrayList<>();
-        for (StoredWebDrv strWd : poolWebDrivers) {
-            try {
-                strWdToDelete.add(strWd);
-                strWd.getWebDriver().quit();
-            }
-            catch (Exception e) {
-            	Log4jConfig.pLogger.error("Problem removing all WebDrivers", e);
-            }
-        }
-        
-        poolWebDrivers.removeAll(strWdToDelete);
-        Log4jConfig.pLogger.info("Removed all WebDriver");
-    }
-    
+	public void removeAllStrWd() {
+		List<StoredWebDrv> strWdToDelete = new ArrayList<>();
+		for (StoredWebDrv strWd : poolWebDrivers) {
+			try {
+				strWdToDelete.add(strWd);
+				strWd.getWebDriver().quit();
+			}
+			catch (Exception e) {
+				Log4jConfig.pLogger.error("Problem removing all WebDrivers", e);
+			}
+		}
+
+		poolWebDrivers.removeAll(strWdToDelete);
+		Log4jConfig.pLogger.info("Removed all WebDriver");
+	}
+
 	/**
 	 * Devuelve datos adicionales del WebDriver que necesitamos.
 	 * actualmente sólo lo informaremos para el caso de 'BrowserStack' (devolvemos el modelo de de dispositivo móvil especificado en BrowserStack)
 	 * en el resto de casos devolveremos ""
 	 */
-	private String getMoreDataWdrv(String browser, TestRunTM testRun) {
+	private String getMoreDataWdrv(String driverId, TestRunTM testRun) {
 		String moreDataWdrv = "";
-		switch (browser) {
+		switch (driverId) {
 		//En el caso de BrowserStack como información específica del WebDriver incluiremos el modelo de dispositivo móvil asociado
 		case "browserstack":
 			BrowserStackMobil bsStackMobil = testRun.getBrowserStackMobil();

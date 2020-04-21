@@ -180,7 +180,7 @@ public class TestRunMaker {
 			inputData.getVersion() + "-" + 
 			inputData.getApp() + "-" + 
 			inputData.getChannel() + "-" + 
-			inputData.getBrowser());
+			inputData.getDriver());
 	}
 
 }

@@ -46,7 +46,7 @@ public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 	
 	private void setWebDriverVersion() {
 		if (inputParams.getDriverVersion()==null) {
-			switch (inputParams.getBrowser()) {
+			switch (inputParams.getDriver()) {
 			case "firefox":
 				inputParams.setDriverVersion(GeckoDriverVersionDefault);
 				break;

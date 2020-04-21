@@ -17,7 +17,7 @@ public class TestRunBean {
 	private Date finDate;
 	private float durationMillis;
 	private int numberTestCases;
-	private String browser;
+	private String driver;
 	
 	public String getIdExecSuite() {
 		return idExecSuite;
@@ -73,11 +73,11 @@ public class TestRunBean {
 	public void setNumberTestCases(int numberTestCases) {
 		this.numberTestCases = numberTestCases;
 	}
-	public String getBrowser() {
-		return browser;
+	public String getDriver() {
+		return driver;
 	}
-	public void setBrowser(String browser) {
-		this.browser = browser;
+	public void setDriver(String driver) {
+		this.driver = driver;
 	}
 	public List<TestCaseBean> getListTestCase() {
 		return listTestCase;

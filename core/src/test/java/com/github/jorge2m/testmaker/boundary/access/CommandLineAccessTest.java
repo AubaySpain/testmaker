@@ -163,7 +163,7 @@ public class CommandLineAccessTest {
 	private List<String> getBaseArgs() {
 		List<String> listArgs = new ArrayList<>();
 		listArgs.add("-suite"); listArgs.add("SmokeTest");
-		listArgs.add("-browser"); listArgs.add("chrome");
+		listArgs.add("-driver"); listArgs.add("chrome");
 		listArgs.add("-channel"); listArgs.add("desktop");
 		listArgs.add("-application"); listArgs.add("shop");
 		listArgs.add("-version"); listArgs.add("V1");

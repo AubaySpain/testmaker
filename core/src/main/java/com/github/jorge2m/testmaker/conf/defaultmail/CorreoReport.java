@@ -92,7 +92,7 @@ public class CorreoReport {
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">TIPO TEST</th>" +
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">APPLICATION</th>" +
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">CHANNEL</th>" +
-			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">BROWSER</th>" +
+			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">DRIVER</th>" +
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">VERSIÓN</th>" +
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">#AVAILABILITY</th>" +
 			"<th style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">#OKs</th>" +
@@ -137,7 +137,7 @@ public class CorreoReport {
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + nameSuite + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getApp() + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getChannel() + "</td>" +
-				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getBrowser() + "</td>" +
+				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getDriver() + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getVersion() + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:" + "darkGreen" + ";\">" + numDisps + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:" + State.Ok.getColorCss() + ";\">" + getNumTestCasesStr(testCasesState.get(State.Ok)) + "</td>" +

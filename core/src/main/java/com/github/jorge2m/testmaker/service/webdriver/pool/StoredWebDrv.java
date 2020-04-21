@@ -8,20 +8,20 @@ public class StoredWebDrv {
 
     public enum stateWd {busy, free}
     
-    private String browser = EmbebdedDriver.chrome.name();
+    private String driver = EmbebdedDriver.chrome.name();
     private String moreDataWdrv = "";
     private WebDriver webdriver;
     private stateWd state = stateWd.free;
 
-    public StoredWebDrv(WebDriver webdriver, stateWd state, String browser, String moreDataWdrv) {
+    public StoredWebDrv(WebDriver webdriver, stateWd state, String driver, String moreDataWdrv) {
         this.webdriver = webdriver;
         this.state = state;
-        this.browser = browser;
+        this.driver = driver;
         this.moreDataWdrv = moreDataWdrv;
     }
     
-    public String getBrowser() {
-        return this.browser;
+    public String getDriver() {
+        return this.driver;
     }
     
     public String getMoreDataWdrv() {

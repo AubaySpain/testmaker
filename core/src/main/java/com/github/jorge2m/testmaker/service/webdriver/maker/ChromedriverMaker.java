@@ -75,7 +75,7 @@ class ChromedriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel!=Channel.movil_web && isHeadless) {
+		if (channel!=Channel.movil && isHeadless) {
 			options.addArguments("--window-size=1920x1080");
 		}
 		
@@ -84,7 +84,7 @@ class ChromedriverMaker extends DriverMaker {
 		if (nettraffic) {
 			configNettrafficSnifer();
 		}
-		if (channel==Channel.movil_web) {
+		if (channel==Channel.movil) {
 			configMobilSimulator();
 		}
 	}

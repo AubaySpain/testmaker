@@ -111,7 +111,7 @@ public class SuitesDAO {
 		suiteData.setVersion(rowSuite.getString("VERSION"));
 		suiteData.setChannel(Channel.valueOf(rowSuite.getString("CHANNEL")));
 		suiteData.setApp(rowSuite.getString("APP"));
-		suiteData.setBrowser(rowSuite.getString("BROWSER"));
+		suiteData.setDriver(rowSuite.getString("BROWSER"));
 		suiteData.setResult(State.valueOf(rowSuite.getString("RESULT")));
 
 		String inicioDate = rowSuite.getString("INICIO");
@@ -137,7 +137,7 @@ public class SuitesDAO {
 				insert.setString(1, suiteData.getIdExecSuite());
 				insert.setString(2, suiteData.getName()); 
 				insert.setString(3, suiteData.getVersion()); 
-				insert.setString(4, suiteData.getBrowser()); 
+				insert.setString(4, suiteData.getDriver()); 
 				insert.setString(5, suiteData.getChannel().name()); 
 				insert.setString(6, suiteData.getApp());
 				insert.setString(7, suiteData.getResult().name());

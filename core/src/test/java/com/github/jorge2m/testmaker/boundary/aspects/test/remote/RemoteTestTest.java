@@ -26,7 +26,7 @@ public class RemoteTestTest {
 		//Given
 		InputParamsBasic inputParams = new InputParamsBasic(Suites.class, AppEcom.class);
 		inputParams.setSuite(Suites.SmokeTest);
-		inputParams.setBrowser("chrome");
+		inputParams.setDriver("chrome");
 		inputParams.setChannel(Channel.desktop);
 		inputParams.setApp(AppEcom.shop);
 		inputParams.setVersion("V1");

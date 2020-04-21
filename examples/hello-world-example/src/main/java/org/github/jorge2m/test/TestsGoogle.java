@@ -28,7 +28,7 @@ public class TestsGoogle {
 		description="Input the text <b>#{textToSearch}</b> and click button \"Search with Google\"",
 		expected="At leas one entry with the text #{textToSearch} appears",
 		saveImagePage=SaveWhen.Always,
-		saveHtmlPage=SaveWhen.IfProblem)
+		saveHtmlPage=SaveWhen.Always)
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
 		//Input Text to Search
 		By byInputSearch = By.xpath("//input[@name='q']");

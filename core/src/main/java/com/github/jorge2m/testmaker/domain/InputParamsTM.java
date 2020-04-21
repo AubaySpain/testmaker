@@ -29,7 +29,7 @@ public abstract class InputParamsTM {
 	
 	public static final String SuiteNameParam = "suite";
 	public static final String GroupsNameParam = "groups";
-	public static final String BrowserNameParam = "browser";
+	public static final String DriverNameParam = "driver";
 	public static final String ChannelNameParam = "channel";
 	public static final String AppNameParam = "application";
 	public static final String VersionNameParam = "version";
@@ -61,8 +61,8 @@ public abstract class InputParamsTM {
 	@FormParam(GroupsNameParam)
 	String groupsCommaSeparated;
 
-	@FormParam(BrowserNameParam)
-	String browser;
+	@FormParam(DriverNameParam)
+	String driver;
 
 	@FormParam(ChannelNameParam)
 	String channel;
@@ -156,18 +156,18 @@ public abstract class InputParamsTM {
 			.desc("Groups of tests to include")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserNameParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.DriverNameParam)
 			.required(true)
 			.hasArg()
 			//.possibleValues(EmbebdedDriver.class)
-			.desc("Browser to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbebdedDriver.values()))
+			.desc("WebDriver to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbebdedDriver.values()))
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.ChannelNameParam)
 			.required(true)
 			.hasArg()
 			.possibleValues(Channel.class)
-			.desc("Channel on which to run the browser. Possible values: " + Arrays.toString(Channel.values()))
+			.desc("Channel on which to run the webdriver. Possible values: " + Arrays.toString(Channel.values()))
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.AppNameParam)
@@ -278,7 +278,7 @@ public abstract class InputParamsTM {
 		application = cmdLine.getOptionValue(AppNameParam);
 		version = cmdLine.getOptionValue(VersionNameParam);
 		url = cmdLine.getOptionValue(URLNameParam);
-		browser = cmdLine.getOptionValue(BrowserNameParam);
+		driver = cmdLine.getOptionValue(DriverNameParam);
 		serverDNS = cmdLine.getOptionValue(ServerDNSNameParam);
 		String[] groups = cmdLine.getOptionValues(GroupsNameParam);
 		if (groups!=null) {
@@ -305,7 +305,7 @@ public abstract class InputParamsTM {
 	private enum ParamTM {
 		Suite(SuiteNameParam),
 		Groups(GroupsNameParam),
-		Browser(BrowserNameParam),
+		Driver(DriverNameParam),
 		Channel(ChannelNameParam),
 		Application(AppNameParam),
 		Version(VersionNameParam),
@@ -346,8 +346,8 @@ public abstract class InputParamsTM {
 			return this.suite;
 		case Groups:
 			return this.groupsCommaSeparated;
-		case Browser:
-			return this.browser;
+		case Driver:
+			return this.driver;
 		case Channel:
 			return this.channel;
 		case Application:
@@ -444,11 +444,11 @@ public abstract class InputParamsTM {
 		URI uri = new URI(getUrlBase());
 		return (uri.getScheme() + "://" + uri.getHost());
 	}
-	public String getBrowser() {
-		return this.browser;
+	public String getDriver() {
+		return this.driver;
 	}
-	public void setBrowser(String browser) {
-		this.browser = browser;
+	public void setDriver(String driver) {
+		this.driver = driver;
 	}
 	public String getWebAppDNS() {
 		return serverDNS;

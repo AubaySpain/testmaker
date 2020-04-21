@@ -18,7 +18,6 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.domain.RepositoryI;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
-import com.github.jorge2m.testmaker.service.FilterSuites;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 
 
@@ -26,9 +25,9 @@ public class FilterSuitesTest {
 
 	private LocalDate fechaHoy = LocalDate.now();
 	private SuiteBean suite1 = getNew("Suite1", Finished, "SmokeTest", desktop, "shop", fechaHoy);
-	private SuiteBean suite2 = getNew("Suite2", Started, "SmokeTest", movil_web, "shop", fechaHoy);
+	private SuiteBean suite2 = getNew("Suite2", Started, "SmokeTest", movil, "shop", fechaHoy);
 	private SuiteBean suite3 = getNew("Suite3", Stopping, "MenusPais", desktop, "outlet", fechaHoy.minusDays(3));
-	private SuiteBean suite4 = getNew("Suite4", Stopped, "MenusPais", movil_web, "shop", fechaHoy.minusDays(1));
+	private SuiteBean suite4 = getNew("Suite4", Stopped, "MenusPais", movil, "shop", fechaHoy.minusDays(1));
 	private SuiteBean suite5 = getNew("Suite5", Finished, "SmokeTest", desktop, "outlet", fechaHoy.minusDays(5));
 	
 	private List<SuiteBean> listSuitesInMemory = Arrays.asList(suite1, suite2, suite3);

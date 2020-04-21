@@ -33,6 +33,13 @@ public interface TestABmanager {
 		}
 	}
 
+	public static void activateTestAB(TestABactData testABtoActive, Channel channel, Enum<?> app, WebDriver driver) 
+	throws Exception {
+		List<TestABactData> listTestABs = new ArrayList<>();
+		listTestABs.add(testABtoActive);
+		activateTestsAB(listTestABs, channel, app, driver);
+	}
+	
 	public static void activateTestsAB(List<TestABactData> testsABtoActive, Channel channel, Enum<?> app, WebDriver driver) 
 	throws Exception {
 		List<TestABactData> listOptimize = filterByTestABtype(testsABtoActive, TypeTestAB.Optimize);

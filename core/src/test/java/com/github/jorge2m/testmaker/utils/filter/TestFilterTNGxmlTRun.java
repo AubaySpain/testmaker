@@ -176,7 +176,7 @@ public class TestFilterTNGxmlTRun {
     	inputParams.setSuite(Suites.SuiteForUnitTest);
     	inputParams.setApp(AppEcom.shop);
     	inputParams.setUrlBase("https://shop.mango.com/preHome.faces");
-    	inputParams.setBrowser(EmbebdedDriver.chrome.name());
+    	inputParams.setDriver(EmbebdedDriver.chrome.name());
     	return inputParams;
     }
     

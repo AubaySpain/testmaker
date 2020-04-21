@@ -88,7 +88,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel==Channel.movil_web) {
+		if (channel==Channel.movil) {
 			configMobilSimulator();
 		}
 		setFirefoxOptions();
@@ -131,7 +131,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 
 	private void resizeBrowserIfNeeded(WebDriver driver) {
-		if (channel==Channel.movil_web) {
+		if (channel==Channel.movil) {
 			//En caso de móvil redimensionaremos el navegador a unas dimensiones tipo 'móvil'
 			driver.manage().window().setSize(new Dimension(640, 1136));
 		} else {

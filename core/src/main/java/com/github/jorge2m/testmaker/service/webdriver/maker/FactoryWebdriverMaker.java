@@ -25,12 +25,12 @@ public class FactoryWebdriverMaker {
 
 	public static DriverMaker make(TestRunTM testRun) {
 		InputParamsTM inputParams = testRun.getSuiteParent().getInputParams();
-		String browser = inputParams.getBrowser();
+		String driver = inputParams.getDriver();
 		DriverMaker driverMakerUser = testRun.getDriverMakerUser();
 		if (driverMakerUser!=null) {
 			return driverMakerUser;
 		}
-		return getEmbebdedDriverMaker(browser, testRun);
+		return getEmbebdedDriverMaker(driver, testRun);
 	}
 	
 	private static DriverMaker getEmbebdedDriverMaker(String browser, TestRunTM testRun) {

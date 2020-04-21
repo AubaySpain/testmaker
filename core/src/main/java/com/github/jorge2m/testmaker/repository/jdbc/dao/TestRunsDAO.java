@@ -95,7 +95,7 @@ public class TestRunsDAO {
     	
     	testRunData.setDurationMillis(rowTestRun.getFloat("TIME_MS"));
     	testRunData.setNumberTestCases(rowTestRun.getInt("NUMBER_TESTCASES"));
-    	testRunData.setBrowser(rowTestRun.getString("BROWSER"));
+    	testRunData.setDriver(rowTestRun.getString("BROWSER"));
     	return testRunData;
     }
 
@@ -111,7 +111,7 @@ public class TestRunsDAO {
 				insert.setString(7, getDateFormat().format(testRun.getFinDate()));
 				insert.setFloat(8, testRun.getDurationMillis());
 				insert.setInt(9, testRun.getNumberTestCases());
-				insert.setString(10, testRun.getBrowser());
+				insert.setString(10, testRun.getDriver());
 				insert.executeUpdate();
 			} catch (SQLException ex) {
 				throw new RuntimeException(ex);

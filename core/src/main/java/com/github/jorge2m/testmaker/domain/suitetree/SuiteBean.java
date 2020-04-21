@@ -17,7 +17,7 @@ public class SuiteBean {
 	private String version;
 	private Channel channel;
 	private String app;
-	private String browser;
+	private String driver;
 	private Date inicioDate;
 	private Date finDate;
 	private float durationMillis;
@@ -48,8 +48,8 @@ public class SuiteBean {
 	public String getApp() {
 		return app;
 	}
-	public String getBrowser() {
-		return browser;
+	public String getDriver() {
+		return driver;
 	}
 	public State getResult() {
 		return result;
@@ -97,8 +97,8 @@ public class SuiteBean {
 	public void setApp(String app) {
 		this.app = app;
 	}
-	public void setBrowser(String browser) {
-		this.browser = browser;
+	public void setDriver(String driver) {
+		this.driver = driver;
 	}
 	public void setResult(State result) {
 		this.result = result;

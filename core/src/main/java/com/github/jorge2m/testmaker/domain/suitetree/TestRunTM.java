@@ -171,7 +171,7 @@ public class TestRunTM extends XmlTest {
 			testRunBean.setDurationMillis(fin.getTime() - inicio.getTime());
 		}
 		testRunBean.setNumberTestCases(getNumTestCases());
-		testRunBean.setBrowser(suite.getInputParams().getBrowser());
+		testRunBean.setDriver(suite.getInputParams().getDriver());
 		
 		List<TestCaseBean> listTestCase = new ArrayList<>();
 		for (TestCaseTM testCase : getListTestCases()) {
