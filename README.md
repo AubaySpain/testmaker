@@ -109,7 +109,7 @@ Then, you can use the API REST exposed in the machine-1 for execute a TestSuite 
 
 ## And more...
 
-#### Reuse of WebDriver / Browsers
+### Reuse of WebDriver / Browsers
 
 By default *TestMaker* creates a new *WebDriver* for each TestCase, this means that the WebDriver start/stop time is added to the total test time, in the case of Firefox or Chrome this time is usually between 4 or 5 seconds. Further, starting a browser consumes very CPU with what affects performance of the machine that hosts TestMaker and can reduce the maximum number of parallel TestCases that can be run on that machine.
 
@@ -117,7 +117,7 @@ TestMaker has an execution mode in wich it stores the WebDriver/Browsers already
 
 To activate this mode, simply add the parameter `-reciclewd true` to the execution of a new TestSuite.
 
-#### Integration with BrowseStack
+### Integration with BrowseStack
 
 You can lauch your automated TestCases implemented in under TestMaker against your account of **BrowserStack** simply indicating as  `driver` parameter the value `browserstack` and including the rest of parameters related to BrowserStack either for desktop or mobile. 
 
@@ -137,7 +137,7 @@ TestMaker will connect with BrowserStack and run the TestCases against it. So in
 
 ![](/images_doc/TmToBrowserStack.png?raw=true)
 
-#### Google Test A/Bs management
+### Google Test A/Bs management
 
 Tests A/Bs that randomize the aspect of your GUI in the search for the variant most suitable for real users can be a real headcache for an automatic TestCase that uses that GUI. Imagine that you have a Test AB that randomly shows 3 visual variants of a HTML Page with a 33% probability for each one, then an Automatic Test than only supports one variant will fail 66% of the times it runs.
 
@@ -166,7 +166,7 @@ The pom.xml has to include:
 - The artifact TestMaker is based in AspectJ technology, then we need to include the aspectj-maven-plugin for weave the aspects from TestMaker.
 
 A possible pom.xml can be:
-​```xml
+```xml
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -237,14 +237,13 @@ A possible pom.xml can be:
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
 ```
 
 ### CmdLineAccess.java
 That class implements the user access via Command Line.
 
-​```java
+```java
 package org.github.jorge2m.test;
 
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
