@@ -13,7 +13,6 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.ManagementWebdriver;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
 import com.github.jorge2m.testmaker.service.webdriver.pool.StoredWebDrv.stateWd;
 import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 
@@ -100,18 +99,16 @@ public class PoolWebDrivers {
 		while (itStrWd.hasNext() && !encontrado) {
 			StoredWebDrv strWd = itStrWd.next();
 			if (strWd.isFree() &&
-				strWd.getDriver().compareTo(driverId)==0 &&
-				strWd.getMoreDataWdrv().compareTo(moreDataWdrv) == 0) {
-
-				//Lo obtenemos
-				webdriverFree = strWd.getWebDriver();
-				encontrado = true;
-
-				//Le cambiamos el estado a 'busy' en el gestor
-				strWd.markAsBusy();
-				Log4jConfig.pLogger.debug(
-					"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
-					strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
+				strWd.getDriver().compareTo(driverId)==0) {
+				if (strWd.getMoreDataWdrv() == moreDataWdrv ||
+					strWd.getMoreDataWdrv().compareTo(moreDataWdrv)==0) {
+					webdriverFree = strWd.getWebDriver();
+					encontrado = true;
+					strWd.markAsBusy();
+					Log4jConfig.pLogger.debug(
+						"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
+						strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
+				}
 			}
 		}
 
@@ -199,13 +196,10 @@ public class PoolWebDrivers {
 		switch (driverId) {
 		//En el caso de BrowserStack como información específica del WebDriver incluiremos el modelo de dispositivo móvil asociado
 		case "browserstack":
-			BrowserStackMobil bsStackMobil = testRun.getBrowserStackMobil();
-			if (bsStackMobil!=null) {
-				moreDataWdrv = bsStackMobil.getDevice();
-			}
+			moreDataWdrv = testRun.getSuiteParent().getInputParams().getDeviceBStack();
 			break;
 
-			//En el resto de tipos de WebDriver no habrá información específica sobre el WebDriver / Dispositivo de ejecución
+		//En el resto de tipos de WebDriver no habrá información específica sobre el WebDriver / Dispositivo de ejecución
 		default:
 			moreDataWdrv = "";
 		}

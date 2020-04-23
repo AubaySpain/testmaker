@@ -16,8 +16,6 @@ import org.testng.xml.XmlSuite;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
 import com.github.jorge2m.testmaker.service.webdriver.maker.DriverMaker;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
 import com.github.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
 
 public class TestRunMaker {
@@ -29,8 +27,6 @@ public class TestRunMaker {
 	private List<String> groups = new ArrayList<>();
 	private Map<String,String> dependencyGroups = new HashMap<>();
 	private EvidenceStorer storerErrorStep = null;
-	private BrowserStackDesktop browserStackDesktop = null;
-	private BrowserStackMobil browserStackMobil = null;
 	private DriverMaker driverMakerUser = null;
 	
 	private TestRunMaker(String id, List<String> listClases) {
@@ -70,14 +66,6 @@ public class TestRunMaker {
 	public void setStorerErrorStep(EvidenceStorer storerErrorStep) {
 		this.storerErrorStep = storerErrorStep;
 	}
-
-	public void setBrowserStackDesktop(BrowserStackDesktop browserStackDesktop) {
-		this.browserStackDesktop = browserStackDesktop;
-	}
-	
-	public void setBrowserStackMobil(BrowserStackMobil browserStackMobil) {
-		this.browserStackMobil = browserStackMobil;
-	}
 	
 	public DriverMaker getDriverMaker() {
 		return driverMakerUser;
@@ -101,8 +89,6 @@ public class TestRunMaker {
 		testRun.setGroups(createGroups(filterSuiteXML));
 		testRun.setXmlClasses(listXMLclasses);
 		testRun.setStorerErrorStep(storerErrorStep);
-		testRun.setBrowserStackDesktop(browserStackDesktop);
-		testRun.setBrowserStackMobil(browserStackMobil);
 		testRun.setDriverMakerUser(driverMakerUser);
 
 		//Para el caso de tests provenientes de factorías delegaremos el filtrado al @Test

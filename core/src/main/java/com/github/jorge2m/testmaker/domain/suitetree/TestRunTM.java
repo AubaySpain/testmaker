@@ -13,8 +13,6 @@ import org.testng.xml.XmlTest;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.service.webdriver.maker.DriverMaker;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
 import com.github.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
 
 public class TestRunTM extends XmlTest {
@@ -26,8 +24,8 @@ public class TestRunTM extends XmlTest {
 	private ITestContext testNgContext;
 	private EvidenceStorer storerErrorEvidence = null;
 	private List<TestCaseTM> listTestCases = new ArrayList<>();
-	private BrowserStackDesktop browserStackDesktop = null;
-	private BrowserStackMobil browserStackMobil = null;
+	//private BrowserStackDesktop browserStackDesktop = null;
+	//private BrowserStackMobil browserStackMobil = null;
 	private DriverMaker driverMakerUser = null;
 
 
@@ -125,21 +123,21 @@ public class TestRunTM extends XmlTest {
 		listTestCases.add(testCase);
 	}
     
-	public void setBrowserStackDesktop(BrowserStackDesktop browserStackDesktop) {
-		this.browserStackDesktop = browserStackDesktop;
-	}
-	
-	public void setBrowserStackMobil(BrowserStackMobil browserStackMobil) {
-		this.browserStackMobil = browserStackMobil;
-	}
-	
-	public BrowserStackDesktop getBrowserStackDesktop() {
-		return this.browserStackDesktop;
-	}
-	
-	public BrowserStackMobil getBrowserStackMobil() {
-		return this.browserStackMobil;
-	}
+//	public void setBrowserStackDesktop(BrowserStackDesktop browserStackDesktop) {
+//		this.browserStackDesktop = browserStackDesktop;
+//	}
+//	
+//	public void setBrowserStackMobil(BrowserStackMobil browserStackMobil) {
+//		this.browserStackMobil = browserStackMobil;
+//	}
+//	
+//	public BrowserStackDesktop getBrowserStackDesktop() {
+//		return this.browserStackDesktop;
+//	}
+//	
+//	public BrowserStackMobil getBrowserStackMobil() {
+//		return this.browserStackMobil;
+//	}
 	
 	public TestRunBean getTestRunBean() {
 		TestRunBean testRunBean = new TestRunBean();
@@ -149,11 +147,11 @@ public class TestRunTM extends XmlTest {
 		testRunBean.setSuiteName(suite.getName());
 		testRunBean.setName(getName());
 		testRunBean.setResult(getResult());
-		if (getBrowserStackMobil()!=null) {
-			testRunBean.setDevice(getBrowserStackMobil().getDevice());
-		} else {
-			testRunBean.setDevice("");
-		}
+//		if (getBrowserStackMobil()!=null) {
+//			testRunBean.setDevice(getBrowserStackMobil().getDevice());
+//		} else {
+//			testRunBean.setDevice("");
+//		}
 		
 		Date inicio = new Date();
 		Date fin = new Date();

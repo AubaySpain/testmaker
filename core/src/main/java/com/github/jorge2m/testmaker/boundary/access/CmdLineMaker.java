@@ -33,7 +33,9 @@ public class CmdLineMaker {
 		this.args = args;
 		this.inputParams = inputParams;
 		this.cmdLine = getParsedOptions();
-		inputParams.setAllDataFromCommandLine(cmdLine);
+		if (cmdLine!=null) {
+			inputParams.setAllDataFromCommandLine(cmdLine);
+		}
 	}
 	
 	public static CmdLineMaker from(String args[], InputParamsTM inputParams) throws ParseException {
@@ -66,7 +68,7 @@ public class CmdLineMaker {
 			catch (ParseException e) {
 				System.out.println(e.getLocalizedMessage());
 				printHelpSyntaxis(options);
-				throw e;
+				return null;
 			}
 		} else {
 			return cmdLineHelp;
@@ -135,7 +137,8 @@ public class CmdLineMaker {
 
 
 	boolean checkOptionsValue(List<MessageError> storedErrors) {
-		if (HelpNameParam.compareTo(cmdLine.getOptions()[0].getOpt())==0) {
+		if (cmdLine==null ||
+			HelpNameParam.compareTo(cmdLine.getOptions()[0].getOpt())==0) {
 			return false;
 		}
 		

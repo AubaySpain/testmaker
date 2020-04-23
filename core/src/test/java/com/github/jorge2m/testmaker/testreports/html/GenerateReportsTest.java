@@ -14,7 +14,6 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
-import com.github.jorge2m.testmaker.testreports.html.GenerateReports;
 
 public class GenerateReportsTest {
 

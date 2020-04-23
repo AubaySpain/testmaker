@@ -117,6 +117,26 @@ TestMaker has an execution mode in wich it stores the WebDriver/Browsers already
 
 To activate this mode, simply add the parameter `-reciclewd true` to the execution of a new TestSuite.
 
+#### Integration with BrowseStack
+
+You can lauch your automated TestCases implemented in under TestMaker against your account of **BrowserStack** simply indicating as  `driver` parameter the value `browserstack` and including the rest of parameters related to BrowserStack either for desktop or mobile. 
+
+| Parameter             | Desktop | Mobile | Description                                                  | Example  Value Desktop | Example Value Mobile   |
+| --------------------- | :-----: | :----: | :----------------------------------------------------------- | ---------------------- | ---------------------- |
+| userBStack            |    X    |   X    | User of your BrowserStack Automation service                 |                        |                        |
+| passwordBStack        |    X    |   X    | Password of your BrowserStack Automation service             |                        |                        |
+| osBStack              |    X    |   X    | Operating System of the machine where to launch the tests    | Windows                | android                |
+| os_versionBStack      |    X    |   X    | Operating System version                                     | 8                      | 9.0                    |
+| browserBStack         |    X    |   X    | Browser where to launch the tests                            | Firefox                | Chrome                 |
+| browser_versioNBStack |    X    |   -    | Browser version                                              | 68.0                   |                        |
+| resolutionBStack      |    X    |   -    | Resolution of the screen                                     | 1920x1080              |                        |
+| deviceBStack          |    -    |   X    | Name of the mobile device                                    |                        | Samsung Galaxy S9 Plus |
+| realMobileBStack      |    -    |   X    | Flag that indicates if you want to use a real device or a emulation |                        | true                   |
+
+TestMaker will connect with BrowserStack and run the TestCases against it. So in the resultant report of TestMaker will appear a link to the build ind BrowserStack Automate.
+
+![](/images_doc/TmToBrowserStack.png?raw=true)
+
 #### Google Test A/Bs management
 
 Tests A/Bs that randomize the aspect of your GUI in the search for the variant most suitable for real users can be a real headcache for an automatic TestCase that uses that GUI. Imagine that you have a Test AB that randomly shows 3 visual variants of a HTML Page with a 33% probability for each one, then an Automatic Test than only supports one variant will fail 66% of the times it runs.
@@ -125,7 +145,7 @@ One solution is to modify the Test to indentify and support all three variants o
 
 TestMaker brings a solution for those Test AB's backed by **Google Experiments** and **Google Optimize** giving the option of establish a certain variant of each Test AB in each execution of an Automatic Test. For this you only need to create an object with the TestAB data and pass it to TestMaker along with the variant that you want to active.
 
-#### Integración con BrowserStack
+
 
 # Getting Started
 

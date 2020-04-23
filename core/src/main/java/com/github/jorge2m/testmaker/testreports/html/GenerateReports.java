@@ -19,6 +19,7 @@ import org.testng.ISuite;
 import org.testng.reporters.EmailableReporter;
 import org.testng.xml.XmlSuite;
 
+import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
@@ -29,56 +30,61 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobilI;
+import com.github.jorge2m.testmaker.testreports.browserstack.BrowserStackRestClient;
 import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
 import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReports extends EmailableReporter {
 	
-    static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
-    
-    private SuiteBean suite;
-    private InputParamsTM inputParamsSuite;
-    private List<Integer> treeTable;
-    private String outputDirectory = "";
-    private String reportHtml = "";
-    
-    private String output_library = "../..";
-    private String pathStatics = output_library + "/static";
-    
-    @Override
-    public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
-        super.generateReport(xmlSuites, suites, outputDirectory);
-        SuiteTM suiteTM = ((SuiteTM)xmlSuites.get(0));
-    	this.suite = suiteTM.getSuiteBean();
-    	this.inputParamsSuite = suiteTM.getInputParams();
-    	this.treeTable = getMapTree(suite);
-    	this.outputDirectory = outputDirectory;
-        try {
-        	deployStaticsIfNotExist();
-            generateReportHTML();
-        } 
-        catch (Exception e) {
-            pLogger.fatal("Problem generating ReportHTML", e);
-        }
-    }
-    
-    private void deployStaticsIfNotExist() throws Exception {
-    	ResourcesExtractor resExtractor = ResourcesExtractor.getNew();
-    	String pathDirectoryInFromResources =  ConstantesTM.nameDirectoryStatics;
-    	resExtractor.copyDirectoryResources(
-    		pathDirectoryInFromResources, 
-    		outputDirectory + "/../../" + pathDirectoryInFromResources);
-    }
+	static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
 
-    private void generateReportHTML() throws Exception {
-        pintaCabeceraHTML();
-        pintaHeadersTableMain();        
-        pintaTestRunsOfSuite();
-        pintaCierreHTML();
-        createFileReportHTML();
-    }
+	private SuiteBean suite;
+	private InputParamsTM inputParamsSuite;
+	private List<Integer> treeTable;
+	private String outputDirectory = "";
+	private String reportHtml = "";
+	private String output_library = "../..";
+	private String pathStatics = output_library + "/static";
 
-    public void pintaHeadersTableMain() {
+	@Override
+	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
+		super.generateReport(xmlSuites, suites, outputDirectory);
+		SuiteTM suiteTM = ((SuiteTM)xmlSuites.get(0));
+		this.suite = suiteTM.getSuiteBean();
+		this.inputParamsSuite = suiteTM.getInputParams();
+		this.treeTable = getMapTree(suite);
+		this.outputDirectory = outputDirectory;
+		try {
+			deployStaticsIfNotExist();
+			generateReportHTML();
+		} 
+		catch (Exception e) {
+			pLogger.fatal("Problem generating ReportHTML", e);
+		}
+	}
+
+	private void deployStaticsIfNotExist() throws Exception {
+		ResourcesExtractor resExtractor = ResourcesExtractor.getNew();
+		String pathDirectoryInFromResources =  ConstantesTM.nameDirectoryStatics;
+		resExtractor.copyDirectoryResources(
+			pathDirectoryInFromResources, 
+			outputDirectory + "/../../" + pathDirectoryInFromResources);
+	}
+
+	private void generateReportHTML() throws Exception {
+		pintaCabeceraHTML();
+		pintaHeadersTableMain();	
+		pintaTestRunsOfSuite();
+		pintaCierreHTML();
+		createFileReportHTML();
+	}
+
+    void pintaHeadersTableMain() {
     	reportHtml+=
         	"<table id=\"tableMain\" class=\"tablemain\">" + 
             "<thead>\n" + 
@@ -89,6 +95,7 @@ public class GenerateReports extends EmailableReporter {
             "        <span id=\"browser\">" + suite.getDriver() + "</span>" + 
             "        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>" + 
             "      </div>" + 
+                   getDivBrowserStack() +
             "    </th>\n" + 
             "  </tr>\n" +
             "  <tr id=\"header2\">" + 
@@ -107,8 +114,62 @@ public class GenerateReports extends EmailableReporter {
             "  <tr></tr>\n" +
         	"   </thead>\n";
     }
+
+	private String getDivBrowserStack() {
+		String urlBuildBrowserStack = getUrlBuildBrowserStack();
+		if ("".compareTo(urlBuildBrowserStack)!=0) {
+			String initialDiv = 
+				"<div style=\"float:right;\">" +
+				"	<a id=\"linkBrowserStack\" href=\"" + urlBuildBrowserStack + "\" target=\"_blank\">" +		
+				"		<div style=\"float:left;\">" + 
+				"			<div style=\"padding-right:4px;\">BrowserStack Report</div>";
+			
+			String finalDiv = 
+				"		</div>" + 
+				"		<div style=\"float:left;\">" +
+				"			<img width=\"53\" src=\"../../static/images/browserstack-logo.svg\" title=\"BrowserStack Report\">" +
+				"		</div>" +
+				"	</a>" +
+				"</div>";
+			
+			String dataDiv = "";
+			if (inputParamsSuite.getChannel()==Channel.desktop) {
+				BrowserStackDesktopI bsData = new BrowserStackDataDesktop(inputParamsSuite);
+				dataDiv = 
+					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getOs() + " " + bsData.getOsVersion() + "</div>" + 
+					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getBrowser() + " " + bsData.getBrowserVersion() + "</div>";
+				if (bsData.getResolution()!=null && "".compareTo(bsData.getResolution())!=0) {
+					dataDiv+=
+						"<div style=\"font-size:11;padding-right:4px;\">" + bsData.getResolution() + "</div>";
+				}
+			} else {
+				BrowserStackMobilI bsData = new BrowserStackDataMobil(inputParamsSuite);
+				dataDiv = 
+					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getOs() + " " + bsData.getOsVersion() + "</div>" +
+					"<div style=\"font-size:11;padding-right:8px;\">" + bsData.getDevice() + "</div>" +
+					"<div style=\"font-size:11;padding-right:8px;\">Mobil Real: " + bsData.getRealMobile() + "</div>" +
+					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getBrowser() + "</div>";
+			}
+			
+			return (
+				initialDiv +
+				dataDiv +
+				finalDiv);
+		}
+		return "";
+	}
+
+	private String getUrlBuildBrowserStack() {
+		if (inputParamsSuite.getDriver().compareTo(EmbebdedDriver.browserstack.name())==0) {
+			String user = inputParamsSuite.getUserBStack();
+			String password = inputParamsSuite.getPasswordBStack();
+			BrowserStackRestClient client = new BrowserStackRestClient(user, password);
+			return client.getUrlBuild(suite.getIdExecSuite());
+		}
+		return "";
+	}
     
-    public void pintaCabeceraHTML() {
+    void pintaCabeceraHTML() {
         reportHtml+="<html>\n";
         reportHtml+="<head>\n";
         reportHtml+="<meta charset=\"utf-8\">\n";
@@ -157,12 +218,12 @@ public class GenerateReports extends EmailableReporter {
         reportHtml+="<br>\n";
     }
 
-	private void pintaTestRunsOfSuite() {
+	void pintaTestRunsOfSuite() {
 		reportHtml+="<tbody id=\"treet2\">\n";
 		for (TestRunBean testRun : suite.getListTestRun()) {
 			DateFormat format = DateFormat.getDateTimeInstance();
 			String deviceInfo = "";
-			if ("".compareTo(testRun.getDevice())!=0) {
+			if (testRun.getDevice()!=null && "".compareTo(testRun.getDevice())!=0) {
 				deviceInfo = " [" + testRun.getDevice() + "]";
 			}
 			reportHtml+= 
@@ -183,7 +244,7 @@ public class GenerateReports extends EmailableReporter {
 		}
 	}
 
-	private void pintaTestCasesOfTestRun(TestRunBean testRun) {
+	void pintaTestCasesOfTestRun(TestRunBean testRun) {
 		List<TestCaseBean> listTestCases = testRun.getListTestCase();
 		String TagTimeout = "@TIMEOUTSTEP";
 		for (int i=0; i<listTestCases.size(); i++) {

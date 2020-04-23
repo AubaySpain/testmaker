@@ -46,3 +46,4 @@ br.clear {clear:left;}
 .overTestrun td.nowrap, .overMethod td.nowrap {white-space:nowrap; font: bold 8pt Arial;}
 
 a.link-sort-table {color:#00FFFF;}
+#linkBrowserStack {color:white; text-decoration:none; font-size:14; position:relative; text-align:right;}

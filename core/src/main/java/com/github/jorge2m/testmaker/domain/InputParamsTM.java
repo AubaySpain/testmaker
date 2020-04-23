@@ -47,6 +47,19 @@ public abstract class InputParamsTM {
 	public static final String DriverVersionParam = "driverVersion";
 	public static final String TestObjectParam = "testobject";
 	
+	//BrowserStack
+	public static final String UserBStackParam = "userBStack"; //Mobil & Desktop
+	public static final String PasswordBStackParam = "passwordBStack"; //Mobil & Desktop
+	public static final String OsBStackParam = "osBStack"; //Mobil & Desktop
+	public static final String OsVersionBStackParam = "os_versionBStack"; //Mobil & Desktop
+	public static final String DeviceBStackParam = "deviceBStack"; //Mobil
+	public static final String RealMobileBStackParam = "realMobileBStack"; //Mobil 
+	public static final String BrowserBStackParam = "browserBStack"; //Mobil & Desktop
+	public static final String BrowserVersionBStackParam = "browser_versionBStack"; //Desktop
+	public static final String ResolutionBStackParam = "resolutionBStack"; //Desktop
+	
+	@FormParam(ResolutionBStackParam)
+	
 	public static final String patternTestCaseItem = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
 	
 	public enum ManagementWebdriver {recycle, discard}
@@ -111,6 +124,34 @@ public abstract class InputParamsTM {
 	
 	@FormParam(TestObjectParam)
 	String testObject;
+	
+	//Browser Stack
+	@FormParam(UserBStackParam)
+	String userBStack;
+	
+	@FormParam(PasswordBStackParam)
+	String passwordBStack;
+	
+	@FormParam(OsBStackParam)
+	String osBStack;
+	
+	@FormParam(OsVersionBStackParam)
+	String osVersionBStack;
+	
+	@FormParam(DeviceBStackParam)
+	String deviceBStack;
+	
+	@FormParam(RealMobileBStackParam)
+	String realMobileBStack;
+	
+	@FormParam(BrowserBStackParam)
+	String browserBStack;
+	
+	@FormParam(BrowserVersionBStackParam)
+	String browserVersionBStack;
+	
+	@FormParam(ResolutionBStackParam)
+	String resolutionBStack;
 
 	public InputParamsTM() {}
 
@@ -268,6 +309,64 @@ public abstract class InputParamsTM {
 			.pattern("\\d+(\\.\\d+)*")
 			.desc("Version of Driver (ChromeDriver, Geckodriver...) to use")
 			.build());
+		
+		//BrowserStack
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.UserBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("User of the BrowserStack platform")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.PasswordBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("Password of the BrowserStack platform")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.OsBStackParam)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("android"/*mobil*/, "iPhone"/*mobil*/, "Windows"/*desktop*/, "OS X"/*desktop*/))
+			.desc("os of the BrowserStack Test Environment")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.OsVersionBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("os Version of the BrowserStack Test Environment")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.DeviceBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("Devide of the BrowserStack Test Environment")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.RealMobileBStackParam)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Indicator if a real movil-device is available in the BrowserStack Test Environment")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("Browser of the BrowserStack Test Environment")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserVersionBStackParam)
+			.required(false)
+			.hasArgs()
+			.desc("Browser version of the BrowserStack Test Environment (only desktop)")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.ResolutionBStackParam)
+			.required(false)
+			.hasArgs()
+			.pattern("\\d+x\\d+")
+			.desc("Screen Resolution of the BrowserStack Test Environment, for example 1024x768 (only desktop)")
+			.build());
 
 		return optionsTM;
 	}
@@ -300,6 +399,17 @@ public abstract class InputParamsTM {
 		store = cmdLine.getOptionValue(StoreParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
+		
+		//BrowserStack
+		userBStack = cmdLine.getOptionValue(UserBStackParam);
+		passwordBStack = cmdLine.getOptionValue(PasswordBStackParam);
+		osBStack = cmdLine.getOptionValue(OsBStackParam);
+		osVersionBStack = cmdLine.getOptionValue(OsVersionBStackParam);
+		deviceBStack = cmdLine.getOptionValue(DeviceBStackParam);
+		realMobileBStack = cmdLine.getOptionValue(RealMobileBStackParam);
+		browserBStack = cmdLine.getOptionValue(BrowserBStackParam);
+		browserVersionBStack = cmdLine.getOptionValue(BrowserVersionBStackParam);
+		resolutionBStack = cmdLine.getOptionValue(ResolutionBStackParam);
 	}
 
 	private enum ParamTM {
@@ -321,7 +431,16 @@ public abstract class InputParamsTM {
 		Mails(MailsParam),
 		TypeAccess(TypeAccessParam),
 		DriverVersion(DriverVersionParam),
-		TestObject(TestObjectParam);
+		TestObject(TestObjectParam),
+		UserBStack(UserBStackParam),
+		PasswordBStack(PasswordBStackParam),
+		OsBStack(OsBStackParam),
+		OsVersionBStack(OsVersionBStackParam),
+		DeviceBStack(DeviceBStackParam),
+		RealMobileBStack(RealMobileBStackParam),
+		BrowserBStack(BrowserBStackParam),
+		BrowserVersionBStack(BrowserVersionBStackParam),
+		ResolutionBStack(ResolutionBStackParam);
 		
 		public String nameParam;
 		private ParamTM(String nameParam) {
@@ -378,6 +497,24 @@ public abstract class InputParamsTM {
 			return this.typeAccess;
 		case DriverVersion:
 			return this.driverVersion;
+		case UserBStack:
+			return userBStack;
+		case PasswordBStack:
+			return passwordBStack;
+		case OsBStack:
+			return osBStack;
+		case OsVersionBStack:
+			return osVersionBStack;
+		case DeviceBStack:
+			return deviceBStack;
+		case RealMobileBStack:
+			return realMobileBStack;
+		case BrowserBStack:
+			return browserBStack;
+		case BrowserVersionBStack:
+			return browserVersionBStack;
+		case ResolutionBStack:
+			return resolutionBStack;
 		default:
 			return "";
 		}
@@ -626,6 +763,63 @@ public abstract class InputParamsTM {
 	public void setTestObject(String testObject) {
 		this.testObject = testObject;
 	}
+	
+	//BrowserStack
+	public String getUserBStack() {
+		return userBStack;
+	}
+	public void setUserBStack(String userBStack) {
+		this.userBStack = userBStack;
+	}
+	public String getPasswordBStack() {
+		return passwordBStack;
+	}
+	public void setPasswordBStack(String passwordBStack) {
+		this.passwordBStack = passwordBStack;
+	}
+	public String getOsBStack() {
+		return osBStack;
+	}
+	public void setOsBStack(String osBStack) {
+		this.osBStack = osBStack;
+	}
+	public String getOsVersionBStack() {
+		return osVersionBStack;
+	}
+	public void setOsVersionBStack(String osVersionBStack) {
+		this.osVersionBStack = osVersionBStack;
+	}
+	public String getDeviceBStack() {
+		return deviceBStack;
+	}
+	public void setDeviceBStack(String deviceBStack) {
+		this.deviceBStack = deviceBStack;
+	}
+	public String getRealMobileBStack() {
+		return realMobileBStack;
+	}
+	public void setRealMobileBStack(String realMobileBStack) {
+		this.realMobileBStack = realMobileBStack;
+	}
+	public String getBrowserBStack() {
+		return browserBStack;
+	}
+	public void setBrowserBStack(String browserBStack) {
+		this.browserBStack = browserBStack;
+	}
+	public String getBrowserVersionBStack() {
+		return browserVersionBStack;
+	}
+	public void setBrowserVersionBStack(String browserVersionBStack) {
+		this.browserVersionBStack = browserVersionBStack;
+	}
+	public String getResolutionBStack() {
+		return resolutionBStack;
+	}
+	public void setResolutionBStack(String resolutionBStack) {
+		this.resolutionBStack = resolutionBStack;
+	}
+	
 	public DataFilterTCases getDataFilter() {
 		DataFilterTCases dFilter = new DataFilterTCases(getChannel(), getApp());
 		dFilter.setGroupsFilter(getGroupsFilter());

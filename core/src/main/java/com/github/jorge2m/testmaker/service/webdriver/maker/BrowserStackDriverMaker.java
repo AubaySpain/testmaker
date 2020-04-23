@@ -8,26 +8,30 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktop;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobil;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobilI;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
+import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
 
 
 public class BrowserStackDriverMaker extends DriverMaker {
 	
-	private final TestRunTM testRun;
+	private final InputParamsTM inputParams;
 	String buildProject;
 	String sessionName;
 	String userBStack;
 	String passBStack;
 	
 	public BrowserStackDriverMaker(TestRunTM testRun) {
-		this.testRun = testRun;
+		this.inputParams = testRun.getSuiteParent().getInputParams();
 		buildProject = 
 			testRun.getSuite().getName() + 
 			" (" + testRun.getSuiteParent().getIdExecution() + ")";
 		sessionName = testRun.getName();
+		setChannel(inputParams.getChannel());
 	}
 
 	@Override
@@ -58,29 +62,31 @@ public class BrowserStackDriverMaker extends DriverMaker {
 	}
 
 	private WebDriver createBStackDriverMobil() {
-		BrowserStackMobil bsStackMobil = testRun.getBrowserStackMobil();
-		if (bsStackMobil==null) {
-			throw new RuntimeException("The data for connect with BrowserStack is not in the context");
-		}
+//		BrowserStackMobil bsStackMobil = testRun.getBrowserStackMobil();
+		BrowserStackMobilI bsStackMobil = new BrowserStackDataMobil(inputParams);
+//		if (bsStackMobil==null) {
+//			throw new RuntimeException("The data for connect with BrowserStack is not in the context");
+//		}
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability("os", bsStackMobil.getSo());
-		capabilities.setCapability("os_version", bsStackMobil.getSoVersion());
+		capabilities.setCapability("os", bsStackMobil.getOs());
+		capabilities.setCapability("os_version", bsStackMobil.getOsVersion());
 		capabilities.setCapability("device", bsStackMobil.getDevice());
-		capabilities.setCapability("realMobile", bsStackMobil.getRealMobil());
+		capabilities.setCapability("realMobile", bsStackMobil.getRealMobile());
 		capabilities.setCapability("browserName", bsStackMobil.getBrowser());
 		return (runBrowserStack(bsStackMobil.getUser(), bsStackMobil.getPassword(), capabilities));
 	}
 
 	private WebDriver createBStackDriverDesktop() {
-		BrowserStackDesktop bsStackDesktop = testRun.getBrowserStackDesktop();
-		if (bsStackDesktop==null) {
-			throw new RuntimeException("The data for connect with BrowserStack is not in the context");
-		}
+//		BrowserStackDesktopI bsStackDesktop = testRun.getBrowserStackDesktop();
+		BrowserStackDesktopI bsStackDesktop = new BrowserStackDataDesktop(inputParams);
+//		if (bsStackDesktop==null) {
+//			throw new RuntimeException("The data for connect with BrowserStack is not in the context");
+//		}
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability("os", bsStackDesktop.getSo());
-		capabilities.setCapability("os_version", bsStackDesktop.getSoVersion());
+		capabilities.setCapability("os", bsStackDesktop.getOs());
+		capabilities.setCapability("os_version", bsStackDesktop.getOsVersion());
 		capabilities.setCapability("browser", bsStackDesktop.getBrowser());
 		capabilities.setCapability("browser_version", bsStackDesktop.getBrowserVersion());
 		capabilities.setCapability("resolution", bsStackDesktop.getResolution());
