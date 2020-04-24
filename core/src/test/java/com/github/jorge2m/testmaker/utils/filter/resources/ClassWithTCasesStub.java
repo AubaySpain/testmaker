@@ -35,7 +35,7 @@ public class ClassWithTCasesStub {
     }
     
     @Test (
-        groups={"Micuenta", "Canal:movil_App:shop"}, alwaysRun=true, 
+        groups={"Micuenta", "Canal:mobile_App:shop"}, alwaysRun=true, 
         description="Consulta de mis compras con un usuario con datos a nivel de Tienda y Online")
     @Parameters({"userConComprasPeroSoloOnlineEnPRO", "passwordUserConCompras"})
     public void MIC002_CheckConsultaMisCompras(String userConCompras, String passwordUserConCompras, ITestContext context, Method method) throws Exception {

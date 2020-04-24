@@ -5,7 +5,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
 public class FactoryWebdriverMaker {
 
-	public enum EmbebdedDriver { 
+	public enum EmbeddedDriver { 
 		firefox(false), 
 		firefoxhless(true), 
 		chrome(false), 
@@ -14,7 +14,7 @@ public class FactoryWebdriverMaker {
 		browserstack(false);
 		
 		boolean headless;
-		private EmbebdedDriver(boolean headless) {
+		private EmbeddedDriver(boolean headless) {
 			this.headless = headless;
 		}
 		
@@ -34,7 +34,7 @@ public class FactoryWebdriverMaker {
 	}
 	
 	private static DriverMaker getEmbebdedDriverMaker(String browser, TestRunTM testRun) {
-		EmbebdedDriver driverType = EmbebdedDriver.valueOf(browser);
+		EmbeddedDriver driverType = EmbeddedDriver.valueOf(browser);
 		switch (driverType) {
 		case firefox:
 		case firefoxhless:

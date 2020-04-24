@@ -19,7 +19,7 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 public abstract class InputParamsTM {
 
@@ -28,13 +28,13 @@ public abstract class InputParamsTM {
 	abstract public Map<String,String> getSpecificParamsValues();
 	
 	public static final String SuiteNameParam = "suite";
-	public static final String GroupsNameParam = "groups";
 	public static final String DriverNameParam = "driver";
 	public static final String ChannelNameParam = "channel";
 	public static final String AppNameParam = "application";
 	public static final String VersionNameParam = "version";
 	public static final String URLNameParam = "url";
 	public static final String TCaseNameParam = "tcases";
+	public static final String GroupsNameParam = "groups";
 	public static final String ThreadsParam = "threads";
 	public static final String ServerDNSNameParam = "serverDNS";
 	public static final String AsyncExecParam = "asyncexec";
@@ -48,17 +48,15 @@ public abstract class InputParamsTM {
 	public static final String TestObjectParam = "testobject";
 	
 	//BrowserStack
-	public static final String UserBStackParam = "userBStack"; //Mobil & Desktop
-	public static final String PasswordBStackParam = "passwordBStack"; //Mobil & Desktop
-	public static final String OsBStackParam = "osBStack"; //Mobil & Desktop
-	public static final String OsVersionBStackParam = "os_versionBStack"; //Mobil & Desktop
-	public static final String DeviceBStackParam = "deviceBStack"; //Mobil
-	public static final String RealMobileBStackParam = "realMobileBStack"; //Mobil 
-	public static final String BrowserBStackParam = "browserBStack"; //Mobil & Desktop
-	public static final String BrowserVersionBStackParam = "browser_versionBStack"; //Desktop
-	public static final String ResolutionBStackParam = "resolutionBStack"; //Desktop
-	
-	@FormParam(ResolutionBStackParam)
+	public static final String BStackUserParam = "bstack_user"; //Mobil & Desktop
+	public static final String BStackPasswordParam = "bstack_password"; //Mobil & Desktop
+	public static final String BStackOsParam = "bstack_os"; //Mobil & Desktop
+	public static final String BStackOsVersionParam = "bstack_os_version"; //Mobil & Desktop
+	public static final String BStackDeviceParam = "bstack_device"; //Mobil
+	public static final String BStackRealMobileParam = "bstack_realMobile"; //Mobil 
+	public static final String BStackBrowserParam = "bstack_browser"; //Mobil & Desktop
+	public static final String BStackBrowserVersionParam = "bstack_browser_version"; //Desktop
+	public static final String BStackResolutionParam = "bstack_resolution"; //Desktop
 	
 	public static final String patternTestCaseItem = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
 	
@@ -126,32 +124,32 @@ public abstract class InputParamsTM {
 	String testObject;
 	
 	//Browser Stack
-	@FormParam(UserBStackParam)
-	String userBStack;
+	@FormParam(BStackUserParam)
+	String bStackUser;
 	
-	@FormParam(PasswordBStackParam)
-	String passwordBStack;
+	@FormParam(BStackPasswordParam)
+	String bStackPassword;
 	
-	@FormParam(OsBStackParam)
-	String osBStack;
+	@FormParam(BStackOsParam)
+	String bStackOs;
 	
-	@FormParam(OsVersionBStackParam)
-	String osVersionBStack;
+	@FormParam(BStackOsVersionParam)
+	String bStackOsVersion;
 	
-	@FormParam(DeviceBStackParam)
-	String deviceBStack;
+	@FormParam(BStackDeviceParam)
+	String bStackDevice;
 	
-	@FormParam(RealMobileBStackParam)
-	String realMobileBStack;
+	@FormParam(BStackRealMobileParam)
+	String bStackRealMobile;
 	
-	@FormParam(BrowserBStackParam)
-	String browserBStack;
+	@FormParam(BStackBrowserParam)
+	String bStackBrowser;
 	
-	@FormParam(BrowserVersionBStackParam)
-	String browserVersionBStack;
+	@FormParam(BStackBrowserVersionParam)
+	String bStackBrowserVersion;
 	
-	@FormParam(ResolutionBStackParam)
-	String resolutionBStack;
+	@FormParam(BStackResolutionParam)
+	String bStackResolution;
 
 	public InputParamsTM() {}
 
@@ -190,18 +188,11 @@ public abstract class InputParamsTM {
 			.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.GroupsNameParam)
-			.required(false)
-			.hasArg()
-			.valueSeparator(',')
-			.desc("Groups of tests to include")
-			.build());
-
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.DriverNameParam)
 			.required(true)
 			.hasArg()
 			//.possibleValues(EmbebdedDriver.class)
-			.desc("WebDriver to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbebdedDriver.values()))
+			.desc("WebDriver to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbeddedDriver.values()))
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.ChannelNameParam)
@@ -232,6 +223,13 @@ public abstract class InputParamsTM {
 			//Examples: FIC001, FIC001{1}, FIC001{50-10}
 			.pattern(patternTestCaseItem)
 			.desc("List of testcases comma separated (p.e. OTR001,BOR001,FIC001{6-2})")
+			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.GroupsNameParam)
+			.required(false)
+			.hasArg()
+			.valueSeparator(',')
+			.desc("Groups of tests to include")
 			.build());
 		
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.ThreadsParam)
@@ -311,57 +309,57 @@ public abstract class InputParamsTM {
 			.build());
 		
 		//BrowserStack
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.UserBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackUserParam)
 			.required(false)
 			.hasArgs()
 			.desc("User of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.PasswordBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackPasswordParam)
 			.required(false)
 			.hasArgs()
 			.desc("Password of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.OsBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackOsParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("android"/*mobil*/, "iPhone"/*mobil*/, "Windows"/*desktop*/, "OS X"/*desktop*/))
 			.desc("os of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.OsVersionBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackOsVersionParam)
 			.required(false)
 			.hasArgs()
 			.desc("os Version of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.DeviceBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackDeviceParam)
 			.required(false)
 			.hasArgs()
 			.desc("Devide of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.RealMobileBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackRealMobileParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Indicator if a real movil-device is available in the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackBrowserParam)
 			.required(false)
 			.hasArgs()
 			.desc("Browser of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BrowserVersionBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackBrowserVersionParam)
 			.required(false)
 			.hasArgs()
 			.desc("Browser version of the BrowserStack Test Environment (only desktop)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ResolutionBStackParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackResolutionParam)
 			.required(false)
 			.hasArgs()
 			.pattern("\\d+x\\d+")
@@ -401,15 +399,15 @@ public abstract class InputParamsTM {
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
 		
 		//BrowserStack
-		userBStack = cmdLine.getOptionValue(UserBStackParam);
-		passwordBStack = cmdLine.getOptionValue(PasswordBStackParam);
-		osBStack = cmdLine.getOptionValue(OsBStackParam);
-		osVersionBStack = cmdLine.getOptionValue(OsVersionBStackParam);
-		deviceBStack = cmdLine.getOptionValue(DeviceBStackParam);
-		realMobileBStack = cmdLine.getOptionValue(RealMobileBStackParam);
-		browserBStack = cmdLine.getOptionValue(BrowserBStackParam);
-		browserVersionBStack = cmdLine.getOptionValue(BrowserVersionBStackParam);
-		resolutionBStack = cmdLine.getOptionValue(ResolutionBStackParam);
+		bStackUser = cmdLine.getOptionValue(BStackUserParam);
+		bStackPassword = cmdLine.getOptionValue(BStackPasswordParam);
+		bStackOs = cmdLine.getOptionValue(BStackOsParam);
+		bStackOsVersion = cmdLine.getOptionValue(BStackOsVersionParam);
+		bStackDevice = cmdLine.getOptionValue(BStackDeviceParam);
+		bStackRealMobile = cmdLine.getOptionValue(BStackRealMobileParam);
+		bStackBrowser = cmdLine.getOptionValue(BStackBrowserParam);
+		bStackBrowserVersion = cmdLine.getOptionValue(BStackBrowserVersionParam);
+		bStackResolution = cmdLine.getOptionValue(BStackResolutionParam);
 	}
 
 	private enum ParamTM {
@@ -432,15 +430,15 @@ public abstract class InputParamsTM {
 		TypeAccess(TypeAccessParam),
 		DriverVersion(DriverVersionParam),
 		TestObject(TestObjectParam),
-		UserBStack(UserBStackParam),
-		PasswordBStack(PasswordBStackParam),
-		OsBStack(OsBStackParam),
-		OsVersionBStack(OsVersionBStackParam),
-		DeviceBStack(DeviceBStackParam),
-		RealMobileBStack(RealMobileBStackParam),
-		BrowserBStack(BrowserBStackParam),
-		BrowserVersionBStack(BrowserVersionBStackParam),
-		ResolutionBStack(ResolutionBStackParam);
+		BStackUser(BStackUserParam),
+		BStackPassword(BStackPasswordParam),
+		BStackOs(BStackOsParam),
+		BStackOsVersion(BStackOsVersionParam),
+		BStackDevice(BStackDeviceParam),
+		BStackRealMobile(BStackRealMobileParam),
+		BStackBrowser(BStackBrowserParam),
+		BStackBrowserVersion(BStackBrowserVersionParam),
+		BStackResolution(BStackResolutionParam);
 		
 		public String nameParam;
 		private ParamTM(String nameParam) {
@@ -497,24 +495,24 @@ public abstract class InputParamsTM {
 			return this.typeAccess;
 		case DriverVersion:
 			return this.driverVersion;
-		case UserBStack:
-			return userBStack;
-		case PasswordBStack:
-			return passwordBStack;
-		case OsBStack:
-			return osBStack;
-		case OsVersionBStack:
-			return osVersionBStack;
-		case DeviceBStack:
-			return deviceBStack;
-		case RealMobileBStack:
-			return realMobileBStack;
-		case BrowserBStack:
-			return browserBStack;
-		case BrowserVersionBStack:
-			return browserVersionBStack;
-		case ResolutionBStack:
-			return resolutionBStack;
+		case BStackUser:
+			return bStackUser;
+		case BStackPassword:
+			return bStackPassword;
+		case BStackOs:
+			return bStackOs;
+		case BStackOsVersion:
+			return bStackOsVersion;
+		case BStackDevice:
+			return bStackDevice;
+		case BStackRealMobile:
+			return bStackRealMobile;
+		case BStackBrowser:
+			return bStackBrowser;
+		case BStackBrowserVersion:
+			return bStackBrowserVersion;
+		case BStackResolution:
+			return bStackResolution;
 		default:
 			return "";
 		}
@@ -765,59 +763,59 @@ public abstract class InputParamsTM {
 	}
 	
 	//BrowserStack
-	public String getUserBStack() {
-		return userBStack;
+	public String getBStackUser() {
+		return bStackUser;
 	}
-	public void setUserBStack(String userBStack) {
-		this.userBStack = userBStack;
+	public void setBStackUser(String bStackUser) {
+		this.bStackUser = bStackUser;
 	}
-	public String getPasswordBStack() {
-		return passwordBStack;
+	public String getBStackPassword() {
+		return bStackPassword;
 	}
-	public void setPasswordBStack(String passwordBStack) {
-		this.passwordBStack = passwordBStack;
+	public void setBStackPassword(String bStackPassword) {
+		this.bStackPassword = bStackPassword;
 	}
-	public String getOsBStack() {
-		return osBStack;
+	public String getBStackOs() {
+		return bStackOs;
 	}
-	public void setOsBStack(String osBStack) {
-		this.osBStack = osBStack;
+	public void setBStackOs(String bStackOs) {
+		this.bStackOs = bStackOs;
 	}
-	public String getOsVersionBStack() {
-		return osVersionBStack;
+	public String getBStackOsVersion() {
+		return bStackOsVersion;
 	}
-	public void setOsVersionBStack(String osVersionBStack) {
-		this.osVersionBStack = osVersionBStack;
+	public void setBStackOsVersion(String bStackOsVersion) {
+		this.bStackOsVersion = bStackOsVersion;
 	}
-	public String getDeviceBStack() {
-		return deviceBStack;
+	public String getBStackDevice() {
+		return bStackDevice;
 	}
-	public void setDeviceBStack(String deviceBStack) {
-		this.deviceBStack = deviceBStack;
+	public void setBStackDevice(String bStackDevice) {
+		this.bStackDevice = bStackDevice;
 	}
-	public String getRealMobileBStack() {
-		return realMobileBStack;
+	public String getBStackRealMobile() {
+		return bStackRealMobile;
 	}
-	public void setRealMobileBStack(String realMobileBStack) {
-		this.realMobileBStack = realMobileBStack;
+	public void setBStackRealMobile(String bStackRealMobile) {
+		this.bStackRealMobile = bStackRealMobile;
 	}
-	public String getBrowserBStack() {
-		return browserBStack;
+	public String getBStackBrowser() {
+		return bStackBrowser;
 	}
-	public void setBrowserBStack(String browserBStack) {
-		this.browserBStack = browserBStack;
+	public void setBStackBrowser(String bStackBrowser) {
+		this.bStackBrowser = bStackBrowser;
 	}
-	public String getBrowserVersionBStack() {
-		return browserVersionBStack;
+	public String getBStackBrowserVersion() {
+		return bStackBrowserVersion;
 	}
-	public void setBrowserVersionBStack(String browserVersionBStack) {
-		this.browserVersionBStack = browserVersionBStack;
+	public void setBStackBrowserVersion(String bStackBrowserVersion) {
+		this.bStackBrowserVersion = bStackBrowserVersion;
 	}
-	public String getResolutionBStack() {
-		return resolutionBStack;
+	public String getBStackResolution() {
+		return bStackResolution;
 	}
-	public void setResolutionBStack(String resolutionBStack) {
-		this.resolutionBStack = resolutionBStack;
+	public void setBStackResolution(String bStackResolution) {
+		this.bStackResolution = bStackResolution;
 	}
 	
 	public DataFilterTCases getDataFilter() {

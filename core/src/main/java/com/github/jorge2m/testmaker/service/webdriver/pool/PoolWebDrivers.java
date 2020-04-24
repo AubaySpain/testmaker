@@ -196,7 +196,7 @@ public class PoolWebDrivers {
 		switch (driverId) {
 		//En el caso de BrowserStack como información específica del WebDriver incluiremos el modelo de dispositivo móvil asociado
 		case "browserstack":
-			moreDataWdrv = testRun.getSuiteParent().getInputParams().getDeviceBStack();
+			moreDataWdrv = testRun.getSuiteParent().getInputParams().getBStackDevice();
 			break;
 
 		//En el resto de tipos de WebDriver no habrá información específica sobre el WebDriver / Dispositivo de ejecución

@@ -21,8 +21,8 @@ public class GroupsChannelAppsTest {
 		assertTrue(groupsExcluded.contains("Canal:desktop_App:outlet"));
 		assertTrue(groupsExcluded.contains("Canal:desktop_App:outlet,votf"));
 		assertTrue(groupsExcluded.contains("Canal:desktop_App:votf,outlet"));
-		assertTrue(groupsExcluded.contains("Canal:movil_App:shop"));
-		assertTrue(groupsExcluded.contains("Canal:movil_App:all"));
+		assertTrue(groupsExcluded.contains("Canal:mobile_App:shop"));
+		assertTrue(groupsExcluded.contains("Canal:mobile_App:all"));
 		
 		assertTrue(!groupsExcluded.contains("Canal:desktop_App:shop"));
 		assertTrue(!groupsExcluded.contains("Canal:all_App:shop"));

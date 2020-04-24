@@ -10,7 +10,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobilI;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
@@ -36,7 +36,7 @@ public class BrowserStackDriverMaker extends DriverMaker {
 
 	@Override
 	public String getTypeDriver() {
-		return EmbebdedDriver.browserstack.name();
+		return EmbeddedDriver.browserstack.name();
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class BrowserStackDriverMaker extends DriverMaker {
 	public WebDriver build() {
 		WebDriver driver;
 		switch (channel) {
-		case movil: 
+		case mobile: 
 			driver = createBStackDriverMobil();
 			break;
 		case desktop:

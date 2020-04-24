@@ -12,31 +12,31 @@ public class BrowserStackDataMobil implements BrowserStackMobilI {
 	
 	@Override
 	public String getUser() {
-		return inputParams.getUserBStack();
+		return inputParams.getBStackUser();
 	}
 	@Override
 	public String getPassword() {
-		return inputParams.getPasswordBStack();
+		return inputParams.getBStackPassword();
 	}
 	@Override
 	public String getOs() {
-		return inputParams.getOsBStack();
+		return inputParams.getBStackOs();
 	}
 	@Override
 	public String getOsVersion() {
-		return inputParams.getOsVersionBStack();
+		return inputParams.getBStackOsVersion();
 	}
 	@Override
 	public String getDevice() {
-		return inputParams.getDeviceBStack();
+		return inputParams.getBStackDevice();
 	}
 	@Override
 	public String getRealMobile() {
-		return inputParams.getRealMobileBStack();
+		return inputParams.getBStackRealMobile();
 	}
 	@Override
 	public String getBrowser() {
-		return inputParams.getBrowserBStack();
+		return inputParams.getBStackBrowser();
 	}
 	
 }

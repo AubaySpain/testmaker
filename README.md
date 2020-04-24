@@ -119,21 +119,21 @@ To activate this mode, simply add the parameter `-reciclewd true` to the executi
 
 ### Integration with BrowseStack
 
-You can lauch your automated TestCases implemented in under TestMaker against your account of **BrowserStack** simply indicating as  `driver` parameter the value `browserstack` and including the rest of parameters related to BrowserStack either for desktop or mobile. 
+You can launch your automated TestCases implemented under TestMaker against your account of **BrowserStack** simply indicating as  `driver` parameter the value `browserstack` and including the rest of parameters related to BrowserStack either for desktop or mobile. 
 
-| Parameter             | Desktop | Mobile | Description                                                  | Example  Value Desktop | Example Value Mobile   |
-| --------------------- | :-----: | :----: | :----------------------------------------------------------- | ---------------------- | ---------------------- |
-| userBStack            |    X    |   X    | User of your BrowserStack Automation service                 |                        |                        |
-| passwordBStack        |    X    |   X    | Password of your BrowserStack Automation service             |                        |                        |
-| osBStack              |    X    |   X    | Operating System of the machine where to launch the tests    | Windows                | android                |
-| os_versionBStack      |    X    |   X    | Operating System version                                     | 8                      | 9.0                    |
-| browserBStack         |    X    |   X    | Browser where to launch the tests                            | Firefox                | Chrome                 |
-| browser_versioNBStack |    X    |   -    | Browser version                                              | 68.0                   |                        |
-| resolutionBStack      |    X    |   -    | Resolution of the screen                                     | 1920x1080              |                        |
-| deviceBStack          |    -    |   X    | Name of the mobile device                                    |                        | Samsung Galaxy S9 Plus |
-| realMobileBStack      |    -    |   X    | Flag that indicates if you want to use a real device or a emulation |                        | true                   |
+| Parameter              | Desktop | Mobile | Description                                                  | Example  Value Desktop | Example Value Mobile   |
+| ---------------------- | :-----: | :----: | :----------------------------------------------------------- | ---------------------- | ---------------------- |
+| bStack_user            |    X    |   X    | User of your BrowserStack Automation service                 |                        |                        |
+| bStack_password        |    X    |   X    | Password of your BrowserStack Automation service             |                        |                        |
+| bStack_os              |    X    |   X    | Operating System of the machine where to launch the tests    | Windows                | android                |
+| bStack_os_version      |    X    |   X    | Operating System version                                     | 8                      | 9.0                    |
+| bStack_browser         |    X    |   X    | Browser where to launch the tests                            | Firefox                | Chrome                 |
+| bStack_browser_version |    X    |   -    | Browser version                                              | 68.0                   |                        |
+| bStack_resolution      |    X    |   -    | Resolution of the screen                                     | 1920x1080              |                        |
+| bStack_device          |    -    |   X    | Name of the mobile device                                    |                        | Samsung Galaxy S9 Plus |
+| bStack_realMobile      |    -    |   X    | Flag that indicates if you want to use a real device or a emulation |                        | true                   |
 
-TestMaker will connect with BrowserStack and run the TestCases against it. So in the resultant report of TestMaker will appear a link to the build ind BrowserStack Automate.
+TestMaker will connect with BrowserStack and run the TestCases against it. So in the resultant report of TestMaker will appear a link to the build in BrowserStack Automate.
 
 ![](/images_doc/TmToBrowserStack.png?raw=true)
 
@@ -489,3 +489,32 @@ The execution will return a response that includes an attribute '*idExecSuite*' 
 ### Result Report
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
 ![](/images_doc/ResultHelloWorld.png?raw=true)
+
+# Invocation Reference Guide
+## Command Line
+A project built under TestMaker can be called from Command Line for run a new TestSuite invoking the corresponding main class that implements that access. You can see a description for the list of parameters using the parameter `-help`. 
+
+| Parameter     | Required | Function_Description                                         | Values                                                       | Example                                          |
+| ------------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
+| suite         | yes      | Name of the TestSuite to execuite                            | The defined by each project in the corresponding enum        | SmokeTest                                        |
+| driver        | yes      | Name of the driver                                           | chrome, chromehless, firefox, firefoxhless, chromedriver [^1] | chrome                                           |
+| channel       | yes      | Channel where the tests will be run                          | desktop or mobile                                            | desktop                                          |
+| application   | yes      | Aplication to wich the tests refer                           | The defined by each project in the corresponding enum        | google                                           |
+| url           | no       | Initial url that will be loaded in the webdriver             | Any URL with correct format                                  | http://www.google.com                            |
+| tcases        | no       | Filter with the list of test cases that must be executed     | A comma-separated list with the name or code of the metod marked with @Test [^2] | BUS001, FIC002                                   |
+| groups        | no       | Filter with the groups of tests that must be executed        | A comma-separated list with the name of the groups existent in the atribute 'groups' of the @Test | Buscador, Ficha                                  |
+| version       | no       | Value to label the execution[^3]                             | Any identifier                                               | test_payment                                     |
+| threads       | no       | Number of threads for parallelize TestCases                  | A integer number (3 by default)                              | 5                                                |
+| reciclewd     | no       | Flag to reuse the drivers of TestCases already finished (false by default) | true, false (by default)                                     | true                                             |
+| asyncexec     | no       | Flag to indicate if you don't want wait for the completion of execution | true, false (by default)                                     | true                                             |
+| net           | no       | Flag for capture the Http Nettraffic for each @Step          | true, false (by default)                                     | true                                             |
+| store         | no       | Flag to store the info of the TestSuite execution [^ 4]      | true, false (by default)                                     | true                                             |
+| mails         | no       | List of emails to wich you want to send a email with the Report of the TestSuite execution | Comma-separated list of emails                               | jorge.and.2m@gmail.com,jorge.munoz.sge@mango.com |
+| driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
+
+[^1]: TestMaker goes with that  embedded drivers out of the box, but from each project yo can add new webdrivers or overwrite the embedded ones
+[^2]: In each TestCase identifier you can add {number} that specifies the times that TestCase will be executed. Further, you can add a second number that identifies the paralellization for the execution of these TestCases, for example, a valid value could be: "BOR001,FIC002{5-2}"
+
+[^3]: For user use. In many occasions it may be useful for the script to work differently based on the value of this parameter.
+[^ 4]: There are some services of the TestMaker API Rest who need this previous storage, for example the consult of a TestSuite execution. 
+[^5]: TestMaker uses a default version for each driver that you can override with this parameter 

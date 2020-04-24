@@ -1,3 +1,3 @@
 package com.github.jorge2m.testmaker.conf;
 
-public enum Channel { desktop, movil; }
+public enum Channel { desktop, mobile; }

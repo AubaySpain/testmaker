@@ -12,31 +12,31 @@ public class BrowserStackDataDesktop implements BrowserStackDesktopI {
 	
 	@Override
 	public String getUser() {
-		return inputParams.getUserBStack();
+		return inputParams.getBStackUser();
 	}
 	@Override
 	public String getPassword() {
-		return inputParams.getPasswordBStack();
+		return inputParams.getBStackPassword();
 	}
 	@Override
 	public String getOs() {
-		return inputParams.getOsBStack();
+		return inputParams.getBStackOs();
 	}
 	@Override
 	public String getOsVersion() {
-		return inputParams.getOsVersionBStack();
+		return inputParams.getBStackOsVersion();
 	}
 	@Override
 	public String getBrowser() {
-		return inputParams.getBrowserBStack();
+		return inputParams.getBStackBrowser();
 	}
 	@Override
 	public String getBrowserVersion() {
-		return inputParams.getBrowserVersionBStack();
+		return inputParams.getBStackBrowserVersion();
 	}
 	@Override
 	public String getResolution() {
-		return inputParams.getResolutionBStack();
+		return inputParams.getBStackResolution();
 	}
 	
 }

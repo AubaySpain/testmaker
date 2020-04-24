@@ -1,9 +1,11 @@
 package com.github.jorge2m.testmaker.testreports.browserstack;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BrowserStackRestClientTest {
 	
+	@Ignore
 	@Test
 	public void getUrlBuild() throws Exception {
 		String idSuiteExec = "200421_220001343";

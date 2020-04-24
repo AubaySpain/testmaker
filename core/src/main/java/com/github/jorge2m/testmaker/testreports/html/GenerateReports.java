@@ -30,7 +30,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
@@ -160,9 +160,9 @@ public class GenerateReports extends EmailableReporter {
 	}
 
 	private String getUrlBuildBrowserStack() {
-		if (inputParamsSuite.getDriver().compareTo(EmbebdedDriver.browserstack.name())==0) {
-			String user = inputParamsSuite.getUserBStack();
-			String password = inputParamsSuite.getPasswordBStack();
+		if (inputParamsSuite.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
+			String user = inputParamsSuite.getBStackUser();
+			String password = inputParamsSuite.getBStackPassword();
 			BrowserStackRestClient client = new BrowserStackRestClient(user, password);
 			return client.getUrlBuild(suite.getIdExecSuite());
 		}

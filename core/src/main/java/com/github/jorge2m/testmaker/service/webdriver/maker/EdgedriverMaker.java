@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
 
 class EdgedriverMaker extends DriverMaker {
@@ -15,7 +15,7 @@ class EdgedriverMaker extends DriverMaker {
 	
 	@Override
 	public String getTypeDriver() {
-		return EmbebdedDriver.edge.name();
+		return EmbeddedDriver.edge.name();
 	}
 	
 	@Override

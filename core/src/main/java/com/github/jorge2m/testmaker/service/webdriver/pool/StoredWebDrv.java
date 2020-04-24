@@ -2,13 +2,13 @@ package com.github.jorge2m.testmaker.service.webdriver.pool;
 
 import org.openqa.selenium.WebDriver;
 
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 public class StoredWebDrv {
 
     public enum stateWd {busy, free}
     
-    private String driver = EmbebdedDriver.chrome.name();
+    private String driver = EmbeddedDriver.chrome.name();
     private String moreDataWdrv = "";
     private WebDriver webdriver;
     private stateWd state = stateWd.free;

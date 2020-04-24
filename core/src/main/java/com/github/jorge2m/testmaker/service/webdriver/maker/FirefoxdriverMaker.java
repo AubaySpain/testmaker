@@ -15,7 +15,7 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 class FirefoxdriverMaker extends DriverMaker {
 	
@@ -32,9 +32,9 @@ class FirefoxdriverMaker extends DriverMaker {
 	@Override
 	public String getTypeDriver() {
 		if (isHeadless) {
-			return EmbebdedDriver.firefoxhless.name();
+			return EmbeddedDriver.firefoxhless.name();
 		}
-		return EmbebdedDriver.firefox.name();
+		return EmbeddedDriver.firefox.name();
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel==Channel.movil) {
+		if (channel==Channel.mobile) {
 			configMobilSimulator();
 		}
 		setFirefoxOptions();
@@ -131,7 +131,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 
 	private void resizeBrowserIfNeeded(WebDriver driver) {
-		if (channel==Channel.movil) {
+		if (channel==Channel.mobile) {
 			//En caso de móvil redimensionaremos el navegador a unas dimensiones tipo 'móvil'
 			driver.manage().window().setSize(new Dimension(640, 1136));
 		} else {

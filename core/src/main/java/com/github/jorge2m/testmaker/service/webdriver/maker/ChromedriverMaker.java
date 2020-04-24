@@ -13,7 +13,7 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbebdedDriver;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
@@ -34,9 +34,9 @@ class ChromedriverMaker extends DriverMaker {
 	@Override
 	public String getTypeDriver() {
 		if (isHeadless) {
-			return EmbebdedDriver.chromehless.name();
+			return EmbeddedDriver.chromehless.name();
 		}
-		return EmbebdedDriver.chrome.name();
+		return EmbeddedDriver.chrome.name();
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ class ChromedriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel!=Channel.movil && isHeadless) {
+		if (channel!=Channel.mobile && isHeadless) {
 			options.addArguments("--window-size=1920x1080");
 		}
 		
@@ -84,7 +84,7 @@ class ChromedriverMaker extends DriverMaker {
 		if (nettraffic) {
 			configNettrafficSnifer();
 		}
-		if (channel==Channel.movil) {
+		if (channel==Channel.mobile) {
 			configMobilSimulator();
 		}
 	}
