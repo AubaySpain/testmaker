@@ -24,7 +24,7 @@ class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
 	private final boolean isHeadless;
-	private final static String ChromeDriverVersionDefault = "80.0.3987.106";
+	private final static String ChromeDriverVersionDefault = "81.0.4044.69";
 	private ChromeOptions options = new ChromeOptions();
 	
 	public ChromedriverMaker(boolean isHeadless) {
@@ -65,6 +65,7 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("--ignore-certificate-errors");	
 		options.addArguments("--no-proxy-server");
 		options.addArguments("--privileged");
+		options.addArguments("enable-automation"); 
 		activateLogs();
 	}
 	

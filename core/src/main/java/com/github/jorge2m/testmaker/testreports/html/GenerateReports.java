@@ -13,15 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.ISuite;
 import org.testng.reporters.EmailableReporter;
 import org.testng.xml.XmlSuite;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
@@ -41,9 +39,10 @@ import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReports extends EmailableReporter {
 	
-	static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
+	//static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
 
 	private SuiteBean suite;
+	private SuiteTM suiteTM;
 	private InputParamsTM inputParamsSuite;
 	private List<Integer> treeTable;
 	private String outputDirectory = "";
@@ -55,6 +54,7 @@ public class GenerateReports extends EmailableReporter {
 	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
 		super.generateReport(xmlSuites, suites, outputDirectory);
 		SuiteTM suiteTM = ((SuiteTM)xmlSuites.get(0));
+		this.suiteTM = suiteTM;
 		this.suite = suiteTM.getSuiteBean();
 		this.inputParamsSuite = suiteTM.getInputParams();
 		this.treeTable = getMapTree(suite);
@@ -64,7 +64,7 @@ public class GenerateReports extends EmailableReporter {
 			generateReportHTML();
 		} 
 		catch (Exception e) {
-			pLogger.fatal("Problem generating ReportHTML", e);
+			suiteTM.getLogger().fatal("Problem generating ReportHTML", e);
 		}
 	}
 
@@ -212,7 +212,7 @@ public class GenerateReports extends EmailableReporter {
         reportHtml+="  <a href=\"emailable-report.html\" target=\"_blank\" class=\"linkTestNG\">Emailable Report</a>";
         reportHtml+="</div>\n";
         reportHtml+="<div class=\"divTestNG\">";
-        reportHtml+="  <a href=\"" + Log4jConfig.log4jFileName + "\" target=\"_blank\" class=\"linkTestNG\">" + Log4jConfig.log4jFileName + "</a>";
+        reportHtml+="  <a href=\"" + ConstantesTM.nameLogFileSuite + "\" target=\"_blank\" class=\"linkTestNG\">" + ConstantesTM.nameLogFileSuite + "</a>";
         reportHtml+="</div>";        
         reportHtml+="<br>\n";
         reportHtml+="<br>\n";
@@ -408,7 +408,7 @@ public class GenerateReports extends EmailableReporter {
             out.close();
         } 
         catch (Exception e) {
-            pLogger.fatal("Problem creating file ReportHTML", e);
+        	suiteTM.getLogger().fatal("Problem creating file ReportHTML", e);
         } 
     }
 

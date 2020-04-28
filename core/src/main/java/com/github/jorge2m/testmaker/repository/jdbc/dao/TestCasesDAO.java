@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import static com.github.jorge2m.testmaker.repository.jdbc.dao.Utils.DateFormat.*;
 
 
 public class TestCasesDAO {
@@ -47,9 +47,9 @@ public class TestCasesDAO {
 	        "CLASS_SIGNATURE) " + 
         "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
     
-    public static String SQLDeleteHistorical = 
-        "DELETE FROM METHODS " +
-        "WHERE INICIO < ?;";
+    public static String SQLDeleteTestCases = 
+        "DELETE FROM TESTCASES " +
+        "WHERE IDEXECSUITE = ?;";
     
     public TestCasesDAO(ConnectorBD connector) {
     	this.connector = connector;
@@ -80,19 +80,25 @@ public class TestCasesDAO {
     	
     	testCaseData.setIdExecSuite(rowTestRun.getString("IDEXECSUITE"));
     	testCaseData.setSuiteName(rowTestRun.getString("SUITE")); 
-    	testCaseData.setTestRunName(rowTestRun.getString("SUITE"));  
+    	testCaseData.setTestRunName(rowTestRun.getString("TESTRUN"));  
     	testCaseData.setName(rowTestRun.getString("NAME"));
     	testCaseData.setDescription(rowTestRun.getString("DESCRIPTION"));  
     	testCaseData.setResult(State.valueOf(rowTestRun.getString("RESULT")));
     	
         String inicioDate = rowTestRun.getString("INICIO");
-        testCaseData.setInicioDate(getDateFormat().parse(inicioDate));
+        testCaseData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
         String finDate = rowTestRun.getString("FIN");
-        testCaseData.setInicioDate(getDateFormat().parse(finDate));
+        testCaseData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
         testCaseData.setDurationMillis(rowTestRun.getFloat("TIME_MS"));
     	
     	testCaseData.setNumberSteps(rowTestRun.getInt("NUMBER_STEPS"));  
-    	testCaseData.setClassSignature(rowTestRun.getString("CLASS_SIGNATURE"));  
+    	testCaseData.setClassSignature(rowTestRun.getString("CLASS_SIGNATURE"));
+    	
+    	StepsDAO stepsDAO = new StepsDAO(connector);
+    	testCaseData.setListStep(stepsDAO.getListSteps(
+    			rowTestRun.getString("IDEXECSUITE"), 
+    			rowTestRun.getString("TESTRUN"), 
+    			rowTestRun.getString("NAME")));
 
     	return testCaseData;
     }
@@ -107,8 +113,8 @@ public class TestCasesDAO {
             	insert.setString(4, testCase.getName()); 
             	insert.setString(5, testCase.getDescription()); 
             	insert.setString(6, testCase.getResult().name()); 
-    	        insert.setString(7, getDateFormat().format(testCase.getInicioDate()));
-    	        insert.setString(8, getDateFormat().format(testCase.getFinDate()));
+    	        insert.setString(7, Utils.getDateFormat(ToSeconds).format(testCase.getInicioDate()));
+    	        insert.setString(8, Utils.getDateFormat(ToSeconds).format(testCase.getFinDate()));
     	        insert.setFloat(9, testCase.getDurationMillis());
     	        insert.setInt(10,  testCase.getNumberSteps());
     	        insert.setString(11,  testCase.getClassSignature());
@@ -125,10 +131,10 @@ public class TestCasesDAO {
         }
     }
     
-    public void deleteTestCasesBefore(String idSuite) {
+    public void deleteTestCases(String idExecSuite) {
         try (Connection conn = connector.getConnection();
-            PreparedStatement delete = conn.prepareStatement(SQLDeleteHistorical)) {
-            delete.setString(1, idSuite);
+            PreparedStatement delete = conn.prepareStatement(SQLDeleteTestCases)) {
+            delete.setString(1, idExecSuite);
             delete.executeUpdate();
          } 
          catch (SQLException ex) {
@@ -138,8 +144,4 @@ public class TestCasesDAO {
              throw new RuntimeException(ex);
          }    
     } 
-    
-    private static SimpleDateFormat getDateFormat() {
-    	return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
 }

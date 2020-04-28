@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
+import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.SenderMailEndSuiteI;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
@@ -24,20 +26,31 @@ public class SuiteTM extends XmlSuite {
 	private static final long serialVersionUID = 1L;
 	private final InputParamsTM inputParams;
 	private final String idSuiteExecution;
+	private Logger logger;
 	private long threadId;
 	private StateExecution stateExecution = StateExecution.NotStarted;
 	private State result = State.Ok;
 	private long timeInicio = 0;
 	private long timeFin = 0;
-	private final PoolWebDrivers poolWebDrivers = new PoolWebDrivers();
+	private final PoolWebDrivers poolWebDrivers;
 	private SenderMailEndSuiteI senderMail;
 	private List<Object> factoryTests = new ArrayList<>();
 	
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
 		this.idSuiteExecution = idSuiteExecution;
 		this.inputParams = inputParams;
+//		Log4jConfig log4jFactory = new Log4jConfig();
+//		this.logger = log4jFactory.createSuiteLogger(idSuiteExecution, getPathLogFile());
+		this.poolWebDrivers = new PoolWebDrivers(this);
 		//TODO desasteriscar
 		//this.senderMail = new DefaultMailEndSuite();
+	}
+	
+	public Logger getLogger() {
+		if (logger==null) {
+			logger = Log4jTM.createSuiteLogger(idSuiteExecution, getPathLogFile());
+		}
+		return logger;
 	}
 	
 	public String getIdExecution() {
@@ -92,9 +105,9 @@ public class SuiteTM extends XmlSuite {
 		this.threadId = Thread.currentThread().getId();
 		stateExecution = StateExecution.Started;
 		timeInicio = (new Date()).getTime(); 
-    	SuitesExecuted.add(this);
-		if (inputParams.isStoreResult()) {
-			TestMaker.getRepository().storeSuite(this);
+		SuitesExecuted.add(this);
+		if (inputParams.getStoreBd().storeSuite()) {
+			TestMaker.getRepository().store(getSuiteBean(), StoreUntil.suite);
 		}
 	}
 	
@@ -106,10 +119,11 @@ public class SuiteTM extends XmlSuite {
 		if (inputParams.isSendMailInEndSuite()) {
 			senderMail.sendMail(this);
 		}
-		if (inputParams.isStoreResult()) {
-			TestMaker.getRepository().storeAll(this);
+		if (inputParams.getStoreBd().storeSuite()) {
+			TestMaker.getRepository().store(getSuiteBean(), inputParams.getStoreBd());
 		}
 		SuitesExecuted.remove(this);
+		Log4jTM.removeSuiteLogger(idSuiteExecution);
 	}
 	
 	private State getResultFromTestsRun() {
@@ -172,6 +186,12 @@ public class SuiteTM extends XmlSuite {
 		return getPathDirectory(getName(), getIdExecution());
 	}
 	public static String getPathDirectory(String nameSuite, String idExecutionSuite) {
+		return (
+			getPathDirectoryOutputTests() + File.separator + 
+			nameSuite + File.separator + 
+			idExecutionSuite);
+	}
+	public static String getPathDirectoryOutputTests() {
 		String userDir = System.getProperty("user.dir");
 		String lastCharUserDir = userDir.substring(userDir.length() - 1);
 		if (File.separator.compareTo(lastCharUserDir)!=0) {
@@ -179,13 +199,14 @@ public class SuiteTM extends XmlSuite {
 		}
 		return (
 			userDir +
-			ConstantesTM.directoryOutputTests + File.separator + 
-			nameSuite + File.separator + 
-			idExecutionSuite);
+			ConstantesTM.directoryOutputTests);
 	}
 	
 	public String getPathReportHtml() {
 		return (getPathDirectory() + File.separator + ConstantesTM.nameReportHTMLTSuite);
+	}
+	public String getPathLogFile() {
+		return (getPathDirectory() + File.separator + ConstantesTM.nameLogFileSuite);
 	}
 	
 	public String getDnsReportHtml() {
@@ -201,8 +222,9 @@ public class SuiteTM extends XmlSuite {
 				return suite;
 			}
 		}
-		Log4jConfig.pLogger.warn("Not found Suite associated");
-		return listSuites.get(0);
+		//TestMaker.grabLog(Level.WARN, "Not found Suite associated", null);
+		//return listSuites.get(0);
+		return null;
 	}
 	
 	public SuiteBean getSuiteBean() {
@@ -224,6 +246,7 @@ public class SuiteTM extends XmlSuite {
 		suiteBean.setUrlBase(inputParams.getUrlBase());
 		suiteBean.setPathReportHtml(getPathReportHtml());
 		suiteBean.setUrlReportHtml(getDnsReportHtml());
+		suiteBean.setPathLogFile(getPathLogFile());
 		suiteBean.setStateExecution(getStateExecution());
 		
 		List<TestRunBean> listTestRun = new ArrayList<>();

@@ -4,21 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import static com.github.jorge2m.testmaker.repository.jdbc.dao.Utils.DateFormat.*;
 
 
 public class TestRunsDAO {
 	
-	static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
+	//static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
 
 	private final ConnectorBD connector;
 
@@ -36,7 +32,7 @@ public class TestRunsDAO {
 		    "BROWSER " +
 		"FROM TESTRUNS  " + 
 		"WHERE IDEXECSUITE = ? " + 
-		"ORDER BY TEST, INICIO";
+		"ORDER BY INICIO";
 
 	private static String SQLInsertTestRun = 
 		"INSERT INTO TESTRUNS (" +
@@ -51,10 +47,10 @@ public class TestRunsDAO {
 			"NUMBER_TESTCASES, " + 
 			"BROWSER ) " + 
 		"VALUES (?,?,?,?,?,?,?,?,?,?)";
-
-	private static String SQLDeleteHistorical = 
-			"DELETE FROM TESTRUNS " +
-			"WHERE 	IDEXECSUITE < ?;";
+	
+	public static String SQLDeleteTestRun = 
+		"DELETE FROM TESTRUNS " +
+		"WHERE 	IDEXECSUITE = ?";
 
 	public TestRunsDAO(ConnectorBD connector) {
 		this.connector = connector;
@@ -89,13 +85,17 @@ public class TestRunsDAO {
     	testRunData.setDevice(rowTestRun.getString("DEVICE"));
     	
         String inicioDate = rowTestRun.getString("INICIO");
-        testRunData.setInicioDate(getDateFormat().parse(inicioDate));
+        testRunData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
         String finDate = rowTestRun.getString("FIN");
-        testRunData.setInicioDate(getDateFormat().parse(finDate));
+        testRunData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
     	
     	testRunData.setDurationMillis(rowTestRun.getFloat("TIME_MS"));
     	testRunData.setNumberTestCases(rowTestRun.getInt("NUMBER_TESTCASES"));
     	testRunData.setDriver(rowTestRun.getString("BROWSER"));
+    	
+    	TestCasesDAO testCasesDAO = new TestCasesDAO(connector);
+    	testRunData.setListTestCase(testCasesDAO.getListTestCases(rowTestRun.getString("IDEXECSUITE")));
+    	
     	return testRunData;
     }
 
@@ -107,8 +107,8 @@ public class TestRunsDAO {
 				insert.setString(3, testRun.getName()); 
 				insert.setString(4, testRun.getDevice()); 
 				insert.setString(5, testRun.getResult().name()); 
-				insert.setString(6, getDateFormat().format(testRun.getInicioDate()));
-				insert.setString(7, getDateFormat().format(testRun.getFinDate()));
+				insert.setString(6, Utils.getDateFormat(ToSeconds).format(testRun.getInicioDate()));
+				insert.setString(7, Utils.getDateFormat(ToSeconds).format(testRun.getFinDate()));
 				insert.setFloat(8, testRun.getDurationMillis());
 				insert.setInt(9, testRun.getNumberTestCases());
 				insert.setString(10, testRun.getDriver());
@@ -125,21 +125,17 @@ public class TestRunsDAO {
 		}
 	}
 
-    public void deleteTestRunsBefore(String idSuite) {
-        try (Connection conn = connector.getConnection();
-            PreparedStatement delete = conn.prepareStatement(SQLDeleteHistorical)) {
-            delete.setString(1, idSuite);
-            delete.executeUpdate();
-         } 
-         catch (SQLException ex) {
-             throw new RuntimeException(ex);
-         } 
-         catch (ClassNotFoundException ex) {
-             throw new RuntimeException(ex);
-         }    
-    }    
-    
-    private static SimpleDateFormat getDateFormat() {
-    	return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
+	public void deleteTestRuns(String idSuite) {
+		try (Connection conn = connector.getConnection();
+			PreparedStatement delete = conn.prepareStatement(SQLDeleteTestRun)) {
+			delete.setString(1, idSuite);
+			delete.executeUpdate();
+		} 
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		} 
+		catch (ClassNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 }

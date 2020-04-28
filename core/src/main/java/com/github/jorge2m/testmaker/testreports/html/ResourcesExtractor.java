@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.testreports.html.GetterResources.Directory;
 
 public class ResourcesExtractor {
@@ -24,11 +24,11 @@ public class ResourcesExtractor {
 			if (directoryData!=null) {
 				copyDirectoryResources(directoryData, dirDestination);
 			} else {
-				Log4jConfig.pLogger.warn("Not found data from path in resources " + dirOriginFromResources);
+				Log4jTM.getLogger().warn("Not found data from path in resources " + dirOriginFromResources);
 			}
 		} 
 		catch (Exception e) {
-			Log4jConfig.pLogger.error("Problem in copy of static directory for HTML Report", e);
+			Log4jTM.getLogger().error("Problem in copy of static directory for HTML Report", e);
 		}
 	}
 

@@ -8,7 +8,7 @@ import org.openqa.selenium.InvalidCookieDomainException;
 import org.openqa.selenium.WebDriver;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.service.testab.TestABOptimize;
 import com.github.jorge2m.testmaker.service.testab.TestABactData;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils;
@@ -135,7 +135,7 @@ public class TestABOptimizeManager implements TestABmanager {
 			SeleniumUtils.closeTabByTitleAndReturnToWidow(titleTab, windowHandlerToReturn, driver);
 		}
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem activating TestAB via add of Cookie " + cookie.getName(), e);
+			Log4jTM.getLogger().warn("Problem activating TestAB via add of Cookie " + cookie.getName(), e);
 		}
 	}
 
@@ -148,11 +148,11 @@ public class TestABOptimizeManager implements TestABmanager {
 	
 	@Override
 	public int getVariant() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-        	String.format("%s is of type %s that does not support this method yet.",
-        	testAB,
-            testAB.getType())
-        );
+		throw new UnsupportedOperationException(
+			String.format("%s is of type %s that does not support this method yet.",
+			testAB,
+			testAB.getType())
+		);
 	}	
 	
 	private int RandomNumber(int minimo, int maximo) {

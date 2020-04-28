@@ -8,9 +8,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.openqa.selenium.WebDriver;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.ManagementWebdriver;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker;
 import com.github.jorge2m.testmaker.service.webdriver.pool.StoredWebDrv.stateWd;
@@ -25,6 +25,11 @@ import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 public class PoolWebDrivers {
 
 	private final List<StoredWebDrv> poolWebDrivers = new CopyOnWriteArrayList<>();
+	private final SuiteTM suite;
+	
+	public PoolWebDrivers(SuiteTM suite) {
+		this.suite = suite;
+	}
 
 	public WebDriver getWebDriver(String driverId, Channel channel, TestRunTM testRun) {
 		String moreDataWdrv = getMoreDataWdrv(driverId, testRun);
@@ -56,7 +61,7 @@ public class PoolWebDrivers {
 				}
 			}
 			catch (Exception e) {
-				Log4jConfig.pLogger.error("Problem deleging WebDriver",  e);
+				suite.getLogger().error("Problem deleging WebDriver",  e);
 			}
 		}
 	}
@@ -65,7 +70,7 @@ public class PoolWebDrivers {
 			driver.manage().deleteAllCookies();
 		} 
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem deleting cookies for reciclye webdriver ", e.getMessage());
+			suite.getLogger().warn("Problem deleting cookies for reciclye webdriver ", e.getMessage());
 		}
 	}
 
@@ -94,7 +99,7 @@ public class PoolWebDrivers {
 	private synchronized WebDriver getFreeWebDriverFromPool(String driverId, String moreDataWdrv) {
 		WebDriver webdriverFree = null;
 		Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
-		Log4jConfig.pLogger.debug(": Buscando WebDriver free. Type {}, moreDataWrdrv {}", driverId, moreDataWdrv);
+		suite.getLogger().debug(": Buscando WebDriver free. Type {}, moreDataWrdrv {}", driverId, moreDataWdrv);
 		boolean encontrado = false;
 		while (itStrWd.hasNext() && !encontrado) {
 			StoredWebDrv strWd = itStrWd.next();
@@ -105,7 +110,7 @@ public class PoolWebDrivers {
 					webdriverFree = strWd.getWebDriver();
 					encontrado = true;
 					strWd.markAsBusy();
-					Log4jConfig.pLogger.debug(
+					suite.getLogger().debug(
 						"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
 						strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 				}
@@ -113,7 +118,7 @@ public class PoolWebDrivers {
 		}
 
 		if (!encontrado) {
-			Log4jConfig.pLogger.debug("No encontrado Webdriver free. Type: {}, moreDataWrdrv: {}", driverId, moreDataWdrv);
+			suite.getLogger().debug("No encontrado Webdriver free. Type: {}, moreDataWrdrv: {}", driverId, moreDataWdrv);
 		}
 		return webdriverFree;
 	}
@@ -122,7 +127,7 @@ public class PoolWebDrivers {
 		StoredWebDrv strWd = searchWebDriver(driver);
 		if (strWd != null) {
 			strWd.markAsFree();
-			Log4jConfig.pLogger.debug(
+			suite.getLogger().debug(
 				"Mark as Free WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
 				strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 		}
@@ -137,7 +142,7 @@ public class PoolWebDrivers {
 
 	private void deleteStrWedDriver(StoredWebDrv strWd) {
 		poolWebDrivers.remove(strWd);
-		Log4jConfig.pLogger.debug(
+		suite.getLogger().debug(
 			"Removed Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", 
 			strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 	}
@@ -153,7 +158,7 @@ public class PoolWebDrivers {
 	private void storeWebDriver(WebDriver driver, stateWd state, String driverId, String moreDataWdrv) {
 		StoredWebDrv strWd = new StoredWebDrv(driver, state, driverId, moreDataWdrv);
 		poolWebDrivers.add(strWd);
-		Log4jConfig.pLogger.debug("Alta Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", driver, state, driverId, moreDataWdrv);
+		suite.getLogger().debug("Alta Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", driver, state, driverId, moreDataWdrv);
 	}
 
 	private StoredWebDrv searchWebDriver(WebDriver driver) {
@@ -178,12 +183,12 @@ public class PoolWebDrivers {
 				strWd.getWebDriver().quit();
 			}
 			catch (Exception e) {
-				Log4jConfig.pLogger.error("Problem removing all WebDrivers", e);
+				suite.getLogger().error("Problem removing all WebDrivers", e);
 			}
 		}
 
 		poolWebDrivers.removeAll(strWdToDelete);
-		Log4jConfig.pLogger.info("Removed all WebDriver");
+		suite.getLogger().info("Removed all WebDriver");
 	}
 
 	/**

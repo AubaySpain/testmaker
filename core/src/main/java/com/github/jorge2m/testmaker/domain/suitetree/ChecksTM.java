@@ -141,11 +141,16 @@ public class ChecksTM {
 		return true;
 	}
 	
-	public String getTextValidationsBrSeparated() {
+	public List<String> getTextValidations() {
 		List<String> textValidations = new ArrayList<>();
 		for (Check resultValidation : listChecks) {
 			textValidations.add(resultValidation.getDescription());
 		}
+		return textValidations;
+	}
+	
+	public String getTextValidationsBrSeparated() {
+		List<String> textValidations = getTextValidations();
 		return (textValidations.stream().collect(Collectors.joining("<br>")));
 	}
 	public String getHtmlValidationsBrSeparated() {
@@ -228,6 +233,14 @@ public class ChecksTM {
 		}
 		
 		return listCodes;
+	}
+	
+	public List<Boolean> getListOvercomedValidations() {
+		List<Boolean> listOvercomed = new ArrayList<>();
+		for (Check resultValidation : listChecks) {
+			listOvercomed.add(resultValidation.isOvercomed());
+		}
+		return listOvercomed;
 	}
 
 	private int getIndexLastValidation() {

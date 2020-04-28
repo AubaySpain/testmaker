@@ -7,7 +7,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.logging.log4j.Level;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class MailClient {
             Transport.send(message);
         }
         catch (MessagingException ex) {
-        	Log4jConfig.pLogger.log(Level.FATAL, ex);
+        	Log4jTM.getGlobal().log(Level.FATAL, ex);
         }
     }
 }

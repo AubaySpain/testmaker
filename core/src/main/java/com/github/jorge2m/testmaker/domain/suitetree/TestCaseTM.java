@@ -14,7 +14,6 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
@@ -244,7 +243,7 @@ public class TestCaseTM  {
 			driver.get(urlBase);
 		} 
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem initializing Driver content ", e.getMessage());
+			getSuiteParent().getLogger().warn("Problem initializing Driver content ", e.getMessage());
 		}
 	}
 	

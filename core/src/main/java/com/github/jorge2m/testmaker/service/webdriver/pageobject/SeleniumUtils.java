@@ -26,7 +26,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 public class SeleniumUtils { 
@@ -199,7 +199,7 @@ public class SeleniumUtils {
             // Si se ha producido Timeout, paramos la carga de la página y grabamos un log
             Actions action = new Actions(driver);
             action.sendKeys("Keys.ESCAPE").build().perform();
-			Log4jConfig.pLogger.warn("Problem waiting for page Loaded", e);
+            Log4jTM.getLogger().warn("Problem waiting for page Loaded", e);
         }
 
         hesitate(250);
@@ -217,7 +217,7 @@ public class SeleniumUtils {
             domContentLoaded = ((JavascriptExecutor) driver).executeScript("return window.performance.timing.domContentLoadedEventEnd");
         }
         catch (JavascriptException e) {
-        	Log4jConfig.pLogger.warn("Problem obtaining window.performance.timing.domContentLoadedEventEnd", e);
+        	Log4jTM.getLogger().warn("Problem obtaining window.performance.timing.domContentLoadedEventEnd", e);
         }
         
         //Este evento no funciona en Safari (siempre retorna "complete"). Indica que el DOM está cargado (incluye la carga de imágenes, estilos...)
@@ -257,11 +257,11 @@ public class SeleniumUtils {
                     Thread.sleep(1000);
                 }
             } else {
-            	Log4jConfig.pLogger.debug("Web driver: {} cannot execute javascript", driver);
+            	Log4jTM.getLogger().debug("Web driver: {} cannot execute javascript");
             }
         } 
         catch (Exception e) {
-        	Log4jConfig.pLogger.debug("Problem waiting for jQuery.active. " + e.getClass().getName() + ". " + e.getMessage());
+        	Log4jTM.getLogger().debug("Problem waiting for jQuery.active. "+ e.getClass().getName() + ". " + e.getMessage());
         }
     }
 
@@ -369,7 +369,7 @@ public class SeleniumUtils {
         	waitForPageLoaded(driver);
         }
         catch (WebDriverException e) {
-        	Log4jConfig.pLogger.warn("Problem waiting for page loading in another tab", e);        	
+        	Log4jTM.getLogger().warn("Problem waiting for page loading in another tab", e);
         }
     }
     
@@ -423,7 +423,7 @@ public class SeleniumUtils {
     		Thread.sleep(milliseconds);
     	}
     	catch (Exception e) {
-    		Log4jConfig.pLogger.warn("Problem in wait", e);
+    		Log4jTM.getLogger().warn("Problem in wait", e);
     	}
     }
     

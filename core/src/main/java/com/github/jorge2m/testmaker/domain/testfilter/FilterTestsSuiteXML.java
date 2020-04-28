@@ -18,7 +18,7 @@ import org.testng.xml.XmlGroups;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 
@@ -58,7 +58,7 @@ public class FilterTestsSuiteXML {
     		removeDependenciesWithGroupsNotExecuted(testRun);
         }
         catch (ClassNotFoundException e) {
-        	Log4jConfig.pLogger.fatal("Problem filtering TestCases", e);
+        	testRun.getSuiteParent().getLogger().fatal("Problem filtering TestCases", e);
         }
     }
     
@@ -168,7 +168,7 @@ public class FilterTestsSuiteXML {
             }
         }
         catch (ClassNotFoundException e) {
-        	Log4jConfig.pLogger.fatal("Problem getting list of annotations of TestCases methods",  e);
+        	Log4jTM.getGlobal().fatal("Problem getting list of annotations of TestCases methods",  e);
         }
         
         return listOfAnnotationsOfTestCases;

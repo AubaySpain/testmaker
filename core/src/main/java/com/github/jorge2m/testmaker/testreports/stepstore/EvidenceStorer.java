@@ -3,7 +3,7 @@ package com.github.jorge2m.testmaker.testreports.stepstore;
 import java.io.File;
 import java.io.FileWriter;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
 public abstract class EvidenceStorer {
@@ -46,14 +46,12 @@ public abstract class EvidenceStorer {
 	}
 	
 	public void saveContentEvidenceInFile(String content, String pathFile) {
-		try {
-			File file = new File(pathFile);
-			try (FileWriter fw = new FileWriter(file)) {
-				fw.write(content);
-			}
-		} 
+		File file = new File(pathFile);
+		try (FileWriter fw = new FileWriter(file)) {
+			fw.write(content);
+		}
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem saving File " + pathFile, e);
+			Log4jTM.getLogger().warn("Problem saving File " + pathFile, e);
 		}
 	}
 	

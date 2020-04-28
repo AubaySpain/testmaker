@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +12,7 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import static com.github.jorge2m.testmaker.repository.jdbc.dao.Utils.DateFormat.*;
 
 
 public class SuitesDAO {
@@ -52,9 +52,9 @@ public class SuitesDAO {
 		"  FROM SUITES " +
 		"WHERE IDEXECSUITE >= ?";
 
-	private static final String SQLDeleteSuitesBeforeId = 
+	private static final String SQLDeleteSuite = 
 		"DELETE FROM SUITES " +
-		"WHERE IDEXECSUITE <= ? ";
+		"WHERE IDEXECSUITE = ? ";
 
 	private static final String SQLSelectSuitesIdDesc = 
 		"SELECT " + ListFieldsSuiteTable + 
@@ -115,10 +115,10 @@ public class SuitesDAO {
 		suiteData.setResult(State.valueOf(rowSuite.getString("RESULT")));
 
 		String inicioDate = rowSuite.getString("INICIO");
-		suiteData.setInicioDate(getDateFormat().parse(inicioDate));
+		suiteData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
 		String finDate = rowSuite.getString("FIN");
 		if (finDate!=null && "".compareTo(finDate)!=0) {
-			suiteData.setInicioDate(getDateFormat().parse(finDate));
+			suiteData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
 		}
 
 		suiteData.setDurationMillis(rowSuite.getFloat("TIME_MS"));
@@ -128,6 +128,10 @@ public class SuitesDAO {
 		suiteData.setPathReportHtml(rowSuite.getString("PATH_REPORT"));
 		suiteData.setUrlReportHtml(rowSuite.getString("URL_REPORT"));
 		suiteData.setStateExecution(StateExecution.valueOf(rowSuite.getString("STATE_EXECUTION")));
+		
+		TestRunsDAO testRunsDAO = new TestRunsDAO(connector);
+		suiteData.setListTestRun(testRunsDAO.getListTestRuns(rowSuite.getString("IDEXECSUITE")));
+		
 		return suiteData;
 	}
 
@@ -141,9 +145,9 @@ public class SuitesDAO {
 				insert.setString(5, suiteData.getChannel().name()); 
 				insert.setString(6, suiteData.getApp());
 				insert.setString(7, suiteData.getResult().name());
-				insert.setString(8, getDateFormat().format(suiteData.getInicioDate()));
+				insert.setString(8, Utils.getDateFormat(ToSeconds).format(suiteData.getInicioDate()));
 				if (suiteData.getFinDate()!=null) {
-					insert.setString(9, getDateFormat().format(suiteData.getFinDate()));
+					insert.setString(9, Utils.getDateFormat(ToSeconds).format(suiteData.getFinDate()));
 				} else {
 					insert.setString(9, null);
 				}
@@ -212,10 +216,10 @@ public class SuitesDAO {
 		}
 		return null;
 	}
-
-	public void deleteSuitesBefore(String idSuite) {
+	
+	public void deleteSuite(String idSuite) {
 		try (Connection conn = connector.getConnection();
-			PreparedStatement delete = conn.prepareStatement(SQLDeleteSuitesBeforeId)) {
+			PreparedStatement delete = conn.prepareStatement(SQLDeleteSuite)) {
 			delete.setString(1, idSuite);
 			delete.executeUpdate();
 		} 
@@ -225,9 +229,5 @@ public class SuitesDAO {
 		catch (ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
-	}
-
-	private static SimpleDateFormat getDateFormat() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 }

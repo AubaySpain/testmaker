@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.SenderMailEndSuiteI;
@@ -34,12 +34,12 @@ public class DefaultMailEndSuite implements SenderMailEndSuiteI {
 			list1Suite.add(suite);
 			mensajeHTML+=CorreoReport.constuctTableMail(list1Suite);
 
-			Log4jConfig.pLogger.info(". Procedemos a enviar correo!");
+			suite.getLogger().info(". Procedemos a enviar correo!");
 			new MailClient().mail(this.from, myToList, myCcList, getSubjectMail(suite), mensajeHTML, listaAttachImages);
-			Log4jConfig.pLogger.info("Correo enviado!");
+			suite.getLogger().info("Correo enviado!");
 		}
 		catch (Exception e) {
-			Log4jConfig.pLogger.fatal("Problem sending mail", e);
+			suite.getLogger().fatal("Problem sending mail", e);
 		}
 	}
 	

@@ -7,7 +7,7 @@ import org.testng.IMethodInstance;
 import org.testng.IMethodInterceptor;
 import org.testng.ITestContext;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 
 public class PriorityInterceptor implements IMethodInterceptor {
@@ -40,7 +40,7 @@ public class PriorityInterceptor implements IMethodInterceptor {
                 }
             } 
             catch (Exception e) {
-                Log4jConfig.pLogger.error("Problem managing Priority", e);
+            	Log4jTM.getGlobal().error("Problem managing Priority", e);
             }           
 
             result.set(array_index, m);           

@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 import org.apache.commons.compress.utils.IOUtils;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
 import net.lightbody.bmp.BrowserMobProxy;
@@ -53,7 +53,7 @@ public class NettrafficStorer extends EvidenceStorer {
 		
 			proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.REQUEST_HEADERS);
 			proxyInThread.set(proxy);
-			Log4jConfig.pLogger.info("Created Proxy NetTraffic with port " + proxy.getPort());
+			Log4jTM.getLogger().info("Created Proxy NetTraffic with port " + proxy.getPort());
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class NettrafficStorer extends EvidenceStorer {
 			content = writer.toString();
 		}
 		catch (IOException e) {
-			Log4jConfig.pLogger.warn("Exception writing har. " + e);
+			step.getSuiteParent().getLogger().warn("Exception writing har. " + e);
 		}
 		return content;
 	}
@@ -80,7 +80,7 @@ public class NettrafficStorer extends EvidenceStorer {
 			Thread.sleep(1000);
 		}
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Exception writing copying har to harp. " + e);
+			step.getSuiteParent().getLogger().warn("Exception writing copying har to harp. " + e);
 		}
 	}
 	
@@ -149,7 +149,7 @@ public class NettrafficStorer extends EvidenceStorer {
 				int port = proxy.getPort();
 				proxy.stop();
 				destroyProxy();
-				Log4jConfig.pLogger.info("Stop Proxy NetTraffic with port " + port);
+				Log4jTM.getLogger().info("Stop Proxy NetTraffic with port " + port);
 			}
 		}
 	}
@@ -168,8 +168,8 @@ public class NettrafficStorer extends EvidenceStorer {
 			}
 			catch (RuntimeException e) {
 				//NOTA: No debería (miramos de rotar los puertos), pero si en algún momento se produce el RuntimeException por un "java.net.BindException: Address already in use: bind"
-				//entonces se produce un problema según el cuál todo funciona OK pero el Java no acaba. Como si se quedara algún Thread enganchado 
-				Log4jConfig.pLogger.info(e.getClass() + " in start of proxy in port " + port + ". " + e.getMessage());
+				//entonces se produce un problema según el cuál todo funciona OK pero el Java no acaba. Como si se quedara algún Thread enganchado
+				Log4jTM.getLogger().info(e.getClass() + " in start of proxy in port " + port + ". " + e.getMessage());
 				port = checkoutPort();
 				i+=1;
 			}

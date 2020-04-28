@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
@@ -105,7 +105,7 @@ public class BrowserStackDriverMaker extends DriverMaker {
 			urlBrowserStack = new URL(urlBString);
 		}
 		catch (MalformedURLException e) {
-			Log4jConfig.pLogger.error("Incorrect URL for BrowserStack " + urlBString, e);
+			Log4jTM.getLogger().error("Incorrect URL for BrowserStack " + urlBString, e);
 			return null;
 		}
 

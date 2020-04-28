@@ -1,5 +1,7 @@
 package com.github.jorge2m.testmaker.restcontroller;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -21,6 +23,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+
+import org.apache.commons.io.FileUtils;
 
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
 import com.github.jorge2m.testmaker.boundary.access.MessageError;
@@ -110,6 +114,32 @@ public class RestApiTM {
 		}
 	}
 	
+	@DELETE
+	@Path("/suiterun/report")
+	public void deleteSuiteReports(
+					@QueryParam("suite") String suite,
+					@QueryParam("channel") String channel,
+					@QueryParam("application") String application,
+					@QueryParam("state") String state,
+					@QueryParam("date_from") String fechaDesde) throws Exception {
+		List<SuiteBean> listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde);
+		for (SuiteBean suiteBean : listSuites) {
+			purgeSuite(suiteBean);
+		}
+	}
+	
+	private void purgeSuite(SuiteBean suite) throws IOException {
+		purgeSuiteReport(suite);
+		TestMaker.purgeSuite(suite);
+	}
+	private void purgeSuiteReport(SuiteBean suite) throws IOException {
+		File file = new File(suite.getPathReportHtml());
+		String nameParentDir = file.getParentFile().getName();
+		if (nameParentDir.compareTo(suite.getIdExecSuite())==0) {
+			FileUtils.deleteDirectory(file.getParentFile());
+		}
+	}
+	
 	@GET
 	@Path("/suiteruns")
 	@Produces("application/json")
@@ -118,15 +148,21 @@ public class RestApiTM {
 						   @QueryParam("channel") String channel,
 						   @QueryParam("application") String application,
 						   @QueryParam("state") String state,
-						   @QueryParam("desde") String fechaDesde) throws Exception {
+						   @QueryParam("date_from") String fechaDesde) throws Exception {
 		if (channel!=null) {
 			if (!enumContains(Channel.class, channel)) {
-				throw new WebApplicationException("Parameter 'channel' incorrect", Response.Status.BAD_REQUEST);
+				throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST)
+					.entity("Parameter 'channel' incorrect. Possible values: " + Arrays.asList(Channel.values()))
+					.build());
 			}
 		}
 		if (state!=null) {
 			if (!enumContains(SetSuiteRun.class, state)) {
-				throw new WebApplicationException("Parameter 'state' incorrect", Response.Status.BAD_REQUEST);
+				throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST)
+					.entity("Parameter 'state' incorrect. Possible values: " + Arrays.asList(SetSuiteRun.values()))
+					.build());
 			}
 		}
 		Date dateDesde = null;
@@ -135,8 +171,10 @@ public class RestApiTM {
 				dateDesde = getDateFromParam(fechaDesde);
 			}
 			catch (ParseException e) {
-				throw new WebApplicationException(
-						"Parameter 'desde' incorrect. Possible formats: " + listFormatsFecha, Response.Status.BAD_REQUEST);
+				throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST)
+					.entity("Parameter 'date_from' incorrect. Possible formats: " + listFormatsFecha)
+					.build());
 			}
 		}
 
@@ -191,6 +229,10 @@ public class RestApiTM {
 	@POST
 	@Path("/suite/testcases")
 	@Produces("application/json")
+	public List<TestMethodData> getTestCasesFromSuite(@BeanParam InputParamsBasic inputParams) throws Exception {
+		return getTestCasesFromSuite((InputParamsTM)inputParams);
+	}
+	
 	public List<TestMethodData> getTestCasesFromSuite(@BeanParam InputParamsTM inputParams) throws Exception {
 		inputParams.setSuiteEnum(suiteEnum);
 		inputParams.setAppEnum(appEnum);

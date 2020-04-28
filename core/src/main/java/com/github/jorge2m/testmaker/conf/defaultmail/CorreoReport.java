@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import javax.mail.internet.*;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.conf.defaultstorer.RepositorySQLite;
 import com.github.jorge2m.testmaker.domain.RepositoryI;
@@ -255,9 +255,9 @@ public class CorreoReport {
 		String subject="Resultado tests últimas 13 horas";  
 
 		//Envío del correo
-		Log4jConfig.pLogger.info("Fin Test... procedemos a envío del correo!");
+		Log4jTM.getGlobal().info("Fin Test... procedemos a envío del correo!");
 		new MailClient().mail(from, myToList, myCcList, subject, message, listaAttachImages);
-		Log4jConfig.pLogger.info("Correo enviado!");
+		Log4jTM.getGlobal().info("Correo enviado!");
 	}	
 
 	private static class SuiteTestCasesData {

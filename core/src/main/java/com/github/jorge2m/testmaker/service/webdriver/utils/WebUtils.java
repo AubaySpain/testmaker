@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import javax.net.ssl.*;
 import org.testng.*;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.testreports.html.ResultadoErrores;
 
@@ -138,7 +138,7 @@ public class WebUtils {
         }
         catch (Exception e) {
             //Parece que en el caso de Safari se produce una excepción al cargar algunos logs como el de 'performance'
-        	Log4jConfig.pLogger.info("Problem to load the WebDriver error Log", e);
+        	Log4jTM.getLogger().info("Problem to load the WebDriver error Log", e);
         }
 
         // Retornamos la lista de errores y el estado

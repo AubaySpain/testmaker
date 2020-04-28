@@ -484,7 +484,7 @@ Then you must invoke the POST resource '*suiterun*' with body parameters similar
 | store | true |
 (Adding the parameter *driverVersion* if necessary)
 
-The execution will return a response that includes an attribute '*idExecSuite*' with the identificator of the test in timestamp format. You can find the HTML result in the same directory that in the case of the execution via command line or you can visualize it calling to the resource of the API Rest: http://localhost:8888/suiterun/[idExecSuite]/report (for example, http://localhost:80/suiterun/200418_192217511/report). If you run that URL form a browser you'll obtain the HTML report.
+The execution will return a response that includes an attribute '*idExecSuite*' with the identificator of the test in timestamp format. You can find the HTML result in the same directory that in the case of the execution via command line or you can visualize it calling to the resource of the API Rest: http://localhost:80/suiterun/{{idExecSuite}}/report (for example, http://localhost:80/suiterun/200418_192217511/report). If you run that URL form a browser you'll obtain the HTML report.
 
 ### Result Report
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
@@ -492,7 +492,9 @@ In both executions we will obtain a HTML report with the same testcase BUS001 re
 
 # Invocation Reference Guide
 ## Command Line
-A project built under TestMaker can be called from Command Line for run a new TestSuite invoking the corresponding main class that implements that access. You can see a description for the list of parameters using the parameter `-help`. 
+A project built under TestMaker can be called from Command Line for run a new TestSuite invoking the corresponding main class that implements that access. You can see a description for the list of parameters using the parameter `-help`. The list with all the parameters is as follows (to wich should be added the specific ones for BrowserStack described in the previous section "**Integration with BrowserStack**") 
+
+
 
 | Parameter     | Required | Function_Description                                         | Values                                                       | Example                                          |
 | ------------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
@@ -508,7 +510,7 @@ A project built under TestMaker can be called from Command Line for run a new Te
 | reciclewd     | no       | Flag to reuse the drivers of TestCases already finished (false by default) | true, false (by default)                                     | true                                             |
 | asyncexec     | no       | Flag to indicate if you don't want wait for the completion of execution | true, false (by default)                                     | true                                             |
 | net           | no       | Flag for capture the Http Nettraffic for each @Step          | true, false (by default)                                     | true                                             |
-| store         | no       | Flag to store the info of the TestSuite execution [^ 4]      | true, false (by default)                                     | true                                             |
+| storebd       | no       | Level of item store in bd[^ 4]                               | nostore, suite, testrun, testcase (by default), step, validation | validation                                       |
 | mails         | no       | List of emails to wich you want to send a email with the Report of the TestSuite execution | Comma-separated list of emails                               | jorge.and.2m@gmail.com,jorge.munoz.sge@mango.com |
 | driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
 
@@ -516,5 +518,13 @@ A project built under TestMaker can be called from Command Line for run a new Te
 [^2]: In each TestCase identifier you can add {number} that specifies the times that TestCase will be executed. Further, you can add a second number that identifies the paralellization for the execution of these TestCases, for example, a valid value could be: "BOR001,FIC002{5-2}"
 
 [^3]: For user use. In many occasions it may be useful for the script to work differently based on the value of this parameter.
-[^ 4]: There are some services of the TestMaker API Rest who need this previous storage, for example the consult of a TestSuite execution. 
+[^ 4]: There are some services of the TestMaker API Rest who depends on this previous storage, for example the consult of a TestSuite execution. 
 [^5]: TestMaker uses a default version for each driver that you can override with this parameter 
+
+## API REST
+
+The execution of a new TestCase Run is an operation also exposed in the TestMaker REST API. But in this type of access yo also have requests for manage the TestCase Run executions (detail, list, stop, purge, etc.) and for connect/disconnect servers and create the infraestructure for execute tests in a distributed way.
+
+[The complete TestMaker API Documentation](https://documenter.getpostman.com/view/3252940/Szf9XTDg?version=latest)
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/afeff74f2d3b29fa9729)

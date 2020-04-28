@@ -17,6 +17,7 @@ import org.apache.commons.cli.CommandLine;
 import com.github.jorge2m.testmaker.boundary.access.OptionTMaker;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
+import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
@@ -41,7 +42,7 @@ public abstract class InputParamsTM {
 	public static final String RemoteParam = "remote";
 	public static final String RecicleWDParam = "reciclewd";
 	public static final String NetAnalysisParam = "net";
-	public static final String StoreParam = "store";
+	public static final String StoreBdParam = "storebd";
 	public static final String MailsParam = "mails";
 	public static final String TypeAccessParam = "typeAccess";
 	public static final String DriverVersionParam = "driverVersion";
@@ -108,8 +109,8 @@ public abstract class InputParamsTM {
 	@FormParam(NetAnalysisParam)
 	String net;
 
-	@FormParam(StoreParam)
-	String store;
+	@FormParam(StoreBdParam)
+	String storebd;
 
 	@FormParam(MailsParam)
 	String mailsCommaSeparated;
@@ -279,11 +280,13 @@ public abstract class InputParamsTM {
 			.desc("Net Analysis (true, false)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.StoreParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.StoreBdParam)
 			.required(false)
 			.hasArgs()
-			.possibleValues(Arrays.asList("true", "false"))
-			.desc("Store result persistentely (true, false)")
+			.possibleValues(StoreUntil.class)
+			.desc(
+				"Store results in bd until item element. Possible values: " + 
+				Arrays.toString(getNames(StoreUntil.class.getEnumConstants())))
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.MailsParam)
@@ -394,7 +397,7 @@ public abstract class InputParamsTM {
 		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
 		remote = cmdLine.getOptionValue(RemoteParam);
 		net = cmdLine.getOptionValue(NetAnalysisParam);
-		store = cmdLine.getOptionValue(StoreParam);
+		storebd = cmdLine.getOptionValue(StoreBdParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
 		
@@ -425,7 +428,7 @@ public abstract class InputParamsTM {
 		AsyncExec(AsyncExecParam),
 		Remote(RemoteParam),
 		NetAnalysis(NetAnalysisParam),
-		Store(StoreParam),
+		StoreBd(StoreBdParam),
 		Mails(MailsParam),
 		TypeAccess(TypeAccessParam),
 		DriverVersion(DriverVersionParam),
@@ -487,8 +490,8 @@ public abstract class InputParamsTM {
 			return this.remote;
 		case NetAnalysis:
 			return this.net;
-		case Store:
-			return this.store;
+		case StoreBd:
+			return this.storebd;
 		case Mails:
 			return this.mailsCommaSeparated;
 		case TypeAccess:
@@ -716,14 +719,17 @@ public abstract class InputParamsTM {
 		}
 		return false;
 	} 
-	public void setStoreResult(boolean store) {
-		this.store = String.valueOf(store);
-	}
-	public boolean isStoreResult() {
-		if (store!=null) {
-			return ("true".compareTo(store)==0);
+//	public void setStoreResult(boolean store) {
+//		this.store = String.valueOf(store);
+//	}
+	public StoreUntil getStoreBd() {
+		if (storebd==null || "".compareTo(storebd)==0) {
+			if (getTypeAccess()==TypeAccess.Rest) {
+				return StoreUntil.testcase;
+			}
+			return StoreUntil.nostore;
 		}
-		return false;
+		return StoreUntil.valueOf(storebd);
 	}
 	public String getMoreInfo() {
 		return "";

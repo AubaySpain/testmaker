@@ -11,7 +11,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 
 public abstract class PluginChrome { 
@@ -28,7 +28,7 @@ public abstract class PluginChrome {
             options.addExtensions(tmpFile);
         }
         catch (IOException e) {
-        	Log4jConfig.pLogger.warn("Problem creating chrome plugin with path " + pathPlugin , e);
+        	Log4jTM.getLogger().warn("Problem creating chrome plugin with path " + pathPlugin, e);
         }
     }
     

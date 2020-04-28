@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
 public class HardcopyStorer extends EvidenceStorer {
@@ -35,7 +35,7 @@ public class HardcopyStorer extends EvidenceStorer {
 			screenShot = ((TakesScreenshot)newWebDriver).getScreenshotAs(OutputType.BASE64);
 		}
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem capturing page", e);
+			step.getSuiteParent().getLogger().warn("Problem capturing page", e);
 		}
 		return screenShot;
 	}
@@ -43,14 +43,13 @@ public class HardcopyStorer extends EvidenceStorer {
 	@Override
 	public void saveContentEvidenceInFile(String content, String pathFile) {
 		byte[] bytesPng = Base64.getMimeDecoder().decode(content);
-		OutputStream stream = null;
-		try {
-			File file = new File(pathFile);
-			stream = new FileOutputStream(file);
+		File file = new File(pathFile);
+		try (
+			OutputStream stream = new FileOutputStream(file)) {
 			stream.write(bytesPng);
 		} 
 		catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem saving File " + pathFile, e);
+			Log4jTM.getLogger().warn("Problem saving File " + pathFile, e);
 		}
 	}
 	

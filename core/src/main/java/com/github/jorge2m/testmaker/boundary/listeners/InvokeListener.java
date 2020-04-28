@@ -4,7 +4,7 @@ import java.net.HttpURLConnection;
 
 import org.testng.*;
 
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
@@ -63,11 +63,11 @@ public class InvokeListener extends TestListenerAdapter implements ISuiteListene
 
 	@Override //End TestCase Failure
 	public void onTestFailure(ITestResult result) {
-		Log4jConfig.pLogger.error("Exception for TestNG", result.getThrowable());
 		TestCaseTM testCase = TestCaseTM.getTestCase(result);
 		if (testCase!=null) {
 			testCase.end(State.Nok);
 		}
+		Log4jTM.getLogger().error("Exception for TestNG", result.getThrowable());
 	}
 
 	private TestRunTM getTestRun(ITestResult result) {

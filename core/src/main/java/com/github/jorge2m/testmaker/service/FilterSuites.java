@@ -42,13 +42,16 @@ public class FilterSuites {
 	
 	public List<SuiteBean> getListSuites() throws Exception {
 		List<SuiteBean> listSuitesInMemory;
-		List<SuiteBean> listSuitesStored;
+		List<SuiteBean> listSuitesStored = new ArrayList<>();
 		if (desde==null) {
 			listSuitesInMemory = filter(getListSuitesInMemory());
 			listSuitesStored = filter(repository.getListSuites());
 		} else {
 			listSuitesInMemory = filter(getListSuitesInMemoryAfter(desde));
-			listSuitesStored = filter(repository.getListSuitesAfter(desde));
+			List<SuiteBean> listSuitesInBD = repository.getListSuitesAfter(desde);
+			if (listSuitesInBD!=null) {
+				listSuitesStored = filter(listSuitesInBD);
+			}
 		}
 
 		List<SuiteBean> listToReturn = new ArrayList<>();

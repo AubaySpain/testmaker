@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import com.github.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 public class BrowserStackRestClient extends JaxRsClient {
 
@@ -33,7 +33,7 @@ public class BrowserStackRestClient extends JaxRsClient {
 		try {
 			return getClientIgnoreCertificates().register(auth);
 		} catch (Exception e) {
-			Log4jConfig.pLogger.warn("Problem creating BrowserStack APIRest Client. " + e.getCause());
+			Log4jTM.getLogger().warn("Problem creating BrowserStack APIRest Client. " + e.getCause());
 			return null;
 		}
 	}

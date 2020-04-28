@@ -24,6 +24,7 @@ public class SuiteBean {
 	private int numberTestCases;
 	private String moreInfo;
 	private String urlBase;
+	private String pathLogFile;
 	private String pathReportHtml;
 	private String urlReportHtml;
 	
@@ -71,6 +72,9 @@ public class SuiteBean {
 	}
 	public String getUrlBase() {
 		return urlBase;
+	}
+	public String getPathLogFile() {
+		return pathLogFile;
 	}
 	public String getPathReportHtml() {
 		return pathReportHtml;
@@ -121,8 +125,14 @@ public class SuiteBean {
 	public void setUrlBase(String urlBase) {
 		this.urlBase = urlBase;
 	}
+	public void setPathLogFile(String pathLogFile) {
+		this.pathLogFile = pathLogFile;
+	}
 	public void setPathReportHtml(String pathReportHtml) {
 		this.pathReportHtml = pathReportHtml;
+	}
+	public String getPathDirectory() {
+		return getPathReportHtml();
 	}
 	public void setUrlReportHtml(String urlReportHtml) {
 		this.urlReportHtml = urlReportHtml;

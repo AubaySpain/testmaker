@@ -14,7 +14,7 @@ import org.testng.TestNG;
 import org.testng.xml.XmlSuite;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.conf.Log4jConfig;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.defaultstorer.RepositorySQLite;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
@@ -33,14 +33,18 @@ public class TestMaker {
 	private static RepositoryI repository = new RepositorySQLite(); 
 	
 	public static void run(SuiteTM suite, boolean async) {
-		Log4jConfig.configLog4java(suite.getPathDirectory());
+		//Log4jConfig.configLog4java(suite.getPathDirectory());
 		File path = new File(suite.getPathDirectory());
 		path.mkdir();
+		suite.getLogger().info("Inicio TestSuite " + suite.getIdExecution());
 		if (async) {
 			runInTestNgAsync(suite);
+			suite.getLogger().info("Inicio2 TestSuite " + suite.getIdExecution());
 		} else {
 			runInTestNgSync(suite);
+			suite.getLogger().info("Inicio TestSuite " + suite.getIdExecution());
 		}
+		suite.getLogger().info("Fin TestSuite " + suite.getIdExecution());
 	}
 
 	public static void finishSuite(String idExecution) {
@@ -109,6 +113,10 @@ public class TestMaker {
 			suite.end();
 		}
 	}
+	public static void purgeSuite(SuiteBean suite) {
+		repository.delete(suite.getIdExecSuite());
+	}
+	
 	private static boolean neatStop(SuiteTM suite) {
 		suite.setStateExecution(StateExecution.Stopping);
 		List<StateExecution> validStates = Arrays.asList(StateExecution.Stopped, StateExecution.Finished);
@@ -203,7 +211,8 @@ public class TestMaker {
 			Thread.sleep(millis);
 		}
 		catch (InterruptedException e) {
-			Log4jConfig.pLogger.warn(e);
+			Log4jTM.getLogger().warn("Problem in Thread.sleep", e);
 		}
 	}
+
 }

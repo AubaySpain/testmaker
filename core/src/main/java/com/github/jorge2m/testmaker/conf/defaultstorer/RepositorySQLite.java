@@ -12,15 +12,17 @@ import org.sqlite.SQLiteConfig.LockingMode;
 
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI;
+import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
-import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
-import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.ConnectorBD;
+import com.github.jorge2m.testmaker.repository.jdbc.dao.StepsDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.SuitesDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.TestCasesDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.TestRunsDAO;
+import com.github.jorge2m.testmaker.repository.jdbc.dao.ValidationsDAO;
 import com.github.jorge2m.testmaker.testreports.html.ResourcesExtractor;
 
 public class RepositorySQLite implements RepositoryI {
@@ -30,15 +32,27 @@ public class RepositorySQLite implements RepositoryI {
 	private final SuitesDAO suitesDAO = new SuitesDAO(connector);
 	private final TestRunsDAO testRunsDAO = new TestRunsDAO(connector);
 	private final TestCasesDAO testCasesDAO = new TestCasesDAO(connector);
+	private final StepsDAO stepsDAO = new StepsDAO(connector);
+	private final ValidationsDAO validationsDAO = new ValidationsDAO(connector);
+	
+//	@Override
+//	public void storeAll(SuiteTM suite) {
+//		storeSuiteAndChildren(suite);
+//	}
+	
+//	@Override
+//	public void storeSuite(SuiteTM suite) {
+//		storeOnlySuite(suite);
+//	}
 	
 	@Override
-	public void storeAll(SuiteTM suite) {
-		storeSuiteAndChildren(suite);
+	public void store(SuiteBean suite, StoreUntil until) {
+		storeSuiteAndChildren(suite, until);
 	}
 	
 	@Override
-	public void storeSuite(SuiteTM suite) {
-		storeOnlySuite(suite);
+	public void delete(String suiteIdExec) {
+		deleteSuiteAndChildren(suiteIdExec);
 	}
 	
 	@Override
@@ -85,50 +99,76 @@ public class RepositorySQLite implements RepositoryI {
 		);
 	}
 	
-	private synchronized void storeOnlySuite(SuiteTM suite) {
-		suitesDAO.insertOrReplaceSuite(suite.getSuiteBean());
+//	private synchronized void storeOnlySuite(SuiteTM suite) {
+//		suitesDAO.insertOrReplaceSuite(suite.getSuiteBean());
+//	}
+	
+	private synchronized void storeSuiteAndChildren(SuiteBean suite, StoreUntil until) {
+		if (!until.storeSuite()) {
+			return;
+		}
+		suitesDAO.insertOrReplaceSuite(suite);
+		if (!until.storeTestrun()) {
+			return;
+		}
+		for (TestRunBean testRun : suite.getListTestRun()) {
+			testRunsDAO.insertTestRun(testRun);
+			if (until.storeTestcase()) {
+				for (TestCaseBean testCase : testRun.getListTestCase()) {
+					testCasesDAO.insertTestCase(testCase);
+					if (until.storeStep()) {
+						for (StepTM step : testCase.getListStep()) {
+							stepsDAO.insertStep(step);
+							if (until.storeValidation()) {
+								for (ChecksTM checks : step.getListChecksTM()) {
+									validationsDAO.insertValidation(checks);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
-	private synchronized void storeSuiteAndChildren(SuiteTM suite) {
-		suitesDAO.insertOrReplaceSuite(suite.getSuiteBean());
-		for (TestRunTM testRun : suite.getListTestRuns()) {
-			testRunsDAO.insertTestRun(testRun.getTestRunBean());
-			for (TestCaseTM testCase : testRun.getListTestCases()) {
-				testCasesDAO.insertTestCase(testCase.getTestCaseBean());
+	public void deleteSuiteAndChildren(String suiteIdExec) {
+		suitesDAO.deleteSuite(suiteIdExec);
+		testRunsDAO.deleteTestRuns(suiteIdExec);
+		testCasesDAO.deleteTestCases(suiteIdExec);
+		stepsDAO.deleteSteps(suiteIdExec);
+		validationsDAO.deleteValidations(suiteIdExec);
+	}
+
+	@Override
+	public Connection getConnection() throws ClassNotFoundException, SQLException {
+		return connector.getConnection();
+	}
+
+	private void grabSqliteBDifNotExists() {
+		if (!sqliteBdGrabed) {
+			File fileSqliteBD = new File(getSQLiteFilePathAutomaticTestingSchema());
+			if (!fileSqliteBD.exists()) {
+				ResourcesExtractor resExtractor = ResourcesExtractor.getNew();
+				resExtractor.copyDirectoryResources(
+					"sqlite/", 
+					getSQLitePathDirectory());
+				
+				sqliteBdGrabed = true;
 			}
 		}
 	}
 
-    @Override
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-    	return connector.getConnection();
-    }
-    
-    private void grabSqliteBDifNotExists() {
-    	if (!sqliteBdGrabed) {
-	        File fileSqliteBD = new File(getSQLiteFilePathAutomaticTestingSchema());
-	        if (!fileSqliteBD.exists()) {
-	            ResourcesExtractor resExtractor = ResourcesExtractor.getNew();
-		        resExtractor.copyDirectoryResources(
-		        	"sqlite/", 
-		            getSQLitePathDirectory());
-		        
-		        sqliteBdGrabed = true;
-	        }
-    	}
-    }
-    
-    private String getSQLitePathDirectory() {
-    	String path = 
-    		System.getProperty("user.dir") + File.separator + 
-    		ConstantesTM.directoryOutputTests + File.separator + 
-    		"sqlite" + File.separator;
-    	return path;
-    }
-    
-    private String getSQLiteFilePathAutomaticTestingSchema() {
-    	return (
-    		getSQLitePathDirectory() + 
-    		ConstantesTM.SQLiteFileAutomaticTestingSchema);
-    }
+	private String getSQLitePathDirectory() {
+		String path = 
+			System.getProperty("user.dir") + File.separator + 
+			ConstantesTM.directoryOutputTests + File.separator + 
+			"sqlite" + File.separator;
+		return path;
+	}
+
+	private String getSQLiteFilePathAutomaticTestingSchema() {
+		return (
+			getSQLitePathDirectory() + 
+			ConstantesTM.SQLiteFileAutomaticTestingSchema);
+	}
 }
