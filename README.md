@@ -510,15 +510,18 @@ A project built under TestMaker can be called from Command Line for run a new Te
 | reciclewd     | no       | Flag to reuse the drivers of TestCases already finished (false by default) | true, false (by default)                                     | true                                             |
 | asyncexec     | no       | Flag to indicate if you don't want wait for the completion of execution | true, false (by default)                                     | true                                             |
 | net           | no       | Flag for capture the Http Nettraffic for each @Step          | true, false (by default)                                     | true                                             |
-| storebd       | no       | Level of item store in bd[^ 4]                               | nostore, suite, testrun, testcase (by default), step, validation | validation                                       |
+| storebd       | no       | Level of item store in bd[^4]                               | nostore, suite, testrun, testcase (by default), step, validation | validation                                       |
 | mails         | no       | List of emails to wich you want to send a email with the Report of the TestSuite execution | Comma-separated list of emails                               | jorge.and.2m@gmail.com,jorge.munoz.sge@mango.com |
-| driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
+| driverVersion | no       | The version of the driver [^5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
 
 [^1]: TestMaker goes with that  embedded drivers out of the box, but from each project yo can add new webdrivers or overwrite the embedded ones
+
 [^2]: In each TestCase identifier you can add {number} that specifies the times that TestCase will be executed. Further, you can add a second number that identifies the paralellization for the execution of these TestCases, for example, a valid value could be: "BOR001,FIC002{5-2}"
 
 [^3]: For user use. In many occasions it may be useful for the script to work differently based on the value of this parameter.
-[^ 4]: There are some services of the TestMaker API Rest who depends on this previous storage, for example the consult of a TestSuite execution. 
+
+[^4]: There are some services of the TestMaker API Rest who depends on this previous storage, for example the consult of a TestSuite execution. 
+
 [^5]: TestMaker uses a default version for each driver that you can override with this parameter 
 
 ## API REST
