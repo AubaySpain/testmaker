@@ -515,10 +515,13 @@ A project built under TestMaker can be called from Command Line for run a new Te
 | driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
 
 [^1]: TestMaker goes with that  embedded drivers out of the box, but from each project yo can add new webdrivers or overwrite the embedded ones
+
 [^2]: In each TestCase identifier you can add {number} that specifies the times that TestCase will be executed. Further, you can add a second number that identifies the paralellization for the execution of these TestCases, for example, a valid value could be: "BOR001,FIC002{5-2}"
 
 [^3]: For user use. In many occasions it may be useful for the script to work differently based on the value of this parameter.
+
 [^ 4]: There are some services of the TestMaker API Rest who depends on this previous storage, for example the consult of a TestSuite execution. 
+
 [^5]: TestMaker uses a default version for each driver that you can override with this parameter 
 
 ## API REST
