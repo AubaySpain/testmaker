@@ -16,7 +16,7 @@
 	<modules>
 		<module>example-test</module>
 		<module>hello-world-example</module>
-		<module>windriver-test</module>
+		<module>windriver-test</module> 
 	</modules>
 		
 	<dependencies>
