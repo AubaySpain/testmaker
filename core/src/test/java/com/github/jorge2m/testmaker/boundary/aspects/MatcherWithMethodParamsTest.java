@@ -1,6 +1,6 @@
 package com.github.jorge2m.testmaker.boundary.aspects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 

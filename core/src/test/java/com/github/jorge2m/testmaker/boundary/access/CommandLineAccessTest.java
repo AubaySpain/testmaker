@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
-import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
-import com.github.jorge2m.testmaker.boundary.access.MessageError;
-import com.github.jorge2m.testmaker.boundary.access.OptionTMaker;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 
 import org.apache.commons.cli.ParseException;

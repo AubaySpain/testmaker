@@ -1,15 +1,11 @@
 package com.github.jorge2m.testmaker.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-
-import com.github.jorge2m.testmaker.domain.InputParamsBasic;
-import com.github.jorge2m.testmaker.domain.InputParamsTM;
-import com.github.jorge2m.testmaker.domain.TestCaseParams;
 
 public class InputParamsTMTest {
 

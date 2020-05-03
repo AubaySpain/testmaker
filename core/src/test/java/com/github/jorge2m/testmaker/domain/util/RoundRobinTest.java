@@ -1,6 +1,6 @@
 package com.github.jorge2m.testmaker.domain.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,7 +8,6 @@ import java.net.URL;
 import org.junit.Test;
 
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import com.github.jorge2m.testmaker.domain.util.RoundRobin;
 
 public class RoundRobinTest {
 	

@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.service.testab.manager.TestABGoogleExpManager;
 import com.github.jorge2m.testmaker.unittestdata.AppEcom;
 
 public class TestABGoogleExperimentsTest {

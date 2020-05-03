@@ -10,7 +10,6 @@ import java.util.jar.JarEntry;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.github.jorge2m.testmaker.testreports.html.GetterResourcesFromJar;
 import com.github.jorge2m.testmaker.testreports.html.GetterResources.Directory;
 
 public class GetterResourcesFromJarTest {
