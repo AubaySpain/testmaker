@@ -49,6 +49,13 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
+		<profile>
+			<id>CI</id>
+			<modules>
+				<module>archetypes</module>
+				<module>core</module>
+			</modules>
+		</profile>
 		<profile> 
 			<id>release</id>
 			<modules>
