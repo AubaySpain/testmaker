@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>examples</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>winappdriver-test</artifactId>
 	<name>winappdriver-test</name>
