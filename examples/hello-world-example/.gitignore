@@ -9,3 +9,5 @@ target/*
 *.class
 .settings
 /pom.xml.versionsBackup
+/output-library
+!/output-library/SmokeTest/200428_233850174

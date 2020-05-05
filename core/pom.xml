@@ -173,7 +173,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.11</version>
 				<configuration>
 					<complianceLevel>1.8</complianceLevel>
 					<source>1.8</source>
@@ -182,7 +182,23 @@
 					<verbose>true</verbose>
 					<Xlint>ignore</Xlint>
 					<encoding>UTF-8 </encoding>
+					<!-- This weave is important for solve a problem with the future assembly of a Project Based in TestMaker.
+						 With this weave we force the modification of the Aspect classes (addition of method 'aspectOf' basically)
+						 If this modification is missing a future assembly can get the testmaker-core.jar without this wave -->
+					<weaveDirectories>
+						<weaveDirectory>
+							${project.build.directory}/classes/com/github/jorge2m/testmaker/boundary/access
+						</weaveDirectory>
+					</weaveDirectories>
 				</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>test-compile</goal>
+							</goals>
+						</execution>
+					</executions>
 			</plugin>
 		</plugins>
 
@@ -204,7 +220,7 @@
 										<artifactId>
 											aspectj-maven-plugin
 										</artifactId>
-										<versionRange>[1.7,)</versionRange>
+										<versionRange>[1.11,)</versionRange>
 										<goals>
 											<goal>compile</goal>
 										</goals>
