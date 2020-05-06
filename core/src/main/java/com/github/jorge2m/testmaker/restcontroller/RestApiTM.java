@@ -68,15 +68,10 @@ public class RestApiTM {
 			ResultCheckOptions resultCheck = cmdLineAccess.checkOptionsValue();
 			if (resultCheck.isOk()) {
 				creatorSuiteRun.setInputParams(inputParams);
-				SuiteTM suite = TestMaker.execSuite(creatorSuiteRun, inputParams.isAsyncExec());
-				
-				//TODO eliminar después
-				//SuiteBean suiteBean = suite.getSuiteBean();
-				//suiteBean.setListTestRun(null);
-				
+				SuiteBean suiteBean = TestMaker.execSuite(creatorSuiteRun, inputParams.isAsyncExec());
 				return Response
 						.status(Response.Status.OK) 
-						.entity(suite.getSuiteBean())
+						.entity(suiteBean)
 						.build();
 			} else {
 				List<MessageError> listErrors = resultCheck.getListMessagesError();

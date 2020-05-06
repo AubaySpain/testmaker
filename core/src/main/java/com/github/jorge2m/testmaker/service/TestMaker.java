@@ -99,8 +99,8 @@ public class TestMaker {
 		return (repository.getSuite(idExecution));
 	}
 	
-	public static SuiteTM execSuite(CreatorSuiteRun executorSuite, boolean async) throws Exception {
-		return (executorSuite.execTestSuite(async));
+	public static SuiteBean execSuite(CreatorSuiteRun executorSuite, boolean async) throws Exception {
+		return (executorSuite.execTestSuite(async).getSuiteBean());
 	}
 	
 	public static void stopSuite(String idExecSuite) {

@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
+import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
 import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.testreports.stepstore.EvidencesWarehouse;
@@ -18,9 +19,12 @@ import com.github.jorge2m.testmaker.testreports.stepstore.Storage;
 
 public class StepTM {
 
-	private TestCaseTM testCase;
-	private TestRunTM testRun;
-	private SuiteTM suite;
+//	private TestCaseTM testCase;
+//	private TestRunTM testRun;
+//	private SuiteTM suite;
+	private String idExecSuite;
+	private String testRunName;
+	private String testCaseNameUnique;
 	
 	private List<ChecksTM> listChecksTM = new ArrayList<>(); 
 	private String descripcion; 
@@ -41,33 +45,43 @@ public class StepTM {
 	private boolean isStateUpdated = false;
 	
 	public StepTM() {
-		testCase = TestMaker.getTestCase();
+		setParents(TestMaker.getTestCase());
 		evidencesWarehouse = new EvidencesWarehouse(this);
-		if (testCase!=null) {
-			testRun = testCase.getTestRunParent();
-			suite = testRun.getSuiteParent();
-		} else {
-			testRun = null;
-			suite = null;
-		}
+	}
+	
+	public void setParents(TestCaseTM testCaseParent) {
+		this.idExecSuite = testCaseParent.getSuiteParent().getIdExecution();
+		//this.suiteName = testCaseParent.getSuiteParent().getName();
+		this.testRunName = testCaseParent.getTestRunParent().getName();
+		//this.testCaseName = testCaseParent.getName();
+		this.testCaseNameUnique = testCaseParent.getNameUnique();
 	}
 	
 	public TestCaseTM getTestCaseParent() {
-		return testCase;
+		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
+			if (this.idExecSuite.compareTo(suite.getIdExecution())==0) {
+				for (TestRunTM testRun : suite.getListTestRuns()) {
+					if (this.testRunName.compareTo(testRun.getName())==0) {
+						for (TestCaseTM testCase : testRun.getListTestCases()) {
+							if (this.testCaseNameUnique.compareTo(testCase.getNameUnique())==0) {
+								return testCase;
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
-	public void setParents(TestCaseTM testCase) {
-		this.testCase = testCase;
-		this.testRun = testCase.getTestRunParent();
-		this.suite = testRun.getSuiteParent();
-	}
+	
 	public TestRunTM getTestRunParent() {
-		return testRun;
+		return getTestCaseParent().getTestRunParent();
 	}
 	public SuiteTM getSuiteParent() {
-		return suite;
+		return getTestRunParent().getSuiteParent();
 	}
 	public WebDriver getDriver() {
-		return testCase.getDriver();
+		return getTestCaseParent().getDriver();
 	}
 	public String getOutputDirectorySuite() {
 		return getTestRunParent().getTestNgContext().getOutputDirectory();
@@ -94,11 +108,11 @@ public class StepTM {
 	}
 	
 	public String getPathDirectory() {
-		return testCase.getTestPathDirectory();
+		return getTestCaseParent().getTestPathDirectory();
 	}
 	
 	public void captureAndStoreEvidences() {
-		if (suite.getInputParams().isTestExecutingInRemote()) {
+		if (getSuiteParent().getInputParams().isTestExecutingInRemote()) {
 			evidencesWarehouse.captureAndStore(Storage.Memory);
 		} else {
 			evidencesWarehouse.captureAndStore(Storage.File);
@@ -151,7 +165,7 @@ public class StepTM {
 		return saveNettraffic;
 	}
 	public void setSaveNettrafic(SaveWhen saveNettraffic) {
-		if (suite.getInputParams().isNetAnalysis()) {
+		if (getSuiteParent().getInputParams().isNetAnalysis()) {
 			this.saveNettraffic = saveNettraffic;
 			NettrafficStorer netTraffic = new NettrafficStorer();
 			netTraffic.resetAndStartNetTraffic();
