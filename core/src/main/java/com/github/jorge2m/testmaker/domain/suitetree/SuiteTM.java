@@ -26,7 +26,7 @@ public class SuiteTM extends XmlSuite {
 	private static final long serialVersionUID = 1L;
 	private final InputParamsTM inputParams;
 	private final String idSuiteExecution;
-	private Logger logger;
+	//private Logger logger;
 	private long threadId;
 	private StateExecution stateExecution = StateExecution.NotStarted;
 	private State result = State.Ok;
@@ -47,10 +47,7 @@ public class SuiteTM extends XmlSuite {
 	}
 	
 	public Logger getLogger() {
-		if (logger==null) {
-			logger = Log4jTM.createSuiteLogger(idSuiteExecution, getPathLogFile());
-		}
-		return logger;
+		return Log4jTM.getSuiteLogger(idSuiteExecution, getPathLogFile());
 	}
 	
 	public String getIdExecution() {

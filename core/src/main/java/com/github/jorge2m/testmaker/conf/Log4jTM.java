@@ -40,11 +40,15 @@ public class Log4jTM {
 		return loggerGlobal;
 	}
 	
-	public static Logger createSuiteLogger(String suiteIdExec, String pathLogFile) {
+	public static Logger getSuiteLogger(String suiteIdExec, String pathLogFile) {
+		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+		if (ctx.hasLogger(getLoggerName(suiteIdExec))) {
+			return ctx.getLogger(getLoggerName(suiteIdExec));
+		}
 		return createLogger(suiteIdExec, pathLogFile);
 	}
-	public static Logger createSuiteLogger(SuiteBean suite) {
-		return createLogger(suite.getIdExecSuite(), suite.getPathReportHtml());
+	public static Logger getSuiteLogger(SuiteBean suite) {
+		return getSuiteLogger(suite.getIdExecSuite(), suite.getPathReportHtml());
 	}
 	public static void removeSuiteLogger(String suiteIdExec) {
 		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);

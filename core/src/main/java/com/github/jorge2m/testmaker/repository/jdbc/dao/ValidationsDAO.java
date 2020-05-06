@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 
 
 public class ValidationsDAO {
@@ -101,12 +100,11 @@ public class ValidationsDAO {
 	public void insertValidation(ChecksTM validations) {
 		try (Connection conn = connector.getConnection()) {
 			try (PreparedStatement insert = conn.prepareStatement(SQLInsertValidation)) {
-				SuiteBean suite = validations.getSuiteParent().getSuiteBean(); 
-				insert.setString(1, suite.getIdExecSuite());
-				insert.setString(2, suite.getName()); 
-				insert.setString(3, validations.getTestRunParent().getName()); 
-				insert.setString(4, validations.getTestCaseParent().getName());
-				insert.setInt(5, validations.getStepParent().getNumber()); 
+				insert.setString(1, validations.getIdExecSuite());
+				insert.setString(2, validations.getSuiteName()); 
+				insert.setString(3, validations.getTestRunName()); 
+				insert.setString(4, validations.getTestCaseName());
+				insert.setInt(5, validations.getStepNumber()); 
 				insert.setInt(6, validations.getPositionInStep());
 				insert.setString(7, validations.getStateValidation().toString());
 				

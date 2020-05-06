@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jorge2m.testmaker.conf.State;
+import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
 
 public class ChecksTM {
@@ -14,30 +15,37 @@ public class ChecksTM {
 	private boolean avoidEvidences;
 	private String pathMethod;
 
-	private SuiteTM suiteParent;
-	private TestRunTM testRunParent;
-	private TestCaseTM testCaseParent;
-	private StepTM stepParent; 
+//	private SuiteTM suiteParent;
+//	private TestRunTM testRunParent;
+//	private TestCaseTM testCaseParent;
+	//private StepTM stepParent;
+	private String idExecSuite;
+	private String suiteName;
+	private String testRunName;
+	private String testCaseName;
+	private String testCaseNameUnique;
+	private int stepNumber;
 
 	public ChecksTM() {
-		this.testCaseParent = TestCaseTM.getTestCaseInExecution();
+		TestCaseTM testCaseParent = TestCaseTM.getTestCaseInExecution();
 		if (testCaseParent!=null) {
-			this.stepParent = testCaseParent.getLastStep();
-			this.testRunParent = testCaseParent.getTestRunParent();
-			this.suiteParent = testCaseParent.getSuiteParent();
+			//this.stepParent = testCaseParent.getLastStep();
+			this.idExecSuite = testCaseParent.getSuiteParent().getIdExecution();
+			this.suiteName = testCaseParent.getSuiteParent().getName();
+			this.testRunName = testCaseParent.getTestRunParent().getName();
+			this.testCaseName = testCaseParent.getName();
+			this.testCaseNameUnique = testCaseParent.getNameUnique();
+			this.stepNumber = testCaseParent.getLastStep().getNumber();
+			//this.testRunParent = testCaseParent.getTestRunParent();
+			//this.suiteParent = testCaseParent.getSuiteParent();
 		}
 		else {
-			this.stepParent = null;
-			this.testRunParent = null;
-			this.suiteParent = null;			
+			//this.stepParent = null;		
 		}
 	}
 
 	private ChecksTM(StepTM stepParent) {
-		this.stepParent = stepParent;
-		this.testCaseParent = stepParent.getTestCaseParent();
-		this.testRunParent = stepParent.getTestRunParent();
-		this.suiteParent = stepParent.getSuiteParent();
+		setParents(stepParent);
 	}
 	
 	public static ChecksTM getNew(StepTM stepParent) {
@@ -55,23 +63,62 @@ public class ChecksTM {
 	}
 	
 	public void setParents(StepTM step) {
-		this.stepParent = step;
-		this.testCaseParent = stepParent.getTestCaseParent();
-		this.testRunParent = testCaseParent.getTestRunParent();
-		this.suiteParent = testRunParent.getSuiteParent();
+		//this.stepParent = step;
+		TestCaseTM testCaseParent = step.getTestCaseParent();
+		this.idExecSuite = testCaseParent.getSuiteParent().getIdExecution();
+		this.suiteName = testCaseParent.getSuiteParent().getName();
+		this.testRunName = testCaseParent.getTestRunParent().getName();
+		this.testCaseNameUnique = testCaseParent.getNameUnique();
+		this.testCaseName = testCaseParent.getName();
+		this.stepNumber = step.getNumber();
 	}
 	
-	public SuiteTM getSuiteParent() {
-		return this.suiteParent;
-	}
-	public TestRunTM getTestRunParent() {
-		return this.testRunParent;
-	}
-	public TestCaseTM getTestCaseParent() {
-		return this.testCaseParent;
-	}
+//	public SuiteTM getSuiteParent() {
+//		return this.suiteParent;
+//	}
+//	public TestRunTM getTestRunParent() {
+//		return this.testRunParent;
+//	}
+//	public TestCaseTM getTestCaseParent() {
+//		return this.testCaseParent;
+//	}
 	public StepTM getStepParent() {
-		return this.stepParent;
+		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
+			if (this.idExecSuite.compareTo(suite.getIdExecution())==0) {
+				for (TestRunTM testRun : suite.getListTestRuns()) {
+					if (this.testRunName.compareTo(testRun.getName())==0) {
+						for (TestCaseTM testCase : testRun.getListTestCases()) {
+							if (this.testCaseNameUnique.compareTo(testCase.getNameUnique())==0) {
+								for (StepTM step : testCase.getListStep()) {
+									if (this.stepNumber == step.getNumber()) {
+										return step;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	public String getIdExecSuite() {
+		return idExecSuite;
+	}
+	public String getSuiteName() {
+		return suiteName;
+	}
+	public String getTestRunName() {
+		return testRunName;
+	}
+	public String getTestCaseNameUnique() {
+		return testCaseNameUnique;
+	}
+	public String getTestCaseName() {
+		return testCaseName;
+	}
+	public int getStepNumber() {
+		return this.stepNumber;
 	}
 	
 	public State getStateValidation() {
@@ -167,7 +214,7 @@ public class ChecksTM {
 	}
 
 	public int getPositionInStep() {
-		List<ChecksTM> listChecksResultInStep = stepParent.getListChecksTM();
+		List<ChecksTM> listChecksResultInStep = getStepParent().getListChecksTM();
 		for (int i=0; i<listChecksResultInStep.size(); i++) {
 			ChecksTM checksResult = listChecksResultInStep.get(i);
 			if (checksResult==this) {
@@ -209,12 +256,12 @@ public class ChecksTM {
 
 	private void setDatosStepAfterCheckValidation() {
 		State stateValidation = getStateValidation();
-		if (stateValidation.isMoreCriticThan(stepParent.getResultSteps()) || !stepParent.isStateUpdated()) {
-			stepParent.setResultSteps(stateValidation);
+		if (stateValidation.isMoreCriticThan(getStepParent().getResultSteps()) || !getStepParent().isStateUpdated()) {
+			getStepParent().setResultSteps(stateValidation);
 		}
 	}
 	private boolean isStepFinishedWithException() {
-		return (stepParent.getHoraFin()!=null && stepParent.isExcepExists());
+		return (getStepParent().getHoraFin()!=null && getStepParent().isExcepExists());
 	}
 
 	/**
