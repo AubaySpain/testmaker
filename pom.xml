@@ -52,7 +52,6 @@
 		<profile>
 			<id>CI</id>
 			<modules>
-				<module>archetypes</module>
 				<module>core</module>
 			</modules>
 		</profile>
