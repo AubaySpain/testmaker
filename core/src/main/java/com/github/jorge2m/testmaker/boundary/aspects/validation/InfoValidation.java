@@ -13,7 +13,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class InfoValidation {
 
-	private final JoinPoint joinPoint;
+	private final JoinPoint joinPoint; 
 	private final MethodSignature methodSignature;
 	private final Validation valAnnotation;
 	private final Object resultMethod;
