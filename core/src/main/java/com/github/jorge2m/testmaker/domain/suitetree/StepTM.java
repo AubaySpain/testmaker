@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
@@ -80,13 +81,16 @@ public class StepTM {
 	public SuiteTM getSuiteParent() {
 		return getTestRunParent().getSuiteParent();
 	}
+	
+	@JsonIgnore
 	public WebDriver getDriver() {
 		return getTestCaseParent().getDriver();
 	}
+	@JsonIgnore
 	public String getOutputDirectorySuite() {
 		return getTestRunParent().getTestNgContext().getOutputDirectory();
 	}
-	
+	@JsonIgnore
 	public int getNumber() {
 		List<StepTM> listSteps = getTestCaseParent().getListStep();
 		for (int i=0; i<listSteps.size(); i++) {

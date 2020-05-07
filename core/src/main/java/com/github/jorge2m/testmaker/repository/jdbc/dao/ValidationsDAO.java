@@ -100,11 +100,11 @@ public class ValidationsDAO {
 	public void insertValidation(ChecksTM validations) {
 		try (Connection conn = connector.getConnection()) {
 			try (PreparedStatement insert = conn.prepareStatement(SQLInsertValidation)) {
-				insert.setString(1, validations.getIdExecSuite());
-				insert.setString(2, validations.getSuiteName()); 
-				insert.setString(3, validations.getTestRunName()); 
-				insert.setString(4, validations.getTestCaseName());
-				insert.setInt(5, validations.getStepNumber()); 
+				insert.setString(1, validations.getSuiteParent().getIdExecution());
+				insert.setString(2, validations.getSuiteParent().getName()); 
+				insert.setString(3, validations.getTestRunParent().getName()); 
+				insert.setString(4, validations.getTestCaseParent().getName());
+				insert.setInt(5, validations.getStepParent().getNumber()); 
 				insert.setInt(6, validations.getPositionInStep());
 				insert.setString(7, validations.getStateValidation().toString());
 				
