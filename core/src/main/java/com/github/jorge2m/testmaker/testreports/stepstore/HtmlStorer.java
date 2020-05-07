@@ -10,6 +10,6 @@ public class HtmlStorer extends EvidenceStorer {
 	
 	@Override
 	protected String captureContent(StepTM step) {
-		return step.getDriver().getPageSource();
+		return step.getTestCaseParent().getDriver().getPageSource();
 	}
 }

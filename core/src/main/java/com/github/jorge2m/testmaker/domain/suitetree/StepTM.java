@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
@@ -18,9 +19,12 @@ import com.github.jorge2m.testmaker.testreports.stepstore.Storage;
 
 public class StepTM {
 
-	private TestCaseTM testCase;
-	private TestRunTM testRun;
-	private SuiteTM suite;
+	@JsonIgnore
+	private TestCaseTM testCaseParent;
+	@JsonIgnore
+	private TestRunTM testRunParent;
+	@JsonIgnore
+	private SuiteTM suiteParent;
 	
 	private List<ChecksTM> listChecksTM = new ArrayList<>(); 
 	private String descripcion; 
@@ -41,34 +45,36 @@ public class StepTM {
 	private boolean isStateUpdated = false;
 	
 	public StepTM() {
-		testCase = TestMaker.getTestCase();
+		testCaseParent = TestMaker.getTestCase();
 		evidencesWarehouse = new EvidencesWarehouse(this);
-		if (testCase!=null) {
-			testRun = testCase.getTestRunParent();
-			suite = testRun.getSuiteParent();
+		if (testCaseParent!=null) {
+			testRunParent = testCaseParent.getTestRunParent();
+			suiteParent = testRunParent.getSuiteParent();
 		} else {
-			testRun = null;
-			suite = null;
+			testRunParent = null;
+			suiteParent = null;
 		}
 	}
 	
-	public TestCaseTM getTestCaseParent() {
-		return testCase;
-	}
 	public void setParents(TestCaseTM testCase) {
-		this.testCase = testCase;
-		this.testRun = testCase.getTestRunParent();
-		this.suite = testRun.getSuiteParent();
+		this.testCaseParent = testCase;
+		this.testRunParent = testCase.getTestRunParent();
+		this.suiteParent = testRunParent.getSuiteParent();
+	}
+	public TestCaseTM getTestCaseParent() {
+		return testCaseParent;
 	}
 	public TestRunTM getTestRunParent() {
-		return testRun;
+		return testRunParent;
 	}
 	public SuiteTM getSuiteParent() {
-		return suite;
+		return suiteParent;
 	}
-	public WebDriver getDriver() {
-		return testCase.getDriver();
-	}
+	
+//	@JsonIgnore
+//	public WebDriver getDriver() {
+//		return testCase.getDriver();
+//	}
 	public String getOutputDirectorySuite() {
 		return getTestRunParent().getTestNgContext().getOutputDirectory();
 	}
@@ -94,11 +100,11 @@ public class StepTM {
 	}
 	
 	public String getPathDirectory() {
-		return testCase.getTestPathDirectory();
+		return testCaseParent.getTestPathDirectory();
 	}
 	
 	public void captureAndStoreEvidences() {
-		if (suite.getInputParams().isTestExecutingInRemote()) {
+		if (suiteParent.getInputParams().isTestExecutingInRemote()) {
 			evidencesWarehouse.captureAndStore(Storage.Memory);
 		} else {
 			evidencesWarehouse.captureAndStore(Storage.File);
@@ -151,7 +157,7 @@ public class StepTM {
 		return saveNettraffic;
 	}
 	public void setSaveNettrafic(SaveWhen saveNettraffic) {
-		if (suite.getInputParams().isNetAnalysis()) {
+		if (suiteParent.getInputParams().isNetAnalysis()) {
 			this.saveNettraffic = saveNettraffic;
 			NettrafficStorer netTraffic = new NettrafficStorer();
 			netTraffic.resetAndStartNetTraffic();

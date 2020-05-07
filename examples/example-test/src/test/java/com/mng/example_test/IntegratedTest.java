@@ -29,7 +29,7 @@ public class IntegratedTest extends JaxRsClient {
 		mapParams.putSingle(InputParamsTM.AppNameParam, "google");
 		mapParams.putSingle(InputParamsTM.URLNameParam, "https://www.google.com");
 		mapParams.putSingle(InputParamsTM.TCaseNameParam, "BUS100");
-		mapParams.putSingle(InputParamsTM.AsyncExecParam, "true");
+		mapParams.putSingle(InputParamsTM.AsyncExecParam, "false");
 
 		//When
 		Client client = getClientIgnoreCertificates();

@@ -22,7 +22,7 @@ public class HardcopyStorer extends EvidenceStorer {
 	
 	@Override
 	protected String captureContent(StepTM step) {
-		WebDriver driver = step.getDriver();
+		WebDriver driver = step.getTestCaseParent().getDriver();
 		WebDriver newWebDriver = null;
 		if (driver.getClass() == RemoteWebDriver.class) {
 			newWebDriver = new Augmenter().augment(driver);

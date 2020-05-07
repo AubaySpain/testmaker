@@ -82,12 +82,17 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-		<!-- Prescindible jersey-media-moxy?
+		<!-- Prescindible jersey-media-moxy?-->
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-moxy</artifactId>
 			<version>${jersey.version}</version>
-		</dependency> -->
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>4.2.0</version>
+		</dependency>
 		
 		<!-- Utils -->
 		<dependency>
