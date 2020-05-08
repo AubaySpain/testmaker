@@ -35,7 +35,32 @@
 				</executions>
 			</plugin>
 		</plugins>	
-  </build>	
-  
+	</build>	
+
+	<profiles>
+		<profile>
+			<id>CI</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>3.0.0-M4</version>
+						<configuration>
+							<argLine>-Dfile.encoding=UTF-8</argLine>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
 </project>
 

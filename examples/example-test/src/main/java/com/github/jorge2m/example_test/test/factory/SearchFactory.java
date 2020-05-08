@@ -10,10 +10,8 @@ import com.github.jorge2m.example_test.test.testcase.script.BuscarWithoutRefacto
 
 public class SearchFactory {
 
-	private final List<String> searchValues;
-	
-	public SearchFactory() {
-		searchValues = Arrays.asList( 
+	public static final List<String> searchValues = 
+		Arrays.asList( 
 			"Zelda Breath of The Wild",
 			"Enter the gungeon",
 			"Xenoblade Chronicles",
@@ -24,7 +22,8 @@ public class SearchFactory {
 			"Zelda ocarina of time",
 			"Baldur's Gate 2",
 			"Head over Hells Game");
-	}
+	
+	public SearchFactory() {}
 	
 	@Factory
 	public Object[] FAC001_createTests() {
