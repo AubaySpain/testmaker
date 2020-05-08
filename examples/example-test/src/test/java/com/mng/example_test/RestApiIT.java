@@ -161,6 +161,7 @@ public class RestApiIT extends JaxRsClient {
 					ex.printStackTrace();
 				}
 			});
+			Thread.sleep(10000);
 		}
 	}
 	
