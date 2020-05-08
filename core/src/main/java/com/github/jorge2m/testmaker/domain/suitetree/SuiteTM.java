@@ -47,7 +47,6 @@ public class SuiteTM extends XmlSuite {
 		//this.senderMail = new DefaultMailEndSuite();
 	}
 	
-	@JsonIgnore
 	public Logger getLogger() {
 		return Log4jTM.getSuiteLogger(idSuiteExecution, getPathLogFile());
 	}
