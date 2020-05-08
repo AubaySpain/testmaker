@@ -87,7 +87,7 @@ public class RestApiIT extends JaxRsClient {
 	}
 	
 	//@Ignore
-	//@Test
+	@Test
 	public void testFactoryTestCasse() throws Exception {
 		//Given-When
 		SuiteBean suiteData = executeTestsAgainstLocalServer("FAC001");
