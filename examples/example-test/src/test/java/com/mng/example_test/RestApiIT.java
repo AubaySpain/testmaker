@@ -31,7 +31,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public class RestApiIT extends JaxRsClient {
 
-	private final String ServerLocalPort = "86";
+	private final String ServerLocalPort = "85";
 	
 	@Before
 	public void setUp() throws Exception {
@@ -87,7 +87,7 @@ public class RestApiIT extends JaxRsClient {
 	}
 	
 	//@Ignore
-	@Test
+	//@Test
 	public void testFactoryTestCasse() throws Exception {
 		//Given-When
 		SuiteBean suiteData = executeTestsAgainstLocalServer("FAC001");
