@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
@@ -46,6 +47,7 @@ public class SuiteTM extends XmlSuite {
 		//this.senderMail = new DefaultMailEndSuite();
 	}
 	
+	@JsonIgnore
 	public Logger getLogger() {
 		return Log4jTM.getSuiteLogger(idSuiteExecution, getPathLogFile());
 	}
