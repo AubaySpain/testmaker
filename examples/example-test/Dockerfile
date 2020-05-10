@@ -4,7 +4,8 @@
 # the "test80" project with the name of the specific name of the project that uses TestMaker
 
 #When executing docker run for an image with Chrome or Firefox please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
-#example: docker container run --detach -p 80:80 -p 443:443 --shm-size=2g -v $pwd\outputdocker:/test80-1.0/output-library robotest:latest
+#example create image: docker build . jorge2m/example-testmaker:latest
+#example container run: docker run -d -p 80:80 -p 443:443 --shm-size=2g -v "%CD%/dockerresults:/output-library" jorge2m/example-testmaker:latest
 FROM ubuntu:19.10
 
 RUN apt-get update -y \
@@ -17,12 +18,8 @@ RUN apt-get update -y \
 #=======
 # Java 8
 #=======
-#RUN add-apt-repository ppa:webupd8team/java -y \
-#	&& apt-get update -y \
-
-RUN sudo add-apt-repository ppa:ts.sch.gr/ppa \
+RUN add-apt-repository ppa:ts.sch.gr/ppa \
 	&& apt-get update \
-	&& apt-get install oracle-java8-installer
 	&& echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
 	&& dpkg --configure -a \
 	&& apt-get install openjdk-8-jdk-headless -y --force-yes \
@@ -36,7 +33,7 @@ RUN sudo add-apt-repository ppa:ts.sch.gr/ppa \
 # Chrome
 #=======
 #ARG CHROME_VERSION="google-chrome-stable"
-ARG CHROME_VERSION=79.0.3945.117-1
+ARG CHROME_VERSION=81.0.4044.138-1
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update -qqy \
@@ -77,7 +74,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Firefox
 #=========
 #ARG FIREFOX_VERSION=latest
-ARG FIREFOX_VERSION=72.0.1
+ARG FIREFOX_VERSION=76.0.1
 RUN FIREFOX_DOWNLOAD_URL=$(if [ $FIREFOX_VERSION = "latest" ] || [ $FIREFOX_VERSION = "nightly-latest" ] || [ $FIREFOX_VERSION = "devedition-latest" ]; then echo "https://download.mozilla.org/?product=firefox-$FIREFOX_VERSION-ssl&os=linux64&lang=en-US"; else echo "https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2"; fi) \
   && apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install firefox \
@@ -113,8 +110,8 @@ RUN apt-get update -qqy \
 	&& apt-get -qqy install xvfb \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-COPY target/test80-1.0.zip Test80.zip
-RUN unzip Test80.zip
-WORKDIR /test80-1.0
+COPY target/example-test*jar-with-dependencies.jar example-test.jar
+#RUN unzip Test80.zip
+#WORKDIR /test80-1.0
 EXPOSE 80
-CMD xvfb-run -s "-screen 0 1024x768x24" java -cp test80.jar com.mng.robotest.test80.access.rest.ServerRest
+CMD xvfb-run -s "-screen 0 1024x768x24" java -cp example-test.jar com.github.jorge2m.example_test.access.ServerRest -port 80 -secureport 443
