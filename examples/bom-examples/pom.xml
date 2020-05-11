@@ -29,9 +29,9 @@
 			<!-- Seguramente si lo ejecuto sin testmaker se quejará de que no encuentra el aspectj en .m2 -->
 			<!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=562209 -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.github.m50d</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.11</version>
+				<version>1.11.1</version>
 				<configuration>
 					<complianceLevel>1.8</complianceLevel>
 					<source>1.8</source>
