@@ -4,7 +4,7 @@
 # the "test80" project with the name of the specific name of the project that uses TestMaker
 
 #When executing docker run for an image with Chrome or Firefox please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
-#example create image: docker build . jorge2m/example-testmaker:latest
+#example create image: docker build -t jorge2m/example-testmaker:latest .
 #example container run: docker run -d -p 80:80 -p 443:443 --shm-size=2g -v "%CD%/dockerresults:/output-library" jorge2m/example-testmaker:latest
 FROM ubuntu:19.10
 
@@ -22,7 +22,8 @@ RUN add-apt-repository ppa:ts.sch.gr/ppa \
 	&& apt-get update \
 	&& echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
 	&& dpkg --configure -a \
-	&& apt-get install openjdk-8-jdk-headless -y --force-yes \
+	#&& apt-get install openjdk-8-jdk-headless -y --force-yes \
+	&& apt-get install openjdk-8-jdk-headless -y --allow \
 	&& rm /etc/java-8-openjdk/accessibility.properties
 
 ####################################################################################################
