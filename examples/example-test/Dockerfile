@@ -22,8 +22,8 @@ RUN add-apt-repository ppa:ts.sch.gr/ppa \
 	&& apt-get update \
 	&& echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
 	&& dpkg --configure -a \
-	#&& apt-get install openjdk-8-jdk-headless -y --force-yes \
-	&& apt-get install openjdk-8-jdk-headless -y --allow \
+	&& apt-get install openjdk-8-jdk-headless -y --force-yes \
+	#&& apt-get install openjdk-8-jdk-headless -y --allow \
 	&& rm /etc/java-8-openjdk/accessibility.properties
 
 ####################################################################################################
