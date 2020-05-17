@@ -47,6 +47,16 @@
 						<version>3.0.0-M4</version>
 						<configuration>
 							<argLine>-Dfile.encoding=UTF-8</argLine>
+							<systemProperties>
+								<property>
+									<name>server.ip</name>
+									<value>${server.ip}</value>
+								</property>
+								<property>
+									<name>server.port</name>
+									<value>${server.port}</value>
+								</property>
+							</systemProperties>
 						</configuration>
 						<executions>
 							<execution>
