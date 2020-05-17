@@ -17,7 +17,8 @@ public class Page1GoogleStpV {
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
 		expected="Aparecen resultados de búsqueda",
-		saveImagePage=SaveWhen.Always)
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public Page2GoogleResultsStpV search(String textToSearch) {
 		Page1Google page1Google = new Page1Google(driver);
 		page1Google.searchText(textToSearch);

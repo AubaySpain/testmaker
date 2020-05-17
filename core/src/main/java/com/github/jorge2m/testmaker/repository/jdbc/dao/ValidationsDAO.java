@@ -105,8 +105,9 @@ public class ValidationsDAO {
 				insert.setString(1, suite.getIdExecSuite());
 				insert.setString(2, suite.getName()); 
 				insert.setString(3, validations.getTestRunParent().getName()); 
-				insert.setString(4, validations.getTestCaseParent().getName());
-				insert.setInt(5, validations.getStepParent().getNumber());				insert.setInt(6, validations.getPositionInStep());
+				insert.setString(4, validations.getTestCaseParent().getNameUnique());
+				insert.setInt(5, validations.getStepParent().getNumber());
+				insert.setInt(6, validations.getPositionInStep());
 				insert.setString(7, validations.getStateValidation().toString());
 				
 				List<String> listTextChecks = validations.getTextValidations();

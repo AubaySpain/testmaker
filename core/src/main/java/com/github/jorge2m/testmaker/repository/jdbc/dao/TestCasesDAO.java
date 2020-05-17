@@ -110,7 +110,7 @@ public class TestCasesDAO {
             	insert.setString(1, testCase.getIdExecSuite());
             	insert.setString(2, testCase.getSuiteName()); 
             	insert.setString(3, testCase.getTestRunName()); 
-            	insert.setString(4, testCase.getName()); 
+            	insert.setString(4, testCase.getNameUnique()); 
             	insert.setString(5, testCase.getDescription()); 
             	insert.setString(6, testCase.getResult().name()); 
     	        insert.setString(7, Utils.getDateFormat(ToSeconds).format(testCase.getInicioDate()));
