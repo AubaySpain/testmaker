@@ -39,15 +39,18 @@ public class RestApiIT extends JaxRsClient {
 		//From surefire-plugin in pom.xml
 		String serverIpParam = System.getProperty("server.ip");
 		String serverPortParam = System.getProperty("server.port"); 
+		System.out.println(serverIpParam);
+		System.out.println(serverPortParam);
 		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
 			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
-			serverTmIp = serverPortParam;
+			serverTmIp = serverIpParam;
 			serverTmPort = serverPortParam;
 		} else {
 			serverTmIp = "localhost";
 			serverTmPort = "85";
 			startSeverIfNotYet();
 		}
+		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
 	}
 	
 	//@Ignore
