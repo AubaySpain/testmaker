@@ -41,6 +41,7 @@ public class RestApiIT extends JaxRsClient {
 		String serverPortParam = System.getProperty("server.port"); 
 		System.out.println(serverIpParam);
 		System.out.println(serverPortParam);
+		Client client = getClientIgnoreCertificates();
 		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
 			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
 			serverTmIp = serverIpParam;
@@ -48,9 +49,10 @@ public class RestApiIT extends JaxRsClient {
 		} else {
 			serverTmIp = "localhost";
 			serverTmPort = "85";
-			startSeverIfNotYet();
+			startLocalSeverIfNotYet(client);
 		}
 		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
+		checkServerAvailability(client, 5);
 	}
 	
 	//@Ignore
@@ -156,29 +158,43 @@ public class RestApiIT extends JaxRsClient {
 		assertTrue(step3html.exists());
 	}
 	
-	private void startSeverIfNotYet() throws Exception {
-		Client client = getClientIgnoreCertificates();
+	private void startLocalSeverIfNotYet(Client client) throws Exception {
+		if (!checkServerAvailability(client)) {
+			startLocalServer();
+		}
+	}
+	
+	private boolean checkServerAvailability(Client client, int maxTimes) throws Exception {
+		for (int i=0; i<maxTimes; i++) {
+			if (checkServerAvailability(client)) {
+				return true;
+			}
+			Thread.sleep(1000);
+		}
+		return false;
+	}
+	private boolean checkServerAvailability(Client client) {
 		try {
-			//Check Server Availability
 			client
 				.target("http://" + serverTmIp + ":" + serverTmPort + "/testserver")
 				.request(MediaType.APPLICATION_JSON)
 				.get();
+			return true;
 		}
 		catch (Exception e) {
-			//Start Server
-			String[] args = {"-port", serverTmPort};
-			CompletableFuture.runAsync(() -> {
-				try {
-					ServerRest.main(args);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			});
-			//TODO
-			Thread.sleep(10000);
+			return false;
 		}
+	}
+	private void startLocalServer() {
+		String[] args = {"-port", serverTmPort};
+		CompletableFuture.runAsync(() -> {
+			try {
+				ServerRest.main(args);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
 	}
 	
 	private boolean checkExistsTestCase(String valueSearched, List<TestCaseBean> listTestCases) {
