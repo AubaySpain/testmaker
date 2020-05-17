@@ -123,7 +123,7 @@ public class StepsDAO {
 				insert.setString(1, suite.getIdExecSuite());
 				insert.setString(2, suite.getName()); 
 				insert.setString(3, step.getTestRunParent().getName()); 
-				insert.setString(4, step.getTestCaseParent().getName()); 
+				insert.setString(4, step.getTestCaseParent().getNameUnique()); 
 				insert.setInt(5, step.getNumber()); 
 				insert.setString(6, step.getDescripcion()); 
 				insert.setString(7, step.getResExpected()); 
