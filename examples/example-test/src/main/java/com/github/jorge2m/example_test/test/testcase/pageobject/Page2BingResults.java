@@ -1,19 +1,23 @@
 package com.github.jorge2m.example_test.test.testcase.pageobject;
 
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils.getElementWeb;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class Page2BingResults {
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State;
 
-	private final WebDriver driver;
+public class Page2BingResults extends PageObjTM {
 	
 	private final static String XPathNumResults = "//span[@class='sb_count']";
+	private final static String XPathListResults = "//ol[@id='b_results']";
 	
 	public Page2BingResults(WebDriver driver) {
-		this.driver = driver;
+		super(driver);
+	}
+	
+	public boolean checkIsResultsUntil(int maxSeconds) {
+		return state(State.Visible, By.xpath(XPathListResults)).wait(maxSeconds).check();
 	}
 	
 	public long getNumResults() {

@@ -5,6 +5,7 @@ import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjT
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.Visible;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 public class Page1Bing {
@@ -14,7 +15,7 @@ public class Page1Bing {
 	public static final String URL_BING = "http://www.bing.com";
 	private static final String XPathFormSearch = "//form[@action='/search' and @id='sb_form']";
 	private static final String IdInputSearch = "sb_form_q";
-	private static final String XPathLupa = "//label[@for='sb_form_go']/*[@viewBox]";
+	//private static final String XPathLupa = "//label[@for='sb_form_go']/*[@viewBox]";
 
 	
 	public Page1Bing(WebDriver driver) {
@@ -33,8 +34,9 @@ public class Page1Bing {
 	public void searchText(String textToSearch) {
 		By byInputInicio = By.id(IdInputSearch);
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
-		
-		By byIconLupa = By.xpath(XPathLupa);
-		click(byIconLupa, driver).exec();
+		driver.findElement(byInputInicio).sendKeys(Keys.ENTER);
+		//By byIconLupa = By.xpath(XPathLupa);
+		//driver.findElement(By.xpath("//label[@for='sb_form_go']")).getAttribute("innerHTML")
+		//click(byIconLupa, driver).exec();
 	}
 }

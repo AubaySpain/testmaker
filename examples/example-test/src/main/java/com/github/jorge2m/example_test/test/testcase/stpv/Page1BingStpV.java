@@ -36,7 +36,7 @@ public class Page1BingStpV {
 	}
 	
 	@Step (
-		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
+		description="Introducimos el texto <b>#{textToSearch}</b> y pulsamos ENTER",
 		expected="Aparecen resultados de búsqueda",
 		saveHtmlPage=SaveWhen.Always)
 	public Page2BingResultsStpV search(String textToSearch) {
