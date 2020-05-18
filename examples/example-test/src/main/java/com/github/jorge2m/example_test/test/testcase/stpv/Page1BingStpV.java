@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 
 import com.github.jorge2m.example_test.test.testcase.pageobject.Page1Bing;
 import static com.github.jorge2m.example_test.test.testcase.pageobject.Page1Bing.URL_BING;
+
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
@@ -20,7 +22,8 @@ public class Page1BingStpV {
 	
 	@Step (
 		description="Vamos a la Url de Bing <b>" + URL_BING + "</b>",
-		expected="Aparece la página de búsqueda de Bing")
+		expected="Aparece la página de búsqueda de Bing",
+		saveHtmlPage=SaveWhen.Always)
 	public void goToBing() {
 		page1Bing.goToPage();
 		checkIsPage();
