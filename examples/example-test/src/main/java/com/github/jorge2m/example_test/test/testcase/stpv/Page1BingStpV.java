@@ -22,8 +22,7 @@ public class Page1BingStpV {
 	
 	@Step (
 		description="Vamos a la Url de Bing <b>" + URL_BING + "</b>",
-		expected="Aparece la página de búsqueda de Bing",
-		saveHtmlPage=SaveWhen.Always)
+		expected="Aparece la página de búsqueda de Bing")
 	public void goToBing() {
 		page1Bing.goToPage();
 		checkIsPage();
@@ -38,7 +37,8 @@ public class Page1BingStpV {
 	
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
-		expected="Aparecen resultados de búsqueda")
+		expected="Aparecen resultados de búsqueda",
+		saveHtmlPage=SaveWhen.Always)
 	public Page2BingResultsStpV search(String textToSearch) {
 		page1Bing.searchText(textToSearch);
 
