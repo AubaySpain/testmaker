@@ -9,7 +9,7 @@ public class Page1Google {
 
 	private final WebDriver driver;
 	
-	private static final String XPathInputSearch = "//input[@title='Buscar']";
+	private static final String XPathInputSearch = "//input[@name='q']";
 	private static final String XPathButtonBuscar = "//input[@class='gNO89b']";
 	
 	public Page1Google(WebDriver driver) {

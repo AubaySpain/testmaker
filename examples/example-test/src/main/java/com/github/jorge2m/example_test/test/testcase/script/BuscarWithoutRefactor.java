@@ -57,7 +57,7 @@ public class BuscarWithoutRefactor implements Serializable {
 		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
 		expected="Aparecen resultados de búsqueda")
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
-		By byInputInicio = By.xpath("//input[@title='Buscar']");
+		By byInputInicio = By.xpath("//input[@name='q']");
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
 		
 		By byButtonBuscarConGoogle = By.xpath("//input[@class='gNO89b']");
