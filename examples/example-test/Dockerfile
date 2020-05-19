@@ -113,9 +113,9 @@ RUN apt-get update -qqy \
 
 COPY target/example-test*jar-with-dependencies.jar example-test.jar
 
-USER root
-COPY ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
-RUN ["chmod", "+x", "/docker-entrypoint.sh"]
+#USER root
+#COPY ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
+#RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 #COPY ["docker-entrypoint.sh", "/entrypoint2.sh"]
 
 #This is needed for remove DOS-Return Line characters
