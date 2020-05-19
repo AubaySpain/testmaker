@@ -14,6 +14,10 @@ RUN apt-get update -y \
 	&& apt-get -qqy dist-upgrade \
 	&& apt-get -qqy install software-properties-common gettext-base unzip \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+	
+#ENTRYPOINT ["increase-shared-memory.sh"]
+#RUN echo "none /dev/shm tmpfs defaults,size=500m 0 0" >> /etc/fstab \
+#	&& mount -o remount /dev/shm
 
 #=======
 # Java 8
@@ -42,34 +46,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 	&& rm /etc/apt/sources.list.d/google-chrome.list \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
 	&& sed -i 's/"$HERE\/chrome"/"$HERE\/chrome" --no-sandbox/g' /opt/google/chrome/google-chrome
-	
-#apt-get update
-#apt-get install wget
-#wget http://dl.google.com/linux/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_73.0.3679.0-1_amd64.deb
-#apt-get install -f ./google-chrome-unstable_73.0.3679.0-1_amd64.deb
-
-#=============
-# ChromeDriver 
-# Is not necessary, in execution time TestMaker gets automatically the indicated ChromeDriver version indicated in the code
-# but you can download the same version used in the project is you want accelerate a few seconds the execution
-#=============
-#ARG CHROME_DRIVER_VERSION=78.0.3904.70
-#RUN if [ -z "$CHROME_DRIVER_VERSION" ]; \
-#  then CHROME_MAJOR_VERSION=$(google-chrome --version | sed -E "s/.* ([0-9]+)(\.[0-9]+){3}.*/\1/") \
-#    && CHROME_DRIVER_VERSION=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}"); \
-#  fi \
-#  && echo "Using chromedriver version: "$CHROME_DRIVER_VERSION \
-#  && wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
-#  && rm -rf /opt/selenium/chromedriver \
-#  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
-#  && rm /tmp/chromedriver_linux64.zip \
-#  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
-#  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
-#  && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
-
-####################################################################################################
-# Adding Google Firefox and GeckoDriver like described in
-# https://github.com/SeleniumHQ/docker-selenium/blob/master/NodeFirefox/Dockerfile
 
 #=========
 # Firefox
@@ -88,23 +64,6 @@ RUN FIREFOX_DOWNLOAD_URL=$(if [ $FIREFOX_VERSION = "latest" ] || [ $FIREFOX_VERS
   && mv /opt/firefox /opt/firefox-$FIREFOX_VERSION \
   && ln -fs /opt/firefox-$FIREFOX_VERSION/firefox /usr/bin/firefox
 
-#============
-# GeckoDriver
-# Is not necessary, in execution time TestMaker gets automatically the indicated ChromeDriver version indicated in the code
-# but you can download the same version used in the project is you want accelerate a few seconds the execution
-#============
-#ARG GECKODRIVER_VERSION=latest
-#ARG GECKODRIVER_VERSION=0.26.0
-#RUN GK_VERSION=$(if [ ${GECKODRIVER_VERSION:-latest} = "latest" ]; then echo "0.26.0"; else echo $GECKODRIVER_VERSION; fi) \
-#  && echo "Using GeckoDriver version: "$GK_VERSION \
-#  && wget --no-verbose -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GK_VERSION/geckodriver-v$GK_VERSION-linux64.tar.gz \
-#  && rm -rf /opt/geckodriver \
-#  && tar -C /opt -zxf /tmp/geckodriver.tar.gz \
-#  && rm /tmp/geckodriver.tar.gz \
-#  && mv /opt/geckodriver /opt/geckodriver-$GK_VERSION \
-#  && chmod 755 /opt/geckodriver-$GK_VERSION \
-#  && ln -fs /opt/geckodriver-$GK_VERSION /usr/bin/geckodriver
-
 
 # Xvfb
 RUN apt-get update -qqy \
@@ -112,7 +71,5 @@ RUN apt-get update -qqy \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 COPY target/example-test*jar-with-dependencies.jar example-test.jar
-#RUN unzip Test80.zip
-#WORKDIR /test80-1.0
 EXPOSE 80
 CMD xvfb-run -s "-screen 0 1024x768x24" java -cp example-test.jar com.github.jorge2m.example_test.access.ServerRest -port 80 -secureport 443
