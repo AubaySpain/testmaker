@@ -101,7 +101,7 @@ public class RestApiIT extends JaxRsClient {
 		assertTrue(step1png.exists());
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testFactoryTestCasse() throws Exception {
 		//Given-When
