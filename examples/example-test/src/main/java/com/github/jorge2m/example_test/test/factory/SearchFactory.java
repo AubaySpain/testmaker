@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.testng.annotations.Factory;
 
-import com.github.jorge2m.example_test.test.testcase.script.BuscarWithoutRefactor;
+import com.github.jorge2m.example_test.test.testcase.script.BuscarPatternPageObject;
 
 public class SearchFactory {
 
@@ -29,7 +29,7 @@ public class SearchFactory {
 	public Object[] FAC001_createTests() {
 		List<Object> listTests = new ArrayList<>();
 		for (String searchValue : searchValues) {
-			listTests.add(new BuscarWithoutRefactor(searchValue));
+			listTests.add(new BuscarPatternPageObject(searchValue));
 		}
 		return listTests.toArray(new Object[listTests.size()]);
 	}
