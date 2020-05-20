@@ -19,10 +19,14 @@ public class Page2GoogleResultsStpV {
 	@Validation
 	public ChecksTM checkResults() {
 		ChecksTM validations = ChecksTM.getNew();
-		int maxSeconds = 1;
+		int maxSeconds = 2;
 		validations.add(
 			"Aparece alguna entrada de resultado (la esperamos hasta " + maxSeconds + " segundos)",
 			page2GoogleResults.checkAreResultsUntil(maxSeconds), State.Defect);
+		validations.add(
+			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			page2GoogleResults.checkIsNumResultsUntil(maxSeconds),
+			State.Defect);
 		
 		numResults = page2GoogleResults.getNumResults();
 		validations.add(

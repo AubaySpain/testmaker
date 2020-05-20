@@ -19,10 +19,14 @@ public class Page2BingResultsStpV {
 	@Validation
 	public ChecksTM checkResultsSearchBing() {
 		ChecksTM validations = ChecksTM.getNew();
-		int maxSeconds = 1;
+		int maxSeconds = 2;
 		validations.add(
 			"Aparece algún resultado (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2BingResults.checkIsResultsUntil(maxSeconds),
+			State.Defect);
+		validations.add(
+			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			page2BingResults.checkIsNumResultsUntil(maxSeconds),
 			State.Defect);
 		
 		numResults = page2BingResults.getNumResults();

@@ -20,6 +20,10 @@ public class Page2BingResults extends PageObjTM {
 		return state(State.Visible, By.xpath(XPathListResults)).wait(maxSeconds).check();
 	}
 	
+	public boolean checkIsNumResultsUntil(int maxSeconds) {
+		return state(State.Visible, By.xpath(XPathNumResults)).wait(maxSeconds).check();
+	}
+	
 	public long getNumResults() {
 		WebElement numResultsElem = getElementWeb(By.xpath(XPathNumResults), driver);
 		return Utils.getLongFromElement(numResultsElem);
