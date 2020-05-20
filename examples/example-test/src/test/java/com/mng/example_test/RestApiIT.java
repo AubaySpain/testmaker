@@ -179,7 +179,7 @@ public class RestApiIT extends JaxRsClient {
 	private boolean checkServerAvailability(Client client) {
 		try {
 			client
-				.target("http://" + serverTmIp + ":" + serverTmPort + "/testserver")
+				.target("http://" + serverTmIp + ":" + serverTmPort + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 			return true;
