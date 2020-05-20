@@ -33,6 +33,7 @@ public class RestApiIT extends JaxRsClient {
 
 	private String serverTmIp;
 	private String serverTmPort;
+	private boolean localServer;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -44,10 +45,12 @@ public class RestApiIT extends JaxRsClient {
 			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
 			serverTmIp = serverIpParam;
 			serverTmPort = serverPortParam;
+			localServer = false;
 		} else {
 			serverTmIp = "localhost";
 			serverTmPort = "85";
 			startLocalSeverIfNotYet(client);
+			localServer = true;
 		}
 		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
 		checkServerAvailability(client, 10);
@@ -92,8 +95,9 @@ public class RestApiIT extends JaxRsClient {
 			check1.getDescription().contains("1) Aparece alguna entrada de resultado"));
 		assertEquals(check1.getStateResult(), State.Ok);
 		
-		//Check Reports Exists
-		checkReporsSuiteExists(suiteData);
+		if (localServer) {
+			checkReporsSuiteExists(suiteData);
+		}
 		
 		//Check hardcopy Step-1 exists
 		String pathEvidences = getPathEvidences(suiteData, testCase);
@@ -145,8 +149,9 @@ public class RestApiIT extends JaxRsClient {
 			check1.getDescription().contains("Aparecen más resultados en Google"));
 		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Warn);
 		
-		//Check Reports Exists
-		checkReporsSuiteExists(suiteData);
+		if (localServer) {
+			checkReporsSuiteExists(suiteData);
+		}
 		
 		//Check Evidences Step-3 exists
 		String pathEvidences = getPathEvidences(suiteData, testCase);
