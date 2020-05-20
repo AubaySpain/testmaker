@@ -85,11 +85,11 @@ public class RestApiIT extends JaxRsClient {
 		//Check Validation1 (from Step1)
 		ChecksTM checkGroup1 = step1.getListChecksTM().get(0);
 		assertEquals(checkGroup1.getStateValidation(), State.Ok);
-		assertEquals(checkGroup1.getListChecks().size(), 2);
+		assertEquals(checkGroup1.getListChecks().size(), 3);
 		Check check1 = checkGroup1.getListChecks().get(0);
 		assertTrue(
 			"Check descripción Step1 (\"" + check1.getDescription() + "\")",
-			"1) Aparece alguna entrada de resultado".compareTo(check1.getDescription())==0);
+			check1.getDescription().contains("1) Aparece alguna entrada de resultado"));
 		assertEquals(check1.getStateResult(), State.Ok);
 		
 		//Check Reports Exists
@@ -131,7 +131,7 @@ public class RestApiIT extends JaxRsClient {
 		StepTM step3 = testCase.getListStep().get(2);
 		assertTrue(
 			"Check descripción Step3 (\"" + step3.getDescripcion() + "\")",
-			step3.getDescripcion().contains("clickamos el icono de la Lupa"));
+			step3.getDescripcion().contains("pulsamos ENTER"));
 		assertTrue(step3.getResultSteps()==State.Ok || step3.getResultSteps()==State.Warn);
 		assertEquals(step3.getListChecksTM().size(), 2);
 		

@@ -38,6 +38,7 @@ public class Page1BingStpV {
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y pulsamos ENTER",
 		expected="Aparecen resultados de búsqueda",
+		saveImagePage=SaveWhen.Always,
 		saveHtmlPage=SaveWhen.Always)
 	public Page2BingResultsStpV search(String textToSearch) {
 		page1Bing.searchText(textToSearch);
