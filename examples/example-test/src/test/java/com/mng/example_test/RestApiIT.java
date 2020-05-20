@@ -206,12 +206,12 @@ public class RestApiIT extends JaxRsClient {
 	
 	private void checkReporsSuiteExists(SuiteBean suite) {
 		String pathReports = getPathReports(suite);
-		File reportHtml = new File(pathReports + "/ReportTSuite.html");
 		File emailable = new File(pathReports + "/emailable-report.html");
 		File logReport = new File(pathReports + "/emailable-report.html");
-		assertTrue(reportHtml.exists());
+		File reportHtml = new File(pathReports + "/ReportTSuite.html");
 		assertTrue(emailable.exists());
 		assertTrue(logReport.exists());
+		assertTrue(reportHtml.exists());
 	}
 	private String getPathReports(SuiteBean suite) {
 		return 
