@@ -97,12 +97,12 @@ public class RestApiIT extends JaxRsClient {
 		
 		if (localServer) {
 			checkReporsSuiteExists(suiteData);
-		}
 		
-		//Check hardcopy Step-1 exists
-		String pathEvidences = getPathEvidences(suiteData, testCase);
-		File step1png = new File(pathEvidences + "/Step-1.png");
-		assertTrue(step1png.exists());
+			//Check hardcopy Step-1 exists
+			String pathEvidences = getPathEvidences(suiteData, testCase);
+			File step1png = new File(pathEvidences + "/Step-1.png");
+			assertTrue(step1png.exists());
+		}
 	}
 	
 	//@Ignore
@@ -151,14 +151,14 @@ public class RestApiIT extends JaxRsClient {
 		
 		if (localServer) {
 			checkReporsSuiteExists(suiteData);
-		}
 		
-		//Check Evidences Step-3 exists
-		String pathEvidences = getPathEvidences(suiteData, testCase);
-		File step3png = new File(pathEvidences + "/Step-3.png");
-		File step3html = new File(pathEvidences + "/Step-3.html");
-		assertTrue(step3png.exists());
-		assertTrue(step3html.exists());
+			//Check Evidences Step-3 exists
+			String pathEvidences = getPathEvidences(suiteData, testCase);
+			File step3png = new File(pathEvidences + "/Step-3.png");
+			File step3html = new File(pathEvidences + "/Step-3.html");
+			assertTrue(step3png.exists());
+			assertTrue(step3html.exists());
+		}
 	}
 	
 	private void startLocalSeverIfNotYet(Client client) throws Exception {
