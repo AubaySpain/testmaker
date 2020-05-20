@@ -50,7 +50,7 @@ public class RestApiIT extends JaxRsClient {
 			startLocalSeverIfNotYet(client);
 		}
 		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
-		checkServerAvailability(client, 5);
+		checkServerAvailability(client, 10);
 	}
 	
 	//@Ignore
