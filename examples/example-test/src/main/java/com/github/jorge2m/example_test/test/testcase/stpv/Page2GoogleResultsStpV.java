@@ -26,12 +26,12 @@ public class Page2GoogleResultsStpV {
 		validations.add(
 			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2GoogleResults.checkIsNumResultsUntil(maxSeconds),
-			State.Defect);
+			State.Info);
 		
 		numResults = page2GoogleResults.getNumResults();
 		validations.add(
 			"El número de entradas obtenido (" + numResults + ") es mayor que 0",
-			numResults > 0, State.Defect);
+			numResults > 0, State.Info);
 		
 		return validations;
 	}
