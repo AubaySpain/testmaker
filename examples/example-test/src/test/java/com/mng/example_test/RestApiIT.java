@@ -65,7 +65,7 @@ public class RestApiIT extends JaxRsClient {
 		//Then...
 		//Check Suite
 		assertTrue(suiteData!=null);
-		assertEquals(suiteData.getResult(), State.Ok);
+		assertTrue(suiteData.getResult()==State.Ok || suiteData.getResult()==State.Info);
 		assertEquals(suiteData.getStateExecution(), StateExecution.Finished);
 		assertEquals(suiteData.getListTestRun().size(), 1);
 		
@@ -73,7 +73,7 @@ public class RestApiIT extends JaxRsClient {
 		List<TestCaseBean> listTestCases = suiteData.getListTestRun().get(0).getListTestCase();
 		assertEquals(listTestCases.size(), 2);
 		TestCaseBean testCase = listTestCases.get(0);
-		assertEquals(testCase.getResult(), State.Ok);
+		assertTrue(testCase.getResult()==State.Ok || testCase.getResult()==State.Info);
 		assertEquals(testCase.getListStep().size(), 3);
 		
 		//Check Step1
@@ -82,18 +82,18 @@ public class RestApiIT extends JaxRsClient {
 			"Check descripción Step1 (\"" + step1.getDescripcion() + "\")",
 			"Introducimos el texto <b>Mario Maker 2</b> y clickamos el botón \"Buscar con Google\""
 			.compareTo(step1.getDescripcion())==0);
-		assertEquals(step1.getResultSteps(), State.Ok);
+		assertTrue(step1.getResultSteps()==State.Ok || step1.getResultSteps()==State.Info);
 		assertEquals(step1.getListChecksTM().size(), 1);
 		
 		//Check Validation1 (from Step1)
 		ChecksTM checkGroup1 = step1.getListChecksTM().get(0);
-		assertEquals(checkGroup1.getStateValidation(), State.Ok);
+		assertTrue(checkGroup1.getStateValidation()==State.Ok || checkGroup1.getStateValidation()==State.Info);
 		assertEquals(checkGroup1.getListChecks().size(), 3);
 		Check check1 = checkGroup1.getListChecks().get(0);
 		assertTrue(
 			"Check descripción Step1 (\"" + check1.getDescription() + "\")",
 			check1.getDescription().contains("1) Aparece alguna entrada de resultado"));
-		assertEquals(check1.getStateResult(), State.Ok);
+		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Info);
 		
 		if (localServer) {
 			checkReporsSuiteExists(suiteData);
@@ -128,7 +128,7 @@ public class RestApiIT extends JaxRsClient {
 				checkExistsTestCase(valueSearched, listTestCases));
 		}
 		TestCaseBean testCase = listTestCases.get(0);
-		assertTrue(testCase.getResult()==State.Ok || testCase.getResult()==State.Warn);
+		assertTrue(testCase.getResult()==State.Ok || testCase.getResult()==State.Info || testCase.getResult()==State.Warn);
 		assertEquals(testCase.getListStep().size(), 3);
 		
 		//Check Step3
@@ -136,18 +136,18 @@ public class RestApiIT extends JaxRsClient {
 		assertTrue(
 			"Check descripción Step3 (\"" + step3.getDescripcion() + "\")",
 			step3.getDescripcion().contains("pulsamos ENTER"));
-		assertTrue(step3.getResultSteps()==State.Ok || step3.getResultSteps()==State.Warn);
+		assertTrue(step3.getResultSteps()==State.Ok || step3.getResultSteps()==State.Info || step3.getResultSteps()==State.Warn);
 		assertEquals(step3.getListChecksTM().size(), 2);
 		
 		//Check Validation2 (from Step3)
 		ChecksTM checkGroup2 = step3.getListChecksTM().get(1);
-		assertTrue(checkGroup2.getStateValidation()==State.Ok || checkGroup2.getStateValidation()==State.Warn);
+		assertTrue(checkGroup2.getStateValidation()==State.Ok || checkGroup2.getStateValidation()==State.Info || checkGroup2.getStateValidation()==State.Warn);
 		assertEquals(checkGroup2.getListChecks().size(), 1);
 		Check check1 = checkGroup2.getListChecks().get(0);
 		assertTrue(
 			"Check descripción Check1(checkGroup2) (\"" + check1.getDescription() + "\")",
 			check1.getDescription().contains("Aparecen más resultados en Google"));
-		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Warn);
+		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Info || check1.getStateResult()==State.Warn);
 		
 		if (localServer) {
 			checkReporsSuiteExists(suiteData);
