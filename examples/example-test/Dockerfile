@@ -5,7 +5,7 @@
 
 #When executing docker run for an image with Chrome or Firefox please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
 #example create image: docker build -t jorge2m/example-testmaker:latest .
-#example container run: docker run -d -p 80:80 -p 443:443 --shm-size=2g -v "%CD%/dockerresults:/output-library" jorge2m/example-testmaker:latest
+#example container run: docker run -d -p 80:80 -p 443:443 --privileged -v "%CD%/dockerresults:/output-library" gcr.io/testmaker-example/example-test:latest
 FROM ubuntu:19.10
 
 RUN apt-get update -y \

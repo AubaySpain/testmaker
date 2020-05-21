@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
+import com.github.jorge2m.example_test.test.testcase.pageobject.Page1Bing;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
@@ -48,7 +49,7 @@ public class BuscarWithoutRefactor implements Serializable {
 			TestCaseTM.addNameSufix(itemToSearch);
 		}
 		searchInGoogle(itemToSearch, driver);
-		goToBingUrl("http://www.bing.com", driver);
+		goToBingUrl(Page1Bing.URL_BING, driver);
 		searchInBing(itemToSearch, driver);
 		checkMoreResulstsInGoogle(numResultsGoogle, numResultsBing);
 	}

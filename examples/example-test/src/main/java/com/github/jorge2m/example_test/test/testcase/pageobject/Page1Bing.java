@@ -12,7 +12,7 @@ public class Page1Bing {
 
 	private final WebDriver driver;
 	
-	public static final String URL_BING = "http://www.bing.com";
+	public static final String URL_BING = "http://www.bing.es";
 	private static final String XPathFormSearch = "//form[@action='/search' and @id='sb_form']";
 	private static final String IdInputSearch = "sb_form_q";
 	//private static final String XPathLupa = "//label[@for='sb_form_go']/*[@viewBox]";
