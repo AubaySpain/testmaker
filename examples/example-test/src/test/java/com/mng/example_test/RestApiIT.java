@@ -239,7 +239,7 @@ public class RestApiIT extends JaxRsClient {
 		mapParams.putSingle(InputParamsTM.DriverNameParam, "chrome");
 		mapParams.putSingle(InputParamsTM.ChannelNameParam, "desktop");
 		mapParams.putSingle(InputParamsTM.AppNameParam, "google");
-		mapParams.putSingle(InputParamsTM.URLNameParam, "https://www.google.com");
+		mapParams.putSingle(InputParamsTM.URLNameParam, "https://www.google.es");
 		mapParams.putSingle(InputParamsTM.TCaseNameParam, testCases);
 		mapParams.putSingle(InputParamsTM.AsyncExecParam, "false");
 	
