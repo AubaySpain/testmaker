@@ -17,7 +17,7 @@ public class Page2BingResultsStpV {
 	}
 	
 	@Validation
-	public ChecksTM checkResultsSearchBing() {
+	public ChecksTM checkResultsSearchBing() {  
 		ChecksTM validations = ChecksTM.getNew();
 		int maxSeconds = 2;
 		validations.add(
