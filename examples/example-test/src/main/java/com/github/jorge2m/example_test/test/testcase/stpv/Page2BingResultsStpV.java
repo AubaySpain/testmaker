@@ -25,7 +25,7 @@ public class Page2BingResultsStpV {
 			page2BingResults.checkIsResultsUntil(maxSeconds),
 			State.Defect);
 		validations.add(
-			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			"AAparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2BingResults.checkIsNumResultsUntil(maxSeconds),
 			State.Info);
 		
