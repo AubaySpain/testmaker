@@ -1,7 +1,7 @@
 #Dockerfile Template for the specific projects that uses TestMaker. You must change the sequent values:
 # CHROME_VERSION: a version that supports the ChromeDriver specified in the project
 # FIREFOX_VERSION: a version that supports the GeckoDriver specified in the project
-# the "test80" project with the name of the specific name of the project that uses TestMaker
+# NOTE: You must establish the latest Chrome Version stable. This will change in the future
 
 #When executing docker run for an image with Chrome or Firefox please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
 #example create image: docker build -t jorge2m/example-testmaker:latest .
@@ -34,7 +34,7 @@ RUN add-apt-repository ppa:ts.sch.gr/ppa \
 # Chrome
 #=======
 #ARG CHROME_VERSION="google-chrome-stable"
-ARG CHROME_VERSION=81.0.4044.138-1
+ARG CHROME_VERSION=83.0.4103.61-1
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update -qqy \
