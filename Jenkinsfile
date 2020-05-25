@@ -120,7 +120,7 @@ pipeline {
 	post {
 		always {
 			script {
-				if ( machineCreated == 'false') {			
+				if ( machineCreated == false) {			
 					sh label: 
 						'Destroy intance in Google Cloud', 
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
