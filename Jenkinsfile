@@ -1,5 +1,6 @@
 def serverTmIp = ""
 def pathSuites = ""
+def machineCreated = false;
 
 pipeline {
 
@@ -66,6 +67,7 @@ pipeline {
 					script {
 						sh 	label: 'Point to project testmaker', 
 							script: '$GCLOUD_PATH/gcloud config set project testmaker-example'
+						machineCreated = true;
 						sh 	label: 'Create Instance in Google Cloud',
 							script: ''' 
 								$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
@@ -114,13 +116,14 @@ pipeline {
 				}
 			}
 		}
-		stage("Destroy instance Google Cloud") {
-			steps {
+	}
+	post {
+		always {
+			if (machineCreated) {
 				sh label: 
 					'Destroy intance in Google Cloud', 
 					script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
 			}
 		}
-
 	}
 }

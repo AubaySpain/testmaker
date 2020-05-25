@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
@@ -14,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jorge2m.example_test.access.ServerRest;
@@ -56,11 +56,10 @@ public class RestApiIT extends JaxRsClient {
 		checkServerAvailability(client, 10);
 	}
 	
-	//@Ignore
 	@Test
 	public void testStandarTestCasse() throws Exception {
 		//Given-When
-		SuiteBean suiteData = executeTestsAgainstServer("BUS100{2-2}");
+		SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}");
 		
 		//Then...
 		//Check Suite
@@ -105,11 +104,10 @@ public class RestApiIT extends JaxRsClient {
 		}
 	}
 	
-	//@Ignore
 	@Test
 	public void testFactoryTestCasse() throws Exception {
 		//Given-When
-		SuiteBean suiteData = executeTestsAgainstServer("FAC001");
+		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001");
 		
 		//Then...
 		//Check Suite
@@ -179,7 +177,7 @@ public class RestApiIT extends JaxRsClient {
 	private boolean checkServerAvailability(Client client) {
 		try {
 			client
-				.target("http://" + serverTmIp + ":" + serverTmPort + "/suiterun")
+				.target("http://" + serverTmIp + ":" + serverTmPort + "/testserver")
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 			return true;
@@ -229,6 +227,16 @@ public class RestApiIT extends JaxRsClient {
 			getPathReports(suite) + "/" +
 			testCase.getTestRunName() + "/" + 
 			testCase.getNameUnique());
+	}
+	
+	private SuiteBean executeTestsAgainstServerRetry(String testCases) throws Exception {
+		try {
+			return executeTestsAgainstServer(testCases);
+		}
+		catch (NotFoundException e) {
+			Thread.sleep(5000);
+			return executeTestsAgainstServer(testCases);
+		}
 	}
 	
 	private SuiteBean executeTestsAgainstServer(String testCases) throws Exception {
