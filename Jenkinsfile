@@ -11,11 +11,11 @@ pipeline {
 		TAG_IMAGE_DOCKER = "gcr.io/testmaker-example/example-test:latest"
 	}
 	stages {
-//		stage("Git Checkout") {
-//			steps {
-//				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
-//			}
-//		} 
+		stage("Git Checkout") {
+			steps {
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
+			}
+		} 
 //		stage("Unit Tests") {
 //			steps {
 //				sh label: 'Unit Tests', script: 'mvn -P CI clean test'
