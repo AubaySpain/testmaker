@@ -26,19 +26,19 @@ pipeline {
 				}
 			}
 		}
-//		stage("Package") {
-//			steps {
-//				dir("core") {
-//					sh label: 'Install Core', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
-//				}
+		stage("Package") {
+			steps {
+				dir("core") {
+					sh label: 'Install Core', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
+				}
 //				dir("examples/bom-examples") {
 //					sh label: 'Package bom-examples', script: 'mvn clean package'
 //				}
 //				dir("examples/example-test") {
 //					sh label: 'Package example-test', script: 'mvn clean package'
 //				}
-//			}
-//		}
+			}
+		}
 //		stage("Build Docker for example-test project") {
 //			steps {
 //				dir("examples/example-test") {
