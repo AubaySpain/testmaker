@@ -87,7 +87,7 @@ pipeline {
 					withEnv(["SERVER=$serverTmIp"]) {
 						script {
 							sh 	label: 'Execute end-to-end integration-tests', 
-								script: 'mvn -PCI clean integration-test  -Dserver.port=80 -Dserver.ip=${SERVER}'
+								script: 'mvn -PCI clean verify -Dserver.port=80 -Dserver.ip=${SERVER}'
 							sh	label: 'Purge output-library',
 								script: 'rm -R ${WORKSPACE}/output-library'
 							sh 	label: 'Get reports from GC-Instance', 
