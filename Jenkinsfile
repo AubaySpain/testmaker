@@ -2,64 +2,60 @@ def serverTmIp = ""
 def pathSuites = ""
 
 pipeline {
-    agent { label 'java-docker-slave' }
-    environment {
-        PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin:$PATH"
-    }
-    stages {
-        stage("Git Checkout") {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
-            }
-        } 
-        /*
-        stage("Unit Tests") {
-            steps {
-                sh label: 'Unit Tests', script: 'mvn -P CI clean test'
-            }
-            post {
-                always {
-                    junit 'core/target/surefire-reports/*.xml'
-                }
-            }
-        }
-        */
-        stage("Package") {
-            steps {
-                dir("core") {
-                    sh label: 'Install Core', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
-                }
-                dir("examples/bom-examples") {
-                    sh label: 'Package bom-examples', script: 'mvn clean package'
-                }
-                dir("examples/example-test") {
-                    sh label: 'Package example-test', script: 'mvn clean package'
-                }
-            }
-        }
-        stage("Build Docker and push to Google Cloud") {
-            steps {
-                dir("examples/example-test") {
-                    withCredentials([file(credentialsId: 'key-gc', variable: 'GC_KEY')]) {
-                        sh label: 'Dockerize example-test', script: 'docker build -t gcr.io/testmaker-example/example-test:latest .'
-                        withEnv(['GCLOUD_PATH=/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin']) {
-                            sh  label: 'Autenticate in Google Cloud', 
+
+	agent { label 'java-docker-slave' }
+	environment {
+		GCLOUD_PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin"
+		PATH = "$GCLOUD_PATH:$PATH"
+	}
+	stages {
+		stage("Git Checkout") {
+			steps {
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
+			}
+		} 
+		stage("Unit Tests") {
+			steps {
+				sh label: 'Unit Tests', script: 'mvn -P CI clean test'
+			}
+			post {
+				always {
+					junit 'core/target/surefire-reports/*.xml'
+				}
+			}
+		}
+		stage("Package") {
+			steps {
+				dir("core") {
+					sh label: 'Install Core', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
+				}
+				dir("examples/bom-examples") {
+					sh label: 'Package bom-examples', script: 'mvn clean package'
+				}
+				dir("examples/example-test") {
+					sh label: 'Package example-test', script: 'mvn clean package'
+				}
+			}
+		}
+		stage("Build Docker and push to Google Cloud") {
+			steps {
+				dir("examples/example-test") {
+					withCredentials([file(credentialsId: 'key-gc', variable: 'GC_KEY')]) {
+						sh label: 'Dockerize example-test', script: 'docker build -t gcr.io/testmaker-example/example-test:latest .'
+						//withEnv(['GCLOUD_PATH=/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin']) {
+							sh  label: 'Autenticate in Google Cloud', 
 								script: '$GCLOUD_PATH/gcloud auth activate-service-account --key-file=${GC_KEY}'
-                            sh 	label: 'Set project testmaker in Google Cloud', 
+							sh 	label: 'Set project testmaker in Google Cloud', 
 								script: '$GCLOUD_PATH/gcloud config set account testmaker@testmaker-example.iam.gserviceaccount.com'
-							//sh	script: 'Install docker-credential-gcr if not yet',
-							//	script: '$GCLOUD_PATH/gcloud components install docker-credential-gcr'
-							//sh label: '',
-							//	script: '$GCLOUD_PATH/docker-credential-gcloud configure-docker'
-                            sh 	label: 'Autorize docker to push to Google Cloud', 
+							sh 	label: 'Autorize docker to push to Google Cloud', 
 								script: '$GCLOUD_PATH/gcloud auth configure-docker'
-                            sh 	label: 'Push docker to Google Cloud', 
+							sh 	label: 'Push docker to Google Cloud', 
 								script: 'docker push gcr.io/testmaker-example/example-test:latest'
-                        }
-                    }
-                }
-            }
-        }
+						//}
+					}
+				}
+			}
+		}
         /*
         stage("Create instance Google Cloud") {
 			steps {
