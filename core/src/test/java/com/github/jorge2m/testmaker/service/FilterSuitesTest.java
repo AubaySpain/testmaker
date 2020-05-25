@@ -61,7 +61,7 @@ public class FilterSuitesTest {
 		List<SuiteBean> listSuites = filterSuitesSpy.getListSuites();
 		
 		//Then
-		assertTrue(listSuites.contains(suite5)); //TODO replace by 'suite2'
+		assertTrue(listSuites.contains(suite2));
 		assertTrue(listSuites.contains(suite3));
 		assertTrue(listSuites.size()==2);
 	}
