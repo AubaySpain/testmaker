@@ -16,16 +16,16 @@ pipeline {
 				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
 			}
 		} 
-//		stage("Unit Tests") {
-//			steps {
-//				sh label: 'Unit Tests', script: 'mvn -P CI clean test'
-//			}
-//			post {
-//				always {
-//					junit 'core/target/surefire-reports/*.xml'
-//				}
-//			}
-//		}
+		stage("Unit Tests") {
+			steps {
+				sh label: 'Unit Tests', script: 'mvn -P CI clean test'
+			}
+			post {
+				always {
+					junit 'core/target/surefire-reports/*.xml'
+				}
+			}
+		}
 //		stage("Package") {
 //			steps {
 //				dir("core") {
@@ -120,7 +120,7 @@ pipeline {
 	post {
 		always {
 			script {
-				if ( machineCreated == false) {			
+				if ( machineCreated == true) {			
 					sh label: 
 						'Destroy intance in Google Cloud', 
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
