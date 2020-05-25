@@ -16,7 +16,7 @@ public class JaxRsClient {
 	protected Client getClientIgnoreCertificates() throws Exception {
 		SSLContext context = SSLContext.getInstance("TLSv1.2");
 		TrustManager[] trustManagerArray = {new NullX509TrustManager()};
-		context.init(null, trustManagerArray, null);
+		context.init(null, trustManagerArray, null); 
 
 		Client client = ClientBuilder.newBuilder()
 				.hostnameVerifier(new NullHostnameVerifier())
