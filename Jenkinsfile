@@ -13,7 +13,7 @@ pipeline {
 	stages {
 		stage("Git Checkout") {
 			steps {
-				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Jorge2M/testmaker.git']]])
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/AubaySpain/testmaker.git']]])
 			}
 		} 
 		stage("Unit Tests") {
