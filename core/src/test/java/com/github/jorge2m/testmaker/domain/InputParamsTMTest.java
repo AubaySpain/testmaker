@@ -20,7 +20,7 @@ public class InputParamsTMTest {
 		List<TestCaseParams> listTestCaseData = inputParams.getListTestCasesData();
 		
 		//Then
-		assertTrue(listTestCaseData.size()==2); //TODO change to 3
+		assertTrue(listTestCaseData.size()==3);
 		assertTrue(listTestCaseData.get(0).getName().compareTo("FIC001")==0);
 		assertTrue(listTestCaseData.get(0).getInvocationCount()==null);
 		assertTrue(listTestCaseData.get(0).getThreadPoolSize()==null);
