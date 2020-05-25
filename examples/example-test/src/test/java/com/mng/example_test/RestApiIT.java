@@ -37,31 +37,26 @@ public class RestApiIT extends JaxRsClient {
 	
 	@Before
 	public void setUp() throws Exception {
-//		//From surefire-plugin in pom.xml
-//		String serverIpParam = System.getProperty("server.ip");
-//		String serverPortParam = System.getProperty("server.port"); 
-//		Client client = getClientIgnoreCertificates();
-//		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
-//			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
-//			serverTmIp = serverIpParam;
-//			serverTmPort = serverPortParam;
-//			localServer = false;
-//		} else {
-//			serverTmIp = "localhost";
-//			serverTmPort = "85";
-//			startLocalSeverIfNotYet(client);
-//			localServer = true;
-//		}
-//		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
-//		checkServerAvailability(client, 10);
+		//From surefire-plugin in pom.xml
+		String serverIpParam = System.getProperty("server.ip");
+		String serverPortParam = System.getProperty("server.port"); 
+		Client client = getClientIgnoreCertificates();
+		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
+			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
+			serverTmIp = serverIpParam;
+			serverTmPort = serverPortParam;
+			localServer = false;
+		} else {
+			serverTmIp = "localhost";
+			serverTmPort = "85";
+			startLocalSeverIfNotYet(client);
+			localServer = true;
+		}
+		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
+		checkServerAvailability(client, 10);
 	}
 	
 	@Test
-	public void testKO() {
-		assertTrue(false);
-	}
-	
-	//@Test
 	public void testStandarTestCasse() throws Exception {
 		//Given-When
 		SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}");
@@ -109,7 +104,7 @@ public class RestApiIT extends JaxRsClient {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void testFactoryTestCasse() throws Exception {
 		//Given-When
 		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001");
