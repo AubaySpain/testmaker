@@ -7,6 +7,7 @@ pipeline {
 	environment {
 		GCLOUD_PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin"
 		PATH = "$GCLOUD_PATH:$PATH"
+		TAG_IMAGE_DOCKER = "gcr.io/testmaker-example/example-test:latest"
 	}
 	stages {
 		stage("Git Checkout") {
@@ -37,24 +38,26 @@ pipeline {
 				}
 			}
 		}
-		stage("Build Docker and push to Google Cloud") {
+		stage("Build Docker for example-test project") {
 			steps {
 				dir("examples/example-test") {
-					withCredentials([file(credentialsId: 'key-gc', variable: 'GC_KEY')]) {
-						sh label: 'Dockerize example-test', script: 'docker build -t gcr.io/testmaker-example/example-test:latest .'
-						//withEnv(['GCLOUD_PATH=/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin']) {
-							sh  label: 'Autenticate in Google Cloud', 
-								script: '$GCLOUD_PATH/gcloud auth activate-service-account --key-file=${GC_KEY}'
-							sh 	label: 'Set project testmaker in Google Cloud', 
-								script: '$GCLOUD_PATH/gcloud config set account testmaker@testmaker-example.iam.gserviceaccount.com'
-							sh 	label: 'Autorize docker to push to Google Cloud', 
-								script: '$GCLOUD_PATH/gcloud auth configure-docker'
-							sh 	label: 'Push docker to Google Cloud', 
-								script: 'docker push gcr.io/testmaker-example/example-test:latest'
-						//}
-					}
+					sh label: 'Dockerize example-test', script: 'docker build -t $TAG_IMAGE_DOCKER .'
 				}
 			}
+		}
+		stage("Push Docker to Google Cloud") {
+			steps {
+				withCredentials([file(credentialsId: 'key-gc', variable: 'GC_KEY')]) {
+					sh  label: 'Autenticate in Google Cloud', 
+						script: '$GCLOUD_PATH/gcloud auth activate-service-account --key-file=${GC_KEY}'
+				}
+				sh 	label: 'Set project testmaker in Google Cloud', 
+					script: '$GCLOUD_PATH/gcloud config set account testmaker@testmaker-example.iam.gserviceaccount.com'
+				sh 	label: 'Autorize docker to push to Google Cloud', 
+					script: '$GCLOUD_PATH/gcloud auth configure-docker'
+				sh 	label: 'Push docker to Google Cloud', 
+					script: 'docker push $TAG_IMAGE_DOCKER'
+			}		
 		}
         /*
         stage("Create instance Google Cloud") {
@@ -66,7 +69,7 @@ pipeline {
 								script: '$GCLOUD_PATH/gcloud config set project testmaker-example'
 							sh 	label: 'Create Instance in Google Cloud',
 							    script: ''' 
-									$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=gcr.io/testmaker-example/example-test:latest --container-privileged
+									$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
 								'''
 							serverTmIp = sh script: "$GCLOUD_PATH/gcloud compute instances describe testmaker-hub --zone europe-west1-b --format='get(networkInterfaces.accessConfigs[0].natIP)' ", returnStdout: true
 							echo "IP obtained from GC:" + serverTmIp
