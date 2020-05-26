@@ -124,9 +124,11 @@ pipeline {
 //			}
 //		}
 		success {
-			//sh "curl --silent -X POST -H 'Content-Type: application/json' -d '${payload}' ${endpoint}"
-			//sh "curl https://api.GitHub.com/repos/<GitHubUserName>/<REPO_NAME>/statuses/$GIT_COMMIT?access_token=<YOUR_GITHUB_TOKEN> -H 'Content-Type: application/json' -X POST -d '{\"state\": \"success\",\"context\": \"continuous-integration/jenkins\", \"description\": \"Jenkins\", \"target_url\": \"<YOUR_JENKINS_URL>/job/<JenkinsProjectName>/$BUILD_NUMBER/console\"}'"
-			sh "curl https://api.GitHub.com/repos/AubaySpain/testmaker/statuses/$GIT_COMMIT?access_token=9b5d97539a54f5e38b775f124a0270a5e47b8227 -H 'Content-Type: application/json' -X POST -d '{\"state\": \"success\",\"context\": \"continuous-integration/jenkins\", \"description\": \"Jenkins\", \"target_url\": \"https://jenkins.aubay.es/job/TEST-MAKER/job/TestMakerCI/$BUILD_NUMBER/console\"}'"
+			withCredentials([string(credentialsId: 'GitHubToken', variable: 'GITHUB_TOKEN')]) {
+				//sh "curl --silent -X POST -H 'Content-Type: application/json' -d '${payload}' ${endpoint}"
+				//sh "curl https://api.GitHub.com/repos/<GitHubUserName>/<REPO_NAME>/statuses/$GIT_COMMIT?access_token=<YOUR_GITHUB_TOKEN> -H 'Content-Type: application/json' -X POST -d '{\"state\": \"success\",\"context\": \"continuous-integration/jenkins\", \"description\": \"Jenkins\", \"target_url\": \"<YOUR_JENKINS_URL>/job/<JenkinsProjectName>/$BUILD_NUMBER/console\"}'"
+				sh "curl https://api.GitHub.com/repos/AubaySpain/testmaker/statuses/$GIT_COMMIT?access_token=${GITHUB_TOKEN} -H 'Content-Type: application/json' -X POST -d '{\"state\": \"success\",\"context\": \"continuous-integration/jenkins\", \"description\": \"Jenkins\", \"target_url\": \"https://jenkins.aubay.es/job/TEST-MAKER/job/TestMakerCI/$BUILD_NUMBER/console\"}'"
+			}
 		}
 	}
 }
