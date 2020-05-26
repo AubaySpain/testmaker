@@ -103,22 +103,18 @@ pipeline {
 				}
 			}
 		}
-		stage("Publish HTML Reports") {
-			steps {
-				withEnv(["PATHSUITES=$pathSuites"]) {
-					publishHTML([
-						allowMissing: false, 
-						alwaysLinkToLastBuild: false, 
-						keepAll: false, 
-						reportDir: 'output-library', 
-						reportFiles: "${PATHSUITES}", 
-						reportName: 'HTML Report', reportTitles: ''])  
-				}
-			}
-		}
 	}
 	post {
 		always {
+			withEnv(["PATHSUITES=$pathSuites"]) {
+				publishHTML([
+					allowMissing: false, 
+					alwaysLinkToLastBuild: false, 
+					keepAll: false, 
+					reportDir: 'output-library', 
+					reportFiles: "${PATHSUITES}", 
+					reportName: 'HTML Report', reportTitles: ''])  
+			}
 			script {
 				if ( machineCreated == true) {
 					sh label: 
