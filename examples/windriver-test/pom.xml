@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>bom-examples</artifactId>
-		<version>1.3.6</version>
+		<version>1.3.6-SNAPSHOT</version>
 		<relativePath>../bom-examples/pom.xml</relativePath>
 	</parent>
 	<artifactId>winappdriver-test</artifactId>

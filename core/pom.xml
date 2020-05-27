@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>1.3.6</version>
+		<version>1.3.6-SNAPSHOT</version>
 		<!-- <relativePath>../pom.xml</relativePath>´-->
 	</parent>
 	<artifactId>testmaker-core</artifactId>
