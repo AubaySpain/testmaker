@@ -41,9 +41,7 @@ pipeline {
 //		}
 		stage("Package example-test") {
 			steps {
-				dir("testmaker") {
-					sh label: 'Package', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
-				}
+				sh label: 'Package', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
 			}
 		}
 		stage("Build Docker for example-test project") {
