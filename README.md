@@ -172,7 +172,7 @@ A possible pom.xml can be:
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>examples</artifactId>
 	<groupId>com.github.jorge2m</groupId>
-	<version>1.3.5</version>
+	<version>1.3.6</version>
 	<packaging>pom</packaging>
 	<name>examples</name>
 	<url>http://maven.apache.org</url>
@@ -190,7 +190,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.5</version>
+			<version>1.3.6</version>
 		</dependency>
 	</dependencies>
 	

@@ -719,9 +719,9 @@ public abstract class InputParamsTM {
 		}
 		return false;
 	} 
-//	public void setStoreResult(boolean store) {
-//		this.store = String.valueOf(store);
-//	}
+	public void setStoreBd(StoreUntil storeUntil) {
+		this.storebd = storeUntil.name();
+	}
 	public StoreUntil getStoreBd() {
 		if (storebd==null || "".compareTo(storebd)==0) {
 			if (getTypeAccess()==TypeAccess.Rest) {
