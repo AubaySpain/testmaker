@@ -35,10 +35,10 @@ public class TestRunMaker {
 	}
 
 	public static TestRunMaker from(String id, Class<?> classTest) {
-		return (fromClasses(id, Arrays.asList(classTest)));
+		return (from(id, Arrays.asList(classTest)));
 	}
 
-	public static TestRunMaker fromClasses(String id, List<Class<?>> listClasses) {
+	public static TestRunMaker from(String id, List<Class<?>> listClasses) {
 		List<String> listClassesStr = new ArrayList<>();
 		for (Class<?> classItem : listClasses) {
 			listClassesStr.add(classItem.getCanonicalName());

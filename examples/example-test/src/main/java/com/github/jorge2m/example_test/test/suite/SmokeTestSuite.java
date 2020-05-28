@@ -17,7 +17,7 @@ public class SmokeTestSuite extends SuiteMaker {
 	public SmokeTestSuite(InputParamsTM iParams) {
 		super(iParams);
 		setParameters(new HashMap<>());
-		TestRunMaker testRun = TestRunMaker.fromClasses(
+		TestRunMaker testRun = TestRunMaker.from(
 				iParams.getSuiteName(), 
 				Arrays.asList(
 					BuscarWithoutRefactor.class, 
