@@ -10,7 +10,7 @@ public class SuiteSmokeTest extends SuiteMaker {
 	//Creation of the TestRun indicating the name of the suite and the classes with the @Test's to execute.
 	public SuiteSmokeTest(InputParamsTM iParams) {
 		super(iParams);
-		TestRunMaker testRun = TestRunMaker.from(
+		TestRunMaker testRun = TestRunMaker.fromClasses(
 				iParams.getSuiteName(), 
 				Arrays.asList(TestsGoogle.class));
 		
