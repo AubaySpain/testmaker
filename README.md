@@ -180,11 +180,6 @@ A possible pom.xml can be:
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
-	<modules>
-		<module>example-test</module>
-		<module>windriver-test</module>
-	</modules>
 		
 	<dependencies>
 		<dependency>
@@ -196,12 +191,10 @@ A possible pom.xml can be:
 	
 	<build>
 		<plugins>
-			<!-- Seguramente si lo ejecuto sin testmaker se quejará de que no encuentra el aspectj en .m2 -->
-			<!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=562209 -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.github.m50d</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.11</version>
+				<version>1.11.1</version>
 				<configuration>
 					<complianceLevel>1.8</complianceLevel>
 					<source>1.8</source>
@@ -386,6 +379,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;

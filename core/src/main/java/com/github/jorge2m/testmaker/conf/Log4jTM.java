@@ -24,7 +24,9 @@ public class Log4jTM {
 		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
 		if (suite==null) {
 			TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
-			suite = testCase.getSuiteParent();
+			if (testCase!=null) {
+				suite = testCase.getSuiteParent();
+			}
 		}
 		if (suite!=null) {
 			return suite.getLogger();
@@ -35,7 +37,7 @@ public class Log4jTM {
 	
 	public static Logger getGlobal() {
 		if (loggerGlobal==null) {
-			 loggerGlobal = createLogger("Global", SuiteTM.getPathDirectoryOutputTests());
+			 loggerGlobal = createLogger("Global", SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
 		}
 		return loggerGlobal;
 	}
