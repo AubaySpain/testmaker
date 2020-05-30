@@ -23,10 +23,10 @@ public class SmokeTestSuite extends SuiteMaker {
 	public SmokeTestSuite(InputParamsTM iParams) {
 		super(iParams);
 		setParameters(new HashMap<>());
-		TestRunMaker testRun = TestRunMaker.fromClasses(
+		TestRunMaker testRun = TestRunMaker.from(
 				iParams.getSuiteName(), 
 				Arrays.asList(BuscarWithoutRefactor.class, SearchFactory.class));
-		//testRun.setDriverMaker(iParams.getBrowser(), makeListDrivers()); 
+		//testRun.setDriverMaker(iParams.getDriver(), makeListDrivers()); 
 		addTestRun(testRun);
 		setParallelMode(ParallelMode.METHODS);
 		setThreadCount(3);
