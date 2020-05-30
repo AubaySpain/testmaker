@@ -148,7 +148,7 @@ TestMaker brings a solution for those Test AB's backed by **Google Experiments**
 
 # Getting Started
 
-Lets go build a new Maven Project based on TestMaker that will:
+Lets go build a new Maven Project 1.8+ based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
 - Expose a TestSuite with one test that checks the "Hello World" input in Google.
 
@@ -170,10 +170,10 @@ A possible pom.xml can be:
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>examples</artifactId>
-	<groupId>com.github.jorge2m</groupId>
+	<artifactId>getstarted</artifactId>
+	<groupId>org.testmaker</groupId>
 	<version>0.0.1</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<name>examples</name>
 	<url>http://maven.apache.org</url>
 
@@ -185,7 +185,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.5</version>
+			<version>1.3.6</version>
 		</dependency>
 	</dependencies>
 	
@@ -236,7 +236,7 @@ A possible pom.xml can be:
 That class implements the user access via Command Line.
 
 ```java
-package org.github.jorge2m.test;
+package org.testmaker.getstarted;
 
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
@@ -273,10 +273,10 @@ public class CmdLineAccess {
 If we also want manage the execution of the tests via the a HttpRestAPI we must implement a class like this:
 
 ```java
-package org.github.jorge2m.test;
+package org.testmaker.getstarted;
 
-import org.github.jorge2m.test.CmdLineAccess.Apps;
-import org.github.jorge2m.test.CmdLineAccess.Suites;
+import org.testmaker.getstarted.CmdLineAccess.Apps;
+import org.testmaker.getstarted.CmdLineAccess.Suites;
 
 import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine;
 import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine.ResultCmdServer;
@@ -307,10 +307,10 @@ public class RestApiAccess {
 ### MyCreatorSuiteRun.java
 That class invoqued previously from CmdLineAccess and RestApiAccess.java must extend from CreatorSuiteRun and only has to override the metod getSuiteMaker() that returns a TestSuite in function of the 'suite' parameter introduced by the user:
 ```java
-package org.github.jorge2m.test;
+package org.testmaker.getstarted;
 
 import java.util.Arrays;
-import org.github.jorge2m.test.CmdLineAccess.Suites;
+import org.testmaker.getstarted.CmdLineAccess.Suites;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.SuiteMaker;
@@ -345,7 +345,7 @@ public class MyCreatorSuiteRun extends CreatorSuiteRun {
 ### SuiteSmokeTest.java
 Class that must extend from SuiteMaker and that creates a specific TestSuite.
 ```java
-package org.github.jorge2m.test;
+package org.testmaker.getstarted;
 
 import java.util.Arrays;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
@@ -373,7 +373,7 @@ public class SuiteSmokeTest extends SuiteMaker {
 ### TestsGoogle.java
 Finally in that class we implement the @Test that must be executed structured in @Step's and @Validation's. In that example there is only a @Test but there may be as many as necessary an can be filtered in the moment of the execution with the user-parameter 'tests'.
 ```java
-package org.github.jorge2m.test;
+package org.testmaker.getstarted;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -446,7 +446,7 @@ Run the class **CmdLineAccess**. Yo can use different parameters for configure e
 
 + 4 times execution TestCase BUS001 in desktop mode against Chrome paralellizing 2 browsers/testcases
 
-> 
+> `-suite SmokeTest -driver chrome -channel desktop -application google -tcases BUS001{4-2} -url https://www.google.com`
 
 + Idem to previous execution but against Firefox and reusing the browsers then increasing speed of execution
 
