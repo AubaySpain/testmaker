@@ -7,16 +7,16 @@ import org.openqa.selenium.WebDriver;
 
 public class Page1Google {
 
-	private final WebDriver driver;
+	private final WebDriver driver; 
 	
-	private static final String XPathInputSearch = "//input[@name='q']";
+	private static final String XPathInputSearch = "//input[@name='q']"; 
 	private static final String XPathButtonBuscar = "//input[@class='gNO89b']";
 	
 	public Page1Google(WebDriver driver) {
 		this.driver = driver;
 	}
 	
-	public void searchText(String textToSearch) {
+	public void searchText(String textToSearch) { 
 		By byInputInicio = By.xpath(XPathInputSearch);
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
 		

@@ -1,3 +1,4 @@
+#set($hash = '#')
 package ${package}.test.testcase.stpv;
 
 import org.openqa.selenium.WebDriver;
@@ -17,12 +18,22 @@ public class Page2BingResultsStpV {
 	}
 	
 	@Validation
-	public ChecksTM checkResultsSearchBing() {
+	public ChecksTM checkResultsSearchBing() {  
 		ChecksTM validations = ChecksTM.getNew();
+		int maxSeconds = 2;
+		validations.add(
+			"Aparece algún resultado (lo esperamos hasta " + maxSeconds + " segundos)",
+			page2BingResults.checkIsResultsUntil(maxSeconds),
+			State.Defect);
+		validations.add(
+			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			page2BingResults.checkIsNumResultsUntil(maxSeconds),
+			State.Info);
+		
 		numResults = page2BingResults.getNumResults();
 		validations.add(
 			"El número de entradas obtenido (" + numResults + ") es mayor que 0",
-			numResults > 0, State.Defect);
+			numResults > 0, State.Info);
 		
 		return validations;
 	}

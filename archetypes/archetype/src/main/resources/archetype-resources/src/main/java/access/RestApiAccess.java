@@ -1,6 +1,5 @@
 package ${package}.access;
 
-import ${package}.access.CreatorSuiteRunTestGoogle;
 import ${package}.access.datatmaker.Apps;
 import ${package}.access.datatmaker.Suites;
 import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine;
@@ -8,12 +7,12 @@ import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine.ResultCmdServe
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.restcontroller.ServerRestTM;
 
-public class ServerRest {
+public class RestApiAccess {
 
 	public static void main(String[] args) throws Exception {
 		ResultCmdServer result = ServerCmdLine.parse(args);
 		if (result!=null && result.isOk()) {
-			CreatorSuiteRun creatorSuiteRun = CreatorSuiteRunTestGoogle.getNew();
+			CreatorSuiteRun creatorSuiteRun = MyCreatorSuiteRun.getNew();
 			ServerRestTM serverRest = new ServerRestTM.Builder(creatorSuiteRun, Suites.class, Apps.class)
 				.setWithParams(result)
 				/*

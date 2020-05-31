@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.testng.annotations.Factory;
 
-import ${package}.test.testcase.script.BuscarWithoutRefactor;
+import ${package}.test.testcase.script.TestsGoogle;
 
 public class SearchFactory {
 
@@ -30,7 +30,7 @@ public class SearchFactory {
 	public Object[] FAC001_createTests() {
 		List<Object> listTests = new ArrayList<>();
 		for (String searchValue : searchValues) {
-			listTests.add(new BuscarWithoutRefactor(searchValue));
+			listTests.add(new TestsGoogle(searchValue));
 		}
 		return listTests.toArray(new Object[listTests.size()]);
 	}

@@ -1,6 +1,5 @@
 package ${package}.access;
 
-import ${package}.access.CreatorSuiteRunTestGoogle;
 import ${package}.access.datatmaker.Apps;
 import ${package}.access.datatmaker.Suites;
 import com.github.jorge2m.testmaker.boundary.access.ServerCmdLine;

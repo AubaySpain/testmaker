@@ -1,4 +1,7 @@
+#set($hash = '#')
 package ${package}.test.testcase.script;
+
+import java.io.Serializable;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
@@ -11,18 +14,18 @@ import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
-public class BuscarPatternPageObject implements Serializable {
+public class TestsGoogle implements Serializable {
 	
 	private static final long serialVersionUID = 7458665307721500197L;
 
 	private final String itemToSearch;
 	private final boolean factory;
 	
-	public BuscarPatternPageObject() {
+	public TestsGoogle() {
 		this.factory = false;
 		this.itemToSearch = "Mario Maker 2";
 	}
-	public BuscarPatternPageObject(String itemToSearch) {
+	public TestsGoogle(String itemToSearch) {
 		this.factory = true;
 		this.itemToSearch = itemToSearch;
 	}
@@ -50,7 +53,7 @@ public class BuscarPatternPageObject implements Serializable {
 	}
 	
 	@Validation (
-		description="Aparecen más resultados en Google (<b>#{numResultsGoogle}</b> obtenidos) que en Bing (<b>#{numResultsBing}</b> obtenidos)",
+		description="Aparecen más resultados en Google (<b>${hash}{numResultsGoogle}</b> obtenidos) que en Bing (<b>${hash}{numResultsBing}</b> obtenidos)",
 		level=State.Warn)
 	public boolean checkMoreResulstsInGoogle(float numResultsGoogle, float numResultsBing) {
 		return (numResultsGoogle > numResultsBing);

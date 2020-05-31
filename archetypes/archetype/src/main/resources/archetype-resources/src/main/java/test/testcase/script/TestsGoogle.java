@@ -1,10 +1,13 @@
+#set($hash = '#')
 package ${package}.test.testcase.script;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
@@ -19,19 +22,20 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+public class TestsGoogle implements Serializable {
 
-public class BuscarWithoutRefactor implements Serializable {
+	private static final long serialVersionUID = 7458665307721500197L;
 
 	private final String itemToSearch;
 	private final boolean factory;
 	long numResultsGoogle;
 	long numResultsBing;
 	
-	public BuscarWithoutRefactor() {
+	public TestsGoogle() {
 		this.factory = false;
 		this.itemToSearch = "Mario Maker 2";
 	}
-	public BuscarWithoutRefactor(String itemToSearch) {
+	public TestsGoogle(String itemToSearch) {
 		this.factory = true;
 		this.itemToSearch = itemToSearch;
 	}
@@ -51,7 +55,7 @@ public class BuscarWithoutRefactor implements Serializable {
 	}
 	
 	@Step (
-		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
+		description="Introducimos el texto <b>${hash}{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
 		expected="Aparecen resultados de búsqueda")
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
 		By byInputInicio = By.xpath("//input[@name='q']");
@@ -63,23 +67,31 @@ public class BuscarWithoutRefactor implements Serializable {
 	}
 	
 	@Validation
-	public ChecksTM checkResultsSearchGoogle(WebDriver driver) {
+	public ChecksTM checkResultsSearchGoogle(WebDriver driver) {		
 		ChecksTM validations = ChecksTM.getNew();
+		int maxSeconds = 2;
 		By byEntradaResultado = By.xpath("//h3[@class[contains(.,'LC20lb')]]");
 		validations.add(
-			"Aparece alguna entrada de resultado",
-			state(Visible, byEntradaResultado, driver).check(), State.Defect);
+			"Aparece alguna entrada de resultado (la esperamos hasta " + maxSeconds + " segundos)",
+			state(Visible, byEntradaResultado, driver).wait(maxSeconds).check(), 
+			State.Defect);
+		
+		By byNumResults = By.id("result-stats");
+		validations.add(
+			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			state(Visible, byNumResults, driver).wait(maxSeconds).check(), 
+			State.Info);
 		
 		numResultsGoogle = getNumResultsGoogle(driver);
 		validations.add(
 			"El número de entradas obtenido (" + numResultsGoogle + ") es mayor que 0",
-			numResultsGoogle > 0, State.Defect);
+			numResultsGoogle > 0, State.Info);
 		
 		return validations;
 	}
 	
 	@Step (
-		description="Vamos a la Url de Bing <b>#{urlBing}</b>",
+		description="Vamos a la Url de Bing <b>${hash}{urlBing}</b>",
 		expected="Aparece la página de búsqueda de Bing")
 	public void goToBingUrl(String urlBing, WebDriver driver) {
 		driver.get(urlBing);
@@ -95,30 +107,42 @@ public class BuscarWithoutRefactor implements Serializable {
 	}
 	
 	@Step (
-		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
-		expected="Aparecen resultados de búsqueda")
+		description="Introducimos el texto <b>${hash}{textToSearch}</b> y pulsamos RETURN",
+		expected="Aparecen resultados de búsqueda",
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public void searchInBing(String textToSearch, WebDriver driver) {
 		By byInputInicio = By.id("sb_form_q");
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
-		
-		By byIconLupa = By.xpath("//label[@for='sb_form_go']/*[@viewBox]");
-		click(byIconLupa, driver).exec();
+		driver.findElement(byInputInicio).sendKeys(Keys.ENTER);
 		checkResultsSearchBing(driver);
 	}
 	
 	@Validation
 	public ChecksTM checkResultsSearchBing(WebDriver driver) {
 		ChecksTM validations = ChecksTM.getNew();
+		int maxSeconds = 2;
+		validations.add(
+			"Aparece algún resultado (lo esperamos hasta " + maxSeconds + " segundos)",
+			state(Visible, By.xpath("//ol[@id='b_results']"), driver).wait(maxSeconds).check(),
+			State.Defect);
+		
+		validations.add(
+			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
+			state(Visible, By.xpath("//span[@class='sb_count']"), driver).wait(maxSeconds).check(),
+			State.Info);
+		
 		numResultsBing = getNumResultsBing(driver);
 		validations.add(
 			"El número de entradas obtenido (" + numResultsBing + ") es mayor que 0",
-			numResultsGoogle > 0, State.Defect);
+			numResultsBing > 0, 
+			State.Info);
 		
 		return validations;
 	}
 	
 	@Validation (
-		description="Aparecen más resultados en Google (<b>#{numResultsGoogle}</b> obtenidos) que en Bing (<b>#{numResultsBing}</b> obtenidos)",
+		description="Aparecen más resultados en Google (<b>${hash}{numResultsGoogle}</b> obtenidos) que en Bing (<b>${hash}{numResultsBing}</b> obtenidos)",
 		level=State.Warn)
 	public boolean checkMoreResulstsInGoogle(float numResultsGoogle, float numResultsBing) {
 		return (numResultsGoogle > numResultsBing);
@@ -129,11 +153,12 @@ public class BuscarWithoutRefactor implements Serializable {
 		return getLongFromElement(numResultsElem);
 	}
 	
-	public static long getNumResultsBing(WebDriver driver) {
+	static long getNumResultsBing(WebDriver driver) {
 		WebElement numResultsElem = getElementWeb(By.xpath("//span[@class='sb_count']"), driver);
 		return getLongFromElement(numResultsElem);
 	}
-	private static long getLongFromElement(WebElement element) {
+	
+	static long getLongFromElement(WebElement element) {
 		if (element!=null && "".compareTo(element.getText())!=0) {
 			Pattern pattern = Pattern.compile("([\\d.]+)");
 			Matcher matcher = pattern.matcher(element.getText());

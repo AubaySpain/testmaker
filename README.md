@@ -146,7 +146,7 @@ TestMaker brings a solution for those Test AB's backed by **Google Experiments**
 
 
 
-# Getting Started
+# Getting Started from Zero
 
 Lets go build a new Maven Project 1.8+ based on TestMaker that will:
 - Expose access via Command Line and HTTP Rest API. Then we will can use many available parameters to customize the test suite execution.
@@ -482,6 +482,10 @@ The execution will return a response that includes an attribute '*idExecSuite*' 
 ### Result Report
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
 ![](/images_doc/ResultHelloWorld.png?raw=true)
+
+# Getting Started from Artifact
+
+
 
 # Invocation Reference Guide
 ## Command Line

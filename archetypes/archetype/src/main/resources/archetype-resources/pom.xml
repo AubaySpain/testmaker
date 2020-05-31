@@ -58,7 +58,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -71,7 +70,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>${package}.access.CmdRunTests</mainClass>
+									<mainClass>${package}.access.CmdLineAccess</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
@@ -81,7 +80,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>	
-  </build>	
+	</build>	
 </project>

@@ -1,8 +1,10 @@
+#set($hash = '#')
 package ${package}.test.testcase.stpv;
 
 import org.openqa.selenium.WebDriver;
 
 import ${package}.test.testcase.pageobject.Page1Google;
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 
 public class Page1GoogleStpV {
@@ -14,8 +16,10 @@ public class Page1GoogleStpV {
 	}
 	
 	@Step (
-		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
-		expected="Aparecen resultados de búsqueda")
+		description="Introducimos el texto <b>${hash}{textToSearch}</b> y clickamos el botón \"Buscar con Google\"",
+		expected="Aparecen resultados de búsqueda",
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public Page2GoogleResultsStpV search(String textToSearch) {
 		Page1Google page1Google = new Page1Google(driver);
 		page1Google.searchText(textToSearch);

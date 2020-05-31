@@ -3,27 +3,27 @@ package ${package}.access;
 import java.util.Arrays;
 
 import ${package}.access.datatmaker.Suites;
-import ${package}.test.suite.SmokeTestSuite;
+import ${package}.test.suite.SuiteSmokeTest;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.SuiteMaker;
 
-public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
+public class MyCreatorSuiteRun extends CreatorSuiteRun {
 
 	private final String ChromeDriverVersionDefault = "83.0.4103.39";
 	private final String GeckoDriverVersionDefault = "0.26.0";
 	
-	private CreatorSuiteRunTestGoogle() throws Exception {
+	private MyCreatorSuiteRun() throws Exception {
 		super();
 	}
-	private CreatorSuiteRunTestGoogle(InputParamsBasic inputParams) throws Exception {
+	private MyCreatorSuiteRun(InputParamsBasic inputParams) throws Exception {
 		super(inputParams);
 	}
-	public static CreatorSuiteRunTestGoogle getNew() throws Exception {
-		return new CreatorSuiteRunTestGoogle();
+	public static MyCreatorSuiteRun getNew() throws Exception {
+		return new MyCreatorSuiteRun();
 	}
-	public static CreatorSuiteRunTestGoogle getNew(InputParamsBasic inputParams) throws Exception {
-		return new CreatorSuiteRunTestGoogle(inputParams);
+	public static MyCreatorSuiteRun getNew(InputParamsBasic inputParams) throws Exception {
+		return new MyCreatorSuiteRun(inputParams);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 		try {
 			switch ((Suites)inputParams.getSuite()) {
 			case SmokeTest:
-				return (new SmokeTestSuite(inputParams));
+				return (new SuiteSmokeTest(inputParams));
 			case OtherSuite:  
 			default:
 			}

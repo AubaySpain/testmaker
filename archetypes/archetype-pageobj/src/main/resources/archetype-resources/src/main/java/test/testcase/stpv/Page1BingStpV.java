@@ -1,9 +1,12 @@
+#set($hash = '#')
 package ${package}.test.testcase.stpv;
 
 import org.openqa.selenium.WebDriver;
 
 import ${package}.test.testcase.pageobject.Page1Bing;
 import static ${package}.test.testcase.pageobject.Page1Bing.URL_BING;
+
+import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
@@ -34,8 +37,10 @@ public class Page1BingStpV {
 	}
 	
 	@Step (
-		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
-		expected="Aparecen resultados de búsqueda")
+		description="Introducimos el texto <b>${hash}{textToSearch}</b> y pulsamos ENTER",
+		expected="Aparecen resultados de búsqueda",
+		saveImagePage=SaveWhen.Always,
+		saveHtmlPage=SaveWhen.Always)
 	public Page2BingResultsStpV search(String textToSearch) {
 		page1Bing.searchText(textToSearch);
 

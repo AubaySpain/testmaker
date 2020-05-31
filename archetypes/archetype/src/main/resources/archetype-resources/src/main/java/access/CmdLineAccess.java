@@ -11,13 +11,13 @@ import com.github.jorge2m.testmaker.domain.InputParamsBasic;
  * @author jorge.muñoz
  *
  */
-public class CmdRunTests {
+public class CmdLineAccess {
 
 	public static void main(String[] args) throws Exception { 
 		InputParamsBasic inputParams = new InputParamsBasic(Suites.class, Apps.class);
 		CmdLineMaker cmdLineAccess = CmdLineMaker.from(args, inputParams);
 		if (cmdLineAccess.checkOptionsValue().isOk()) {
-			CreatorSuiteRun creatorSuiteRun = CreatorSuiteRunTestGoogle.getNew(inputParams);
+			CreatorSuiteRun creatorSuiteRun = MyCreatorSuiteRun.getNew(inputParams);
 			creatorSuiteRun.execTestSuite(false);
 		}
 	}
