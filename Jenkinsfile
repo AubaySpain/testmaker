@@ -1,11 +1,15 @@
-def serverTmIp = ""
-def pathSuites = ""
-def machineCreated = false;
+//def serverTmIp = ""
+//def pathSuites = ""
+//def machineCreated = false;
 
 pipeline {
 
 	agent { label 'java-docker-slave' }
 	environment {
+		SERVER_TM_IP = ""
+		PATH_SUITES = ""
+		MACHINE_CREATED = false
+
 		GCLOUD_PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin"
 		PATH = "$GCLOUD_PATH:$PATH"
 		TAG_IMAGE_DOCKER = "gcr.io/testmaker-example/example-test:latest"
@@ -26,19 +30,6 @@ pipeline {
 				}
 			}
 		}
-//		stage("Package") {
-//			steps {
-//				dir("core") {
-//					sh label: 'Install Core', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
-//				}
-//				dir("examples/bom-examples") {
-//					sh label: 'Package bom-examples', script: 'mvn clean package'
-//				}
-//				dir("examples/example-test") {
-//					sh label: 'Package example-test', script: 'mvn clean package'
-//				}
-//			}
-//		}
 		stage("Package example-test") {
 			steps {
 				sh label: 'Package', script: 'mvn -P CI -Dmaven.test.skip=true clean install'  
@@ -72,15 +63,15 @@ pipeline {
 					script {
 						sh 	label: 'Point to project testmaker', 
 							script: '$GCLOUD_PATH/gcloud config set project testmaker-example'
-						machineCreated = true;
+						env.MACHINE_CREATED = true;
 						sh 	label: 'Create Instance in Google Cloud',
 							script: ''' 
 								$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
 							'''
-						serverTmIp = sh script: '''
+						SERVER_TM_IP = sh script: '''
 								$GCLOUD_PATH/gcloud compute instances describe testmaker-hub --zone europe-west1-b --format=\'get(networkInterfaces.accessConfigs[0].natIP)\' 
 							''', returnStdout: true
-						echo "IP of the GC Instance:" + serverTmIp
+						echo "IP of the GC Instance:" + SERVER_TM_IP
 						//if serverTmIp="" -> error
 					}
 				}
@@ -89,10 +80,10 @@ pipeline {
 		stage("Integration Tests") {
 			steps {
 				dir("examples/example-test") {
-					withEnv(["SERVER=$serverTmIp"]) {
+					//withEnv(["SERVER=$serverTmIp"]) {
 						script {
 							sh 	label: 'Execute end-to-end integration-tests', 
-								script: 'mvn -PCI clean verify -Dserver.port=80 -Dserver.ip=${SERVER}'
+								script: 'mvn -PCI clean verify -Dserver.port=80 -Dserver.ip=${SERVER_TM_IP}'
 						}
 						post {
 							always {
@@ -100,15 +91,15 @@ pipeline {
 									script: 'rm -R ${WORKSPACE}/output-library'
 								sh 	label: 'Get reports from GC-Instance', 
 									script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
-								pathSuites = sh  script: '''
+								def pathSuites = sh  script: '''
 									for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
 										echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
 									done 
 									''', returnStdout: true
-								pathSuites = pathSuites.replace('\n',',')
+								env.PATH_SUITES = pathSuites.replace('\n',',')
 							}
 						}
-					}
+					//}
 				}
 			}
 		}
@@ -116,21 +107,21 @@ pipeline {
 	post {
 		always {
 			script {
-				if ( machineCreated == true) {
+				if ( env.MACHINE_CREATED == true) {
 					sh label: 
 						'Destroy intance in Google Cloud', 
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
 				}
 			}
-			withEnv(["PATHSUITES=$pathSuites"]) {
+			//withEnv(["PATHSUITES=$pathSuites"]) {
 				publishHTML([
 					allowMissing: false, 
 					alwaysLinkToLastBuild: false, 
 					keepAll: false, 
 					reportDir: 'output-library', 
-					reportFiles: "${PATHSUITES}", 
+					reportFiles: "${PATH_SUITES}", 
 					reportName: 'HTML Report', reportTitles: ''])  
-			}
+			//}
 		}
 		success {
 			withCredentials([string(credentialsId: 'GitHubToken', variable: 'GITHUB_TOKEN')]) {
