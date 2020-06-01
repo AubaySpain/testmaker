@@ -114,15 +114,16 @@ pipeline {
 						'Destroy intance in Google Cloud', 
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
 				}
-			}
-			withEnv(["PATHSUITES=$pathSuites"]) {
-				publishHTML([
-					allowMissing: false, 
-					alwaysLinkToLastBuild: false, 
-					keepAll: false, 
-					reportDir: 'output-library', 
-					reportFiles: "${PATHSUITES}", 
-					reportName: 'HTML Report', reportTitles: ''])  
+
+				withEnv(["PATHSUITES=$pathSuites"]) {
+					publishHTML([
+						allowMissing: false, 
+						alwaysLinkToLastBuild: false, 
+						keepAll: false, 
+						reportDir: 'output-library', 
+						reportFiles: "${PATHSUITES}", 
+						reportName: 'HTML Report', reportTitles: ''])  
+				}
 			}
 		}
 		success {
