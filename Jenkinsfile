@@ -115,13 +115,13 @@ pipeline {
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
 				}
 			}
-			withEnv(["PATH_SUITES=$pathSuites"]) {
+			withEnv(["PATHSUITES=$pathSuites"]) {
 				publishHTML([
 					allowMissing: false, 
 					alwaysLinkToLastBuild: false, 
 					keepAll: false, 
 					reportDir: 'output-library', 
-					reportFiles: "${PATH_SUITES}", 
+					reportFiles: "${PATHSUITES}", 
 					reportName: 'HTML Report', reportTitles: ''])  
 			}
 		}
