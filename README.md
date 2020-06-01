@@ -485,7 +485,10 @@ In both executions we will obtain a HTML report with the same testcase BUS001 re
 
 # Getting Started from Archetype
 
-There is an archetype **testmaker-archetype** published in Maven Central that  can be used for create a base project similar to the one defined in the previous version. 
+There is an archetype **testmaker-archetype** published in Maven Central that  can be used for create a base maven-project and its equivalent **testmaker-archetype-pageobject** for create the same project where the test-script described in the TestGoogle.java class uses a PageObject Pattern.
+
+The classes that contains that project are similar to those described in the previous version unlike that they are located in the corresponding packages:
+
 
 
 
