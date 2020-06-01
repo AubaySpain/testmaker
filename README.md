@@ -489,7 +489,7 @@ In both executions we will obtain a HTML report with the same testcase BUS001 re
 
 There is an archetype **testmaker-archetype** published in Maven Central that  can be used for create a base maven-project and its equivalent **testmaker-archetype-pageobject** for create the same project where the test-script described in the TestGoogle.java class uses a PageObject Pattern.
 
-The classes that contains that project are similar to those described in the previous version unlike that they are located in the corresponding packages:
+When you'll create a project with any of these archetypes you'll have a project with java classes similar to those described in the previous version unlike that they are located in the corresponding packages:
 
 ​	.access.**CmdLineAccess.java**
 
@@ -503,7 +503,112 @@ The classes that contains that project are similar to those described in the pre
 
 
 
-Then you can execute the tests and analize the results in the samme manner described in the  "Getting Started from Zero" section. Note that the test BUS001 testcase in that case is a little more complex 
+Then you can execute the tests and analize the results in the same manner described in the  "Getting Started from Zero" section. Note that the test **BUS001** testcase in that case is a little more complex and instead of searching for the "Hello World" literal it performs the following actions:
+
++ Searches "Mario Maker" in Google and stores the number of results
++ Searches "Mario Maker" in Bing and stores the number of results
++ Checks that the search in google gets more results that in Bing.
+
+
+
+### Expand from base project
+
+Creating a project from a testmaker archetype you'll have an operational project. The modifications to adapt it to the specific needs of each project are described below:
+
++ **Implement new TestCases**: 
+
+  + Rename and modify the *TestsGoogle.java* (or create a new specific java-class) and add your news @Test/s scripts making use of the @Step and @Validation annotations. 
+  + Modify the *SuiteSmokeTest class* adding the new java-class to the list of java-classes that contains all the @Tests of the Suite.
+
++  **Implement a new TestSuite**
+
+  + Implement a new class analogous to the SuiteSmokeTest and include the list of java-classes that contains the @Tests of the Suite.
+  + Modify the enum *Suites* adding a new entry for the new TestSuite.
+  + Open the *MyCreatorSuiteRun* class and modify the *getSuiteMaker()* method adding the new TestSuite in the switch.
+
++ **Modify the chromedriver/geckodriver version** (for support new versions of Chrome or Firefox). They are 2 possibilities:
+
+  + Invoque the TestSuite via Command Line/API Rest indicating the version of the driver in the parameter *driverVersion*. For example *driverVersion=83.0.4103.14* correspond to a ChromeDriver that supports Chrome83.
+
+  + Modify the *MyCreatorSuiteRun* class where they are the default versions of each webdriver:
+
+    ```java
+    public class MyCreatorSuiteRun extends CreatorSuiteRun {
+    	private final String ChromeDriverVersionDefault = "83.0.4103.39";
+    	private final String GeckoDriverVersionDefault = "0.26.0";
+    ```
+
+* **Configure specific user WebDrivers**. TestMaker makes available 2 embebbded WebDrivers configured for manage Chrome and Firefox respectively. But you have the possibility of override any of them or add new ones creating classes that extenns the abstract class *DriverMaker* and passing them as a parameter-list to the *TestRunaker.setDriverMaker* method. For example, lets go to create:
+
+  * A new Chrome-WebDriver wich will be used when *driver=michrome*
+  * A new Firefox-WebDriver wich will be used when  *driver=mifirefox*
+  * Both WebDriver associated to the TestSuite *SmokeTest*
+
+  Then you'll have to modify the class *SuiteSmokeTest* as follows:
+
+  ```java
+public class SuiteSmokeTest extends SuiteMaker {
+    
+    public SuiteSmokeTest(InputParamsTM iParams) {
+        super(iParams);
+        setParameters(new HashMap<>());
+        TestRunMaker testRun = TestRunMaker.from(
+                iParams.getSuiteName(), 
+                Arrays.asList(TestsGoogle.class, SearchFactory.class));
+        testRun.setDriverMaker(iParams.getDriver(), makeListDrivers()); 
+        addTestRun(testRun);
+        setParallelMode(ParallelMode.METHODS);
+        setThreadCount(3);
+    }
+
+    private static List<DriverMaker> makeListDrivers() {
+        return Arrays.asList(
+            new ChromeDriverMaker(),
+            new FirefoxDriverMaker()
+        );
+    }
+    private static class ChromeDriverMaker extends DriverMaker {
+        public String getTypeDriver() {
+            return "michrome";
+        }
+        public void setupDriverVersion(String driverVersion) {
+            ChromeDriverManager.chromedriver().version(driverVersion).setup();
+        }
+        public WebDriver build() {
+            return new ChromeDriver();
+        }
+    }
+    private static class FirefoxDriverMaker extends DriverMaker {
+        public String getTypeDriver() {
+            return "mifirefox";
+        }
+        public void setupDriverVersion(String driverVersion) {
+            FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
+        }
+        public WebDriver build() {
+            return new FirefoxDriver();
+        }
+    }
+}
+  ```
+
+
+
+### Dockerization
+
+The project created from the testmaker-archetype incorporates a *Dockerfile* that you can use for expose the ApiREST of the project. The Dockerfile needs the packaged project in the target directory. So these are the necessary steps to build and run the project in docker (assuming a tag image of "jorge2m/tmarchetype:latest"):
+
+1. mvn clean package
+2. docker build -t jorge2m/tmarchetype:latest .
+3. docker run -d -p 80:80 -p 443:443 --privileged -v "%CD%/output-library:/output-library" jorge2m/tmarchetype:latest
+4. Use a tool (f.e. Postman) for execute the service "testsui
+
+
+
+### TestCase Factories
+
+TestMaker brings the pos
+
 
 
 
