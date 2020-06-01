@@ -111,6 +111,13 @@ pipeline {
 	}
 	post {
 		always {
+			script {
+				if ( machineCreated == true) {
+					sh label: 
+						'Destroy intance in Google Cloud', 
+						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
+				}
+			}
 			withEnv(["PATHSUITES=$pathSuites"]) {
 				publishHTML([
 					allowMissing: false, 
@@ -119,13 +126,6 @@ pipeline {
 					reportDir: 'output-library', 
 					reportFiles: "${PATHSUITES}", 
 					reportName: 'HTML Report', reportTitles: ''])  
-			}
-			script {
-				if ( machineCreated == true) {
-					sh label: 
-						'Destroy intance in Google Cloud', 
-						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
-				}
 			}
 		}
 		success {
