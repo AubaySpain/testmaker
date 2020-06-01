@@ -545,51 +545,51 @@ Creating a project from a testmaker archetype you'll have an operational project
   * Both WebDriver associated to the TestSuite *SmokeTest*
 
   Then you'll have to modify the class *SuiteSmokeTest* as follows:
-
+  
   ```java
-public class SuiteSmokeTest extends SuiteMaker {
-    
-    public SuiteSmokeTest(InputParamsTM iParams) {
-        super(iParams);
-        setParameters(new HashMap<>());
-        TestRunMaker testRun = TestRunMaker.from(
-                iParams.getSuiteName(), 
-                Arrays.asList(TestsGoogle.class, SearchFactory.class));
-        testRun.setDriverMaker(iParams.getDriver(), makeListDrivers()); 
-        addTestRun(testRun);
-        setParallelMode(ParallelMode.METHODS);
-        setThreadCount(3);
-    }
-
-    private static List<DriverMaker> makeListDrivers() {
-        return Arrays.asList(
-            new ChromeDriverMaker(),
-            new FirefoxDriverMaker()
-        );
-    }
-    private static class ChromeDriverMaker extends DriverMaker {
-        public String getTypeDriver() {
-            return "michrome";
-        }
-        public void setupDriverVersion(String driverVersion) {
-            ChromeDriverManager.chromedriver().version(driverVersion).setup();
-        }
-        public WebDriver build() {
-            return new ChromeDriver();
-        }
-    }
-    private static class FirefoxDriverMaker extends DriverMaker {
-        public String getTypeDriver() {
-            return "mifirefox";
-        }
-        public void setupDriverVersion(String driverVersion) {
-            FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
-        }
-        public WebDriver build() {
-            return new FirefoxDriver();
-        }
-    }
-}
+  public class SuiteSmokeTest extends SuiteMaker {
+      
+      public SuiteSmokeTest(InputParamsTM iParams) {
+          super(iParams);
+          setParameters(new HashMap<>());
+          TestRunMaker testRun = TestRunMaker.from(
+                  iParams.getSuiteName(), 
+                  Arrays.asList(TestsGoogle.class, SearchFactory.class));
+          testRun.setDriverMaker(iParams.getDriver(), makeListDrivers()); 
+          addTestRun(testRun);
+          setParallelMode(ParallelMode.METHODS);
+          setThreadCount(3);
+      }
+  
+      private static List<DriverMaker> makeListDrivers() {
+          return Arrays.asList(
+              new ChromeDriverMaker(),
+              new FirefoxDriverMaker()
+          );
+      }
+      private static class ChromeDriverMaker extends DriverMaker {
+          public String getTypeDriver() {
+              return "michrome";
+          }
+          public void setupDriverVersion(String driverVersion) {
+              ChromeDriverManager.chromedriver().version(driverVersion).setup();
+          }
+          public WebDriver build() {
+              return new ChromeDriver();
+          }
+      }
+      private static class FirefoxDriverMaker extends DriverMaker {
+          public String getTypeDriver() {
+              return "mifirefox";
+          }
+          public void setupDriverVersion(String driverVersion) {
+              FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
+          }
+          public WebDriver build() {
+              return new FirefoxDriver();
+          }
+      }
+  }
   ```
 
 
