@@ -73,7 +73,7 @@ public class TestsGoogle implements Serializable {
 		By byEntradaResultado = By.xpath("//h3[@class[contains(.,'LC20lb')]]");
 		validations.add(
 			"Aparece alguna entrada de resultado (la esperamos hasta " + maxSeconds + " segundos)",
-			state(Visible, byEntradaResultado, driver).wait(maxSeconds).check(), 
+			state(Present, byEntradaResultado, driver).wait(maxSeconds).check(), 
 			State.Defect);
 		
 		By byNumResults = By.id("result-stats");

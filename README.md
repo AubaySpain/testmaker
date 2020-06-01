@@ -491,6 +491,20 @@ There is an archetype **testmaker-archetype** published in Maven Central that  c
 
 The classes that contains that project are similar to those described in the previous version unlike that they are located in the corresponding packages:
 
+​	.access.**CmdLineAccess.java**
+
+​	.access.**RestApiAccess.java**
+
+​	.access.**MyCreatorSuiteRun.java**
+
+​	.test.suite.**SuiteSmokeTest.java**
+
+​	.test.script.**TestsGoogle.java**
+
+
+
+Then you can execute the tests and analize the results in the samme manner described in the  "Getting Started from Zero" section. Note that the test BUS001 testcase in that case is a little more complex 
+
 
 
 
