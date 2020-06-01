@@ -185,7 +185,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.6</version>
+			<version>1.3.7</version>
 		</dependency>
 	</dependencies>
 	
@@ -435,7 +435,7 @@ public class TestsGoogle {
 
 
 ## Execution
-Build the project via a "*maven clean install*" and then you are ready for execute the automatic test.
+Build the project via a "*mvn clean package*" and then you are ready for execute the automatic test.
 
 ### Execution via Command Line.
 Run the class **CmdLineAccess**. Yo can use different parameters for configure execution, here I leave several possibilities:
@@ -503,7 +503,7 @@ When you'll create a project with any of these archetypes you'll have a project 
 
 
 
-Then you can execute the tests and analize the results in the same manner described in the  "Getting Started from Zero" section. Note that the test **BUS001** testcase in that case is a little more complex and instead of searching for the "Hello World" literal it performs the following actions:
+Then you can execute the tests and analize the results in the same manner described in the  "Getting Started from Zero" (from "Execution" sub-section). Note that the test **BUS001** testcase in that case is a little more complex and instead of searching for the "Hello World" literal it performs the following actions:
 
 + Searches "Mario Maker" in Google and stores the number of results
 + Searches "Mario Maker" in Bing and stores the number of results
