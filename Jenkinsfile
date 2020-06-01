@@ -68,10 +68,10 @@ pipeline {
 							script: ''' 
 								$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
 							'''
-						SERVER_TM_IP = sh script: '''
+						env.SERVER_TM_IP = sh script: '''
 								$GCLOUD_PATH/gcloud compute instances describe testmaker-hub --zone europe-west1-b --format=\'get(networkInterfaces.accessConfigs[0].natIP)\' 
 							''', returnStdout: true
-						echo "IP of the GC Instance:" + SERVER_TM_IP
+						echo "IP of the GC Instance:" + env.SERVER_TM_IP
 						//if serverTmIp="" -> error
 					}
 				}
