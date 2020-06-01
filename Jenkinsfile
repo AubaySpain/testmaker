@@ -85,26 +85,29 @@ pipeline {
 							sh 	label: 'Execute end-to-end integration-tests', 
 								script: 'mvn -PCI clean verify -Dserver.port=80 -Dserver.ip=${SERVER}'
 						}
-						post {
-							always {
-								script {
-									sh	label: 'Purge output-library',
-										script: 'rm -R ${WORKSPACE}/output-library'
-									sh 	label: 'Get reports from GC-Instance', 
-										script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
-									pathSuites = sh  script: '''
-										for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
-											echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
-										done 
-										''', returnStdout: true
-									pathSuites = pathSuites.replace('\n',',')
-								}
-							}
-						}
 					}
 				}
 			}
 		}
+		post {
+			always {
+				dir("examples/example-test") {
+					script {
+						sh	label: 'Purge output-library',
+							script: 'rm -R ${WORKSPACE}/output-library'
+						sh 	label: 'Get reports from GC-Instance', 
+							script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
+						pathSuites = sh  script: '''
+							for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
+								echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
+							done 
+							''', returnStdout: true
+						pathSuites = pathSuites.replace('\n',',')
+					}
+				}
+			}
+		}
+
 	}
 	post {
 		always {
