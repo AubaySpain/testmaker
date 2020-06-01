@@ -483,6 +483,8 @@ The execution will return a response that includes an attribute '*idExecSuite*' 
 In both executions we will obtain a HTML report with the same testcase BUS001 repeated 4 times. In each testcase there will be the step/validation executed together with links to the capture of the page and their HTML. Here you can see an example of an execution:
 ![](/images_doc/ResultHelloWorld.png?raw=true)
 
+
+
 # Getting Started from Archetype
 
 There is an archetype **testmaker-archetype** published in Maven Central that  can be used for create a base maven-project and its equivalent **testmaker-archetype-pageobject** for create the same project where the test-script described in the TestGoogle.java class uses a PageObject Pattern.

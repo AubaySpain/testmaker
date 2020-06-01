@@ -1,6 +1,6 @@
 package com.github.jorge2m.example_test.test.testcase.pageobject;
 
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.Visible;
+import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -19,7 +19,7 @@ public class Page2GoogleResults extends PageObjTM {
 	
 	public boolean checkAreResultsUntil(int maxSeconds) {
 		By byEntradaResultado = By.xpath(XPathResult);
-		return (state(Visible, byEntradaResultado).wait(maxSeconds).check());
+		return (state(Present, byEntradaResultado).wait(maxSeconds).check());
 	}
 	
 	public boolean checkIsNumResultsUntil(int maxSeconds) {
