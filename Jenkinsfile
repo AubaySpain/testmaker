@@ -121,7 +121,7 @@ pipeline {
 					alwaysLinkToLastBuild: false, 
 					keepAll: false, 
 					reportDir: 'output-library', 
-					reportFiles: "${PATH_SUITES}", 
+					reportFiles: "${env.PATH_SUITES}", 
 					reportName: 'HTML Report', reportTitles: ''])  
 			//}
 		}
