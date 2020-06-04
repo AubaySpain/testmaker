@@ -27,6 +27,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
+import com.github.jorge2m.testmaker.testreports.html.GetterHtmlStatsSuites;
 
 public class TestMaker {
 	
@@ -171,7 +172,7 @@ public class TestMaker {
 	public static void skipTestsIfSuiteStopped() {
 		if (getTestCase()!=null) {
 			skipTestsIfSuiteEnded(getTestCase().getSuiteParent());
-	}
+		}
 	}
 
 	public static void skipTestsIfSuiteEnded(SuiteTM suite) {
@@ -182,6 +183,11 @@ public class TestMaker {
 		if (statesSuiteEnded.contains(suite.getStateExecution())) {
 			throw new SkipException("Suite " + suite.getName() + " in state " + suite.getStateExecution());
 		}
+	}
+	
+	public static String getHtmlStatsSuites(List<SuiteBean> listSuites) throws Exception {
+		GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(listSuites);
+		return getterHtmlSuites.getHtml();
 	}
 
 	private static void runInTestNgSync(SuiteTM suite) {

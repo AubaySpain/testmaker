@@ -1,15 +1,16 @@
 package com.github.jorge2m.testmaker.conf.defaultmail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
-import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.SenderMailEndSuiteI;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import com.github.jorge2m.testmaker.testreports.html.GetterHtmlStatsSuites;
 
 public class DefaultMailEndSuite implements SenderMailEndSuiteI {
 	
@@ -30,9 +31,8 @@ public class DefaultMailEndSuite implements SenderMailEndSuiteI {
 				"se ha ejecutado el siguiente script:" +
 				"</p>";
 
-			List<SuiteTM>list1Suite = new ArrayList<>();
-			list1Suite.add(suite);
-			mensajeHTML+=CorreoReport.constuctTableMail(list1Suite);
+			GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(Arrays.asList(suite.getSuiteBean()));
+			mensajeHTML+=getterHtmlSuites.getHtml();
 
 			suite.getLogger().info(". Procedemos a enviar correo!");
 			new MailClient().mail(this.from, myToList, myCcList, getSubjectMail(suite), mensajeHTML, listaAttachImages);
