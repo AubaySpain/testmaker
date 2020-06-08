@@ -106,7 +106,7 @@ pipeline {
 					sh	label: 'Purge output-library',
 						script: 'rm -rf ${WORKSPACE}/output-library/*'
 					sh label: 'Create void output-library',
-						script: 'mkdir -p output-library/SmokeTest'
+						script: 'mkdir -p ${WORKSPACE}/output-library/SmokeTest'
 					sh 	label: 'Get reports from GC-Hub-Instance', 
 						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/SmokeTest ${WORKSPACE}/output-library/SmokeTest --zone=europe-west1-b'
 					sh 	label: 'Get reports from GC-Slave-Instance', 
