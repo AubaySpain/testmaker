@@ -104,7 +104,7 @@ pipeline {
 			script {
 				if ( machineCreated == true) {
 					sh	label: 'Purge output-library',
-						script: 'rm -R ${WORKSPACE}/output-library'
+						script: 'rm -rf ${WORKSPACE}/output-library'
 					sh 	label: 'Get reports from GC-Hub-Instance', 
 						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
 					sh 	label: 'Get reports from GC-Slave-Instance', 
