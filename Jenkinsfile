@@ -104,24 +104,23 @@ pipeline {
 			script {
 				if ( machineCreated == true) {
 					sh	label: 'Purge output-library',
-						script: 'rm -rf ${WORKSPACE}/output-hub/*'
-					sh label: 'Create void output-library',
-						script: 'mkdir -p ${WORKSPACE}/output-hub/SmokeTest'
-					sh 	label: 'Get reports from GC-Hub-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/* ${WORKSPACE}/output-hub --zone=europe-west1-b'
+						script: 'rm -rf ${WORKSPACE}/output-library/*'
 						
-					sh	label: 'Purge output-library',
-						script: 'rm -rf ${WORKSPACE}/output-slave/*'
 					sh label: 'Create void output-library',
-						script: 'mkdir -p ${WORKSPACE}/output-slave/SmokeTest'						
+						script: 'mkdir -p ${WORKSPACE}/output-library/SmokeTestHub'
+					sh 	label: 'Get reports from GC-Hub-Instance', 
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/SmokeTest/* ${WORKSPACE}/output-library/SmokeTestHub --zone=europe-west1-b'
+
+					sh label: 'Create void output-library',
+						script: 'mkdir -p ${WORKSPACE}/output-slave/SmokeTestSlave'
 					sh 	label: 'Get reports from GC-Slave-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/* ${WORKSPACE}/output-slave --zone=europe-west1-b'
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/SmokeTest/* ${WORKSPACE}/output-library/SmokeTestSlave --zone=europe-west1-b'
 						
 					pathSuites = sh  script: '''
-						for entry in $(ls ${WORKSPACE}/output-hub/SmokeTest); do
+						for entry in $(ls ${WORKSPACE}/output-library/SmokeTestHub); do
 							echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
 						done 
-						for entry in $(ls ${WORKSPACE}/output-slave/SmokeTest); do
+						for entry in $(ls ${WORKSPACE}/output-library/SmokeTestSlave); do
 							echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
 						done 
 						''', returnStdout: true
@@ -152,6 +151,6 @@ pipeline {
 			withCredentials([string(credentialsId: 'GitHubToken', variable: 'GITHUB_TOKEN')]) {
 				sh "curl https://api.GitHub.com/repos/AubaySpain/testmaker/statuses/$GIT_COMMIT?access_token=$GITHUB_TOKEN -H 'Content-Type: application/json' -X POST -d '{\"state\": \"failure\",\"context\": \"continuous-integration/jenkins\", \"description\": \"Jenkins\", \"target_url\": \"https://jenkins.aubay.es/job/TEST-MAKER/job/TestMakerCI/$BUILD_NUMBER/console\"}'"
 			}			
-		}
+		}	
 	}
 }
