@@ -120,10 +120,10 @@ pipeline {
 				
 					sh label: 
 						'Destroy Hub-Instance in Google Cloud', 
-						script: '$GCLOUD_PATH/gcloud compute instances delete --async testmaker-hub --zone europe-west1-b'
+						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
 					sh label: 
 						'Destroy Slave-Instance in Google Cloud', 
-						script: '$GCLOUD_PATH/gcloud compute instances delete --async testmaker-slave --zone europe-west1-b'
+						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
 				}
 
 				withEnv(["PATHSUITES=$pathSuites"]) {
