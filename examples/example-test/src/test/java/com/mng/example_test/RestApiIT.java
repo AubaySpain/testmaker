@@ -109,7 +109,7 @@ public class RestApiIT extends JaxRsClient {
 		}
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testFactoryTestCase() throws Exception {
 		//Given-When
@@ -119,7 +119,7 @@ public class RestApiIT extends JaxRsClient {
 		checkResultFactoryTestCase(suiteData);
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testFactoryTestCaseHub() throws Exception {
 		//Given-When
