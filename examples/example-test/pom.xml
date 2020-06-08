@@ -49,12 +49,12 @@
 							<argLine>-Dfile.encoding=UTF-8</argLine>
 							<systemProperties>
 								<property>
-									<name>server.ip</name>
-									<value>${server.ip}</value>
+									<name>server_slave.ip</name>
+									<value>${server_slave.ip}</value>
 								</property>
 								<property>
-									<name>server.port</name>
-									<value>${server.port}</value>
+									<name>server_slave.port</name>
+									<value>${server_slave.port}</value>
 								</property>
 							</systemProperties>
 						</configuration>

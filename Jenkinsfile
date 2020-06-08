@@ -1,4 +1,5 @@
-def serverTmIp = ""
+def serverHubTmIp = ""
+def serverSlaveTmIp = ""
 def pathSuites = ""
 def machineCreated = false;
 
@@ -57,22 +58,30 @@ pipeline {
 			}		
 		}
 
-		stage("Create instance Google Cloud") {
+		stage("Create instances (Hub/Slave) Google Cloud") {
 			steps {
 				dir("examples/example-test") {
 					script {
 						sh 	label: 'Point to project testmaker', 
 							script: '$GCLOUD_PATH/gcloud config set project testmaker-example'
 						machineCreated = true;
-						sh 	label: 'Create Instance in Google Cloud',
+						sh 	label: 'Create Instance Hub in Google Cloud',
 							script: ''' 
 								$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-hub --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
 							'''
-						serverTmIp = sh script: '''
+						serverHubTmIp = sh script: '''
 								$GCLOUD_PATH/gcloud compute instances describe testmaker-hub --zone europe-west1-b --format=\'get(networkInterfaces.accessConfigs[0].natIP)\' 
 							''', returnStdout: true
-						echo "IP of the GC Instance:" + serverTmIp
-						//if serverTmIp="" -> error
+						echo "IP of the GC Instance-Hub:" + serverHubTmIp
+						
+						sh 	label: 'Create Instance Slave in Google Cloud',
+							script: ''' 
+								$GCLOUD_PATH/gcloud compute instances create-with-container testmaker-slave --machine-type=n1-highcpu-8 --zone europe-west1-b --container-mount-host-path mount-path=/output-library,host-path=/home/jenkins/output-library,mode=rw --tags http-server,https-server --container-image=$TAG_IMAGE_DOCKER --container-privileged
+							'''
+						serverSlaveTmIp = sh script: '''
+								$GCLOUD_PATH/gcloud compute instances describe testmaker-slave --zone europe-west1-b --format=\'get(networkInterfaces.accessConfigs[0].natIP)\' 
+							''', returnStdout: true
+						echo "IP of the GC Instance-Slave:" + serverSlaveTmIp
 					}
 				}
 			}
@@ -80,10 +89,10 @@ pipeline {
 		stage("Integration Tests") {
 			steps {
 				dir("examples/example-test") {
-					withEnv(["SERVER=$serverTmIp"]) {
+					withEnv(["SERVER_HUB=$serverHubTmIp", "SERVER_SLAVE=$serverSlaveTmIp"]) {
 						script {
 							sh 	label: 'Execute end-to-end integration-tests', 
-								script: 'mvn -PCI clean verify -Dserver.port=80 -Dserver.ip=${SERVER}'
+								script: 'mvn -PCI clean verify -Dserver_hub.ip=${SERVER_HUB} -Dserver_hub.port=80 -Dserver_slave.ip=${SERVER_SLAVE} -Dserver_slave.port=80'
 						}
 					}
 				}
@@ -96,8 +105,10 @@ pipeline {
 				if ( machineCreated == true) {
 					sh	label: 'Purge output-library',
 						script: 'rm -R ${WORKSPACE}/output-library'
-					sh 	label: 'Get reports from GC-Instance', 
+					sh 	label: 'Get reports from GC-Hub-Instance', 
 						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
+					sh 	label: 'Get reports from GC-Slave-Instance', 
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
 					pathSuites = sh  script: '''
 						for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
 							echo "SmokeTest\\\\${entry}\\\\ReportTSuite.html"
@@ -106,8 +117,11 @@ pipeline {
 					pathSuites = pathSuites.replace('\n',',')
 				
 					sh label: 
-						'Destroy intance in Google Cloud', 
+						'Destroy Hub-Instance in Google Cloud', 
 						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b'
+					sh label: 
+						'Destroy Slave-Instance in Google Cloud', 
+						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
 				}
 
 				withEnv(["PATHSUITES=$pathSuites"]) {

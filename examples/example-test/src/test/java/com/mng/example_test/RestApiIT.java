@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jorge2m.example_test.access.ServerRest;
@@ -31,38 +32,42 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public class RestApiIT extends JaxRsClient {
 
-	private String serverTmIp;
-	private String serverTmPort;
-	private boolean localServer;
+	private String serverSlaveTmIp;
+	private String serverSlaveTmPort;
+	private boolean localServerSlave;
+	private final String serverSlaveLocalPort = "85";
+	
+	private String serverHubTmIp;
+	private String serverHubTmPort;
 	
 	@Before
 	public void setUp() throws Exception {
-		//From surefire-plugin in pom.xml
-		String serverIpParam = System.getProperty("server.ip");
-		String serverPortParam = System.getProperty("server.port"); 
-		Client client = getClientIgnoreCertificates();
-		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
-			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
-			serverTmIp = serverIpParam;
-			serverTmPort = serverPortParam;
-			localServer = false;
-		} else {
-			serverTmIp = "localhost";
-			serverTmPort = "85";
-			startLocalSeverIfNotYet(client);
-			localServer = true;
-		}
-		System.out.println("Server: " + serverTmIp + ":" + serverTmPort);
-		checkServerAvailability(client, 10);
+		setupServerSlave();
+		setupServerHub();
 	}
 	
 	@Test
-	public void testStandarTestCasse() throws Exception {
+	public void testStandarTestCase() throws Exception {
 		//Given-When
-		SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}");
+		SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}", serverSlaveTmIp, serverSlaveTmPort);
 		
 		//Then...
-		//Check Suite
+		checkResultStandarTestCase(suiteData);
+	}
+	
+	@Test
+	public void testStandarTestCaseHub() throws Exception {
+		if ("".compareTo(serverHubTmIp)!=0) {
+			//Given-When
+			SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}", serverHubTmIp, serverHubTmPort);
+			
+			//Then...
+			checkResultStandarTestCase(suiteData);
+		}
+	}
+	
+	private void checkResultStandarTestCase(SuiteBean suiteData) {
+
 		assertTrue(suiteData!=null);
 		assertTrue(suiteData.getResult()==State.Ok || suiteData.getResult()==State.Info);
 		assertEquals(suiteData.getStateExecution(), StateExecution.Finished);
@@ -94,7 +99,7 @@ public class RestApiIT extends JaxRsClient {
 			check1.getDescription().contains("1) Aparece alguna entrada de resultado"));
 		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Info);
 		
-		if (localServer) {
+		if (localServerSlave) {
 			checkReporsSuiteExists(suiteData);
 		
 			//Check hardcopy Step-1 exists
@@ -104,13 +109,27 @@ public class RestApiIT extends JaxRsClient {
 		}
 	}
 	
+	@Ignore
 	@Test
-	public void testFactoryTestCasse() throws Exception {
+	public void testFactoryTestCase() throws Exception {
 		//Given-When
-		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001");
+		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001", serverSlaveTmIp, serverSlaveTmPort);
 		
 		//Then...
-		//Check Suite
+		checkResultFactoryTestCase(suiteData);
+	}
+	
+	@Ignore
+	@Test
+	public void testFactoryTestCaseHub() throws Exception {
+		//Given-When
+		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001", serverHubTmIp, serverHubTmPort);
+		
+		//Then...
+		checkResultFactoryTestCase(suiteData);
+	}
+	
+	private void checkResultFactoryTestCase(SuiteBean suiteData) throws Exception {
 		assertTrue(suiteData!=null);
 		assertEquals(suiteData.getResult(), State.Warn);
 		assertEquals(suiteData.getStateExecution(), StateExecution.Finished);
@@ -147,7 +166,7 @@ public class RestApiIT extends JaxRsClient {
 			check1.getDescription().contains("Aparecen más resultados en Google"));
 		assertTrue(check1.getStateResult()==State.Ok || check1.getStateResult()==State.Info || check1.getStateResult()==State.Warn);
 		
-		if (localServer) {
+		if (localServerSlave) {
 			checkReporsSuiteExists(suiteData);
 		
 			//Check Evidences Step-3 exists
@@ -159,25 +178,61 @@ public class RestApiIT extends JaxRsClient {
 		}
 	}
 	
-	private void startLocalSeverIfNotYet(Client client) throws Exception {
-		if (!checkServerAvailability(client)) {
-			startLocalServer();
+	private void setupServerSlave() throws Exception {
+		//From surefire-plugin in pom.xml
+		String serverIpParam = System.getProperty("server_slave.ip");
+		String serverPortParam = System.getProperty("server_slave.port");
+		Client client = getClientIgnoreCertificates();
+		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
+			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
+			serverSlaveTmIp = serverIpParam;
+			serverSlaveTmPort = serverPortParam;
+			localServerSlave = false;
+		} else {
+			serverSlaveTmIp = "localhost";
+			serverSlaveTmPort = serverSlaveLocalPort;
+			startLocalSeverIfNotYet(client, serverSlaveTmIp, serverSlaveTmPort);
+			localServerSlave = true;
+		}
+		System.out.println("Server: " + serverSlaveTmIp + ":" + serverSlaveTmPort);
+		checkServerAvailability(client, serverSlaveTmIp, serverSlaveTmPort, 10);
+	}
+	
+	private void setupServerHub() throws Exception {
+		//From surefire-plugin in pom.xml
+		String serverIpParam = System.getProperty("server_hub.ip");
+		String serverPortParam = System.getProperty("server_hub.port");
+		Client client = getClientIgnoreCertificates();
+		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
+			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
+			serverHubTmIp = serverIpParam;
+			serverHubTmPort = serverPortParam;
+
+			System.out.println("Server: " + serverHubTmIp + ":" + serverHubTmPort);
+			checkServerAvailability(client, serverHubTmIp, serverHubTmPort, 10);
 		}
 	}
 	
-	private boolean checkServerAvailability(Client client, int maxTimes) throws Exception {
+	private void startLocalSeverIfNotYet(Client client, String serverIp, String serverPort) throws Exception {
+		if (!checkServerAvailability(client, serverIp, serverPort)) {
+			startLocalServer(serverPort);
+		}
+	}
+	
+	private boolean checkServerAvailability(Client client, String serverIp, String serverPort, int maxTimes) 
+	throws Exception {
 		for (int i=0; i<maxTimes; i++) {
-			if (checkServerAvailability(client)) {
+			if (checkServerAvailability(client, serverIp, serverPort)) {
 				return true;
 			}
 			Thread.sleep(1000);
 		}
 		return false;
 	}
-	private boolean checkServerAvailability(Client client) {
+	private boolean checkServerAvailability(Client client, String serverIp, String serverPort) {
 		try {
 			client
-				.target("http://" + serverTmIp + ":" + serverTmPort + "/testserver")
+				.target("http://" + serverIp + ":" + serverPort + "/testserver")
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 			return true;
@@ -186,8 +241,8 @@ public class RestApiIT extends JaxRsClient {
 			return false;
 		}
 	}
-	private void startLocalServer() {
-		String[] args = {"-port", serverTmPort};
+	private void startLocalServer(String serverPort) {
+		String[] args = {"-port", serverPort};
 		CompletableFuture.runAsync(() -> {
 			try {
 				ServerRest.main(args);
@@ -229,17 +284,18 @@ public class RestApiIT extends JaxRsClient {
 			testCase.getNameUnique());
 	}
 	
-	private SuiteBean executeTestsAgainstServerRetry(String testCases) throws Exception {
+	private SuiteBean executeTestsAgainstServerRetry(String testCases, String serverIp, String serverPort) 
+	throws Exception {
 		try {
-			return executeTestsAgainstServer(testCases);
+			return executeTestsAgainstServer(testCases, serverIp, serverPort);
 		}
 		catch (NotFoundException e) {
 			Thread.sleep(5000);
-			return executeTestsAgainstServer(testCases);
+			return executeTestsAgainstServer(testCases, serverIp, serverPort);
 		}
 	}
 	
-	private SuiteBean executeTestsAgainstServer(String testCases) throws Exception {
+	private SuiteBean executeTestsAgainstServer(String testCases, String serverIp, String serverPort) throws Exception {
 		//Given
 		Form formParams = new Form();
 		MultivaluedMap<String, String> mapParams = formParams.asMap();
@@ -255,7 +311,7 @@ public class RestApiIT extends JaxRsClient {
 		Client client = getClientIgnoreCertificates();
 		SuiteBean suiteData = 
 			client
-				.target("http://" + serverTmIp + ":" + serverTmPort + "/suiterun")
+				.target("http://" + serverIp + ":" + serverPort + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.form(formParams), SuiteBean.class);
 		
