@@ -57,7 +57,7 @@ public class RestApiIT extends JaxRsClient {
 	
 	@Test
 	public void testStandarTestCaseHub() throws Exception {
-		if ("".compareTo(serverHubTmIp)!=0) {
+		if (isServerHub()) {
 			//Given-When
 			SuiteBean suiteData = executeTestsAgainstServerRetry("BUS100{2-2}", serverHubTmIp, serverHubTmPort);
 			
@@ -122,11 +122,13 @@ public class RestApiIT extends JaxRsClient {
 	//@Ignore
 	@Test
 	public void testFactoryTestCaseHub() throws Exception {
-		//Given-When
-		SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001", serverHubTmIp, serverHubTmPort);
-		
-		//Then...
-		checkResultFactoryTestCase(suiteData);
+		if (isServerHub()) {
+			//Given-When
+			SuiteBean suiteData = executeTestsAgainstServerRetry("FAC001", serverHubTmIp, serverHubTmPort);
+			
+			//Then...
+			checkResultFactoryTestCase(suiteData);
+		}
 	}
 	
 	private void checkResultFactoryTestCase(SuiteBean suiteData) throws Exception {
@@ -194,23 +196,29 @@ public class RestApiIT extends JaxRsClient {
 			startLocalSeverIfNotYet(client, serverSlaveTmIp, serverSlaveTmPort);
 			localServerSlave = true;
 		}
-		System.out.println("Server: " + serverSlaveTmIp + ":" + serverSlaveTmPort);
+		System.out.println("Server Slave: " + serverSlaveTmIp + ":" + serverSlaveTmPort);
 		checkServerAvailability(client, serverSlaveTmIp, serverSlaveTmPort, 10);
 	}
 	
 	private void setupServerHub() throws Exception {
-		//From surefire-plugin in pom.xml
+		Client client = getClientIgnoreCertificates();
+		if (isServerHub()) {
+			//From surefire-plugin in pom.xml
+			serverHubTmIp = System.getProperty("server_hub.ip");;
+			serverHubTmPort = System.getProperty("server_hub.port");;
+
+			System.out.println("Server Hub: " + serverHubTmIp + ":" + serverHubTmPort);
+			checkServerAvailability(client, serverHubTmIp, serverHubTmPort, 10);
+			
+			subscribeSlaveToHub(client);
+		}
+	}
+	
+	private boolean isServerHub() {
 		String serverIpParam = System.getProperty("server_hub.ip");
 		String serverPortParam = System.getProperty("server_hub.port");
-		Client client = getClientIgnoreCertificates();
-		if (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
-			serverPortParam!=null && "".compareTo(serverPortParam)!=0) {
-			serverHubTmIp = serverIpParam;
-			serverHubTmPort = serverPortParam;
-
-			System.out.println("Server: " + serverHubTmIp + ":" + serverHubTmPort);
-			checkServerAvailability(client, serverHubTmIp, serverHubTmPort, 10);
-		}
+		return (serverIpParam!=null && "".compareTo(serverIpParam)!=0 &&
+				serverPortParam!=null && "".compareTo(serverPortParam)!=0);
 	}
 	
 	private void startLocalSeverIfNotYet(Client client, String serverIp, String serverPort) throws Exception {
@@ -241,6 +249,17 @@ public class RestApiIT extends JaxRsClient {
 			return false;
 		}
 	}
+	
+	private void subscribeSlaveToHub(Client client) {
+		System.out.println("Subscribing Slave to Hub...");
+		client
+			.target("http://" + serverHubTmIp + ":" + serverHubTmPort + "/subscription")
+			.queryParam("urlslave", "http://" + serverSlaveTmIp + ":" + serverSlaveTmPort)
+			.request(MediaType.APPLICATION_JSON)
+			.get();
+		System.out.println("Subscription completed OK");
+	}
+	
 	private void startLocalServer(String serverPort) {
 		String[] args = {"-port", serverPort};
 		CompletableFuture.runAsync(() -> {
