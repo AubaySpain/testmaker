@@ -23,9 +23,9 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-//import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
-import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
+//import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
@@ -194,8 +194,8 @@ public class ServerRestTM extends JaxRsClient {
 		servletHandler.setContextPath("/");
 		servletHandler.setHandler(getHandlers());
 		ResourceConfig config = new ResourceConfig();
-		//config.register(JacksonFeature.class);
-		config.register(MoxyJsonFeature.class);
+		config.register(JacksonFeature.class);
+		//config.register(MoxyJsonFeature.class);
 		config.register(restApiTM);
 		config.register(LoggingFeature.class);
 		servletHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/*");
