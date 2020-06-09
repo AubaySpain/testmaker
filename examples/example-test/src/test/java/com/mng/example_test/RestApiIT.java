@@ -55,6 +55,7 @@ public class RestApiIT extends JaxRsClient {
 		checkResultStandarTestCase(suiteData);
 	}
 	
+	@Ignore
 	@Test
 	public void testStandarTestCaseHub() throws Exception {
 		if (isServerHub()) {
@@ -119,7 +120,7 @@ public class RestApiIT extends JaxRsClient {
 		checkResultFactoryTestCase(suiteData);
 	}
 	
-	//@Ignore
+	@Ignore
 	@Test
 	public void testFactoryTestCaseHub() throws Exception {
 		if (isServerHub()) {
