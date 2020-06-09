@@ -28,8 +28,6 @@ public class SuiteBean {
 	private String pathReportHtml;
 	private String urlReportHtml;
 	
-	public SuiteBean() {}
-	
 	public List<TestRunBean> getListTestRun() {
 		return listTestRun;
 	}
