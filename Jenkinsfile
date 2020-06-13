@@ -109,9 +109,9 @@ pipeline {
 					sh label: 'Create void output-library',
 						script: 'mkdir -p ${WORKSPACE}/output-library'
 					sh 	label: 'Get reports from GC-Hub-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
 					sh 	label: 'Get reports from GC-Slave-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library ${WORKSPACE}/output-library --zone=europe-west1-b'
 						
 					pathSuites = sh  script: '''
 						for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
