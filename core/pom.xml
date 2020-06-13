@@ -62,12 +62,20 @@
 			<artifactId>jetty-servlet</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-		
+		<!-- Is necessary declare that dependency before jersey-container-servlet-core -->
+		<!-- both contains the class META-INF/services/org.glassfish.jersey.internal.spi.AutoDiscoverable  -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-moxy</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
@@ -78,34 +86,20 @@
 			<artifactId>jersey-container-jetty-http</artifactId>
 			<version>${jersey.version}</version>
 		</dependency> 
-		
+		<!-- 
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-		<!-- Prescindible jersey-media-moxy?-->
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		
-		<!-- ??? -->
+		-->
 		<!-- 
-		<dependency>
-    <groupId>com.owlike</groupId>
-    <artifactId>genson</artifactId>
-    <version>1.6</version>
-</dependency>
--->
-		
-		
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<version>4.2.0</version>
 		</dependency>
+		-->
 		
 		<!-- Java 11 REMOVED JavaEE module java.xml.bind (JAXB) -->
 		<!-- https://stackoverflow.com/questions/52502189/java-11-package-javax-xml-bind-does-not-exist -->
