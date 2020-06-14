@@ -112,8 +112,14 @@ pipeline {
 						
 					sh 	label: 'Get reports from GC-Hub-Instance', 
 						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE} --zone=europe-west1-b'
+					sh 	label: 'ls', 
+						script: 'ls ${WORKSPACE}/output-library'
+						
 					sh 	label: 'Get reports from GC-Slave-Instance', 
 						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/SmokeTest ${WORKSPACE}/output-slave --zone=europe-west1-b'
+					sh 	label: 'ls', 
+						script: 'ls ${WORKSPACE}/output-slave/SmokeTest'	
+					
 					sh	label: 'Move reports slave',
 						script: 'mv ${WORKSPACE}/output-slave/SmokeTest/* ${WORKSPACE}/output-library/SmokeTest/'
 						
