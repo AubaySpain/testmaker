@@ -104,24 +104,14 @@ pipeline {
 			script {
 				if ( machineCreated == true) {
 					sh	label: 'Purge output-library',
-						script: 'rm -rf ${WORKSPACE}/output-library'
-					sh	label: 'Purge output-slave',
-						script: 'rm -rf ${WORKSPACE}/output-slave/*'
-					sh label: 'Create void output-slave',
-						script: 'mkdir -p ${WORKSPACE}/output-slave'
+						script: 'rm -rf ${WORKSPACE}/output-library/*'
 						
+					sh label: 'Create void output-library',
+						script: 'mkdir -p ${WORKSPACE}/output-library'
 					sh 	label: 'Get reports from GC-Hub-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library ${WORKSPACE} --zone=europe-west1-b'
-					sh 	label: 'ls', 
-						script: 'ls ${WORKSPACE}/output-library'
-						
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
 					sh 	label: 'Get reports from GC-Slave-Instance', 
-						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/SmokeTest ${WORKSPACE}/output-slave --zone=europe-west1-b'
-					sh 	label: 'ls', 
-						script: 'ls ${WORKSPACE}/output-slave/SmokeTest'	
-					
-					sh	label: 'Move reports slave',
-						script: 'mv ${WORKSPACE}/output-slave/SmokeTest/* ${WORKSPACE}/output-library/SmokeTest/'
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
 						
 					pathSuites = sh  script: '''
 						for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
