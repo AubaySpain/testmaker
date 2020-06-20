@@ -18,6 +18,7 @@ RUN apt-get update -y \
 #=======
 # Java 8
 #=======
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
 RUN add-apt-repository ppa:ts.sch.gr/ppa \
 	&& apt-get update \
 	&& echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
