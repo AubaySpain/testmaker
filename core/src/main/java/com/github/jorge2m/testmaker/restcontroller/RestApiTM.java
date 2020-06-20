@@ -244,34 +244,11 @@ public class RestApiTM {
 	}
 	
 	private boolean checkServerAvailability(String urlSlave) throws Exception {
-		if (checkTestServerService(urlSlave)) {
-			if (checkSuiteRunService(urlSlave)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean checkTestServerService(String urlSlave) throws Exception {
 		JaxRsClient jaxRsClient = new JaxRsClient();
 		Client client = jaxRsClient.getClientIgnoreCertificates();
 		try {
 			client
 				.target(urlSlave + "/testserver")
-				.request(MediaType.APPLICATION_JSON)
-				.get();
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	}
-	private boolean checkSuiteRunService(String urlSlave) throws Exception {
-		JaxRsClient jaxRsClient = new JaxRsClient();
-		Client client = jaxRsClient.getClientIgnoreCertificates();
-		try {
-			client
-				.target(urlSlave + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 			return true;
