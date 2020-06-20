@@ -13,7 +13,7 @@ import javax.ws.rs.client.ClientBuilder;
 
 public class JaxRsClient {
 
-	protected Client getClientIgnoreCertificates() throws Exception {
+	public Client getClientIgnoreCertificates() throws Exception {
 		SSLContext context = SSLContext.getInstance("TLSv1.2");
 		TrustManager[] trustManagerArray = {new NullX509TrustManager()};
 		context.init(null, trustManagerArray, null); 

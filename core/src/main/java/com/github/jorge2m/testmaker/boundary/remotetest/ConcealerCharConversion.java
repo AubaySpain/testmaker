@@ -39,9 +39,7 @@ public class ConcealerCharConversion {
 	
 	private static void conceal(StepTM step) {
 		String stepDescription = step.getDescripcion();
-		Log4jTM.getLogger().info("Concealing Step Description: " + step.getDescripcion());
 		step.setDescripcion(conceal(stepDescription));
-		Log4jTM.getLogger().info("Result concealing: " + step.getDescripcion());
 		String stepResExpected = step.getResExpected();
 		step.setResExpected(conceal(stepResExpected));
 		for (ChecksTM checks : step.getListChecksTM()) {

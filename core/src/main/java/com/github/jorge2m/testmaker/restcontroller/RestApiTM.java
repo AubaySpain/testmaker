@@ -20,7 +20,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -29,6 +31,7 @@ import org.apache.commons.io.FileUtils;
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
 import com.github.jorge2m.testmaker.boundary.access.MessageError;
 import com.github.jorge2m.testmaker.boundary.access.ResultCheckOptions;
+import com.github.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
@@ -197,7 +200,24 @@ public class RestApiTM {
 	
 	@GET
 	@Path("/subscription")
-	public Response addSubscriber(@QueryParam("urlslave") String urlslave) {
+	public Response addSubscriber(@QueryParam("urlslave") String urlslave) {	
+		//Check slave availability;
+		try {
+			if (!checkServerAvailability(urlslave, 5)) {
+				return Response
+					.status(Response.Status.NOT_FOUND)
+					.entity("Not available Server Slave in " + urlslave)
+					.build();
+			}
+		}
+		catch (Exception e) {
+			return Response
+				.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity(e.getCause())
+				.build();
+		}
+		
+		//Subscribe slave to hub
 		try {
 			URL urlSubscriber = new URL(urlslave);
 			ServerSubscriber subscriber = new ServerSubscriber(urlSubscriber);
@@ -211,6 +231,31 @@ public class RestApiTM {
 		}
 
 		return Response.ok().build();
+	}
+	
+	private boolean checkServerAvailability(String urlSlave, int retries) throws Exception {
+		for (int i=0; i<retries; i++) {
+			if (checkServerAvailability(urlSlave)) {
+				return true;
+			}
+			Thread.sleep(1000);
+		}
+		return false;
+	}
+	
+	private boolean checkServerAvailability(String urlSlave) throws Exception {
+		JaxRsClient jaxRsClient = new JaxRsClient();
+		Client client = jaxRsClient.getClientIgnoreCertificates();
+		try {
+			client
+				.target(urlSlave + "/testserver")
+				.request(MediaType.APPLICATION_JSON)
+				.get();
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 	
 	@DELETE
