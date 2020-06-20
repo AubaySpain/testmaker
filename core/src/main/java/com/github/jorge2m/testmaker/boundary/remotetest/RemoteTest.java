@@ -89,11 +89,15 @@ public class RemoteTest extends JaxRsClient {
 		List<TestCaseBean> listTestCaseRemote = suiteRemote
 				.getListTestRun().get(0)
 				.getListTestCase();
+		TestCaseBean testToReturn = listTestCaseRemote.get(0);
 		for (TestCaseBean testCaseRemote : listTestCaseRemote) {
 			if (testCaseRemote.getListStep().size() > 0) {
-				return testCaseRemote;
+				testToReturn = testCaseRemote;
+				break;
 			}
 		}
+		
+		ConcealerCharConversion.conceal(testToReturn);
 		return listTestCaseRemote.get(0);
 	}
 	

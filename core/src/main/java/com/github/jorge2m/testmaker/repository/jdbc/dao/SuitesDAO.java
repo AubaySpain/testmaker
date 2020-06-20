@@ -118,7 +118,7 @@ public class SuitesDAO {
 		suiteData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
 		String finDate = rowSuite.getString("FIN");
 		if (finDate!=null && "".compareTo(finDate)!=0) {
-			suiteData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
+			suiteData.setFinDate(Utils.getDateFormat(ToSeconds).parse(finDate));
 		}
 
 		suiteData.setDurationMillis(rowSuite.getFloat("TIME_MS"));
@@ -171,24 +171,28 @@ public class SuitesDAO {
 		}
 	}
 
-	public SuiteBean get1rstSuiteBefore(Date fechaHasta) throws Exception {
-		for (SuiteBean suite : getListSuitesIdDesc()) {
-			if (suite.getInicioDate().before(fechaHasta)) {
-				return suite;
-			}
-		}
-		return null;
-	}
-
 	public SuiteBean get1rstSuiteAfter(Date fechaDesde) throws Exception {
 		SuiteBean suiteToReturn = null;
-		for (SuiteBean suite : getListSuitesIdDesc()) {
-			if (suite.getInicioDate().after(fechaDesde)) {
-				suiteToReturn = suite;
-			} else {
-				break;
+		try (Connection conn = connector.getConnection();
+			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc)) {
+			try (ResultSet resultado = select.executeQuery()) {
+				while (resultado.next()) {
+					Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
+					if (inicioDateSuite.after(fechaDesde)) {
+						suiteToReturn = getSuite(resultado);
+					} else {
+						break;
+					}
+				}
 			}
+		} 
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		} 
+		catch (ClassNotFoundException ex) {
+			throw new RuntimeException(ex);
 		}
+		
 		return suiteToReturn;
 	}
 
@@ -204,7 +208,6 @@ public class SuitesDAO {
 						listSuites.add(getSuite(resultado));
 					}
 				}
-
 				return listSuites;
 			} 
 			catch (SQLException ex) {
