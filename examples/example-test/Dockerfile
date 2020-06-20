@@ -8,6 +8,12 @@
 #example container run: docker run -d -p 80:80 -p 443:443 --privileged -v "%CD%/dockerresults:/output-library" gcr.io/testmaker-example/example-test:latest
 FROM ubuntu:19.10
 
+# Set the locale
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
+
 RUN apt-get update -y \
 	&& apt-get install -y wget \
 	&& apt-get install -y gnupg2 \
