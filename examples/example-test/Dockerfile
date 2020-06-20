@@ -8,18 +8,18 @@
 #example container run: docker run -d -p 80:80 -p 443:443 --privileged -v "%CD%/dockerresults:/output-library" gcr.io/testmaker-example/example-test:latest
 FROM ubuntu:19.10
 
-# Set the locale
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8  
-
 RUN apt-get update -y \
+	&& apt -y install locales \
 	&& apt-get install -y wget \
 	&& apt-get install -y gnupg2 \
 	&& apt-get -qqy dist-upgrade \
 	&& apt-get -qqy install software-properties-common gettext-base unzip \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 #=======
 # Java 8
@@ -41,7 +41,7 @@ RUN add-apt-repository ppa:ts.sch.gr/ppa \
 # Chrome
 #=======
 #ARG CHROME_VERSION="google-chrome-stable"
-ARG CHROME_VERSION=83.0.4103.61-1
+ARG CHROME_VERSION=83.0.4103.106-1
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update -qqy \
