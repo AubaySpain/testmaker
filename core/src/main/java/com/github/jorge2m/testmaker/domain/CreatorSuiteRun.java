@@ -11,7 +11,7 @@ import com.github.jorge2m.testmaker.service.TestMaker;
 public abstract class CreatorSuiteRun {
 	
 	protected InputParamsTM inputParams;
-	protected SuiteMaker suiteMaker;
+	//protected SuiteMaker suiteMaker;
 	
 	public abstract SuiteMaker getSuiteMaker() throws Exception;
 	
@@ -19,29 +19,29 @@ public abstract class CreatorSuiteRun {
 	
 	public CreatorSuiteRun(InputParamsTM inputParams) throws Exception {
 		this.inputParams = inputParams;
-		this.suiteMaker = getSuiteMaker();
+		//this.suiteMaker = getSuiteMaker();
 	}
 	
 	public void setInputParams(InputParamsTM inputParams) throws Exception {
 		this.inputParams = inputParams;
-		this.suiteMaker = getSuiteMaker();
+		//this.suiteMaker = getSuiteMaker();
 	}
 	
-	public SuiteTM getSuite() {
-		return suiteMaker.getSuite();
+	public SuiteTM getSuite() throws Exception {
+		return getSuiteMaker().getSuite();
 	}
 	
 	public SuiteTM execTestSuite(boolean async) throws Exception {
-		SuiteTM suite = suiteMaker.getSuite();
+		SuiteTM suite = getSuiteMaker().getSuite();
 		TestMaker.run(suite, async);
 		return suite;
 	}
 
-	public List<TestMethod> getListAllTestCases() {
-		return suiteMaker.getListTests();
+	public List<TestMethod> getListAllTestCases() throws Exception {
+		return getSuiteMaker().getListTests();
 	}
 
-	public List<TestMethodData> getListAllTestCasesData() {
+	public List<TestMethodData> getListAllTestCasesData() throws Exception {
 		List<TestMethodData> listTestMethods = new ArrayList<>();
 		for (TestMethod testMethod : getListAllTestCases()) {
 			listTestMethods.add(testMethod.getData());

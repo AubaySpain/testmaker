@@ -73,13 +73,9 @@ public class RestApiTM {
 			CmdLineMaker cmdLineAccess = CmdLineMaker.from(inputParams);
 			ResultCheckOptions resultCheck = cmdLineAccess.checkOptionsValue();
 			if (resultCheck.isOk()) {
-				creatorSuiteRun.setInputParams(inputParams);
-				SuiteTM suite = TestMaker.execSuite(creatorSuiteRun, inputParams.isAsyncExec());
-				
-				//TODO eliminar después
-				//SuiteBean suiteBean = suite.getSuiteBean();
-				//suiteBean.setListTestRun(null);
-				
+				CreatorSuiteRun creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
+				//creatorSuiteRun.setInputParams(inputParams);
+				SuiteTM suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec());
 				return Response
 						.status(Response.Status.OK) 
 						.entity(suite.getSuiteBean())
@@ -293,8 +289,9 @@ public class RestApiTM {
 		inputParams.setSuiteEnum(suiteEnum);
 		inputParams.setAppEnum(appEnum);
 		inputParams.setTypeAccess(TypeAccess.Rest);
-		creatorSuiteRun.setInputParams(inputParams);
-		return (creatorSuiteRun.getListAllTestCasesData());
+		CreatorSuiteRun creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
+		//creatorSuiteRun.setInputParams(inputParams);
+		return (creatorSuiteRunService.getListAllTestCasesData());
 	}
 
 	

@@ -110,9 +110,9 @@ public abstract class SuiteMaker {
 	}
 
 	private void generateXmlSuiteIfNotAvailable() {
-		//if (suite==null) {
+		if (suite==null) {
 			suite = createSuite();
-		//}
+		}
 	}
 
 	private SuiteTM createSuite() {
