@@ -16,6 +16,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
@@ -115,12 +116,31 @@ public class RemoteTest extends JaxRsClient {
 		mapParams.putSingle(InputParamsTM.RemoteParam, "true");
 
 		Client client = getClientIgnoreCertificates();
+		SuiteBean suiteData = execRemoteSuiteRun(client, formParams, 2);
+		return suiteData;
+	}
+	
+	private SuiteBean execRemoteSuiteRun(Client client, Form formParams, int numRetries) throws Exception {
+		for (int i=1; i<=numRetries; i++) {
+			try {
+				return execRemoteSuiteRun(client, formParams);
+			}
+			catch (Exception e) {
+				Log4jTM.getLogger().warn(
+						"Exception in Remote Test execution (retry " + i + "), retry in 5 seconds...", 
+						e.getCause());
+				Thread.sleep(5000);
+			}
+		}
+		return null;
+	}
+	
+	private SuiteBean execRemoteSuiteRun(Client client, Form formParams) {
 		SuiteBean suiteData = 
 			client
 				.target(server.getUrl() + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.form(formParams), SuiteBean.class);
-
 		return suiteData;
 	}
 	
