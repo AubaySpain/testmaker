@@ -108,10 +108,10 @@ pipeline {
 						
 					sh label: 'Create void output-library',
 						script: 'mkdir -p ${WORKSPACE}/output-library'
-					//sh 	label: 'Get reports from GC-Hub-Instance', 
-					//	script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
-					//sh 	label: 'Get reports from GC-Slave-Instance', 
-					//	script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
+					sh 	label: 'Get reports from GC-Hub-Instance', 
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-hub:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
+					sh 	label: 'Get reports from GC-Slave-Instance', 
+						script: '$GCLOUD_PATH/gcloud compute scp --recurse testmaker-slave:/home/jenkins/output-library/* ${WORKSPACE}/output-library --zone=europe-west1-b'
 						
 					pathSuites = sh  script: '''
 						for entry in $(ls ${WORKSPACE}/output-library/SmokeTest); do
@@ -120,9 +120,9 @@ pipeline {
 						''', returnStdout: true
 					pathSuites = pathSuites.replace('\n',',')
 				
-					sh label: 
-						'Destroy Hub-Instance in Google Cloud', 
-						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b & $GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
+					//sh label: 
+					//	'Destroy Hub-Instance in Google Cloud', 
+					//	script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b & $GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
 				}
 
 				withEnv(["PATHSUITES=$pathSuites"]) {
