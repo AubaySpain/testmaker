@@ -98,7 +98,7 @@ public class RemoteTest extends JaxRsClient {
 		}
 		
 		ConcealerCharConversion.conceal(testToReturn);
-		return listTestCaseRemote.get(0);
+		return testToReturn;
 	}
 	
 	public SuiteBean suiteRun(InputParamsTM inputParams, List<String> testCases, String testObjectSerialized) 

@@ -33,6 +33,7 @@ import com.github.jorge2m.testmaker.boundary.access.MessageError;
 import com.github.jorge2m.testmaker.boundary.access.ResultCheckOptions;
 import com.github.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
 import com.github.jorge2m.testmaker.conf.Channel;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
@@ -91,6 +92,7 @@ public class RestApiTM {
 				}
 		}
 		catch (Exception e) {
+			Log4jTM.getLogger().error("Problem in suiterun execution" , e.getCause());
 			return Response
 					.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getCause())
