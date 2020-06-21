@@ -42,7 +42,7 @@ public abstract class SuiteMaker {
 	}
 	
 	private static synchronized String makeIdSuiteExecution() {
-		Calendar c1 = Calendar.getInstance();
+		Calendar c1 = Calendar.getInstance(); 
 		String timestamp = new SimpleDateFormat("yyMMdd_HHmmssSS").format(c1.getTime());
 		SeleniumUtils.waitMillis(1);
 		return (timestamp);
@@ -110,9 +110,9 @@ public abstract class SuiteMaker {
 	}
 
 	private void generateXmlSuiteIfNotAvailable() {
-		if (suite==null) {
+		//if (suite==null) {
 			suite = createSuite();
-		}
+		//}
 	}
 
 	private SuiteTM createSuite() {

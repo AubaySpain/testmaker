@@ -95,7 +95,7 @@ public class RestApiTM {
 		}
 		catch (Exception e) {
 			System.out.println("Problem in suiterun execution. Cause exception: " + e.getCause());
-			Log4jTM.getLogger().error("Problem in suiterun execution" , e.getCause());
+			Log4jTM.getLogger().error("Problem in suiterun execution" , e);
 
 			return Response
 					.status(Response.Status.INTERNAL_SERVER_ERROR)

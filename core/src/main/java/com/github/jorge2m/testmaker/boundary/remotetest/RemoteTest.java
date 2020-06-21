@@ -127,8 +127,7 @@ public class RemoteTest extends JaxRsClient {
 			}
 			catch (Exception e) {
 				Log4jTM.getLogger().warn(
-						"Exception in Remote Test execution (retry " + i + "), retry in 5 seconds...", 
-						e.getCause());
+						"Exception in Remote Test execution (retry " + i + "), retry in 5 seconds...", e);
 				Thread.sleep(5000);
 			}
 		}
