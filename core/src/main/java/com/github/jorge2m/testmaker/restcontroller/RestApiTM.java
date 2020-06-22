@@ -64,8 +64,7 @@ public class RestApiTM {
 	}
 	
 	public Response newSuiteRun(@BeanParam InputParamsTM inputParams) {
-		System.out.println("Init Suite " + inputParams.getSuiteName());
-		System.out.println("Test Serialized: " + inputParams.getTestObject());
+		System.out.println("Test Serialized (): " + inputParams.getTestObject());
 		Log4jTM.getLogger().info("Init Suite " + inputParams.getSuiteName());
 		inputParams.setSuiteEnum(suiteEnum);
 		inputParams.setAppEnum(appEnum);

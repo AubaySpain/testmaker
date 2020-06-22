@@ -34,6 +34,7 @@ public class FactoryAspect {
 		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
 		InputParamsTM inputParams = suite.getInputParams();
 		Object[] listTests;
+		System.out.println("FactoryAspect: " + inputParams.getTestObject());
 		if (inputParams.isTestExecutingInRemote()) {
 			listTests = manageAroundRemote(inputParams);
 		} else {
