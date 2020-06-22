@@ -37,7 +37,7 @@ public class RemoteTest extends JaxRsClient {
 	throws Exception {
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
-			Log4jTM.getLogger().info("Factory Test -> Remote");
+			Log4jTM.getLogger().info("Factory Test (" + testCase.getName() + ") -> Remote");
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);
 		}
 		Log4jTM.getLogger().info("Standar Test -> Remote");
@@ -48,6 +48,10 @@ public class RemoteTest extends JaxRsClient {
 	throws Exception {
 		byte[] testSerialized = SerializationUtils.serialize(testObject);
 		String testSerializedStrB64 = Base64.getEncoder().encodeToString(testSerialized);
+		
+		Object testObjectDes = SerializationUtils.deserialize(Base64.getDecoder().decode(testSerializedStrB64));
+		Log4jTM.getLogger().info("Objeto deserializado: " + testObjectDes.toString());
+		
 		SuiteBean suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
