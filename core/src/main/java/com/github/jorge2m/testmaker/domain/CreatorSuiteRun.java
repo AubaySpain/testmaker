@@ -32,12 +32,14 @@ public abstract class CreatorSuiteRun {
 	}
 	
 	public SuiteTM execTestSuite(boolean async) throws Exception {
+		makeSuiteMakerIfNull();
 		SuiteTM suite = suiteMaker.getSuite();
 		TestMaker.run(suite, async);
 		return suite;
 	}
 
 	public List<TestMethod> getListAllTestCases() throws Exception {
+		makeSuiteMakerIfNull();
 		return suiteMaker.getListTests();
 	}
 
@@ -47,5 +49,11 @@ public abstract class CreatorSuiteRun {
 			listTestMethods.add(testMethod.getData());
 		}
 		return listTestMethods;
+	}
+	
+	private void makeSuiteMakerIfNull() throws Exception {
+		if (suiteMaker==null) {
+			suiteMaker = getSuiteMaker();
+		}
 	}
 }
