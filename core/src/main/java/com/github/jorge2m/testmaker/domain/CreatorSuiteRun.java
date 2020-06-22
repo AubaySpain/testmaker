@@ -34,6 +34,7 @@ public abstract class CreatorSuiteRun {
 	public SuiteTM execTestSuite(boolean async) throws Exception {
 		makeSuiteMakerIfNull();
 		SuiteTM suite = suiteMaker.getSuite();
+		suite.getLogger().info("Test with object associated: ", suite.getInputParams().getTestObject());
 		TestMaker.run(suite, async);
 		return suite;
 	}

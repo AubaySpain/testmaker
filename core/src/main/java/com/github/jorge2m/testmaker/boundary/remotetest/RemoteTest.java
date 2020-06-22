@@ -48,10 +48,7 @@ public class RemoteTest extends JaxRsClient {
 	throws Exception {
 		byte[] testSerialized = SerializationUtils.serialize(testObject);
 		String testSerializedStrB64 = Base64.getEncoder().encodeToString(testSerialized);
-		
-		Object testObjectDes = SerializationUtils.deserialize(Base64.getDecoder().decode(testSerializedStrB64));
-		Log4jTM.getLogger().info("Objeto deserializado: " + testObjectDes.toString());
-		
+		Log4jTM.getLogger().info("Object Serialized: " + testSerializedStrB64);
 		SuiteBean suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
