@@ -69,7 +69,7 @@ public class RestApiIT extends JaxRsClient {
 	private void checkResultStandarTestCase(SuiteBean suiteData) {
 
 		assertTrue(suiteData!=null);
-		assertTrue(suiteData.getResult()==State.Ok || suiteData.getResult()==State.Info);
+		assertTrue(suiteData.getResult()==State.Ok || suiteData.getResult()==State.Info || suiteData.getResult()==State.Warn);
 		assertEquals(suiteData.getStateExecution(), StateExecution.Finished);
 		assertEquals(suiteData.getListTestRun().size(), 1);
 		
