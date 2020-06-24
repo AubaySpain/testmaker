@@ -13,7 +13,7 @@ public class SearchFactory {
 	public static final List<String> searchValues = 
 		Arrays.asList( 
 			"Zelda Breath of The Wild",
-			"Enter the gungeon",
+			"Enter the gungeon"/*,
 			"Xenoblade Chronicles",
 			"Undertale",
 			"Salamander Game",
@@ -21,7 +21,7 @@ public class SearchFactory {
 			"Super Mario 64",
 			"Zelda ocarina of time",
 			"Baldur's Gate 2",
-			"Head over Hells Game");
+			"Head over Hells Game"*/);
 	
 	public SearchFactory() {}
 	

@@ -7,10 +7,6 @@ pipeline {
 
 	agent { label 'java-docker-slave' }
 	environment {
-		//SERVER_TM_IP = ""
-		//PATH_SUITES = ""
-		//MACHINE_CREATED = false
-
 		GCLOUD_PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin"
 		PATH = "$GCLOUD_PATH:$PATH"
 		TAG_IMAGE_DOCKER = "gcr.io/testmaker-example/example-test:latest"
@@ -120,9 +116,9 @@ pipeline {
 						''', returnStdout: true
 					pathSuites = pathSuites.replace('\n',',')
 				
-					//sh label: 
-					//	'Destroy Hub-Instance in Google Cloud', 
-					//	script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b & $GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
+					sh label: 
+						'Destroy Hub-Instance in Google Cloud', 
+						script: '$GCLOUD_PATH/gcloud compute instances delete testmaker-hub --zone europe-west1-b & $GCLOUD_PATH/gcloud compute instances delete testmaker-slave --zone europe-west1-b'
 				}
 
 				withEnv(["PATHSUITES=$pathSuites"]) {

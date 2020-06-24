@@ -16,7 +16,13 @@ public class CreatorSuiteRunService extends CreatorSuiteRun {
 	}
 	
 	@Override
-	public synchronized SuiteMaker getSuiteMaker() throws Exception {
+	public SuiteMaker getSuiteMaker() throws Exception {
+		return getSuiteMakerSync(inputParamsService, creatorServer);
+	}
+	
+	private static synchronized SuiteMaker getSuiteMakerSync(InputParamsTM inputParamsService, CreatorSuiteRun creatorServer) 
+	throws Exception {
+		System.out.println("creatorServer.setInputParams with: " + inputParamsService);
 		creatorServer.setInputParams(inputParamsService);
 		return creatorServer.getSuiteMaker();
 	}

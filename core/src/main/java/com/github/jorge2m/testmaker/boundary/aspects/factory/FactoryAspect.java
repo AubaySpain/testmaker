@@ -32,7 +32,10 @@ public class FactoryAspect {
 
 	private Object[] manageAroundFactory(ProceedingJoinPoint joinPoint) throws Throwable {
 		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
+		System.out.println("Hash Suite:" + System.identityHashCode(suite));
+		System.out.println("Suite created in Present Thread: " + suite);
 		InputParamsTM inputParams = suite.getInputParams();
+		System.out.println("Input params of suite: " + inputParams);
 		Object[] listTests;
 		System.out.println("FactoryAspect: " + inputParams.getTestObject());
 		if (inputParams.isTestExecutingInRemote()) {
@@ -52,7 +55,7 @@ public class FactoryAspect {
 		if (inputParams.getTestObject()!=null) {
 			listTests.add(
 				SerializationUtils.deserialize(Base64.getDecoder().decode(inputParams.getTestObject())));
-			inputParams.setTestObject(null);
+			//inputParams.setTestObject(null);
 		}
 		return listTests.toArray(new Object[listTests.size()]);
 	}

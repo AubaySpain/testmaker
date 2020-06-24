@@ -39,6 +39,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
 		this.idSuiteExecution = idSuiteExecution;
+		System.out.println("Creating SuiteTM with inputParams: " +  inputParams);
 		this.inputParams = inputParams;
 //		Log4jConfig log4jFactory = new Log4jConfig();
 //		this.logger = log4jFactory.createSuiteLogger(idSuiteExecution, getPathLogFile());
