@@ -64,8 +64,6 @@ public class RestApiTM {
 	}
 	
 	public Response newSuiteRun(@BeanParam InputParamsTM inputParams) {
-		System.out.println("Test Serialized (): " + inputParams.getTestObject());
-		Log4jTM.getLogger().info("Init Suite " + inputParams.getSuiteName());
 		inputParams.setSuiteEnum(suiteEnum);
 		inputParams.setAppEnum(appEnum);
 		inputParams.setTypeAccess(TypeAccess.Rest);
@@ -90,9 +88,7 @@ public class RestApiTM {
 				}
 		}
 		catch (Exception e) {
-			System.out.println("Problem in suiterun execution. Cause exception: " + e.getCause());
 			Log4jTM.getLogger().error("Problem in suiterun execution" , e);
-
 			return Response
 					.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getCause())

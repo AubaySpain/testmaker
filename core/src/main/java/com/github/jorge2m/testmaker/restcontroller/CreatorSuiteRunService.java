@@ -22,7 +22,6 @@ public class CreatorSuiteRunService extends CreatorSuiteRun {
 	
 	private static synchronized SuiteMaker getSuiteMakerSync(InputParamsTM inputParamsService, CreatorSuiteRun creatorServer) 
 	throws Exception {
-		System.out.println("creatorServer.setInputParams with: " + inputParamsService);
 		creatorServer.setInputParams(inputParamsService);
 		return creatorServer.getSuiteMaker();
 	}

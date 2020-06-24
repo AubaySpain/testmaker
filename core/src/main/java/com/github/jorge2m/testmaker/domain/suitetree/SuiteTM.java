@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
+import com.github.jorge2m.testmaker.conf.defaultmail.DefaultMailEndSuite;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.SenderMailEndSuiteI;
@@ -39,13 +40,11 @@ public class SuiteTM extends XmlSuite {
 	
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
 		this.idSuiteExecution = idSuiteExecution;
-		System.out.println("Creating SuiteTM with inputParams: " +  inputParams);
 		this.inputParams = inputParams;
 //		Log4jConfig log4jFactory = new Log4jConfig();
 //		this.logger = log4jFactory.createSuiteLogger(idSuiteExecution, getPathLogFile());
 		this.poolWebDrivers = new PoolWebDrivers(this);
-		//TODO desasteriscar
-		//this.senderMail = new DefaultMailEndSuite();
+		this.senderMail = new DefaultMailEndSuite();
 	}
 	
 	public Logger getLogger() {
