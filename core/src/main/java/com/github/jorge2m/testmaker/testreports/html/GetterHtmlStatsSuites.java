@@ -9,6 +9,7 @@ import java.util.Map;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 import com.github.jorge2m.testmaker.service.TestMaker;
 
 public class GetterHtmlStatsSuites {
@@ -24,12 +25,26 @@ public class GetterHtmlStatsSuites {
 		if (listSuites!=null) {
 			for (SuiteBean suite : listSuites) {
 				SuiteTestCasesData suiteTestCases = new SuiteTestCasesData(
-						suite, 
-						TestMaker.getRepository().getListTestCases(suite.getIdExecSuite()));
+					suite, 
+					getListTestCasesFromSuite(suite));
 				listSuitesTestCases.add(suiteTestCases);
 			}
 		}
 		return buildTableMail(listSuitesTestCases);
+	}
+	
+	private List<TestCaseBean> getListTestCasesFromSuite(SuiteBean suite) throws Exception {
+		List<TestCaseBean> listTestCases = new ArrayList<>();
+		if (suite.getListTestRun().size() > 0) {
+			//From memory
+			for (TestRunBean testRun : suite.getListTestRun()) {
+				listTestCases.addAll(testRun.getListTestCase());
+			}
+		} else {
+			//From repository
+			listTestCases = TestMaker.getRepository().getListTestCases(suite.getIdExecSuite());
+		}
+		return listTestCases;
 	}
 
 	private static String buildTableMail(List<SuiteTestCasesData> listSuites) {
