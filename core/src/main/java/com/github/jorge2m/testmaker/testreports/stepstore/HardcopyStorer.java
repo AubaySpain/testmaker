@@ -24,14 +24,13 @@ public class HardcopyStorer extends EvidenceStorer {
 	protected String captureContent(StepTM step) {
 		WebDriver driver = step.getTestCaseParent().getDriver();
 		WebDriver newWebDriver = null;
-		if (driver.getClass() == RemoteWebDriver.class) {
-			newWebDriver = new Augmenter().augment(driver);
-		} else {
-			newWebDriver = driver;
-		}
-		
 		String screenShot = "";
 		try {
+			if (driver.getClass() == RemoteWebDriver.class) {
+				newWebDriver = new Augmenter().augment(driver);
+			} else {
+				newWebDriver = driver;
+			}
 			screenShot = ((TakesScreenshot)newWebDriver).getScreenshotAs(OutputType.BASE64);
 		}
 		catch (Exception e) {
