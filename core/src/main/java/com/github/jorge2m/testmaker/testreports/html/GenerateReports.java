@@ -344,7 +344,7 @@ public class GenerateReports extends EmailableReporter {
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 			String diffInMilliesStr = String.valueOf(diffInMillies);
 			String fechaFinStr = format.format(step.getHoraFin());
-			if (diffInMillies >= 0) {
+			if (diffInMillies < 0) {
 				diffInMilliesStr = "?";
 				fechaFinStr = "?";
 			}
@@ -360,7 +360,7 @@ public class GenerateReports extends EmailableReporter {
 				"     <td>" + step.getDescripcion() + "</td>" + 
 				"     <td>" + step.getResExpected() + "</td>" +
 				tdClassDate + format.format(step.getHoraInicio()) + "</td>" + 
-				fechaFinStr + "</td>" +
+				tdClassDate + fechaFinStr + "</td>" +
 				"     <td>" + step.getNameClass() + " / " + step.getNameMethod() + "</td>" +
 				"</tr>\n";
 
