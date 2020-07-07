@@ -341,20 +341,26 @@ public class GenerateReports extends EmailableReporter {
 				tdClassDate = "<td><font class=\"timeout\">";
 				timeout = true;
 			}
-
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			String diffInMilliesStr = String.valueOf(diffInMillies);
+			String fechaFinStr = format.format(step.getHoraFin());
+			if (diffInMillies >= 0) {
+				diffInMilliesStr = "?";
+				fechaFinStr = "?";
+			}
+
 			reportHtml+=
 				"<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"     <td style=\"display:none;\"></td>\n" +
 				"     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
 				"     <td>" + step.getNumChecksTM() + "</td>" + 
 				"     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
-				"     <td>" + diffInMillies + "</td>" + 
+				"     <td>" + diffInMilliesStr + "</td>" + 
 				"     <td class=\"nowrap\">" + linkHardcopy + linkHtml + linkError + linkHarp + linkHar + "</td>" + 
 				"     <td>" + step.getDescripcion() + "</td>" + 
 				"     <td>" + step.getResExpected() + "</td>" +
 				tdClassDate + format.format(step.getHoraInicio()) + "</td>" + 
-				tdClassDate + format.format(step.getHoraFin()) + "</td>" +
+				fechaFinStr + "</td>" +
 				"     <td>" + step.getNameClass() + " / " + step.getNameMethod() + "</td>" +
 				"</tr>\n";
 
