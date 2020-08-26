@@ -77,7 +77,7 @@ public class RestApiIT extends JaxRsClient {
 		List<TestCaseBean> listTestCases = suiteData.getListTestRun().get(0).getListTestCase();
 		assertEquals(listTestCases.size(), 2);
 		TestCaseBean testCase = listTestCases.get(0);
-		assertTrue(testCase.getResult()==State.Ok || testCase.getResult()==State.Info);
+		assertTrue(testCase.getResult()==State.Ok || suiteData.getResult()==State.Warn || testCase.getResult()==State.Info);
 		assertEquals(testCase.getListStep().size(), 3);
 		
 		//Check Step1
