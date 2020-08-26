@@ -41,7 +41,7 @@ RUN add-apt-repository ppa:ts.sch.gr/ppa \
 # Chrome
 #=======
 #ARG CHROME_VERSION="google-chrome-stable"
-ARG CHROME_VERSION=83.0.4103.106-1
+ARG CHROME_VERSION=85.0.4183.83-1
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update -qqy \
