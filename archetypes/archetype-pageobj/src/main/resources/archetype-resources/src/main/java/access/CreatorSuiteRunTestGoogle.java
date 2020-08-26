@@ -10,7 +10,7 @@ import com.github.jorge2m.testmaker.domain.SuiteMaker;
 
 public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 
-	private final String ChromeDriverVersionDefault = "83.0.4103.39";
+	private final String ChromeDriverVersionDefault = "85.0.4183.83";
 	private final String GeckoDriverVersionDefault = "0.26.0";
 	
 	private CreatorSuiteRunTestGoogle() throws Exception {

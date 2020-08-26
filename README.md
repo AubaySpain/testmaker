@@ -185,7 +185,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.9</version>
+			<version>1.3.10</version>
 		</dependency>
 	</dependencies>
 	
@@ -456,7 +456,7 @@ Then a *ReportTSuite.html* with the results of the execution will appear in the 
 
 **Note** TestMaker uses default versions for the webdriver of Chrome (*ChromeDriver*) and Firefox (*GeckoDriver*). But perhaps that versions of the drivers doesn't support the version of chrome/firefox installed in your machine so the execution will fail. In this case you will have to locate the correct version number of the driver (you don't have to download anyting, only get the version number) in the oficial pages for *ChromeDriver* (https://sites.google.com/a/chromium.org/chromedriver/downloads) and *GeckoDriver* (https://github.com/mozilla/geckodriver/releases)  and enter it as a new parameter '*driverVersion*'. For example:
 
-> -suite SmokeTest -driver chrome -driverVersion 83.0.4103.14 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+> -suite SmokeTest -driver chrome -driverVersion 85.0.4183.83 -channel desktop -application google -tcases BUS001 -url https://www.google.com
 > -suite SmokeTest -driver firefox -driverVersion 0.26.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
 
 ### Execution via Http Rest API
@@ -528,13 +528,13 @@ Creating a project from a testmaker archetype you'll have an operational project
 
 + **Modify the chromedriver/geckodriver version** (for support new versions of Chrome or Firefox). They are 2 possibilities:
 
-  + Invoque the TestSuite via Command Line/API Rest indicating the version of the driver in the parameter *driverVersion*. For example *driverVersion=83.0.4103.14* correspond to a ChromeDriver that supports Chrome83.
+  + Invoque the TestSuite via Command Line/API Rest indicating the version of the driver in the parameter *driverVersion*. For example *driverVersion=85.0.4183.83* correspond to a ChromeDriver that supports Chrome83.
 
   + Modify the *MyCreatorSuiteRun* class where they are the default versions of each webdriver:
 
     ```java
     public class MyCreatorSuiteRun extends CreatorSuiteRun {
-    	private final String ChromeDriverVersionDefault = "83.0.4103.39";
+    	private final String ChromeDriverVersionDefault = "85.0.4183.83";
     	private final String GeckoDriverVersionDefault = "0.26.0";
     ```
 
@@ -670,7 +670,7 @@ A project built under TestMaker can be called from Command Line for run a new Te
 | net           | no       | Flag for capture the Http Nettraffic for each @Step          | true, false (by default)                                     | true                                             |
 | storebd       | no       | Level of item store in bd[^ 4]                               | nostore, suite, testrun, testcase (by default), step, validation | validation                                       |
 | mails         | no       | List of emails to wich you want to send a email with the Report of the TestSuite execution | Comma-separated list of emails                               | jorge.and.2m@gmail.com,jorge.munoz.sge@mango.com |
-| driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 83.0.4103.14                                     |
+| driverVersion | no       | The version of the driver [^ 5]                              | Driver version of (ChromeDriver, GeckoDriver, etc.)          | 85.0.4183.83                                     |
 
 [^1]: TestMaker goes with that  embedded drivers out of the box, but from each project yo can add new webdrivers or overwrite the embedded ones
 
