@@ -5,7 +5,7 @@ def machineCreated = false;
 
 pipeline {
 
-	agent { label 'master' }
+	agent { label 'java-docker-slave' }
 	environment {
 		GCLOUD_PATH = "/home/jenkins/tools/com.cloudbees.jenkins.plugins.gcloudsdk.GCloudInstallation/gcloud/bin"
 		PATH = "$GCLOUD_PATH:$PATH"
