@@ -21,7 +21,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	
 	//Nota: si se modifica la versión sería conveniente regenerar la AMI correspondiente al Robotest en Cloud
 	private final boolean isHeadless;
-	private final static String GeckoDriverVersionDefault = "0.26.0";
+	private final static String GeckoDriverVersionDefault = "0.27.0";
 	private FirefoxProfile fp = new FirefoxProfile();
 	private FirefoxOptions options;
 	

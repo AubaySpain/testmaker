@@ -83,7 +83,8 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Firefox
 #=========
 #ARG FIREFOX_VERSION=latest
-ARG FIREFOX_VERSION=76.0.1
+#List of versions in https://download-installer.cdn.mozilla.net/pub/firefox/releases/
+ARG FIREFOX_VERSION=80.0
 RUN FIREFOX_DOWNLOAD_URL=$(if [ $FIREFOX_VERSION = "latest" ] || [ $FIREFOX_VERSION = "nightly-latest" ] || [ $FIREFOX_VERSION = "devedition-latest" ]; then echo "https://download.mozilla.org/?product=firefox-$FIREFOX_VERSION-ssl&os=linux64&lang=en-US"; else echo "https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2"; fi) \
   && apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install firefox \

@@ -457,7 +457,7 @@ Then a *ReportTSuite.html* with the results of the execution will appear in the 
 **Note** TestMaker uses default versions for the webdriver of Chrome (*ChromeDriver*) and Firefox (*GeckoDriver*). But perhaps that versions of the drivers doesn't support the version of chrome/firefox installed in your machine so the execution will fail. In this case you will have to locate the correct version number of the driver (you don't have to download anyting, only get the version number) in the oficial pages for *ChromeDriver* (https://sites.google.com/a/chromium.org/chromedriver/downloads) and *GeckoDriver* (https://github.com/mozilla/geckodriver/releases)  and enter it as a new parameter '*driverVersion*'. For example:
 
 > -suite SmokeTest -driver chrome -driverVersion 85.0.4183.83 -channel desktop -application google -tcases BUS001 -url https://www.google.com
-> -suite SmokeTest -driver firefox -driverVersion 0.26.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
+> -suite SmokeTest -driver firefox -driverVersion 0.27.0 -channel desktop -application google -tcases BUS001 -url https://www.google.com
 
 ### Execution via Http Rest API
 Run the class **RestApiAccess** with the parameter -port 80 (if you what to expose a secure port use the parameter -secureport). If the server starts correctly you'll see the message:
@@ -535,7 +535,7 @@ Creating a project from a testmaker archetype you'll have an operational project
     ```java
     public class MyCreatorSuiteRun extends CreatorSuiteRun {
     	private final String ChromeDriverVersionDefault = "85.0.4183.83";
-    	private final String GeckoDriverVersionDefault = "0.26.0";
+    	private final String GeckoDriverVersionDefault = "0.27.0";
     ```
 
 * **Configure specific user WebDrivers**. TestMaker makes available 2 embebbded WebDrivers configured for manage Chrome and Firefox respectively. But you have the possibility of override any of them or add new ones creating classes that extenns the abstract class *DriverMaker* and passing them as a parameter-list to the *TestRunaker.setDriverMaker* method. For example, lets go to create:
