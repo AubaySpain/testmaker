@@ -159,4 +159,4 @@
 		</repository>
 	</distributionManagement>
 </project>
-<!-- Deploy in maven central: mvn clean install -Prelease -->
+<!-- Deploy in maven central: mvn clean deploy -Prelease -->

@@ -141,7 +141,7 @@ public class BuscarWithoutRefactor implements Serializable {
 	}
 	private static long getLongFromElement(WebElement element) {
 		if (element!=null && "".compareTo(element.getText())!=0) {
-			Pattern pattern = Pattern.compile("([\\d.]+)");
+			Pattern pattern = Pattern.compile("([\\d.,]+)");
 			Matcher matcher = pattern.matcher(element.getText());
 			if (matcher.find()) {
 				return Long.valueOf(
