@@ -149,6 +149,15 @@ public class TestMaker {
 	public static WebDriver getDriverTestCase() {
 		return (getTestCase().getDriver());
 	}
+	
+	public static WebDriver renewDriverTestCase() {
+		WebDriver driver = getDriverTestCase();
+		if (driver!=null) {
+			driver.quit();
+		}
+	    getTestCase().makeWebDriver();
+	    return getDriverTestCase();
+	}
 
 	public static StepTM getCurrentStepInExecution() {
 		return getTestCase().getCurrentStepInExecution();
