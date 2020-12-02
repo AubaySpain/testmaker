@@ -178,7 +178,7 @@ public class SeleniumUtils {
         while (input.getAttribute("value").compareTo(valueExpected) != 0 && i < numRetry);
     }    
     
-    private static String toString(CharSequence... keys) {
+    private static String toString(CharSequence... keys) { 
     	final StringBuilder sb = new StringBuilder();
     	for (CharSequence key : keys) {
 	    	sb.append(key);
