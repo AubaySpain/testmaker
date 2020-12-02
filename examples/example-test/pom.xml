@@ -7,7 +7,7 @@
 		<relativePath>../bom-examples/pom.xml</relativePath>
 	</parent>  
 
-	<artifactId>example-test</artifactId>
+	<artifactId>example-test</artifactId> 
 	<packaging>jar</packaging>
 
 	<build>
