@@ -168,14 +168,23 @@ public class SeleniumUtils {
     }   
     
     public static void sendKeysWithRetry(int numRetry, WebElement input, CharSequence... keys) {
+    	String valueExpected = toString(keys);
         int i = 0;
         do {
             input.clear();
             input.sendKeys(keys);
             i += 1;
         } 
-        while (input.getAttribute("value").compareTo(keys.toString()) != 0 && i < numRetry);
+        while (input.getAttribute("value").compareTo(valueExpected) != 0 && i < numRetry);
     }    
+    
+    private static String toString(CharSequence... keys) {
+    	final StringBuilder sb = new StringBuilder();
+    	for (CharSequence key : keys) {
+	    	sb.append(key);
+    	}
+    	return sb.toString();
+    }
 
     public static void waitForPageLoaded(WebDriver driver) {
         waitForPageLoaded(driver, 30/*waitSeconds*/);
