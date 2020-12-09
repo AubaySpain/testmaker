@@ -7,7 +7,7 @@
 		<relativePath>../bom-examples/pom.xml</relativePath>
 	</parent>  
 	<artifactId>hello-world-example</artifactId>
-	<packaging>jar</packaging>
+	<packaging>jar</packaging> 
 	
 	<build>
 		<plugins>
