@@ -3,17 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.jorge2m</groupId>
 	<artifactId>testmaker</artifactId>
-	<version>1.3.13</version>
+	<version>1.3.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>testmaker</name> 
 	<description>Framework for the construction of End To End Testcases based on Selenium WebDriver</description>
-	<url>http://github.com/jorge2m/testmaker</url>
+	<url>http://github.com/AubaySpain/testmaker</url>
 	
 	<licenses> 
 		<license> 
 			<name>GPL-v3.0</name>
-			<url>http://github.com/jorge2m/testmaker/blob/master/LICENSE</url>
+			<url>http://github.com/AubaySpain/testmaker/blob/master/LICENSE</url>
 		</license>
 	</licenses>
 	
@@ -27,9 +27,9 @@
 	</developers>
 	
 	<scm>
-		<connection>scm:git:git://github.com/jorge2m/testmaker.git</connection>
-		<developerConnection>scm:git:ssh://github.com:jorge2m/testmaker.git</developerConnection>
-		<url>http://github.com/jorge2m/testmaker/tree/master</url>
+		<connection>scm:git:git://github.com/AubaySpain/testmaker.git</connection>
+		<developerConnection>scm:git:ssh://github.com:AubaySpain/testmaker.git</developerConnection>
+		<url>http://github.com/AubaySpain/testmaker/tree/master</url>
 	</scm>
 
 	<properties>
@@ -143,7 +143,7 @@
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-					<stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
+					<stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
 				</configuration>
 			</plugin>
 		</plugins>
