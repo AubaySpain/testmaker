@@ -6,7 +6,7 @@
 #When executing docker run for an image with Chrome or Firefox please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
 #example create image: docker build -t jorge2m/example-testmaker:latest .
 #example container run: docker run -d -p 80:80 -p 443:443 --privileged -v "%CD%/dockerresults:/output-library" jorge2m/example-testmaker:latest
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 RUN apt-get update -y \
 	&& apt -y install locales \
