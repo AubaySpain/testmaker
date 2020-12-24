@@ -1,7 +1,10 @@
 package com.github.jorge2m.testmaker.service.testab.manager;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidCookieDomainException;
@@ -45,76 +48,73 @@ public class TestABOptimizeManager implements TestABmanager {
 	@Override
 	public void activateTestAB() throws Exception {
 		if (isActiveForChannelAndApp(testAB, channelTest, app)) {
-			setCookieGtm_auth(testAB, driver);
-			setCookieGtm_preview(testAB, driver);
-			setCookieGtm_experiment(getVariantInGtm_experiment(testAB, varianteActivada), driver);
+			List<TestABactData> testsABtoActive = Arrays.asList(TestABactData.getNew(testAB, varianteActivada));
+			activateTestsAB(testsABtoActive, channelTest, app, driver);
 		}
 	}
 	
 	public static void activateTestsAB(List<TestABactData> testsABtoActive, Channel channel, Enum<?> app, WebDriver driver) 
 	throws Exception {
-		String valueCookie = "";
+		String valueCookie_gaexp = getValueCookie_gaexp(driver);
 		for (TestABactData testABtoActive : testsABtoActive) {
 			TestABOptimize testAB = (TestABOptimize)testABtoActive.getTestAB();
 			int vTestAB = testABtoActive.getvToActive();
 			if (isActiveForChannelAndApp(testAB, channel, app)) {
-				if ("".compareTo(valueCookie)==0) {
-					setCookieGtm_auth(testAB, driver);
-					setCookieGtm_preview(testAB, driver);
-					valueCookie+=getVariantInGtm_experiment(testAB, vTestAB);
-				} else {
-					valueCookie=valueCookie+"&"+testAB.getIdExperiment() + vTestAB;
-				}
+				valueCookie_gaexp = getNewValueCookie_gaexp(valueCookie_gaexp, testAB, vTestAB);
 			}
 		}
+		setCookie_gaexp(valueCookie_gaexp, driver);
+	}
+	
+	private static String getValueCookie_gaexp(WebDriver driver) {
+		Cookie cookie = driver.manage().getCookieNamed("_gaexp");
+		if (cookie!=null) {
+			return cookie.getValue();
+		}
+		return "";
+	}
+	
+	private static String getNewValueCookie_gaexp(String actualValue, TestABOptimize testAB, int variant) {
+		String dataCookieTestAB = testAB.getIdExperiment() + ".18707." + String.valueOf(variant);
+		if ("".compareTo(actualValue)==0) {
+			return ("GAX1.2." + dataCookieTestAB);
+		} else {
+	    	Pattern pattern = Pattern.compile(testAB.getIdExperiment() + "\\.[0-9]+\\.[0-9]+");
+	        Matcher matcher = pattern.matcher(actualValue);
+	        if (matcher.find()) {
+	             return pattern.matcher(actualValue).replaceAll(dataCookieTestAB);
+	        }
+			return (actualValue + "!" +dataCookieTestAB);
+		}
+	}
+	
+	private static void setCookie_gaexp(String value, WebDriver driver) {
+		Cookie cookie_gaexp = new Cookie("_gaexp", value);
+		setCookie(cookie_gaexp, driver);
 		
-		setCookieGtm_experiment(valueCookie, driver);
+		Cookie cookie_browser = getCookie_Gaex_WithValue(value, driver);
+		if (cookie_browser!=null &&
+			cookie_browser.getDomain().indexOf(".")!=0) {
+			Pattern pattern = Pattern.compile(".*(\\..+\\..+)");
+	        Matcher matcher = pattern.matcher(cookie_browser.getDomain());
+	        if (matcher.find()) {
+	    		Cookie cookie_gaexp2 = new Cookie(
+    				"_gaexp", value, 
+    	    		matcher.group(1), 
+    	    		"/", null, false, false);
+	    		setCookie(cookie_gaexp2, driver);
+	        }
+		}
 	}
 	
-	private static String getVariantInGtm_experiment(TestABOptimize testAB, int variante) {
-		return (testAB.getGroup() + "=" + testAB.getIdExperiment() + variante);
-	}
-	
-	private static void setCookieGtm_auth(TestABOptimize testAB, WebDriver driver) {
-		String gtm_auth = "gtm_auth";
-		Cookie cookieGtm_auth = new Cookie(
-			gtm_auth, 
-    		testAB.getGroup() + "=" + testAB.getAuth(), 
-    		"www.google-analytics.com", 
-    		"/gtm/",
-    		null, 
-    		false, 
-    		false
-    	);
-		setCookie(cookieGtm_auth, driver);
-	}
-	
-	private static void setCookieGtm_preview(TestABOptimize testAB, WebDriver driver) {
-		String gtm_preview = "gtm_preview";
-		Cookie cookieGtm_preview = new Cookie(
-			gtm_preview, 
-    		testAB.getGroup() + "=" + testAB.getPreview(), 
-    		"www.google-analytics.com",
-    		"/gtm/",
-    		null, 
-    		false, 
-    		false
-    	);
-		setCookie(cookieGtm_preview, driver);
-	}
-	
-	private static void setCookieGtm_experiment(String value, WebDriver driver) {
-		String gtm_experiment = "gtm_experiment";
-		Cookie cookieGtm_experiment = new Cookie(
-			gtm_experiment, 
-			value, 
-    		"www.google-analytics.com", 
-    		"/gtm/", 
-    		null, 
-    		false, 
-    		false
-    	);
-		setCookie(cookieGtm_experiment, driver);
+	private static Cookie getCookie_Gaex_WithValue(String value, WebDriver driver) {
+		for (Cookie cookie : driver.manage().getCookies()) {
+			if ("_gaexp".compareTo(cookie.getName())==0 &&
+				value.compareTo(cookie.getValue())==0) {
+				return cookie;
+			}
+		}
+		return null;
 	}
 	
 	private static void setCookie(Cookie cookie, WebDriver driver) {
