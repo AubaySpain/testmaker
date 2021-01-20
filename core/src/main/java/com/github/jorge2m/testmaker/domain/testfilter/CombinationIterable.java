@@ -18,7 +18,7 @@ public class CombinationIterable<T> implements Iterable<List<T>> {
         return new CombinationIterator<>(allElements);
     }
 
-    private static final class CombinationIterator<T> 
+    private static final class CombinationIterator<T>  
     implements Iterator<List<T>> {
 
         private final List<T> allElements;
