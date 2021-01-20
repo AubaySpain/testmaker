@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class CombinationIterable<T> implements Iterable<List<T>> {
+public class CombinationIterable<T> implements Iterable<List<T>> { 
 
     private final List<T> allElements;
 
