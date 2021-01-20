@@ -88,7 +88,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel==Channel.mobile) {
+		if (channel==Channel.mobile || channel==Channel.tablet) {
 			configMobilSimulator();
 		}
 		setFirefoxOptions();
@@ -125,16 +125,26 @@ class FirefoxdriverMaker extends DriverMaker {
 	}
 
 	private void configMobilSimulator() {
-		fp.setPreference(
+		if (channel==Channel.mobile) {
+			fp.setPreference(
 				"general.useragent.override", 
 				"Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19");
+		}
+		if (channel==Channel.tablet) {
+			fp.setPreference(
+				"general.useragent.override", 
+				"Mozilla/5.0 (Linux; Android 4.4.2; Nexus 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36");
+		}
 	}
 
 	private void resizeBrowserIfNeeded(WebDriver driver) {
 		if (channel==Channel.mobile) {
-			//En caso de móvil redimensionaremos el navegador a unas dimensiones tipo 'móvil'
 			driver.manage().window().setSize(new Dimension(640, 1136));
-		} else {
+		}
+		if (channel==Channel.tablet) {
+			driver.manage().window().setSize(new Dimension(1600, 2560));
+		}
+		if (channel==Channel.desktop) {
 			//En caso de Desktop maximizamos la ventana
 			driver.manage().window().maximize();
 			java.awt.Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

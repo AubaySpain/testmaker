@@ -76,7 +76,7 @@ class ChromedriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel!=Channel.mobile && isHeadless) {
+		if (channel==Channel.desktop && isHeadless) {
 			options.addArguments("--window-size=1920x1080");
 		}
 		
@@ -85,7 +85,7 @@ class ChromedriverMaker extends DriverMaker {
 		if (nettraffic) {
 			configNettrafficSnifer();
 		}
-		if (channel==Channel.mobile) {
+		if (channel==Channel.mobile || channel==Channel.tablet) {
 			configMobilSimulator();
 		}
 	}
@@ -115,7 +115,15 @@ class ChromedriverMaker extends DriverMaker {
 
 	private void configMobilSimulator() {
 		Map<String, Object> mobileEmulation = new HashMap<>();
-		mobileEmulation.put("deviceName", "Nexus 6"); // select the device to emulate
+		mobileEmulation.put("deviceName", "Nexus 6");
+		if (channel==Channel.tablet) {
+//			Map<String, Object> deviceMetrics = new HashMap<String, Object>();
+//	        deviceMetrics.put("width", 1280);  
+//	        deviceMetrics.put("height", 800); 
+//	        deviceMetrics.put("pixelRatio", 2.0);
+//	        mobileEmulation.put("deviceMetrics", deviceMetrics);
+			mobileEmulation.put("deviceName", "Nexus 10");
+		}
 		options.setExperimentalOption("mobileEmulation", mobileEmulation);
 	}
 }

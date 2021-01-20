@@ -49,6 +49,7 @@ public class BrowserStackDriverMaker extends DriverMaker {
 		WebDriver driver;
 		switch (channel) {
 		case mobile: 
+		case tablet:
 			driver = createBStackDriverMobil();
 			break;
 		case desktop:
