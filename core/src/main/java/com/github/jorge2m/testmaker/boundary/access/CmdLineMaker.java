@@ -20,7 +20,7 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
  * @author jorge.muñoz
  * Implementa el acceso a través de la línea de comandos
  */
-public class CmdLineMaker { 
+public class CmdLineMaker {
 
 	private final String[] args;
     private static final String HelpNameParam = "help";

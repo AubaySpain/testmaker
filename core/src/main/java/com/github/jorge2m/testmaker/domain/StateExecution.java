@@ -1,7 +1,7 @@
 package com.github.jorge2m.testmaker.domain;
 
 
-public enum StateExecution {
+public enum StateExecution { 
 	NotStarted(false), 
 	Started(false), 
 	Finished(true), 
