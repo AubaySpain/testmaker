@@ -2,7 +2,7 @@ package com.github.jorge2m.testmaker.service.webdriver.maker;
 
 import java.awt.Toolkit;
 
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Proxy;
@@ -21,7 +21,6 @@ class FirefoxdriverMaker extends DriverMaker {
 	
 	//Nota: si se modifica la versión sería conveniente regenerar la AMI correspondiente al Robotest en Cloud
 	private final boolean isHeadless;
-	private final static String GeckoDriverVersionDefault = "0.27.0";
 	private FirefoxProfile fp = new FirefoxProfile();
 	private FirefoxOptions options;
 	
@@ -40,9 +39,11 @@ class FirefoxdriverMaker extends DriverMaker {
 	@Override
 	public void setupDriverVersion(String driverVersion) {
 		if (driverVersion!=null && "".compareTo(driverVersion)!=0) {
-			FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
+			WebDriverManager.firefoxdriver().driverVersion(driverVersion).setup();
+			//FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
 		} else {
-			FirefoxDriverManager.firefoxdriver().version(GeckoDriverVersionDefault).setup();
+			WebDriverManager.firefoxdriver().setup();
+			//FirefoxDriverManager.firefoxdriver().version(GeckoDriverVersionDefault).setup();
 		}
 	}
 
