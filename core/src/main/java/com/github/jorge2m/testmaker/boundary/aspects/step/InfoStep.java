@@ -5,7 +5,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
-public class InfoStep {
+public class InfoStep { 
 
 	private final MethodSignature methodSignature;
 	private final Step stepAnnotation;
