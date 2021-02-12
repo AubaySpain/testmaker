@@ -1,10 +1,9 @@
 package com.github.jorge2m.testmaker.domain.suitetree;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.openqa.selenium.WebDriver;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
@@ -200,6 +199,34 @@ public class StepTM {
 	}
 	public void setTimeFin(long timeFin) {
 		this.timeFin = timeFin;
+	}
+	
+	/**
+	 * @return 	
+	 * 	if exists, the path name of the file evidence
+	 *  if doesn't exists null
+	 */
+	public String getPathFileEvidence(StepEvidence stepEvidence) {
+		String pathFile = stepEvidence.getPathFile(this);
+		File file = new File(pathFile);
+		if (file.exists()) {
+			return pathFile;
+		}
+		return null;
+	}
+	
+	/**
+	 * @return 	
+	 * 	if exists, the name of the file evidence
+	 *  if doesn't exists null
+	 */
+	public String getNameFileEvidence(StepEvidence stepEvidence) {
+		String pathFile = stepEvidence.getPathFile(this);
+		File file = new File(pathFile);
+		if (file.exists()) {
+			return stepEvidence.getNameFileEvidence(this);
+		}
+		return null;
 	}
 
 	public State getResultSteps() {

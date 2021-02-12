@@ -2,6 +2,8 @@ package com.github.jorge2m.testmaker.service.testab.manager;
 
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
@@ -45,15 +47,41 @@ public class TestABGoogleExpManager implements TestABmanager {
 	public void activateTestAB() throws Exception {
 		if (isActiveForChannelAndApp()) {
 			String valueCookieRemovingTestAB = getValueCookieResetingAllTestABvariants(driver);
+			String testABvalueForVariant = testAB.getValueCookie(app) + "%3A" + varianteActivada + "%2C";
 			if (valueCookieRemovingTestAB!=null) { 
-				String testABvalueForVariant = testAB.getValueCookie(app) + "%3A" + varianteActivada + "%2C";
 				String newValueCookie = valueCookieRemovingTestAB + testABvalueForVariant;
 				Cookie actualCookie = driver.manage().getCookieNamed(nameCookieGoogleExperiments);
 				Cookie newCookie = getClonedWithNewValue(actualCookie, newValueCookie);
 				driver.manage().deleteCookieNamed(nameCookieGoogleExperiments);
 				driver.manage().addCookie(newCookie);
+			} else {
+				createNewGoogleExperimentsCookie(testABvalueForVariant);
 			}
 		}
+	}
+	
+	private void createNewGoogleExperimentsCookie(String valueCookie) {
+        Cookie newCookie = new Cookie.Builder(nameCookieGoogleExperiments, valueCookie)
+        		.isHttpOnly(true)
+        		.isSecure(true)
+        		.build();
+        driver.manage().addCookie(newCookie);
+        Cookie actualCookie = driver.manage().getCookieNamed(nameCookieGoogleExperiments);
+        
+        if (actualCookie.getDomain().indexOf(".")!=0) {
+			Pattern pattern = Pattern.compile(".*(\\..+\\..+)");
+	        Matcher matcher = pattern.matcher(actualCookie.getDomain());
+	        if (matcher.find()) {
+	        	newCookie = new Cookie.Builder(nameCookieGoogleExperiments, valueCookie)
+	        		.domain(matcher.group(1))
+	        		.isHttpOnly(true)
+	        		.isSecure(true)
+	        		.build();
+	        	driver.manage().deleteCookieNamed(nameCookieGoogleExperiments);
+	    		driver.manage().addCookie(newCookie);
+	        }
+        }
+
 	}
 	
 	public static void activateTestsAB(List<TestABactData> testsABtoActive, Channel channel, Enum<?> app, WebDriver driver) throws Exception {

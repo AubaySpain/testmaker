@@ -28,7 +28,7 @@ public class MailClient {
         }
     }
 
-    public void mail(String from, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, ArrayList<AttachMail> imgAttach) {
+    public void mail(String from, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, List<AttachMail> imgAttach) {
         String login = "robottestmango@gmail.com";
         String password = "sirrobot";
 	        	
