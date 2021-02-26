@@ -9,7 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class AfterMethodAspect {
 
-	@Pointcut("@annotation(org.testng.annotations.AfterMethod)")
+	@Pointcut("@annotation(org.testng.annotations.AfterMethod)") 
 	public void annotationAfterMethodPointcut() {}
 
 	@Pointcut("execution(* *(..))")
