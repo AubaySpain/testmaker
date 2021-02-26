@@ -185,7 +185,7 @@ A possible pom.xml can be:
 		<dependency>
 			<groupId>com.github.jorge2m</groupId>
 			<artifactId>testmaker-core</artifactId>
-			<version>1.3.16</version>
+			<version>1.3.17</version>
 		</dependency>
 	</dependencies>
 	
