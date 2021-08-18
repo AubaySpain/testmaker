@@ -35,7 +35,10 @@ public class SelectElement {
 			break;
 		case Value:
 			if (selectElem.getAttribute("value").compareTo(value)!=0) {
-				selectElem.sendKeys(value);
+				new Select(selectElem).selectByValue(value);
+				if (selectElem.getAttribute("value").compareTo(value)!=0) {
+					selectElem.sendKeys(value);
+				}
 			}
 			break;
 		case ValueJavaScript:
