@@ -134,6 +134,14 @@ public class ChecksTM {
 		Check resultValidation = Check.of(id, levelResult);
 		add(resultValidation);
 	}
+	public boolean areAllChecksOvercomed() {
+		for (Check check : listChecks) {
+			if (!check.isOvercomed()) {
+				return false;
+			}
+		}
+		return true;
+	}
 	public boolean calculateAvoidEvidences() {
 		for (Check check : listChecks) {
 			if (!check.isOvercomed() &&
@@ -142,7 +150,6 @@ public class ChecksTM {
 				return false;
 			}
 		}
-		
 		return true;
 	}
 	
