@@ -175,7 +175,7 @@ public class TestFilterTNGxmlTRun {
     	inputParams.setChannel(Channel.desktop);
     	inputParams.setSuite(Suites.SuiteForUnitTest);
     	inputParams.setApp(AppEcom.shop);
-    	inputParams.setUrlBase("https://shop.mango.com/preHome.faces");
+    	inputParams.setUrlBase("https://www.google.com");
     	inputParams.setDriver(EmbeddedDriver.chrome.name());
     	return inputParams;
     }

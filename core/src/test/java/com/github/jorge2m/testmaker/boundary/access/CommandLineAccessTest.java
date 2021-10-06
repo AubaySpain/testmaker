@@ -164,7 +164,7 @@ public class CommandLineAccessTest {
 		listArgs.add("-channel"); listArgs.add("desktop");
 		listArgs.add("-application"); listArgs.add("shop");
 		listArgs.add("-version"); listArgs.add("V1");
-		listArgs.add("-url"); listArgs.add("https://shop.pre.mango.com/preHome.faces");
+		listArgs.add("-url"); listArgs.add("https://www.googe.com");
 		listArgs.add("-tcases"); listArgs.add("MIC001,FAV001");
 		return listArgs;
 	}

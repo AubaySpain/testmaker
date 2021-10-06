@@ -30,7 +30,7 @@ public class RemoteTestTest {
 		inputParams.setChannel(Channel.desktop);
 		inputParams.setApp(AppEcom.shop);
 		inputParams.setVersion("V1");
-		inputParams.setUrlBase("https://shop.mango.com/preHome.faces");
+		inputParams.setUrlBase("https://www.google.com");
 		
 		//When
 		ServerSubscriber server = new ServerSubscriber(new URL("https://localhost:80"));
