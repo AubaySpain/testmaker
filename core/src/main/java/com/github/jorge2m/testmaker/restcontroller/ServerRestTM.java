@@ -204,7 +204,7 @@ public class ServerRestTM extends JaxRsClient {
 	
 	private HandlerWrapper getHandlers() {
 		ResourceHandler resource_handler = new ResourceHandler();
-		resource_handler.setDirectoriesListed(true);
+		resource_handler.setDirectoriesListed(false);
 		resource_handler.setWelcomeFiles(new String[]{ "index.html" });
 		resource_handler.setResourceBase(".");
 		return resource_handler;

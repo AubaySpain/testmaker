@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>1.3.19-SNAPSHOT</version>
+		<version>2.0.0</version>
 		<!-- <relativePath>../pom.xml</relativePath>´-->
 	</parent>
 	<artifactId>testmaker-core</artifactId>
@@ -15,7 +15,7 @@
 	
 	<properties> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<selenium.version>3.141.59</selenium.version>
+		<selenium.version>4.0.0</selenium.version>
 		<jetty.version>9.2.14.v20151106</jetty.version>
 		<jersey.version>2.25.1</jersey.version>
 		<!-- <jetty.version>9.4.27.v20200227</jetty.version> -->
@@ -125,11 +125,19 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>net.lightbody.bmp</groupId>
 			<artifactId>browsermob-core</artifactId>
 			<version>2.1.5</version>
 		</dependency>
+		<!-- That overrides the 4.0.5 version existent in browsermob-core -->
+		<dependency>
+    		<groupId>io.netty</groupId>
+    		<artifactId>netty-all</artifactId>
+    		<version>4.1.68.Final</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>

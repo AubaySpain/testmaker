@@ -75,7 +75,7 @@ public class TestABOptimizeManager implements TestABmanager {
 	}
 	
 	private static String getNewValueCookie_gaexp(String actualValue, TestABOptimize testAB, int variant) {
-		String dataCookieTestAB = testAB.getIdExperiment() + ".18707." + String.valueOf(variant);
+		String dataCookieTestAB = testAB.getIdExperiment() + ".19012." + String.valueOf(variant);
 		if ("".compareTo(actualValue)==0) {
 			return ("GAX1.2." + dataCookieTestAB);
 		} else {

@@ -104,7 +104,7 @@ class FirefoxdriverMaker extends DriverMaker {
 		//Con FirefoxBinary intentamos eliminar el tema de la excepción
 		//"org.openqa.selenium.WebDriverException: Unable to bind to locking port 7054 within 45000 ms" -> Aumentamos de 45 a 60 segundos
 		FirefoxBinary fb = new FirefoxBinary();  
-		fb.setTimeout(java.util.concurrent.TimeUnit.SECONDS.toMillis(60));
+		//fb.setTimeout(java.util.concurrent.TimeUnit.SECONDS.toMillis(60));
 		options = new FirefoxOptions().setBinary(fb);
 		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, "true");
 		options.setCapability("acceptSslCerts", true);
