@@ -297,6 +297,12 @@ public class RestApiTM {
 		return "Jetty Server Started Ok";
 	}
 	
+	@GET
+	@Path("/health")
+	public String health() {
+		return "{\"status\":\"UP\"}";
+	}
+	
 	private Date getDateFromParam(String fecha) throws ParseException {
 		for (String fechaFormat : listFormatsFecha) {
 			Date date = getFecha(fecha, new SimpleDateFormat(fechaFormat));
