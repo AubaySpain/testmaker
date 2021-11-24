@@ -15,7 +15,7 @@
 	
 	<properties> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<selenium.version>4.0.0</selenium.version>
+		<selenium.version>4.1.0</selenium.version>
 		<jetty.version>9.2.14.v20151106</jetty.version>
 		<jersey.version>2.25.1</jersey.version>
 		<!-- <jetty.version>9.4.27.v20200227</jetty.version> -->
