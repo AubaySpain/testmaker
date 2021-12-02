@@ -35,6 +35,7 @@ public class ServerRestTM extends JaxRsClient {
 	
 	private final Integer httpPort;
 	private final Integer httpsPort;
+	private final String urlIniServerSlave;
 	private final String urlServerSlave;
 	private final String urlServerHub;
 	private final String pathCertificate;
@@ -46,16 +47,20 @@ public class ServerRestTM extends JaxRsClient {
 	private final Class<? extends Enum<?>> suiteEnum;
 	private final Class<? extends Enum<?>> appEnum;
 
-	private ServerRestTM(Integer httpPort, Integer httpsPort, String urlServerHub, String urlServerSlave, String pathCertificate, String passwordCertificate,
-						 CreatorSuiteRun creatorSuiteRun, Class<? extends RestApiTM> restApiTM, 
-						 Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) throws Exception {
+	private ServerRestTM(
+			Integer httpPort, Integer httpsPort, 
+			String urlIniServerSlave, String urlServerHub, String urlServerSlave, 
+			String pathCertificate, String passwordCertificate,
+			CreatorSuiteRun creatorSuiteRun, Class<? extends RestApiTM> restApiTM, 
+			Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) throws Exception {
 		this.httpPort = httpPort;
 		this.httpsPort = httpsPort;
+		this.urlIniServerSlave = urlIniServerSlave;
 		this.urlServerHub = urlServerHub;
 		if (urlServerSlave!=null) {
 			this.urlServerSlave = urlServerSlave;
 		} else {
-			this.urlServerSlave = makeUrlServerSlave();
+			this.urlServerSlave = makeUrlStartingServer();
 		}
 		this.pathCertificate = pathCertificate;
 		this.passwordCertificate = passwordCertificate;
@@ -70,7 +75,7 @@ public class ServerRestTM extends JaxRsClient {
 		return serverRestTM;
 	}
 	
-	private String makeUrlServerSlave() throws Exception {
+	private String makeUrlStartingServer() throws Exception {
 		String hostAddress = InetAddress.getLocalHost().getHostAddress();
 		if (httpPort!=null) {
 			return "http://" + hostAddress + ":" + httpPort;
@@ -112,27 +117,30 @@ public class ServerRestTM extends JaxRsClient {
 			if (httpsPort!=null) {
 				System.out.println("HttpsPort: " + httpsPort);
 			}
+			if (urlIniServerSlave!=null) {
+				subscribeServerSlaveToStartingHub();
+			}
 			if (urlServerHub!=null) {
-				subscribeServerToHub();
+				subscribeStartingServerSlaveToHub();
 			}
 			jettyServer.join();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (urlServerHub!=null) {
-				unsubscribeServerFromHub();
+				unsubscribeStartingServerSlaveFromHub();
 			}
 			jettyServer.destroy();
 		}
 	}
-	
-	private void subscribeServerToHub() throws Exception {
-		manageConnectionHub(true);
+
+	private void subscribeStartingServerSlaveToHub() throws Exception {
+		manageConnectionStartingServerSlaveToHub(true);
 	}
-	private void unsubscribeServerFromHub() throws Exception {
-		manageConnectionHub(false);
+	private void unsubscribeStartingServerSlaveFromHub() throws Exception {
+		manageConnectionStartingServerSlaveToHub(false);
 	}
-	private void manageConnectionHub(boolean subscription) throws Exception {
+	private void manageConnectionStartingServerSlaveToHub(boolean subscription) throws Exception {
 		Client client = getClientIgnoreCertificates();
 		Invocation.Builder builder = client
 			.target(urlServerHub).path("subscription")
@@ -152,6 +160,23 @@ public class ServerRestTM extends JaxRsClient {
 			System.out.println(response);
 		} else {
 			System.out.println("Result OK " + action + " server slave in url " + urlServerSlave + " with server hub in url " + urlServerHub);
+		}
+	}
+	
+	private void subscribeServerSlaveToStartingHub() throws Exception {
+		Client client = getClientIgnoreCertificates();
+		String urlLocalServerHub = makeUrlStartingServer();
+		Invocation.Builder builder = client
+			.target(urlLocalServerHub).path("subscription")
+			.queryParam("urlslave", urlServerSlave)
+			.request(MediaType.APPLICATION_JSON);
+		
+		Response response = builder.get();
+		if (response.getStatus() >= 400) {
+			System.out.println("Problem subscripting url slave " + urlIniServerSlave + " in starting server hub in url " + urlLocalServerHub);
+			System.out.println(response);
+		} else {
+			System.out.println("Result OK subscripting url slave " + urlIniServerSlave + " in starting server hub in url " + urlLocalServerHub);
 		}
 	}
 	
@@ -217,6 +242,7 @@ public class ServerRestTM extends JaxRsClient {
 		private Class<? extends RestApiTM> restApiTM = RestApiTM.class;
 		private Integer httpPort = null;
 		private Integer httpsPort = null; 
+		private String urlIniServerSlave = null;
 		private String urlServerSlave = null;
 		private String urlServerHub = null;
 		private String pathCertificate = ServerRestTM.class.getResource("/testkey.jks").toExternalForm();
@@ -232,6 +258,7 @@ public class ServerRestTM extends JaxRsClient {
 			portHttp(params.getPort());
 			portHttps(params.getSecurePort());
 			urlServerHub(params.getUrlServerHub());
+			urlIniServerSlave(params.getUrlIniServerSlave());
 			urlServerSlave(params.getUrlServerSlave());
 			return this;
 		}
@@ -241,6 +268,10 @@ public class ServerRestTM extends JaxRsClient {
 		}
 		public Builder portHttps(Integer httpsPort) {
 			this.httpsPort = httpsPort;
+			return this;
+		}
+		public Builder urlIniServerSlave(String urlIniServerSlave) {
+			this.urlIniServerSlave = urlIniServerSlave;
 			return this;
 		}
 		public Builder urlServerHub(String urlServerHub) {
@@ -268,7 +299,7 @@ public class ServerRestTM extends JaxRsClient {
 			}
 			if (serverRestTM==null || isRestartRequired) {
 				serverRestTM = new ServerRestTM(
-						httpPort, httpsPort, urlServerHub, urlServerSlave,
+						httpPort, httpsPort, urlIniServerSlave, urlServerHub, urlServerSlave,
 						pathCertificate, passwordCertificate, 
 						creatorSuiteRun, restApiTM, 
 						suiteEnum, appEnum);

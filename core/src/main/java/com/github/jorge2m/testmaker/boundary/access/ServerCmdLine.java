@@ -22,6 +22,7 @@ public class ServerCmdLine {
 	final static String portparam = "port";
 	final static String secureportparam = "secureport";
 	final static String urlhubparam = "urlhub";
+	final static String urlinislaveparam = "urlinislave";
 	final static String urlslaveparam = "urlslave";
 	
 	/** 
@@ -55,15 +56,20 @@ public class ServerCmdLine {
 			.hasArg()
 			.desc("HTTPS Server Port").build());
 		
+		options.addOption(Option.builder(urlinislaveparam)
+			.required(false)
+			.hasArg()
+			.desc("(Starting hub) URL Server Slave where connect present hub").build());
+		
 		options.addOption(Option.builder(urlhubparam)
 			.required(false)
 			.hasArg()
-			.desc("URL Server Hub where connect present slave").build());
+			.desc("(Starting slave) URL Server Hub where connect present slave").build());
 		
 		options.addOption(Option.builder(urlslaveparam)
 			.required(false)
 			.hasArg()
-			.desc("URL Server Slave to subscribe in hub").build());
+			.desc("(Starting slave) URL Server Slave to subscribe in hub").build());
 		
 		return options;
 	}
@@ -95,6 +101,18 @@ public class ServerCmdLine {
 			}
 			else {
 				System.out.println("Param " + secureportparam + " must be a numeric value");
+				resultParse.setOk(false);
+				return resultParse;
+			}
+		}
+		
+		if (cmdLine.hasOption(urlinislaveparam)) {
+			String urlIniServerSlave = cmdLine.getOptionValue(urlinislaveparam);
+			if (checkPatternValue(ConstantesTM.URL_Pattern, urlIniServerSlave)) {
+				resultParse.setUrlIniServerSlave(urlIniServerSlave);
+			}
+			else {
+				System.out.println("Param " + urlinislaveparam + " is not a url with a valid format");
 				resultParse.setOk(false);
 				return resultParse;
 			}
@@ -144,6 +162,7 @@ public class ServerCmdLine {
 		private boolean ok = false;
 		private Integer port = null;  
 		private Integer securePort = null;
+		private String urlIniServerSlave = null;
 		private String urlServerHub = null;
 		private String urlServerSlave = null;
 		
@@ -164,6 +183,12 @@ public class ServerCmdLine {
 		}
 		public void setSecurePort(Integer securePort) {
 			this.securePort = securePort;
+		}
+		public void setUrlIniServerSlave(String urlIniServerSlave) {
+			this.urlIniServerSlave = urlIniServerSlave;
+		}
+		public String getUrlIniServerSlave() {
+			return urlIniServerSlave;
 		}
 		public String getUrlServerHub() {
 			return urlServerHub;
