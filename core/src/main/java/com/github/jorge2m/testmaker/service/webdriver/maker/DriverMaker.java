@@ -9,7 +9,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
+import com.github.jorge2m.testmaker.testreports.stepstore.ReverseProxy;
 
 import net.lightbody.bmp.client.ClientUtil;
 
@@ -38,8 +38,7 @@ public abstract class DriverMaker {
 	}
 	
 	Proxy getProxyForNettraffic() {
-		new NettrafficStorer();
-		Proxy seleniumProxy = ClientUtil.createSeleniumProxy(NettrafficStorer.getProxy());
+		Proxy seleniumProxy = ClientUtil.createSeleniumProxy(ReverseProxy.getProxy());
 		return seleniumProxy;
 	}
 

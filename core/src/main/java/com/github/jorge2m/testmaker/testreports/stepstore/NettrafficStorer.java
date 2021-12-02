@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.LinkedList;
 
 import org.apache.commons.compress.utils.IOUtils;
 
@@ -18,7 +17,6 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
-import net.lightbody.bmp.proxy.CaptureType;
 
 /**
  * NetTraffic Manager based into BrowserMobProxy Class.
@@ -28,39 +26,14 @@ import net.lightbody.bmp.proxy.CaptureType;
  */
 public class NettrafficStorer extends EvidenceStorer {
 	
-	static ThreadLocal<BrowserMobProxy> proxyInThread;
-	static int initPort = 1000;
-	static int maxSizeListPorts = 20;
-	static LinkedList<Integer> listPortsAssigned; 
-	final static String nameProxyInContext = "BrowserMobProxy";
-	
 	public NettrafficStorer() {
 		super(StepEvidence.Har);
-		if (proxyInThread==null) {
-			proxyInThread = new ThreadLocal<>();
-		}
-			
-		BrowserMobProxy proxy = getProxy();
-		if (proxy==null || ((BrowserMobProxyServer)proxy).isStopped()) {
-			if (proxy==null) {
-				proxy = forceCreateProxy();
-			} else {
-				int initPort = proxy.getPort();
-				proxy = new BrowserMobProxyServer();
-				proxy.setTrustAllServers(true);
-				proxy.start(checkoutPort(initPort));
-			}
-		
-			proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.REQUEST_HEADERS);
-			proxyInThread.set(proxy);
-			Log4jTM.getLogger().info("Created Proxy NetTraffic with port " + proxy.getPort());
-		}
 	}
 	
 	@Override
 	protected String captureContent(StepTM step) {
 		String content = "";
-		Har har = getProxy().getHar(); 
+		Har har = ReverseProxy.getProxy().getHar(); 
 		Writer writer = new StringWriter();
 		try {
 			har.writeTo(writer);
@@ -100,92 +73,19 @@ public class NettrafficStorer extends EvidenceStorer {
 		}
 	}
 	
-	public static BrowserMobProxy getProxy() {
-		if (proxyInThread!=null) {
-			return proxyInThread.get();
-		}
-		return null;
-	}
-	
-	public static void destroyProxy() {
-		if (proxyInThread!=null) {
-			proxyInThread.remove();
-		}
-	}
-	
-	public int checkoutPort() {
-		synchronized(NettrafficStorer.class) {
-			if (listPortsAssigned==null) {
-				listPortsAssigned = new LinkedList<>();
-			}
-			
-			if (!listPortsAssigned.isEmpty()) {
-				if (listPortsAssigned.size()>=maxSizeListPorts) {
-					int port = listPortsAssigned.getFirst();
-					listPortsAssigned.removeFirst();
-					listPortsAssigned.addLast(port);
-					return port;
-				}
-				
-				int port = listPortsAssigned.getLast() + 1;
-				listPortsAssigned.addLast(port);
-				return port;
-			}	
-				
-			int port = initPort;
-			listPortsAssigned.addLast(port);
-			return port;
-		}
-	}
-	
 	public void resetAndStartNetTraffic() {
-		getProxy().newHar();
+		ReverseProxy.getProxy().newHar();
 	}
 	
 	public static void stopNetTrafficThread() {
-		BrowserMobProxy proxy = getProxy();
+		BrowserMobProxy proxy = ReverseProxy.getProxy();
 		if (proxy!=null) {
 			if (!((BrowserMobProxyServer)proxy).isStopped()) {
 				int port = proxy.getPort();
 				proxy.stop();
-				destroyProxy();
+				ReverseProxy.destroyProxy();
 				Log4jTM.getLogger().info("Stop Proxy NetTraffic with port " + port);
 			}
 		}
-	}
-	
-	private BrowserMobProxy forceCreateProxy() {
-		BrowserMobProxy proxy = new BrowserMobProxyServer();
-		boolean started = false;
-		int i=0;
-		while (!started && i<5) {
-			int port = 0;
-			try {
-				proxy.setTrustAllServers(true);
-				port = checkoutPort();
-				proxy.start(port);
-				started = true;
-			}
-			catch (RuntimeException e) {
-				//NOTA: No debería (miramos de rotar los puertos), pero si en algún momento se produce el RuntimeException por un "java.net.BindException: Address already in use: bind"
-				//entonces se produce un problema según el cuál todo funciona OK pero el Java no acaba. Como si se quedara algún Thread enganchado
-				Log4jTM.getLogger().info(e.getClass() + " in start of proxy in port " + port + ". " + e.getMessage());
-				port = checkoutPort();
-				i+=1;
-			}
-		}
-		
-		return proxy;
-	}
-	
-	private int checkoutPort(int numPort) {
-		for (int i=0; i<listPortsAssigned.size(); i++) {
-			if (listPortsAssigned.get(i)==numPort) {
-				listPortsAssigned.remove(i);
-			}
-		}
-	
-		listPortsAssigned.addLast(numPort);
-		return numPort;
 	}
 }
