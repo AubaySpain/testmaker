@@ -8,8 +8,8 @@ public enum StepEvidence {
 	Imagen("png", "icon-hardcopy.png", "Page Hardcopy"), 
 	Html("html", "icon-html.png", "Page Html"), 
 	ErrorPage("-error.html", "icon-error.png", "Information Error"), 
-	Har("har", "icon-nettraffic-har", "Http Nettraffic Har format (JSON)"), 
-	Harp("harp", "icon-nettraffic-harp", "Http Nettraffic Harp format");
+	Har("har", "icon-nettraffic-har.png", "Http Nettraffic Har format (JSON)"), 
+	Harp("harp", "icon-nettraffic-harp.png", "Http Nettraffic Harp format");
 	
 	public String fileExtension;
 	public String nameIcon;
