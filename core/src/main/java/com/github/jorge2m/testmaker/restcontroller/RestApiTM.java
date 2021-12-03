@@ -276,6 +276,7 @@ public class RestApiTM {
 	
 	@GET
 	@Path("/subscriptions")
+	@Produces("application/json")
 	public List<ServerSubscriber> getSubscriptionsCollection() {	
 		return ServerSubscribers.getCollection();
 	}
