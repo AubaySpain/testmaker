@@ -13,6 +13,10 @@ public class RoundRobin<T> implements Iterable<T> {
 		return collection.size();
 	}
 	
+	public List<T> getCollection() {
+		return collection;
+	}
+	
 	public boolean add(T item) {
 		if (!collection.contains(item)) {
 			collection.add(item);

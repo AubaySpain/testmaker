@@ -274,6 +274,12 @@ public class RestApiTM {
 		return Response.ok().build();
 	}
 	
+	@GET
+	@Path("/subscriptions")
+	public List<ServerSubscriber> getSubscriptionsCollection() {	
+		return ServerSubscribers.getCollection();
+	}
+	
 	@POST
 	@Path("/suite/testcases")
 	@Produces("application/json")

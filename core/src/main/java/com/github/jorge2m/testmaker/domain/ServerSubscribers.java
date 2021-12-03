@@ -1,6 +1,7 @@
 package com.github.jorge2m.testmaker.domain;
 
 import java.net.URL;
+import java.util.List;
 
 import com.github.jorge2m.testmaker.boundary.remotetest.RemoteTest;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
@@ -15,6 +16,9 @@ public class ServerSubscribers {
 	}
 	public static void remove(ServerSubscriber subscriber) {
 		collection.remove(subscriber);
+	}
+	public static List<ServerSubscriber> getCollection() {
+		return collection.getCollection();
 	}
 	public static boolean isSome() {
 		return collection.size() > 0;
