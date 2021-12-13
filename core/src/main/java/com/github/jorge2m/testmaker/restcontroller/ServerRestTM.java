@@ -168,7 +168,7 @@ public class ServerRestTM extends JaxRsClient {
 		String urlLocalServerHub = makeUrlStartingServer();
 		Invocation.Builder builder = client
 			.target(urlLocalServerHub).path("subscription")
-			.queryParam("urlslave", urlServerSlave)
+			.queryParam("urlslave", urlIniServerSlave)
 			.request(MediaType.APPLICATION_JSON);
 		
 		Response response = builder.get();

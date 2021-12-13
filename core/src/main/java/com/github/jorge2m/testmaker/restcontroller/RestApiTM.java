@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
@@ -277,8 +278,12 @@ public class RestApiTM {
 	@GET
 	@Path("/subscriptions")
 	@Produces("application/json")
-	public List<ServerSubscriber> getSubscriptionsCollection() {	
-		return ServerSubscribers.getCollection();
+	public StringList getSubscriptionsCollection() {	
+		List<String> servers = ServerSubscribers.getCollection().stream()
+				.map(s -> s.getUrl().toString())
+				.collect(Collectors.toList());
+		
+		return new StringList(servers);
 	}
 	
 	@POST
