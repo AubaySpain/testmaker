@@ -9,6 +9,8 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -155,22 +157,26 @@ public class TestCaseTM  {
 		return null;
 	}
 	
-	public static TestCaseTM getTestCaseInExecution() {
+	public static Optional<TestCaseTM> getTestCaseInExecution() {
 		Long threadId = Thread.currentThread().getId();
 		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
 			for (TestRunTM testRun : suite.getListTestRuns()) {
 				for (TestCaseTM testCase : testRun.getListTestCases()) {
 					if (testCase.getThreadId().compareTo(threadId)==0 &&
 						testCase.getStateRun()==StateExecution.Started) {
-						return testCase;
+						return Optional.of(testCase);
 					}
 				}
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
-	public static WebDriver getDriverTestCase() {
-		return TestCaseTM.getTestCaseInExecution().getDriver();
+	public static Optional<WebDriver> getDriverTestCase() {
+		Optional<TestCaseTM> testCaseTM = TestCaseTM.getTestCaseInExecution();
+		if (testCaseTM.isPresent()) {
+			return Optional.of(testCaseTM.get().getDriver());
+		}
+		return Optional.empty();
 	}
 	
 	public ITestResult getResult() {
@@ -279,8 +285,10 @@ public class TestCaseTM  {
 		this.specificInputData = sufix;
 		updateInvocationCount();
 	}
-	public static void addNameSufix(String sufix) {
-		TestCaseTM.getTestCaseInExecution().addSufixToName(sufix);
+	public static void addNameSufix(String sufix) throws NoSuchElementException {
+		TestCaseTM.getTestCaseInExecution()
+			.orElseThrow(() -> new NoSuchElementException())
+			.addSufixToName(sufix);
 	}
 	
 	public TestCaseBean getTestCaseBean() {

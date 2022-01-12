@@ -1,5 +1,7 @@
 package com.github.jorge2m.testmaker.boundary.aspects.validation;
 
+import java.util.NoSuchElementException;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -47,7 +49,8 @@ public class ValidationAspect {
     }
     
     private StepTM getLastStep() {
-    	TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
+    	TestCaseTM testCase = TestCaseTM.getTestCaseInExecution()
+    			.orElseThrow(() -> new NoSuchElementException());
     	return (testCase.getLastStep());
     }
     

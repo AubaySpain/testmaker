@@ -1,5 +1,7 @@
 package com.github.jorge2m.testmaker.boundary.aspects.step;
 
+import java.util.NoSuchElementException;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -25,7 +27,9 @@ public class StepAspect {
 	@Before("annotationStepPointcut() && atExecution()")
 	public void before(JoinPoint joinPoint) {
 		InfoStep infoStep = InfoStep.from(joinPoint);
-		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
+		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException());
+		
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
 		StepTM step = infoStep.getDatosStep();
 		testCase.addStep(step);
@@ -45,7 +49,9 @@ public class StepAspect {
 		pointcut="annotationStepPointcut() && atExecution()", 
 		throwing="ex")
 	public void doRecoveryActions(JoinPoint joinPoint, Throwable ex) {
-		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
+		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException());
+		
 		StepTM currentStep = testCase.getCurrentStepInExecution();
 		if (currentStep!=null) {
 			if (!testCase.isLastStep(currentStep)) {
@@ -61,7 +67,9 @@ public class StepAspect {
 	@AfterReturning(
 		pointcut="annotationStepPointcut() && atExecution()")
 	public void grabValidationAfter(JoinPoint joinPoint) throws Throwable {
-		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
+		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException());
+		
 		StepTM currentStep = testCase.getCurrentStepInExecution();
 		currentStep.end(false);
 	}

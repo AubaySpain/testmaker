@@ -1,5 +1,7 @@
 package com.github.jorge2m.testmaker.conf;
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,9 +25,9 @@ public class Log4jTM {
 	public static Logger getLogger() {
 		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
 		if (suite==null) {
-			TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
-			if (testCase!=null) {
-				suite = testCase.getSuiteParent();
+			Optional<TestCaseTM> testCaseOp = TestCaseTM.getTestCaseInExecution();
+			if (testCaseOp.isPresent()) {
+				suite = testCaseOp.get().getSuiteParent();
 			}
 		}
 		if (suite!=null) {

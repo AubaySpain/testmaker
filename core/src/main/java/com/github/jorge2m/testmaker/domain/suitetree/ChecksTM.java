@@ -2,6 +2,7 @@ package com.github.jorge2m.testmaker.domain.suitetree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,13 +26,15 @@ public class ChecksTM {
 	private StepTM stepParent; 
 
 	public ChecksTM() {
-		this.testCaseParent = TestCaseTM.getTestCaseInExecution();
-		if (testCaseParent!=null) {
+		Optional<TestCaseTM> testCaseOp = TestCaseTM.getTestCaseInExecution();
+		if (testCaseOp.isPresent()) {
+			this.testCaseParent = testCaseOp.get();
 			this.stepParent = testCaseParent.getLastStep();
 			this.testRunParent = testCaseParent.getTestRunParent();
 			this.suiteParent = testCaseParent.getSuiteParent();
 		}
 		else {
+			this.testCaseParent = null;
 			this.stepParent = null;
 			this.testRunParent = null;
 			this.suiteParent = null;			

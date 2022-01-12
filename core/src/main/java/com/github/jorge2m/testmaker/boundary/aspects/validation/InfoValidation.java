@@ -1,6 +1,8 @@
 package com.github.jorge2m.testmaker.boundary.aspects.validation;
 
 import java.lang.reflect.Method;
+import java.util.NoSuchElementException;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -62,7 +64,9 @@ public class InfoValidation {
 	}
 	
     private ChecksTM getValidationResultFromObjectMethodReturn() {
-    	TestCaseTM testCaseInThread = TestCaseTM.getTestCaseInExecution();
+    	TestCaseTM testCaseInThread = TestCaseTM.getTestCaseInExecution()
+    			.orElseThrow(() -> new NoSuchElementException());
+    	
     	StepTM step = testCaseInThread.getLastStep();
     	ChecksTM valResult = ChecksTM.getNew(step);
     	if (resultMethod!=null) {

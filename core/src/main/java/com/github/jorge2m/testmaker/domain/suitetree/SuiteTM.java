@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
@@ -32,6 +31,7 @@ public class SuiteTM extends XmlSuite {
 	private long threadId;
 	private StateExecution stateExecution = StateExecution.NotStarted;
 	private State result = State.Ok;
+	private String infoExecution;
 	private long timeInicio = 0;
 	private long timeFin = 0;
 	private final PoolWebDrivers poolWebDrivers;
@@ -157,6 +157,13 @@ public class SuiteTM extends XmlSuite {
 		return timeFin - timeInicio;
 	}
 	
+	public String getInfoExecution() {
+		return infoExecution;
+	}
+	public void setInfoExecution(String infoExecution) {
+		this.infoExecution = infoExecution;
+	}
+	
 	public List<Object> getFactoryTests() {
 		return factoryTests;
 	}
@@ -239,6 +246,7 @@ public class SuiteTM extends XmlSuite {
 		suiteBean.setInicioDate(getInicio());
 		suiteBean.setFinDate(getFin());
 		suiteBean.setDurationMillis(getDurationMillis());
+		suiteBean.setInfoExecution(getInfoExecution());
 		suiteBean.setNumberTestCases(getNumberTestCases());
 		suiteBean.setMoreInfo(inputParams.getMoreInfo());
 		suiteBean.setUrlBase(inputParams.getUrlBase());

@@ -13,6 +13,7 @@ public class SuiteBean {
 	private String idExecSuite;
 	private State result;
 	private StateExecution stateExecution;
+	private String infoExecution;
 	private String name;
 	private String version;
 	private Channel channel;
@@ -39,6 +40,9 @@ public class SuiteBean {
 	}
 	public String getName() {
 		return name;
+	}
+	public String getInfoExecution() {
+		return infoExecution;
 	}
 	public String getVersion() {
 		return version;
@@ -88,6 +92,9 @@ public class SuiteBean {
 	
 	public void setIdExecSuite(String idExecSuite) {
 		this.idExecSuite = idExecSuite;
+	}
+	public void setInfoExecution(String infoExecution) {
+		this.infoExecution = infoExecution;
 	}
 	public void setName(String name) {
 		this.name = name;

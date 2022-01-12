@@ -13,6 +13,7 @@ import com.github.jorge2m.testmaker.service.TestMaker;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Aspect
@@ -30,11 +31,10 @@ public class TestAspect {
 	}
 	
 	private Object manageAroundTest(ProceedingJoinPoint joinPoint) throws Throwable {
-		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution();
-		if (testCase!=null) {
-			TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
-		}
+		TestCaseTM testCase = TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException());
 		
+		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
 		if (executeTestRemote(inputParams)) {
 			ServerSubscribers.sendTestToRemoteServer(testCase, joinPoint.getTarget());

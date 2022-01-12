@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.openqa.selenium.WebDriver;
@@ -142,12 +144,28 @@ public class TestMaker {
 		return (TestRunTM)ctx.getCurrentXmlTest();
 	}
 	
-	public static TestCaseTM getTestCase() {
+	public static Optional<TestCaseTM> getTestCase() {
 		return TestCaseTM.getTestCaseInExecution();
 	}
 	
+	public static SuiteTM getSuite() {
+		return TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException())
+				.getSuiteParent();
+	}
+	
+	public static InputParamsTM getInputParamsSuite() {
+		return TestCaseTM.getTestCaseInExecution()
+				.orElseThrow(() -> new NoSuchElementException())
+				.getInputParamsSuite();
+	}
+	
 	public static WebDriver getDriverTestCase() {
-		return (getTestCase().getDriver());
+		Optional<TestCaseTM> testCaseOp = getTestCase();
+		if (testCaseOp.isPresent()) {
+			return testCaseOp.get().getDriver();
+		}
+		return null;
 	}
 	
 	public static WebDriver renewDriverTestCase() {
@@ -155,16 +173,23 @@ public class TestMaker {
 		if (driver!=null) {
 			driver.quit();
 		}
-	    getTestCase().makeWebDriver();
+		getTestCase()
+			.orElseThrow(() -> new NoSuchElementException())
+			.makeWebDriver();
+		
 	    return getDriverTestCase();
 	}
 
 	public static StepTM getCurrentStepInExecution() {
-		return getTestCase().getCurrentStepInExecution();
+		return getTestCase()
+				.orElseThrow(() -> new NoSuchElementException())
+				.getCurrentStepInExecution();
 	}
 
 	public static StepTM getLastStep() {
-		return getTestCase().getLastStep();
+		return getTestCase()
+				.orElseThrow(() -> new NoSuchElementException())
+				.getLastStep();
 	}
 
 	public static String getParamTestRun(String idParam, ITestContext ctx) {
@@ -179,8 +204,9 @@ public class TestMaker {
 	}
 
 	public static void skipTestsIfSuiteStopped() {
-		if (getTestCase()!=null) {
-			skipTestsIfSuiteEnded(getTestCase().getSuiteParent());
+		Optional<TestCaseTM> testCaseOp = getTestCase(); 
+		if (testCaseOp.isPresent()) {
+			skipTestsIfSuiteEnded(testCaseOp.get().getSuiteParent());
 		}
 	}
 

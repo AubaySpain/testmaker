@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
@@ -44,12 +45,14 @@ public class StepTM {
 	private boolean isStateUpdated = false;
 	
 	public StepTM() {
-		testCaseParent = TestMaker.getTestCase();
 		evidencesWarehouse = new EvidencesWarehouse(this);
-		if (testCaseParent!=null) {
+		Optional<TestCaseTM> testCaseOp = TestMaker.getTestCase();
+		if (testCaseOp.isPresent()) {
+			testCaseParent = testCaseOp.get();
 			testRunParent = testCaseParent.getTestRunParent();
 			suiteParent = testRunParent.getSuiteParent();
 		} else {
+			testCaseParent = null;
 			testRunParent = null;
 			suiteParent = null;
 		}

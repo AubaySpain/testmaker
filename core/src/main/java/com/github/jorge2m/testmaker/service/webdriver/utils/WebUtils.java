@@ -3,6 +3,7 @@ package com.github.jorge2m.testmaker.service.webdriver.utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.net.ssl.*;
 import org.testng.*;
@@ -102,7 +103,10 @@ public class WebUtils {
     public static ResultadoErrores getLogErrors(Level levelFrom, WebDriver webdriver, int maxErrors) {
         ResultadoErrores resultado = new ResultadoErrores();
         resultado.setResultado(ResultadoErrores.Resultado.OK);
-        ITestContext ctx = TestMaker.getTestCase().getTestRunContext();
+        ITestContext ctx = TestMaker.getTestCase()
+        		.orElseThrow(() -> new NoSuchElementException())
+        		.getTestRunContext();
+        
         ArrayList<String> listaLogError = new ArrayList<>();
         List<Boolean> supMaximosList = new ArrayList<>();
         try {
