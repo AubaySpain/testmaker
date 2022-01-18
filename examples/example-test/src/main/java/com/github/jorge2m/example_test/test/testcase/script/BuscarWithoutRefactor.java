@@ -44,7 +44,7 @@ public class BuscarWithoutRefactor implements Serializable {
 		groups={"Buscador", "Canal:desktop_App:google"}, alwaysRun=true, 
 		description="Checkear que la búsqueda en Google devuelve más resultados que la búsqueda en Bing")
 	public void BUS001_CheckGoogleMoreResults() {
-		WebDriver driver = TestCaseTM.getDriverTestCase();
+		WebDriver driver = TestCaseTM.getDriverTestCase().get();
 		if (factory) {
 			TestCaseTM.addNameSufix(itemToSearch);
 		}

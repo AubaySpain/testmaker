@@ -30,7 +30,7 @@ public class Calculator {
 		groups={"Canal:desktop_App:calculator"}, 
 		description="Checks the Add operation in the Calculator Windows App")
 	public void CAL001_CheckAddition() {
-		WindowsDriver driver = (WindowsDriver)TestCaseTM.getDriverTestCase();
+		WindowsDriver driver = (WindowsDriver)TestCaseTM.getDriverTestCase().get();
 		clickClearButton(driver);
 		execOnePlusSeven(driver);
 	}

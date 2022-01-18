@@ -20,7 +20,7 @@ public class TestsGoogle {
 		groups={"Canal:desktop_App:google"},
 		description="Type \"Hello World!\" and Check the result")
 	public void BUS001_CheckGoogleMoreResults() {
-		WebDriver driver = TestCaseTM.getDriverTestCase();
+		WebDriver driver = TestCaseTM.getDriverTestCase().get();
 		searchInGoogle("Hello World!", driver);
 	}
 	
