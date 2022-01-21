@@ -444,7 +444,7 @@ public class GenerateReports extends EmailableReporter {
     public static String getDnsOfFileReport(String filePath, String applicationDNS, TypeAccess typeAccess) {
         String pathReport = filePath.substring(filePath.indexOf(ConstantesTM.directoryOutputTests));
         if (applicationDNS!=null && "".compareTo(applicationDNS)!=0) {
-            return (applicationDNS + "\\" + pathReport);
+            return (applicationDNS + "/" + pathReport);
         } else {
         	switch (typeAccess) {
         	case CmdLine:

@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.PathParam;
 
 import org.apache.commons.cli.CommandLine;
 
