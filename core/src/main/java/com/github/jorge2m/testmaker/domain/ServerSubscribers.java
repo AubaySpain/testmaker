@@ -2,8 +2,10 @@ package com.github.jorge2m.testmaker.domain;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.jorge2m.testmaker.boundary.remotetest.RemoteTest;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.util.RoundRobin;
 
@@ -24,10 +26,16 @@ public class ServerSubscribers {
 		return collection.size() > 0;
 	}
 	
-	public static void sendTestToRemoteServer(TestCaseTM testCase, Object testObject) throws Exception {
-		ServerSubscriber server = collection.next();
-		RemoteTest remoteTest = new RemoteTest(server);
-		remoteTest.execute(testCase, testObject);
+	public static Optional<SuiteBean> sendTestToRemoteServer(TestCaseTM testCase, Object testObject) throws Exception {
+		for (int i=0; i<collection.size(); i++) {
+			ServerSubscriber server = collection.next();
+			RemoteTest remoteTest = new RemoteTest(server);
+			Optional<SuiteBean> suiteBean = remoteTest.execute(testCase, testObject);
+			if (suiteBean.isPresent()) {
+				return suiteBean;
+			}
+		}
+		return Optional.empty();
 	}
 	
 	public static class ServerSubscriber {

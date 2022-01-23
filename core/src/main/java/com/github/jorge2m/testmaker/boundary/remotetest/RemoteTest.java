@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -27,13 +28,14 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class RemoteTest extends JaxRsClient {
 	
+	private final int MAX_RETRY_TEST = 2;
 	private final ServerSubscriber server;
 	
 	public RemoteTest(ServerSubscriber server) {
 		this.server = server;
 	}
 	
-	public SuiteBean execute(TestCaseTM testCase, Object testObject) 
+	public Optional<SuiteBean> execute(TestCaseTM testCase, Object testObject) 
 	throws Exception {
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
@@ -44,24 +46,32 @@ public class RemoteTest extends JaxRsClient {
 		return executeTestStandar(testCase, inputParams);
 	}
 	
-	private SuiteBean executeTestFromFactory(TestCaseTM testCase, InputParamsTM inputParams, Serializable testObject) 
+	private Optional<SuiteBean> executeTestFromFactory(TestCaseTM testCase, InputParamsTM inputParams, Serializable testObject) 
 	throws Exception {
 		byte[] testSerialized = SerializationUtils.serialize(testObject);
 		String testSerializedStrB64 = Base64.getEncoder().encodeToString(testSerialized);
 		Log4jTM.getLogger().info("Object Serialized: " + testSerializedStrB64);
-		SuiteBean suiteRemote = suiteRun(
+		Optional<SuiteBean> suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
 				testSerializedStrB64);
-		return processTestCaseRemote(testCase, suiteRemote); 
+		
+		if (!suiteRemote.isPresent()) {
+			return Optional.empty();
+		}
+		return Optional.of(processTestCaseRemote(testCase, suiteRemote.get())); 
 	}
 	
-	private SuiteBean executeTestStandar(TestCaseTM testCase, InputParamsTM inputParams) throws Exception {
-		SuiteBean suiteRemote = suiteRun(
+	private Optional<SuiteBean> executeTestStandar(TestCaseTM testCase, InputParamsTM inputParams) throws Exception {
+		Optional<SuiteBean> suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
 				null);
-		return processTestCaseRemote(testCase, suiteRemote);
+		
+		if (!suiteRemote.isPresent()) {
+			return Optional.empty();
+		}
+		return Optional.of(processTestCaseRemote(testCase, suiteRemote.get()));
 	}
 	
 	private SuiteBean processTestCaseRemote(TestCaseTM testCase, SuiteBean suiteRemoteExecuted) {
@@ -105,7 +115,7 @@ public class RemoteTest extends JaxRsClient {
 		return testToReturn;
 	}
 	
-	public SuiteBean suiteRun(InputParamsTM inputParams, List<String> testCases, String testObjectSerialized) 
+	public Optional<SuiteBean> suiteRun(InputParamsTM inputParams, List<String> testCases, String testObjectSerialized) 
 	throws Exception {
 		Form formParams = getFormParams(inputParams.getAllParamsValues());
 		MultivaluedMap<String, String> mapParams = formParams.asMap();
@@ -119,14 +129,13 @@ public class RemoteTest extends JaxRsClient {
 		mapParams.putSingle(InputParamsTM.RemoteParam, "true");
 
 		Client client = getClientIgnoreCertificates();
-		SuiteBean suiteData = execRemoteSuiteRun(client, formParams, 2);
-		return suiteData;
+		return execRemoteSuiteRun(client, formParams, MAX_RETRY_TEST);
 	}
 	
-	private SuiteBean execRemoteSuiteRun(Client client, Form formParams, int numRetries) throws Exception {
+	private Optional<SuiteBean> execRemoteSuiteRun(Client client, Form formParams, int numRetries) throws Exception {
 		for (int i=1; i<=numRetries; i++) {
 			try {
-				return execRemoteSuiteRun(client, formParams);
+				return Optional.of(execRemoteSuiteRun(client, formParams));
 			}
 			catch (Exception e) {
 				Log4jTM.getLogger().warn(
@@ -134,7 +143,7 @@ public class RemoteTest extends JaxRsClient {
 				Thread.sleep(5000);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 	
 	private SuiteBean execRemoteSuiteRun(Client client, Form formParams) {

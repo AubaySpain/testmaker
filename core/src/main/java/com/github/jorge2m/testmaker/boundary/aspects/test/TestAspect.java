@@ -8,12 +8,14 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.service.TestMaker;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Aspect
@@ -37,12 +39,27 @@ public class TestAspect {
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
 		if (executeTestRemote(inputParams)) {
-			ServerSubscribers.sendTestToRemoteServer(testCase, joinPoint.getTarget());
-			//TODO si un @Test retorna un valor <> de void tendremos problemas. Se debería serializar el objeto de respuesta
-			return null;
+			return executeTestRemote(joinPoint, testCase);
 		} else {
 			return executeTest(testCase, joinPoint);
 		}
+	}
+
+	private Object executeTestRemote(ProceedingJoinPoint joinPoint, TestCaseTM testCase) 
+	throws ExecuteRemoteTestException {
+		try {
+			Optional<SuiteBean> suiteBean = ServerSubscribers.sendTestToRemoteServer(testCase, joinPoint.getTarget());
+			if (!suiteBean.isPresent()) {
+				throw new ExecuteRemoteTestException("Problem executing test Remote");
+			}
+		} catch (Exception e) {
+		    throw new ExecuteRemoteTestException("Problem executing test Remote", e);
+		}
+	
+
+		
+		//TODO si un @Test retorna un valor <> de void tendremos problemas. Se debería serializar el objeto de respuesta
+		return null;
 	}
 	
 	private Object executeTest(TestCaseTM testCase, ProceedingJoinPoint joinPoint) throws Throwable {

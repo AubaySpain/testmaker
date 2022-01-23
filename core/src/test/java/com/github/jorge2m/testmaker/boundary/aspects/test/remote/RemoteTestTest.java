@@ -35,7 +35,7 @@ public class RemoteTestTest {
 		//When
 		ServerSubscriber server = new ServerSubscriber(new URL("https://localhost:80"));
 		RemoteTest remoteTest = new RemoteTest(server);
-		SuiteBean suiteRemote = remoteTest.suiteRun(inputParams, Arrays.asList("SES002"), null);
+		SuiteBean suiteRemote = remoteTest.suiteRun(inputParams, Arrays.asList("SES002"), null).get();
 		
 		//Then
 		TestCaseBean testCaseRemote = suiteRemote.
