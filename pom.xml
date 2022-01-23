@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.jorge2m</groupId>
 	<artifactId>testmaker</artifactId>
-	<version>2.0.12-SNAPSHOT</version>
+	<version>2.0.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>testmaker</name> 
@@ -11,7 +11,7 @@
 	<url>http://github.com/AubaySpain/testmaker</url>
 	
 	<licenses> 
-		<license> 
+		<license>
 			<name>GPL-v3.0</name>
 			<url>http://github.com/AubaySpain/testmaker/blob/master/LICENSE</url>
 		</license>
