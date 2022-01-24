@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.PathParam;
 
 import org.apache.commons.cli.CommandLine;
 
@@ -39,6 +38,7 @@ public abstract class InputParamsTM {
 	public static final String TCaseNameParam = "tcases";
 	public static final String GroupsNameParam = "groups";
 	public static final String ThreadsParam = "threads";
+	public static final String ThreadsRampParam = "threadsramp";
 	public static final String ServerDNSNameParam = "serverDNS";
 	public static final String AsyncExecParam = "asyncexec";
 	public static final String RemoteParam = "remote";
@@ -95,6 +95,9 @@ public abstract class InputParamsTM {
 	
 	@FormParam(ThreadsParam)
 	String threads;
+	
+	@FormParam(ThreadsRampParam)
+	String threadsramp;
 
 	@FormParam(ServerDNSNameParam)
 	String serverDNS;
@@ -241,6 +244,13 @@ public abstract class InputParamsTM {
 			.pattern("[0-9]+")
 			.desc("Number or threads for paralelize TestCases")
 			.build());
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.ThreadsRampParam)
+			.required(false)
+			.hasArgs()
+			.pattern("[0-9]+")
+			.desc("Ramp in seconds for reach maximum thread paralelization")
+			.build());		
 
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.VersionNameParam)
 			.required(false)
@@ -395,6 +405,7 @@ public abstract class InputParamsTM {
 			mailsCommaSeparated = String.join(",", mails);
 		}
 		threads = cmdLine.getOptionValue(ThreadsParam);
+		threadsramp = cmdLine.getOptionValue(ThreadsRampParam);
 		reciclewd = cmdLine.getOptionValue(RecicleWDParam);
 		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
 		remote = cmdLine.getOptionValue(RemoteParam);
@@ -425,6 +436,7 @@ public abstract class InputParamsTM {
 		Url(URLNameParam),
 		Tcases(TCaseNameParam),
 		Threads(ThreadsParam),
+		ThreadsRamp(ThreadsRampParam),
 		ServerDNS(ServerDNSNameParam),
 		RecicleWD(RecicleWDParam),
 		AsyncExec(AsyncExecParam),
@@ -482,6 +494,8 @@ public abstract class InputParamsTM {
 			return this.tcasesCommaSeparated;
 		case Threads:
 			return this.threads;
+		case ThreadsRamp:
+			return this.threadsramp;
 		case ServerDNS:
 			return this.serverDNS;
 		case RecicleWD:
@@ -665,6 +679,17 @@ public abstract class InputParamsTM {
 	public void setThreads(String threads) {
 		this.threads = threads;
 	}
+	public int getThreadsRampNum() {
+		if (threadsramp!=null) {
+			return Integer.valueOf(threadsramp);
+		}
+		return 0;
+	}
+	
+	public String getThreadsRamp() {
+		return threadsramp;
+	}
+	
 	public List<String> getMails() {
 		if (mailsCommaSeparated!=null) {
 			String[] mails = mailsCommaSeparated.split(",");

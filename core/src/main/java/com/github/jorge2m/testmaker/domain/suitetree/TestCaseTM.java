@@ -163,7 +163,7 @@ public class TestCaseTM  {
 			for (TestRunTM testRun : suite.getListTestRuns()) {
 				for (TestCaseTM testCase : testRun.getListTestCases()) {
 					if (testCase.getThreadId().compareTo(threadId)==0 &&
-						testCase.getStateRun()==StateExecution.Started) {
+						!testCase.getStateRun().isFinished()) {
 						return Optional.of(testCase);
 					}
 				}
@@ -206,7 +206,7 @@ public class TestCaseTM  {
 	public StepTM getCurrentStepInExecution() {
 		StepTM stepReturn = null;
 		for (StepTM step : listSteps) {
-			if (step.getState()==StateExecution.Started) {
+			if (!step.getState().isFinished()) {
 				stepReturn = step;
 			}
 		}

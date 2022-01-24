@@ -40,16 +40,13 @@ public class TestAspect {
 				.orElseThrow(() -> new NoSuchElementException());
 		
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
-		InputParamsTM inputParams = testCase.getInputParamsSuite();
-		return executeTest(joinPoint, testCase, inputParams);
+		return executeTest(joinPoint, testCase);
 	}
 
-	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase, InputParamsTM inputParams)
-			throws Throwable {
-		//TODO finish development
-		//fitTestToRamp(testCase, inputParams);
-		//testCase.setStateRun(StateExecution.Running);
-		if (executeTestRemote(inputParams)) {
+	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase) throws Throwable {
+		fitTestToRamp(testCase);
+		testCase.setStateRun(StateExecution.Running);
+		if (executeTestRemote(testCase.getSuiteParent().getInputParams())) {
 			return executeTestRemote(joinPoint, testCase);
 		} else {
 			return executeTest(testCase, joinPoint);
@@ -58,9 +55,9 @@ public class TestAspect {
 
 	private final static int MAX_SECONDS_DELAY_TEST = 300; 
 	
-	private void fitTestToRamp(TestCaseTM testCase, InputParamsTM inputParams) {
+	private void fitTestToRamp(TestCaseTM testCase) {
 		for (int i=0; i<MAX_SECONDS_DELAY_TEST; i++) {
-			if (!isNeededWaitForExecTest(testCase.getSuiteParent(), inputParams)) {
+			if (!isNeededWaitForExecTest(testCase.getSuiteParent())) {
 				return;
 			}
 			try {
@@ -71,15 +68,15 @@ public class TestAspect {
 		}
 	}
 
-	//TODO UnitTests
-	boolean isNeededWaitForExecTest(SuiteTM suiteParent, InputParamsTM inputParams) {
-		int numTestCasesRunning = getTestCasesRunning(suiteParent);
-		if (numTestCasesRunning == 0) {
+	synchronized boolean isNeededWaitForExecTest(SuiteTM suiteParent) {
+		InputParamsTM inputParams = suiteParent.getInputParams();
+		int rampSeconds = inputParams.getThreadsRampNum();
+		if (rampSeconds == 0) {
 			return false;
 		}
 		
-		int rampSeconds = 30; //TODO get from input parameter
-		if (rampSeconds == 0) {
+		int numTestCasesRunning = getTestCasesRunning(suiteParent);
+		if (numTestCasesRunning == 0) {
 			return false;
 		}
 		
@@ -89,9 +86,9 @@ public class TestAspect {
 		}
 		
 		int maxTestsInParallel = suiteParent.getThreadCount();
-		int secondsBetweenTests = rampSeconds / maxTestsInParallel - 1;
+		int secondsBetweenTests = rampSeconds / (maxTestsInParallel - 1);
 		int secondMustInitNewTestCase = numTestCasesRunning * secondsBetweenTests;
-		if (secondsFromInitSuite < secondMustInitNewTestCase) {
+		if (secondsFromInitSuite >= secondMustInitNewTestCase) {
 			return false;
 		}
 		
