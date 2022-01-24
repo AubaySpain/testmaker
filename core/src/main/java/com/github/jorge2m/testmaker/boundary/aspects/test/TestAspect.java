@@ -8,7 +8,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
+import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.service.TestMaker;
 
@@ -16,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 @Aspect
@@ -38,11 +41,65 @@ public class TestAspect {
 		
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
+		return executeTest(joinPoint, testCase, inputParams);
+	}
+
+	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase, InputParamsTM inputParams)
+			throws Throwable {
+		//TODO finish development
+		//fitTestToRamp(testCase, inputParams);
+		//testCase.setStateRun(StateExecution.Running);
 		if (executeTestRemote(inputParams)) {
 			return executeTestRemote(joinPoint, testCase);
 		} else {
 			return executeTest(testCase, joinPoint);
 		}
+	}
+
+	private final static int MAX_SECONDS_DELAY_TEST = 300; 
+	
+	private void fitTestToRamp(TestCaseTM testCase, InputParamsTM inputParams) {
+		for (int i=0; i<MAX_SECONDS_DELAY_TEST; i++) {
+			if (!isNeededWaitForExecTest(testCase.getSuiteParent(), inputParams)) {
+				return;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Unexpected interrupt", e);
+			}
+		}
+	}
+
+	//TODO UnitTests
+	boolean isNeededWaitForExecTest(SuiteTM suiteParent, InputParamsTM inputParams) {
+		int numTestCasesRunning = getTestCasesRunning(suiteParent);
+		if (numTestCasesRunning == 0) {
+			return false;
+		}
+		
+		int rampSeconds = 30; //TODO get from input parameter
+		if (rampSeconds == 0) {
+			return false;
+		}
+		
+		long secondsFromInitSuite = suiteParent.getTimeFromInit(TimeUnit.SECONDS);
+		if (secondsFromInitSuite >= rampSeconds) {
+			return false;   
+		}
+		
+		int maxTestsInParallel = suiteParent.getThreadCount();
+		int secondsBetweenTests = rampSeconds / maxTestsInParallel - 1;
+		int secondMustInitNewTestCase = numTestCasesRunning * secondsBetweenTests;
+		if (secondsFromInitSuite < secondMustInitNewTestCase) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private int getTestCasesRunning(SuiteTM suiteTM) {
+		return suiteTM.getNumberTestCases(StateExecution.Running);
 	}
 
 	private Object executeTestRemote(ProceedingJoinPoint joinPoint, TestCaseTM testCase) 
@@ -56,8 +113,6 @@ public class TestAspect {
 		    throw new ExecuteRemoteTestException("Problem executing test Remote", e);
 		}
 	
-
-		
 		//TODO si un @Test retorna un valor <> de void tendremos problemas. Se debería serializar el objeto de respuesta
 		return null;
 	}

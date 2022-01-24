@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -655,11 +656,11 @@ public abstract class InputParamsTM {
 	public String getThreads() {
 		return threads;
 	}
-	public Integer getThreadsNum() {
+	public Optional<Integer> getThreadsNum() {
 		if (threads!=null) {
-			return Integer.valueOf(threads);
+			return Optional.of(Integer.valueOf(threads));
 		}
-		return null;
+		return Optional.empty();
 	}
 	public void setThreads(String threads) {
 		this.threads = threads;

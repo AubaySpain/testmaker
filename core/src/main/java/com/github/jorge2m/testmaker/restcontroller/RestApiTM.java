@@ -10,10 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -199,21 +201,15 @@ public class RestApiTM {
 	
 	@GET
 	@Path("/subscription")
-	public Response addSubscriber(@QueryParam("urlslave") String urlslave) {	
-		//Check slave availability;
-		try {
-			if (!checkServerAvailability(urlslave, 5)) {
-				return Response
-					.status(Response.Status.NOT_FOUND)
-					.entity("Not available Server Slave in " + urlslave)
-					.build();
+	public Response addSubscriber(
+			@QueryParam("urlslave") String urlslave, 
+			@DefaultValue("false") @QueryParam("checkslave") boolean checkslave) {
+		
+		if (checkslave) {
+			Optional<Response> responseCheck = checkSlaveAvailability(urlslave);
+			if (responseCheck.isPresent()) {
+				return responseCheck.get();
 			}
-		}
-		catch (Exception e) {
-			return Response
-				.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity(e.getCause())
-				.build();
 		}
 		
 		//Subscribe slave to hub
@@ -230,6 +226,27 @@ public class RestApiTM {
 		}
 
 		return Response.ok().build();
+	}
+
+	private Optional<Response> checkSlaveAvailability(String urlslave) {
+		try {
+			if (!checkServerAvailability(urlslave, 5)) {
+				return Optional.of(
+					Response
+						.status(Response.Status.NOT_FOUND)
+						.entity("Not available Server Slave in " + urlslave)
+						.build());
+			}
+		}
+		catch (Exception e) {
+			return Optional.of(
+				Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getCause())
+					.build());
+		}
+		
+		return Optional.empty();
 	}
 	
 	private boolean checkServerAvailability(String urlSlave, int retries) throws Exception {

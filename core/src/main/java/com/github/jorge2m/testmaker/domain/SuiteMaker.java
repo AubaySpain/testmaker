@@ -123,10 +123,10 @@ public abstract class SuiteMaker {
 		suite.setListenersClass(createStandardListeners());
 		suite.setParameters(parameters);
 		suite.setParallel(parallelMode);
-		if (inputData.getThreadsNum()==null) {
+		if (!inputData.getThreadsNum().isPresent()) {
 			suite.setThreadCount(threadCount);
 		} else {
-			suite.setThreadCount(inputData.getThreadsNum());
+			suite.setThreadCount(inputData.getThreadsNum().get());
 		}
 		createTestRuns(suite);
 		return suite;

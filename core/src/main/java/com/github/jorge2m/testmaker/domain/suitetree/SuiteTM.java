@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.testng.xml.XmlSuite;
@@ -95,6 +97,19 @@ public class SuiteTM extends XmlSuite {
 		return numTestCases;
 	}
 	
+	public int getNumberTestCases(StateExecution state) {
+		return getTestCases(state).size();
+	}
+	
+	public List<TestCaseTM> getTestCases(StateExecution state) {
+		return 
+			getListTestRuns().stream()
+				.map(s -> s.getListTestCases())
+				.flatMap(List::stream)
+				.filter(s -> s.getStateRun() == StateExecution.Running)
+				.collect(Collectors.toList());
+	}
+	 
 	public PoolWebDrivers getPoolWebDrivers() {
 		return poolWebDrivers;
 	}
@@ -155,6 +170,10 @@ public class SuiteTM extends XmlSuite {
 	}
 	public long getDurationMillis() {
 		return timeFin - timeInicio;
+	}
+	public long getTimeFromInit(TimeUnit timeUnit) {
+		Long now = new Date().getTime();
+		return (timeUnit.convert(now - getTimeInicio(), TimeUnit.MILLISECONDS));
 	}
 	
 	public String getInfoExecution() {

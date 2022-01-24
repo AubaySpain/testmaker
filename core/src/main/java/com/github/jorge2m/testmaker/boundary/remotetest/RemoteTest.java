@@ -28,7 +28,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class RemoteTest extends JaxRsClient {
 	
-	private final int MAX_RETRY_TEST = 2;
+	private final static int MAX_RETRY_TEST = 2;
 	private final ServerSubscriber server;
 	
 	public RemoteTest(ServerSubscriber server) {
