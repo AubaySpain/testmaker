@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.testng.annotations.Test;
 
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
@@ -29,7 +30,7 @@ public class TestAspect {
 
 	@Pointcut("execution(* *(..))")
 	public void atExecution(){}
-
+	
 	@Around("annotationTestPointcut() && atExecution()")
 	public Object aroundTest(ProceedingJoinPoint joinPoint) throws Throwable {
 		return manageAroundTest(joinPoint);
@@ -116,9 +117,10 @@ public class TestAspect {
 	
 	private Object executeTest(TestCaseTM testCase, ProceedingJoinPoint joinPoint) throws Throwable {
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
-		Method presentMethod = ((MethodSignature)joinPoint.getSignature()).getMethod();
-		if (executeTestLocal(inputParams, presentMethod)) {
-			testCase.makeWebDriver();
+		MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+		if (executeTestLocal(inputParams, methodSignature.getMethod())) {
+			Test testAnnotation = methodSignature.getMethod().getAnnotation(Test.class);
+			testCase.makeInitObjects(testAnnotation.create());
 			return joinPoint.proceed();
 		}
 		return null;

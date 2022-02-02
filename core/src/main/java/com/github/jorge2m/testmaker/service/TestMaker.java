@@ -13,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.SkipException;
 import org.testng.TestNG;
+import org.testng.annotations.InitObject;
 import org.testng.xml.XmlSuite;
 
 import com.github.jorge2m.testmaker.conf.Channel;
@@ -175,7 +176,7 @@ public class TestMaker {
 		}
 		getTestCase()
 			.orElseThrow(() -> new NoSuchElementException())
-			.makeWebDriver();
+			.makeInitObjects(InitObject.WebDriver);
 		
 	    return getDriverTestCase();
 	}

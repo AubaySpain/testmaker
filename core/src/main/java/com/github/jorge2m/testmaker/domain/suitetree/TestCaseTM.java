@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.annotations.InitObject;
 
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
@@ -31,8 +32,8 @@ public class TestCaseTM  {
 	private final TestRunTM testRunParent;
 	private final ITestResult result;
 	private final long threadId;
+	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
-	private WebDriver driver;
 
 	public TestCaseTM(ITestResult result) {
 		this.testRunParent = (TestRunTM)result.getTestContext().getCurrentXmlTest();
@@ -40,10 +41,11 @@ public class TestCaseTM  {
 		this.result = result;
 		this.threadId = Thread.currentThread().getId();
 		this.invocationCount = getInvocationCountForTest();
+		this.initTestObjects = new InitTestObjects(this);
 	}
 	
-	public void makeWebDriver() {
-		this.driver = getWebDriverForTestCase();
+	public void makeInitObjects(InitObject initObject) {
+		initTestObjects.make(initObject);
 	}
 	
 	private void updateInvocationCount() {
@@ -110,7 +112,7 @@ public class TestCaseTM  {
 	
 	private void stopTest() {
 		setStateRun(StateExecution.Finished);
-		suiteParent.getPoolWebDrivers().quitWebDriver(driver, testRunParent);
+		initTestObjects.stopTestSignal();
 	}
 	
 	public int getIndexInTestRun() {
@@ -232,29 +234,8 @@ public class TestCaseTM  {
 		this.stateRun = stateRun;
 	}
 	
-	private WebDriver getWebDriverForTestCase() {
-		InputParamsTM inputData = suiteParent.getInputParams();
-		WebDriver driver = suiteParent
-				.getPoolWebDrivers()
-				.getWebDriver(
-						inputData.getDriver(), 
-						inputData.getChannel(), 
-						testRunParent);
-		initDriverContent(driver, inputData.getUrlBase());
-		return driver;
-	}
-	private void initDriverContent(WebDriver driver, String urlBase) {
-		try {
-			driver.manage().deleteAllCookies();
-			driver.get(urlBase);
-		} 
-		catch (Exception e) {
-			getSuiteParent().getLogger().warn("Problem initializing Driver content ", e.getMessage());
-		}
-	}
-	
 	public WebDriver getDriver() {
-		return driver;
+		return initTestObjects.getWebDriver();
 	}
 	
 	public Long getThreadId() {
