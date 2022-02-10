@@ -55,7 +55,7 @@ public class FilterSuitesTest {
 	@Test
 	public void testGetRunningSuites() throws Exception {
 		//Given
-		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew(null, null, null, SetSuiteRun.running, null));
+		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew(null, null, null, SetSuiteRun.running, null, null));
 		
 		//When
 		List<SuiteBean> listSuites = filterSuitesSpy.getListSuites();
@@ -69,7 +69,7 @@ public class FilterSuitesTest {
 	@Test
 	public void testGetSuitesMemoryAndRepository() throws Exception {
 		//Given
-		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew("SmokeTest", null, null, null, null));
+		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew("SmokeTest", null, null, null, null, null));
 		
 		//When
 		List<SuiteBean> listSuites = filterSuitesSpy.getListSuites();
@@ -84,17 +84,17 @@ public class FilterSuitesTest {
 	@Test
 	public void testGetSuitesDesde() throws Exception {
 		//Given
-		LocalDate fechaDesde = fechaHoy.minusDays(2);
-		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew(null, null, null, null, getDate(fechaDesde)));
+		LocalDate fechaDesde = fechaHoy.minusDays(3);
+		LocalDate fechaHasta = fechaHoy.minusDays(1);
+		FilterSuites filterSuitesSpy = createFilterSuitesSpy(FilterSuites.getNew(null, null, null, null, getDate(fechaDesde), getDate(fechaHasta)));
 		
 		//When
 		List<SuiteBean> listSuites = filterSuitesSpy.getListSuites();
 		
 		//Then
-		assertTrue(listSuites.contains(suite1));
-		assertTrue(listSuites.contains(suite2));
+		assertTrue(listSuites.contains(suite3));
 		assertTrue(listSuites.contains(suite4));
-		assertTrue(listSuites.size()==3);
+		assertTrue(listSuites.size()==2);
 	}
 	
 	private FilterSuites createFilterSuitesSpy(FilterSuites filterSuites) throws Exception {
@@ -104,7 +104,7 @@ public class FilterSuitesTest {
 		RepositoryI repository = Mockito.mock(RepositoryI.class);
 		filterSuitesSpy.setRepository(repository);
 		when(repository.getListSuites()).thenReturn(listSuitesInRepository);
-		when(repository.getListSuitesAfter(Mockito.any(Date.class))).thenReturn(listSuitesInRepositoryDesde);
+		when(repository.getListSuitesBetween(Mockito.any(Date.class), Mockito.any(Date.class))).thenReturn(listSuitesInRepositoryDesde);
 		return filterSuitesSpy;
 	}
 

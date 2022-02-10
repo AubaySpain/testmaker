@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.State;
@@ -47,10 +50,10 @@ public class SuitesDAO {
 		"WHERE IDEXECSUITE = ? " +
 		"ORDER BY IDEXECSUITE DESC";
 
-	private static final String SQLSelectSuitesFromId = 
-		"SELECT " + ListFieldsSuiteTable + 
-		"  FROM SUITES " +
-		"WHERE IDEXECSUITE >= ?";
+//	private static final String SQLSelectSuitesFromId = 
+//		"SELECT " + ListFieldsSuiteTable + 
+//		"  FROM SUITES " +
+//		"WHERE IDEXECSUITE >= ?";
 
 	private static final String SQLDeleteSuite = 
 		"DELETE FROM SUITES " +
@@ -171,18 +174,49 @@ public class SuitesDAO {
 		}
 	}
 
-	public SuiteBean get1rstSuiteAfter(Date fechaDesde) throws Exception {
-		SuiteBean suiteToReturn = null;
+//	public SuiteBean get1rstSuiteAfter(Date fechaDesde) throws Exception {
+//		SuiteBean suiteToReturn = null;
+//		try (Connection conn = connector.getConnection();
+//			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc)) {
+//			try (ResultSet resultado = select.executeQuery()) {
+//				while (resultado.next()) {
+//					Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
+//					if (inicioDateSuite.after(fechaDesde)) {
+//						suiteToReturn = getSuite(resultado);
+//					} else {
+//						break;
+//					}
+//				}
+//			}
+//		} 
+//		catch (SQLException ex) {
+//			throw new RuntimeException(ex);
+//		} 
+//		catch (ClassNotFoundException ex) {
+//			throw new RuntimeException(ex);
+//		}
+//		
+//		return suiteToReturn;
+//	}
+	
+	public List<SuiteBean> getSuitesBetween(final Date fechaDesde, final Date fechaHasta) throws Exception {
+		Pair<Date,Date> desdeHastaPair = getDatesNormalized(fechaDesde, fechaHasta);
+		if (desdeHastaPair.getLeft().after(desdeHastaPair.getRight())) {
+			throw new IllegalArgumentException(desdeHastaPair.getLeft() + " after " + desdeHastaPair.getRight());
+		}
+		
+		List<SuiteBean> suitesToReturn = new ArrayList<>();
 		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc)) {
-			try (ResultSet resultado = select.executeQuery()) {
-				while (resultado.next()) {
-					Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
-					if (inicioDateSuite.after(fechaDesde)) {
-						suiteToReturn = getSuite(resultado);
-					} else {
-						break;
-					}
+			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc);
+			ResultSet resultado = select.executeQuery()) {
+			while (resultado.next()) {
+				Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
+				Interval interval = dateInterval(inicioDateSuite, desdeHastaPair);
+				if (interval==Interval.BETWEEN) {
+					suitesToReturn.add(getSuite(resultado));
+				}
+				if (interval==Interval.BEFORE) {
+					break;
 				}
 			}
 		} 
@@ -193,32 +227,63 @@ public class SuitesDAO {
 			throw new RuntimeException(ex);
 		}
 		
-		return suiteToReturn;
+		return suitesToReturn;
 	}
-
-	public List<SuiteBean> getListSuitesAfter(Date fechaDesde) throws Exception {
-		List<SuiteBean> listSuites = new ArrayList<>();
-		SuiteBean suite = get1rstSuiteAfter(fechaDesde);
-		if (suite!=null) {
-			try (Connection conn = connector.getConnection();
-				PreparedStatement select = conn.prepareStatement(SQLSelectSuitesFromId)) {
-				select.setString(1, suite.getIdExecSuite());
-				try (ResultSet resultado = select.executeQuery()) {
-					while (resultado.next()) {
-						listSuites.add(getSuite(resultado));
-					}
-				}
-				return listSuites;
-			} 
-			catch (SQLException ex) {
-				throw new RuntimeException(ex);
-			}
-			catch (ClassNotFoundException ex) {
-				throw new RuntimeException(ex);
+	
+	private enum Interval { BEFORE, BETWEEN, AFTHER } 
+	Interval dateInterval(Date date, Pair<Date,Date> interval) {
+		if (date.before(interval.getRight())) {
+			if (date.after(interval.getLeft())) { 
+				return Interval.BETWEEN;
+			} else {
+				return Interval.BEFORE;
 			}
 		}
-		return null;
+		return Interval.AFTHER;
 	}
+		
+	private Pair<Date, Date> getDatesNormalized(final Date fechaDesde, final Date fechaHasta) {
+		Date desde;
+		Date hasta;
+		if (fechaDesde==null) {
+			desde = new Date(0);
+		} else {
+			desde = (Date)fechaDesde.clone();
+		}
+		if (fechaHasta==null) {
+			Calendar cal = Calendar.getInstance();
+			cal.set(9999, 11, 31);
+			hasta = new Date(cal.getTimeInMillis());
+		} else {
+			hasta = (Date)fechaHasta.clone();
+		}
+		
+		return Pair.of(desde, hasta);
+	}
+
+//	public List<SuiteBean> getListSuitesBetween(Date desde, Date hasta) throws Exception {
+//		List<SuiteBean> listSuites = new ArrayList<>();
+//		List<SuiteBean> suite = getSuitesBetween(desde, hasta);
+//		if (suite!=null) {
+//			try (Connection conn = connector.getConnection();
+//				PreparedStatement select = conn.prepareStatement(SQLSelectSuitesFromId)) {
+//				select.setString(1, suite.getIdExecSuite());
+//				try (ResultSet resultado = select.executeQuery()) {
+//					while (resultado.next()) {
+//						listSuites.add(getSuite(resultado));
+//					}
+//				}
+//				return listSuites;
+//			} 
+//			catch (SQLException ex) {
+//				throw new RuntimeException(ex);
+//			}
+//			catch (ClassNotFoundException ex) {
+//				throw new RuntimeException(ex);
+//			}
+//		}
+//		return null;
+//	}
 	
 	public void deleteSuite(String idSuite) {
 		try (Connection conn = connector.getConnection();

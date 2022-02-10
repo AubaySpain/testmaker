@@ -61,8 +61,8 @@ public class RepositorySQLite implements RepositoryI {
 	}
 	
 	@Override
-	public synchronized List<SuiteBean> getListSuitesAfter(Date fechaDesde) throws Exception {
-		return (suitesDAO.getListSuitesAfter(fechaDesde));
+	public synchronized List<SuiteBean> getListSuitesBetween(Date desde, Date hasta) throws Exception {
+		return (suitesDAO.getSuitesBetween(desde, hasta));
 	}
 	
 	@Override

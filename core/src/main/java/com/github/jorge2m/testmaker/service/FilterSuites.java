@@ -20,35 +20,37 @@ public class FilterSuites {
 	private final String application; 
 	private final SetSuiteRun state; 
 	private final Date desde;
+	private final Date hasta;
 	
 	private RepositoryI repository = TestMaker.getRepository();
 	
-	private FilterSuites (String suite, Channel channel, String application, SetSuiteRun state, Date fechaDesde) {
+	private FilterSuites (String suite, Channel channel, String application, SetSuiteRun state, Date fechaDesde, Date fechaHasta) {
 		this.suite = suite;
 		this.application = application;
 		this.channel = channel;
 		this.state = state;
 		this.desde = fechaDesde;
+		this.hasta = fechaHasta;
 	}
 	
 	public static FilterSuites getNew() {
-		return (getNew(null, null, null, null, null));
+		return (getNew(null, null, null, null, null, null));
 	}
 	
-	public static FilterSuites getNew(String suite, Channel channel, String application, SetSuiteRun state, Date fechaDesde) {
-		return new FilterSuites(suite, channel, application, state, fechaDesde);
+	public static FilterSuites getNew(String suite, Channel channel, String application, SetSuiteRun state, Date fechaDesde, Date fechaHasta) {
+		return new FilterSuites(suite, channel, application, state, fechaDesde, fechaHasta);
 	}
 	
 	
 	public List<SuiteBean> getListSuites() throws Exception {
 		List<SuiteBean> listSuitesInMemory;
 		List<SuiteBean> listSuitesStored = new ArrayList<>();
-		if (desde==null) {
+		if (desde==null && hasta==null) {
 			listSuitesInMemory = filter(getListSuitesInMemory());
 			listSuitesStored = filter(repository.getListSuites());
 		} else {
-			listSuitesInMemory = filter(getListSuitesInMemoryAfter(desde));
-			List<SuiteBean> listSuitesInBD = repository.getListSuitesAfter(desde);
+			listSuitesInMemory = filter(getListSuitesInMemoryBetween(desde, hasta));
+			List<SuiteBean> listSuitesInBD = repository.getListSuitesBetween(desde, hasta);
 			if (listSuitesInBD!=null) {
 				listSuitesStored = filter(listSuitesInBD);
 			}
@@ -114,15 +116,26 @@ public class FilterSuites {
 		return listSuitesToReturn;
 	}
 	
-	List<SuiteBean> getListSuitesInMemoryAfter(Date fechaDesde) {
+	//TODO tests
+	List<SuiteBean> getListSuitesInMemoryBetween(Date fechaDesde, Date fechaHasta) {
 		List<SuiteBean> listSuitesReturn = new ArrayList<>();
 		List<SuiteBean> listSuites = getListSuitesInMemory();
 		for (SuiteBean suiteData : listSuites) {
-			if (suiteData.getInicioDate().after(fechaDesde)) {
+			if (suiteBetween(suiteData, fechaDesde, fechaHasta)) {
 				listSuitesReturn.add(suiteData);
 			}
 		}
 		return listSuitesReturn;
+	}
+	
+	private boolean suiteBetween(SuiteBean suite, Date fechaDesde, Date fechaHasta) {
+		if (fechaDesde!=null && suite.getInicioDate().before(fechaDesde)) {
+			return false;
+		}
+		if (fechaHasta!=null && suite.getInicioDate().after(fechaHasta)) {
+			return false;
+		}
+		return true;
 	}
 	
 }

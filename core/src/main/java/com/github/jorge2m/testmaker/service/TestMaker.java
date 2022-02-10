@@ -78,16 +78,17 @@ public class TestMaker {
 		return filterSuites.getListSuites();
 	}
 	
-	public static List<SuiteBean> getListSuites(String suite, String channel, String application, String setSuite, Date fechaDesde) 
+	public static List<SuiteBean> getListSuites(String suite, String channel, String application, String setSuite, Date fechaDesde, Date fechaHasta) 
 	throws Exception {
 		Channel channelEnum = channel!=null ? Channel.valueOf(channel) : null;
 		SetSuiteRun setSuiteEnum = setSuite!=null ? SetSuiteRun.valueOf(setSuite) : null;
-		return getListSuites(suite, channelEnum, application, setSuiteEnum, fechaDesde);
+		return getListSuites(suite, channelEnum, application, setSuiteEnum, fechaDesde, fechaHasta);
 	}
 	
-	public static List<SuiteBean> getListSuites(String suite, Channel channel, String application, SetSuiteRun setSuite, Date fechaDesde) 
+	public static List<SuiteBean> getListSuites(
+			String suite, Channel channel, String application, SetSuiteRun setSuite, Date fechaDesde, Date fechaHasta) 
 	throws Exception {
-		FilterSuites filterSuites = FilterSuites.getNew(suite, channel, application, setSuite, fechaDesde);
+		FilterSuites filterSuites = FilterSuites.getNew(suite, channel, application, setSuite, fechaDesde, fechaHasta);
 		return filterSuites.getListSuites();
 	}
 	

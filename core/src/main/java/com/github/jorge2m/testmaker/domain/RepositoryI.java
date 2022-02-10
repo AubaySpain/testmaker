@@ -14,7 +14,7 @@ public interface RepositoryI {
 	public void store(SuiteBean suite, StoreUntil until);
 	public void delete(String suiteIdExec);
 	public SuiteBean getSuite(String idExecution) throws Exception;
-	public List<SuiteBean> getListSuitesAfter(Date fechaDesde) throws Exception;
+	public List<SuiteBean> getListSuitesBetween(Date fechaDesde, Date fechaHasta) throws Exception;
 	public List<SuiteBean> getListSuites() throws Exception;
 	public List<TestCaseBean> getListTestCases(String suiteExecId) throws Exception;
 

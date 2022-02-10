@@ -130,8 +130,9 @@ public class RestApiTM {
 					@QueryParam("channel") String channel,
 					@QueryParam("application") String application,
 					@QueryParam("state") String state,
-					@QueryParam("date_from") String fechaDesde) throws Exception {
-		List<SuiteBean> listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde);
+					@QueryParam("date_from") String fechaDesde,
+					@QueryParam("date_to") String fechaHasta) throws Exception {
+		List<SuiteBean> listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
 		for (SuiteBean suiteBean : listSuites) {
 			purgeSuite(suiteBean);
 		}
@@ -157,7 +158,8 @@ public class RestApiTM {
 						   @QueryParam("channel") String channel,
 						   @QueryParam("application") String application,
 						   @QueryParam("state") String state,
-						   @QueryParam("date_from") String fechaDesde) throws Exception {
+						   @QueryParam("date_from") String fechaDesde,
+						   @QueryParam("date_to") String fechaHasta) throws Exception {
 		if (channel!=null) {
 			if (!enumContains(Channel.class, channel)) {
 				throw new WebApplicationException(Response
@@ -186,8 +188,21 @@ public class RestApiTM {
 					.build());
 			}
 		}
+		
+		Date dateHasta = null;
+		if (fechaHasta!=null) {
+			try {
+				dateHasta = getDateFromParam(fechaHasta);
+			}
+			catch (ParseException e) {
+				throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST)
+					.entity("Parameter 'date_to' incorrect. Possible formats: " + listFormatsFecha)
+					.build());
+			}
+		}
 
-		return (TestMaker.getListSuites(suite, channel, application, state, dateDesde));
+		return (TestMaker.getListSuites(suite, channel, application, state, dateDesde, dateHasta));
 	}
 	
 	@DELETE
