@@ -155,6 +155,7 @@ public class RestApiTM {
 	
 	@GET
 	@Path("/suiteruns/mail")
+	@Produces("application/json")
 	public Response sendReportMail(
 			@HeaderParam("host") String host,
 			@QueryParam("suite") String suite,
@@ -171,10 +172,10 @@ public class RestApiTM {
 				suite, channel, application, state, fechaDesde, fechaHasta);
 		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
 		boolean sendedOk = sender.send(listSuites);
-		if (!sendedOk) {
-			//throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
+		if (sendedOk) {
+			return Response.ok().build();
 		}
-		return Response.ok().build();
+		throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
 	}
 	
 	private List<String> getMails(String mailsCommaSeparated) {
