@@ -46,6 +46,8 @@ public abstract class InputParamsTM {
 	public static final String NetAnalysisParam = "net";
 	public static final String StoreBdParam = "storebd";
 	public static final String MailsParam = "mails";
+	public static final String MailUserParam = "mailuser";
+	public static final String MailPasswordParam = "mailpassword";
 	public static final String TypeAccessParam = "typeAccess";
 	public static final String DriverVersionParam = "driverVersion";
 	public static final String TestObjectParam = "testobject";
@@ -117,9 +119,6 @@ public abstract class InputParamsTM {
 	@FormParam(StoreBdParam)
 	String storebd;
 
-	@FormParam(MailsParam)
-	String mailsCommaSeparated;
-	
 	@FormParam(TypeAccessParam)
 	String typeAccess = TypeAccess.CmdLine.name();
 	
@@ -400,10 +399,7 @@ public abstract class InputParamsTM {
 		if (tcases!=null) {
 			tcasesCommaSeparated = String.join(",", tcases);
 		}
-		String[] mails = cmdLine.getOptionValues(MailsParam);
-		if (mails!=null) {
-			mailsCommaSeparated = String.join(",", mails);
-		}
+
 		threads = cmdLine.getOptionValue(ThreadsParam);
 		threadsramp = cmdLine.getOptionValue(ThreadsRampParam);
 		reciclewd = cmdLine.getOptionValue(RecicleWDParam);
@@ -444,6 +440,8 @@ public abstract class InputParamsTM {
 		NetAnalysis(NetAnalysisParam),
 		StoreBd(StoreBdParam),
 		Mails(MailsParam),
+		MailUser(MailUserParam),
+		MailPassword(MailPasswordParam),
 		TypeAccess(TypeAccessParam),
 		DriverVersion(DriverVersionParam),
 		TestObject(TestObjectParam),
@@ -508,8 +506,6 @@ public abstract class InputParamsTM {
 			return this.net;
 		case StoreBd:
 			return this.storebd;
-		case Mails:
-			return this.mailsCommaSeparated;
 		case TypeAccess:
 			return this.typeAccess;
 		case DriverVersion:
@@ -690,20 +686,6 @@ public abstract class InputParamsTM {
 		return threadsramp;
 	}
 	
-	public List<String> getMails() {
-		if (mailsCommaSeparated!=null) {
-			String[] mails = mailsCommaSeparated.split(",");
-			return Arrays.asList(mails);
-		}
-		return Arrays.asList();
-	}
-	public void setMails(List<String> mailsInput) {
-		String[] mails = mailsInput.toArray(new String[mailsInput.size()]);
-		mailsCommaSeparated = String.join(",", mails);
-	}
-	public boolean isSendMailInEndSuite() {
-		return (getMails()!=null && getMails().size()>0);
-	}
 	public boolean getRecicleWD() {
 		if (reciclewd!=null) {
 	    	return ("true".compareTo(reciclewd)==0);

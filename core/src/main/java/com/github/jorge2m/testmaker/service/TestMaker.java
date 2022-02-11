@@ -222,8 +222,8 @@ public class TestMaker {
 		}
 	}
 	
-	public static String getHtmlStatsSuites(List<SuiteBean> listSuites) throws Exception {
-		GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(listSuites);
+	public static String getHtmlStatsSuites(List<SuiteBean> listSuites, String hostTestMaker) throws Exception {
+		GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(listSuites, hostTestMaker);
 		return getterHtmlSuites.getHtml();
 	}
 

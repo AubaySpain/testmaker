@@ -14,10 +14,8 @@ import org.testng.xml.XmlTest;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
-import com.github.jorge2m.testmaker.conf.defaultmail.DefaultMailEndSuite;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
-import com.github.jorge2m.testmaker.domain.SenderMailEndSuiteI;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.service.TestMaker;
@@ -37,7 +35,6 @@ public class SuiteTM extends XmlSuite {
 	private long timeInicio = 0;
 	private long timeFin = 0;
 	private final PoolWebDrivers poolWebDrivers;
-	private SenderMailEndSuiteI senderMail;
 	private List<Object> factoryTests = new ArrayList<>();
 	
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
@@ -46,7 +43,6 @@ public class SuiteTM extends XmlSuite {
 //		Log4jConfig log4jFactory = new Log4jConfig();
 //		this.logger = log4jFactory.createSuiteLogger(idSuiteExecution, getPathLogFile());
 		this.poolWebDrivers = new PoolWebDrivers(this);
-		this.senderMail = new DefaultMailEndSuite();
 	}
 	
 	public Logger getLogger() {
@@ -75,10 +71,6 @@ public class SuiteTM extends XmlSuite {
 	
 	public State getResult() {
 		return result;
-	}
-	
-	public void setSenderMail(SenderMailEndSuiteI senderMail) {
-		this.senderMail = senderMail;
 	}
 	
 	public List<TestRunTM> getListTestRuns() {
@@ -129,9 +121,6 @@ public class SuiteTM extends XmlSuite {
 		result = getResultFromTestsRun();
 		timeFin = (new Date()).getTime(); 
 		poolWebDrivers.removeAllStrWd();
-		if (inputParams.isSendMailInEndSuite()) {
-			senderMail.sendMail(this);
-		}
 		if (inputParams.getStoreBd().storeSuite()) {
 			TestMaker.getRepository().store(getSuiteBean(), inputParams.getStoreBd());
 		}

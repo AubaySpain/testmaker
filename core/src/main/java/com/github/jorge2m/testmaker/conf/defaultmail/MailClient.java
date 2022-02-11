@@ -28,21 +28,18 @@ public class MailClient {
         }
     }
 
-    public void mail(String from, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, List<AttachMail> imgAttach) {
-        String login = "robottestmango@gmail.com";
-        String password = "sirrobot";
-	        	
+    public void mail(String user, String password, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, List<AttachMail> imgAttach) {
         Properties props = new Properties();
         props.setProperty("mail.host", "smtp.gmail.com");
         props.setProperty("mail.smtp.port", "587");
         props.setProperty("mail.smtp.auth", "true");
         props.setProperty("mail.smtp.starttls.enable", "true");
 		       
-        Authenticator auth = new SMTPAuthenticator(login, password);
+        Authenticator auth = new SMTPAuthenticator(user, password);
         Session session = Session.getInstance(props, auth);
         MimeMessage message = new MimeMessage(session);
         try {
-            message.setFrom(new InternetAddress(from));
+            message.setFrom(new InternetAddress(user));
             message.setRecipients(Message.RecipientType.TO,to);
             if (cc!=null) {
             	message.setRecipients(Message.RecipientType.CC,cc);

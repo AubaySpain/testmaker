@@ -17,6 +17,7 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -37,11 +38,13 @@ import com.github.jorge2m.testmaker.boundary.access.ResultCheckOptions;
 import com.github.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
+import com.github.jorge2m.testmaker.conf.defaultmail.SenderReportByMailAdapter;
 import com.github.jorge2m.testmaker.domain.CreatorSuiteRun;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
+import com.github.jorge2m.testmaker.domain.SenderReportOutputPort;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -148,6 +151,38 @@ public class RestApiTM {
 		if (nameParentDir.compareTo(suite.getIdExecSuite())==0) {
 			FileUtils.deleteDirectory(file.getParentFile());
 		}
+	}
+	
+	@GET
+	@Path("/suiteruns/mail")
+	public Response sendReportMail(
+			@HeaderParam("host") String host,
+			@QueryParam("suite") String suite,
+			@QueryParam("channel") String channel,
+			@QueryParam("application") String application,
+			@QueryParam("state") String state,
+			@QueryParam("date_from") String fechaDesde,
+			@QueryParam("date_to") String fechaHasta,
+			@QueryParam("user") String user,
+			@QueryParam("password") String password,
+			@QueryParam("toMails") String toMails,
+			@QueryParam("ccMails") String ccMails) throws Exception {
+		List<SuiteBean> listSuites = getListSuitesRunData(
+				suite, channel, application, state, fechaDesde, fechaHasta);
+		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
+		boolean sendedOk = sender.send(listSuites);
+		if (!sendedOk) {
+			//throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
+		}
+		return Response.ok().build();
+	}
+	
+	private List<String> getMails(String mailsCommaSeparated) {
+		if (mailsCommaSeparated!=null) {
+			String[] mails = mailsCommaSeparated.split(",");
+			return Arrays.asList(mails);
+		}
+		return Arrays.asList();
 	}
 	
 	@GET

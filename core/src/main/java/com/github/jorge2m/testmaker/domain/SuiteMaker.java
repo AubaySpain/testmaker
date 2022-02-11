@@ -12,7 +12,6 @@ import org.testng.xml.XmlSuite.ParallelMode;
 
 import com.github.jorge2m.testmaker.boundary.listeners.InvokeListener;
 import com.github.jorge2m.testmaker.boundary.listeners.MyTransformer;
-import com.github.jorge2m.testmaker.conf.defaultmail.DefaultMailEndSuite;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethod;
@@ -28,7 +27,6 @@ public abstract class SuiteMaker {
 	private final FilterTestsSuiteXML filterSuiteXML;
 
 	private Map<String,String> parameters = new HashMap<>();
-	private SenderMailEndSuiteI senderMail = new DefaultMailEndSuite();
 
 	private List<TestRunMaker> listTestRuns = new ArrayList<>();
 	private ParallelMode parallelMode = ParallelMode.METHODS;
@@ -55,20 +53,12 @@ public abstract class SuiteMaker {
 
 	public SuiteTM getSuite() {
 		generateXmlSuiteIfNotAvailable();
-		suite.setSenderMail(senderMail);
 		return suite;
 	}
 
 	public XmlTest getTestRun() {
 		generateXmlSuiteIfNotAvailable();
 		return (suite.getTests().get(0));
-	}
-
-	public SenderMailEndSuiteI getSenderMail() {
-		return senderMail;
-	}
-	public void setSenderMail(SenderMailEndSuiteI senderMail) {
-		this.senderMail = senderMail;
 	}
 
 	protected void setParameters(Map<String,String> parameters) {

@@ -15,9 +15,11 @@ import com.github.jorge2m.testmaker.service.TestMaker;
 public class GetterHtmlStatsSuites {
 
 	private final List<SuiteBean> listSuites;
+	private final String hostTestMaker;
 	
-	public GetterHtmlStatsSuites(List<SuiteBean> listSuites) {
+	public GetterHtmlStatsSuites(List<SuiteBean> listSuites, String hostTestMaker) {
 		this.listSuites = listSuites;
+		this.hostTestMaker = hostTestMaker == null ? "" : hostTestMaker;
 	}
 	
 	public String getHtml() throws Exception {
@@ -47,7 +49,7 @@ public class GetterHtmlStatsSuites {
 		return listTestCases;
 	}
 
-	private static String buildTableMail(List<SuiteTestCasesData> listSuites) {
+	private String buildTableMail(List<SuiteTestCasesData> listSuites) {
 		String html = 	
 			"<table border=\"0\" style=\"font:12pt Arial; margin:-8px 0 0; border-collapse:collapse; text-align:left;\"><thead>" +
 			"<tr style=\"background-color:#11F411;border:1px solid #000000;border-collapse:collapse;\">" +
@@ -111,7 +113,7 @@ public class GetterHtmlStatsSuites {
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:" + State.Skip.getColorCss() + ";\">" + getNumTestCasesStr(testCasesState.get(State.Skip)) + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:right;\">" + tiempoSegs + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getStateExecution() + "</td>" +
-				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\"><a href='" + suite.getUrlReportHtml().replace("\\", "/") + "'>Report HTML</a></td>" +
+				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\"><a href='" + hostTestMaker + "/" + suite.getUrlReportHtml().replace("\\", "/") + "'>Report HTML</a></td>" +
 				"</tr>";
 			}
 		}
