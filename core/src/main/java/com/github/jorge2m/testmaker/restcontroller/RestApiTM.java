@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -158,24 +159,25 @@ public class RestApiTM {
 	@Produces("application/json")
 	public Response sendReportMail(
 			@HeaderParam("host") String host,
+			@NotNull @QueryParam("user") String user,
+			@NotNull @QueryParam("password") String password,
+			@NotNull @QueryParam("toMails") String toMails,
+			@QueryParam("ccMails") String ccMails,			
 			@QueryParam("suite") String suite,
 			@QueryParam("channel") String channel,
 			@QueryParam("application") String application,
 			@QueryParam("state") String state,
 			@QueryParam("date_from") String fechaDesde,
-			@QueryParam("date_to") String fechaHasta,
-			@QueryParam("user") String user,
-			@QueryParam("password") String password,
-			@QueryParam("toMails") String toMails,
-			@QueryParam("ccMails") String ccMails) throws Exception {
+			@QueryParam("date_to") String fechaHasta) throws Exception {
 		List<SuiteBean> listSuites = getListSuitesRunData(
 				suite, channel, application, state, fechaDesde, fechaHasta);
 		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
 		boolean sendedOk = sender.send(listSuites);
-		if (sendedOk) {
-			return Response.ok().build();
+		if (!sendedOk) {
+			throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
 		}
-		throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
+		return Response.ok().build();
+		
 	}
 	
 	private List<String> getMails(String mailsCommaSeparated) {

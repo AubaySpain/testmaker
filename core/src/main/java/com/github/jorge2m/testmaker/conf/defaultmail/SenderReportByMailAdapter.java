@@ -42,9 +42,14 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 			String mensajeHTML = getMessageHTML(listSuites);
 
 			Log4jTM.getGlobal().info(". Sending email...");
-			new MailClient().mail(user, password, myToList, myCcList, getSubjectMail(listSuites), mensajeHTML, listaAttachImages);
-			Log4jTM.getGlobal().info("Email sended!");
-			return true;
+			MailClient mailClient = new MailClient();
+			boolean sended = mailClient.mail(user, password, myToList, myCcList, getSubjectMail(listSuites), mensajeHTML, listaAttachImages);
+			if (sended) {
+				Log4jTM.getGlobal().info("Email sended!");
+				return true;
+			}
+			Log4jTM.getGlobal().fatal("Problem sending email");
+			return false;
 		}
 		catch (Exception e) {
 			Log4jTM.getGlobal().fatal("Problem sending email", e);

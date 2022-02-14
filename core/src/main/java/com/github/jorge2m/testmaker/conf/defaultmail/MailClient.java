@@ -28,12 +28,17 @@ public class MailClient {
         }
     }
 
-    public void mail(String user, String password, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, List<AttachMail> imgAttach) {
+    public boolean mail(String user, String password, InternetAddress[] to, InternetAddress[] cc, String subject, String texto, List<AttachMail> imgAttach) {
         Properties props = new Properties();
-        props.setProperty("mail.host", "smtp.gmail.com");
-        props.setProperty("mail.smtp.port", "587");
-        props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.smtp.starttls.enable", "true");
+        //props.setProperty("mail.transport.protocol", "smtps"); //
+        props.setProperty("mail.host", "smtp.gmail.com"); //
+        //props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
+        //props.setProperty("mail.smtp.host", "smtp.gmail.com");
+        props.setProperty("mail.smtp.port", "587"); //
+        props.setProperty("mail.smtp.auth", "true"); //
+        props.setProperty("mail.smtp.starttls.enable", "true"); //
+        //props.setProperty("mail.smtp.starttls.required", "true");
+        props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 		       
         Authenticator auth = new SMTPAuthenticator(user, password);
         Session session = Session.getInstance(props, auth);
@@ -65,9 +70,11 @@ public class MailClient {
             message.setContent(multipart);
 	                
             Transport.send(message);
+            return true;
         }
         catch (MessagingException ex) {
         	Log4jTM.getGlobal().log(Level.FATAL, ex);
+        	return false;
         }
     }
 }
