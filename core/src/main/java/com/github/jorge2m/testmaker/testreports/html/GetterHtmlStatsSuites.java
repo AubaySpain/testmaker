@@ -95,6 +95,10 @@ public class GetterHtmlStatsSuites {
 				accumulateData(testCasesStateAcc, testCasesState);
 				totalDisp+=Integer.valueOf(numDisps);
 				totalMINs += Double.valueOf(suite.getDurationMillis()) / 1000 / 60;
+				String urlReport = suite.getUrlReportHtml().replace("\\", "/");
+				if (urlReport.indexOf("http")!=0) {
+					urlReport = hostTestMaker + "/" + urlReport;
+				}
 
 				html+= 
 				"<tr>" + 
@@ -113,7 +117,7 @@ public class GetterHtmlStatsSuites {
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:" + State.Skip.getColorCss() + ";\">" + getNumTestCasesStr(testCasesState.get(State.Skip)) + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:right;\">" + tiempoSegs + "</td>" +
 				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\">" + suite.getStateExecution() + "</td>" +
-				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\"><a href='" + hostTestMaker + "/" + suite.getUrlReportHtml().replace("\\", "/") + "'>Report HTML</a></td>" +
+				"<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px;\"><a href='" + urlReport + "'>Report HTML</a></td>" +
 				"</tr>";
 			}
 		}

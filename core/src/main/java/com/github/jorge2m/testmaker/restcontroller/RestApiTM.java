@@ -157,20 +157,25 @@ public class RestApiTM {
 	@GET
 	@Path("/logglobal")
 	public Response getGlobalLog() {
-		File file = new File(SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
 		try {
-			return Response.ok(FileUtils.readFileToString(file, "UTF-8")).build();
+			return Response.ok(Log4jTM.getDataLoggerGlobal()).build();
 		}
 		catch (Exception e) {
-			throw new WebApplicationException("Problem deleting file " + file.getName(), Response.Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException("Problem getting data from Global Log File" , Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@DELETE
 	@Path("/logglobal")
-	public void deleteGlobalLog() {
-		File file = new File(SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
-		FileUtils.deleteQuietly(file);
+	public Response deleteGlobalLog() {
+		try {
+			Log4jTM.clearLoggerGlobal();
+			return Response.ok().build();
+		}
+		catch (Exception e) {
+			throw new WebApplicationException("Problem clearing Global Log File" , Response.Status.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 	
 	@GET

@@ -1,7 +1,11 @@
 package com.github.jorge2m.testmaker.conf;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +41,27 @@ public class Log4jTM {
 		}
 	}
 	
+	private static String getPathGlobalLog() {
+		return SuiteTM.getPathDirectoryOutputTests() + File.separator + "Global.log";
+	}
+	
 	public static Logger getGlobal() {
 		if (loggerGlobal==null) {
-			 loggerGlobal = createLogger("Global", SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
+			 loggerGlobal = createLogger("Global", getPathGlobalLog());
 		}
 		return loggerGlobal;
+	}
+	
+	public static String getDataLoggerGlobal() throws IOException {
+		File file = new File(getPathGlobalLog());
+		return FileUtils.readFileToString(file, "UTF-8");
+	}
+	
+	public static void clearLoggerGlobal() throws IOException {
+		//File file = new File(getPathGlobalLog());
+		//FileUtils.cle deleteQuietly(file);
+		//file.createNewFile();
+		FileUtils.write(new File(getPathGlobalLog()), "", Charset.defaultCharset());
 	}
 	
 	public static Logger getSuiteLogger(String suiteIdExec, String pathLogFile) {
