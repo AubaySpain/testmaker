@@ -139,7 +139,7 @@ public class RestApiTM {
 		List<SuiteBean> listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
 		for (SuiteBean suiteBean : listSuites) {
 			purgeSuite(suiteBean);
-		}
+		}		
 	}
 	
 	private void purgeSuite(SuiteBean suite) throws IOException {
@@ -152,6 +152,25 @@ public class RestApiTM {
 		if (nameParentDir.compareTo(suite.getIdExecSuite())==0) {
 			FileUtils.deleteDirectory(file.getParentFile());
 		}
+	}
+	
+	@GET
+	@Path("/logglobal")
+	public Response getGlobalLog() {
+		File file = new File(SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
+		try {
+			return Response.ok(FileUtils.readFileToString(file, "UTF-8")).build();
+		}
+		catch (Exception e) {
+			throw new WebApplicationException("Problem deleting file " + file.getName(), Response.Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@DELETE
+	@Path("/logglobal")
+	public void deleteGlobalLog() {
+		File file = new File(SuiteTM.getPathDirectoryOutputTests() + "\\Global.log");
+		FileUtils.deleteQuietly(file);
 	}
 	
 	@GET
