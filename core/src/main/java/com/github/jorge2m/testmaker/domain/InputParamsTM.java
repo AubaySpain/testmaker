@@ -51,6 +51,7 @@ public abstract class InputParamsTM {
 	public static final String TypeAccessParam = "typeAccess";
 	public static final String DriverVersionParam = "driverVersion";
 	public static final String TestObjectParam = "testobject";
+	public static final String IdExecSuiteParam = "idexecsuite";
 	
 	//BrowserStack
 	public static final String BStackUserParam = "bstack_user"; //Mobil & Desktop
@@ -124,6 +125,9 @@ public abstract class InputParamsTM {
 	
 	@FormParam(DriverVersionParam)
 	String driverVersion;
+	
+	@FormParam(IdExecSuiteParam)
+	String idExecSuite;
 	
 	@FormParam(TestObjectParam)
 	String testObject;
@@ -322,6 +326,12 @@ public abstract class InputParamsTM {
 			.desc("Version of Driver (ChromeDriver, Geckodriver...) to use")
 			.build());
 		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.IdExecSuiteParam)
+			.required(false)
+			.hasArgs()
+			.desc("Id of SuiteTest Execution. For the case where you want to specify your own instead of the automatically generated one")
+			.build());		
+		
 		//BrowserStack
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackUserParam)
 			.required(false)
@@ -409,6 +419,7 @@ public abstract class InputParamsTM {
 		storebd = cmdLine.getOptionValue(StoreBdParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
+		idExecSuite = cmdLine.getOptionValue(IdExecSuiteParam);
 		
 		//BrowserStack
 		bStackUser = cmdLine.getOptionValue(BStackUserParam);
@@ -443,6 +454,7 @@ public abstract class InputParamsTM {
 		MailUser(MailUserParam),
 		MailPassword(MailPasswordParam),
 		TypeAccess(TypeAccessParam),
+		IdExecSuite(IdExecSuiteParam),
 		DriverVersion(DriverVersionParam),
 		TestObject(TestObjectParam),
 		BStackUser(BStackUserParam),
@@ -510,6 +522,8 @@ public abstract class InputParamsTM {
 			return this.typeAccess;
 		case DriverVersion:
 			return this.driverVersion;
+		case IdExecSuite:
+			return this.idExecSuite;
 		case BStackUser:
 			return bStackUser;
 		case BStackPassword:
@@ -761,6 +775,13 @@ public abstract class InputParamsTM {
 	}
 	public void setTypeAccess(TypeAccess typeAccess) {
 		this.typeAccess = typeAccess.name();
+	}
+	
+	public String getIdExecSuite() {
+		return this.idExecSuite;
+	}
+	public void setIdExecSuite(String idExecSuite) {
+		this.idExecSuite = idExecSuite;
 	}
 	
 	public String getDriverVersion() {

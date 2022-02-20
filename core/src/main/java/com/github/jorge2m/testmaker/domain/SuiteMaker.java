@@ -34,9 +34,16 @@ public abstract class SuiteMaker {
 	private SuiteTM suite;
 	
 	protected SuiteMaker(InputParamsTM inputData) {
-		this.idSuiteExecution = makeIdSuiteExecution();
+		this.idSuiteExecution = getIdSuiteExecution(inputData);
 		this.inputData = inputData;
 		this.filterSuiteXML = FilterTestsSuiteXML.getNew(inputData.getDataFilter());
+	}
+	
+	private String getIdSuiteExecution(InputParamsTM inputData) {
+		if (inputData.getIdExecSuite()!=null && "".compareTo(inputData.getIdExecSuite())!=0) {
+			return inputData.getIdExecSuite();
+		}
+		return makeIdSuiteExecution();
 	}
 	
 	private static synchronized String makeIdSuiteExecution() {

@@ -25,6 +25,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 public class RemoteTest extends JaxRsClient {
 	
@@ -38,12 +39,20 @@ public class RemoteTest extends JaxRsClient {
 	public Optional<SuiteBean> execute(TestCaseTM testCase, Object testObject) 
 	throws Exception {
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
+		setIdExecSuite(inputParams, testCase);
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
 			Log4jTM.getLogger().info("Factory Test (" + testCase.getName() + ") -> Remote");
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);
 		}
 		Log4jTM.getLogger().info("Standar Test -> Remote");
 		return executeTestStandar(testCase, inputParams);
+	}
+	
+	private void setIdExecSuite(InputParamsTM inputParams, TestCaseTM testCase) {
+		//We need to unify idexecsuite in all testcases for send all to BrowserStack gathered under the same id
+		if (inputParams.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
+			inputParams.setIdExecSuite(testCase.getSuiteParent().getIdExecution());
+		}
 	}
 	
 	private Optional<SuiteBean> executeTestFromFactory(TestCaseTM testCase, InputParamsTM inputParams, Serializable testObject) 
@@ -139,8 +148,8 @@ public class RemoteTest extends JaxRsClient {
 			}
 			catch (Exception e) {
 				Log4jTM.getLogger().warn(
-						"Exception in Remote Test execution (retry " + i + "), retry in 5 seconds...", e);
-				Thread.sleep(5000);
+						"Exception in Remote Test execution (retry " + i + "), retry in 10 seconds...", e);
+				Thread.sleep(10000);
 			}
 		}
 		return Optional.empty();

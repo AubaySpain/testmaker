@@ -40,15 +40,24 @@ public class TestMaker {
 		//Log4jConfig.configLog4java(suite.getPathDirectory());
 		File path = new File(suite.getPathDirectory());
 		path.mkdir();
-		suite.getLogger().info("Inicio TestSuite " + suite.getIdExecution());
+		logIniTestSuite(suite);
 		if (async) {
 			runInTestNgAsync(suite);
-			suite.getLogger().info("Inicio2 TestSuite " + suite.getIdExecution());
 		} else {
 			runInTestNgSync(suite);
-			suite.getLogger().info("Inicio TestSuite " + suite.getIdExecution());
 		}
-		suite.getLogger().info("Fin TestSuite " + suite.getIdExecution());
+		logFinTestSuite(suite);
+	}
+	
+	private static void logIniTestSuite(SuiteTM suite) {
+		String message = "Init TestSuite " + suite.getIdExecution();
+		suite.getLogger().info(message);
+		System.out.println(message);
+	}
+	private static void logFinTestSuite(SuiteTM suite) {
+		String message = "End TestSuite " + suite.getIdExecution();
+		suite.getLogger().info(message);
+		System.out.println(message);
 	}
 
 	public static void finishSuite(String idExecution) {
