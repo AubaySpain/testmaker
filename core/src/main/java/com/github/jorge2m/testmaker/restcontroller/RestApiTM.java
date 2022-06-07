@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
@@ -26,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,6 +58,9 @@ import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 @Path("/")
 public class RestApiTM {
 	
+	@Context
+	private HttpServletRequest httpServletRequest;
+	
 	private final static CreatorSuiteRun creatorSuiteRun = ServerRestTM.getServerRestTM().getCreatorSuiteRun();
 	private final static Class<? extends Enum<?>> suiteEnum = ServerRestTM.getServerRestTM().getSuiteEnum();
 	private final static Class<? extends Enum<?>> appEnum = ServerRestTM.getServerRestTM().getAppEnum();
@@ -74,6 +79,7 @@ public class RestApiTM {
 		inputParams.setSuiteEnum(suiteEnum);
 		inputParams.setAppEnum(appEnum);
 		inputParams.setTypeAccess(TypeAccess.Rest);
+		setParamServerDNS(inputParams);
 		try {
 			CmdLineMaker cmdLineAccess = CmdLineMaker.from(inputParams);
 			ResultCheckOptions resultCheck = cmdLineAccess.checkOptionsValue();
@@ -100,6 +106,16 @@ public class RestApiTM {
 					.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getCause())
 					.build();
+		}
+	}
+	
+	private void setParamServerDNS(InputParamsTM inputParams) {
+		String serverDNS = inputParams.getWebAppDNS();
+		if (serverDNS==null) {
+			inputParams.setWebAppDNS(
+					httpServletRequest.getScheme() + "://" + 
+					httpServletRequest.getServerName() +
+					":" + httpServletRequest.getServerPort());
 		}
 	}
 	

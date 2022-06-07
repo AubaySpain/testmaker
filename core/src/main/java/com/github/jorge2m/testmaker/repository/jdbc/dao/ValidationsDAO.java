@@ -159,7 +159,6 @@ public class ValidationsDAO {
 		for (int i=0; i<checksDescr.size(); i++) {
 			Check check = new Check();
 			check.setDescription(checksDescr.get(i));
-			check.setId(i);
 			if (levels.size()>i) {
 				check.setLevelResult(State.valueOf(levels.get(i)));
 			}

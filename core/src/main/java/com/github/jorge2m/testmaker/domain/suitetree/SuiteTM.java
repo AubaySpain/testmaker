@@ -224,7 +224,10 @@ public class SuiteTM extends XmlSuite {
 	
 	public String getDnsReportHtml() {
 		String pathFileReport = getPathReportHtml();
-		return (GenerateReports.getDnsOfFileReport(pathFileReport, inputParams.getWebAppDNS(), inputParams.getTypeAccess()));
+		return (GenerateReports.getDnsOfFileReport(
+				pathFileReport.replace("\\", "/"), 
+				inputParams.getWebAppDNS(), 
+				inputParams.getTypeAccess()));
 	}
 	
 	public static SuiteTM getSuiteCreatedInPresentThread() {

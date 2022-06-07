@@ -72,7 +72,7 @@ public class InfoValidation {
     	if (resultMethod!=null) {
     		//One Validation
 	        if (resultMethod instanceof Boolean) {
-	        	Check validation = new Check(1);
+	        	Check validation = new Check();
 	        	validation.setOvercomed((Boolean)resultMethod);
 	        	valResult.add(validation);
 	        	return valResult;
@@ -87,7 +87,7 @@ public class InfoValidation {
 	        	"The return of a method marked with @Validation annotation must be of type boolean or " + 
 	        	ChecksTM.class.getName()));
     	} else {
-    		valResult.add(new Check(1));
+    		valResult.add(new Check());
     		return valResult;
     	}
     }
@@ -106,9 +106,8 @@ public class InfoValidation {
 	    		valResult.get(0).setLevelResult(valAnnotation.level());
 	    	}
 	    	
-	    	if (valAnnotation.avoidEvidences()) {
-	    		valResult.get(0).setAvoidEvidences(true);
-	    	}
+    		valResult.get(0).setStore(valAnnotation.store());
+    		valResult.get(0).setSend(valAnnotation.send());
     	}
     }
 }

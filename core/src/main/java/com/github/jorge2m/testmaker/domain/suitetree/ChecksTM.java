@@ -6,8 +6,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.jorge2m.testmaker.conf.StoreType;
+import com.github.jorge2m.testmaker.conf.SendType;
 import com.github.jorge2m.testmaker.conf.State;
+import com.github.jorge2m.testmaker.domain.Alarm;
+import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
+
 
 public class ChecksTM {
 	
@@ -123,20 +128,26 @@ public class ChecksTM {
 		return (listChecks.get(index));
 	}
 	public void add(Check check) {
+		check.setParentChecks(this);
 		listChecks.add(check);
+		sendNotificationsIfNeeded(check);
 	}
 	public void add(String description, boolean overcomed, State levelResult) {
-		add(description, overcomed, levelResult, false);
+		add(description, overcomed, levelResult, StoreType.Evidences, SendType.None);
 	}
-	public void add(String description, boolean overcomed, State levelResult, boolean avoidEvidences) {
-		int id = listChecks.size() + 1;
-		Check resultValidation = Check.of(id, id + ") " + description, overcomed, levelResult, avoidEvidences);
+	public void add(String description, boolean overcomed, State levelResult, StoreType store) {
+		Check resultValidation = Check.of(description, overcomed, levelResult, store, SendType.None);
 		add(resultValidation);
 	}
-	public void add(int id, State levelResult) {
-		Check resultValidation = Check.of(id, levelResult);
+	public void add(String description, boolean overcomed, State levelResult, SendType send) {
+		Check resultValidation = Check.of(description, overcomed, levelResult, StoreType.Evidences, send);
 		add(resultValidation);
 	}
+	public void add(String description, boolean overcomed, State levelResult, StoreType storeType, SendType sendType) {
+		Check resultValidation = Check.of(description, overcomed, levelResult, storeType, sendType);
+		add(resultValidation);
+	}
+
 	public boolean areAllChecksOvercomed() {
 		for (Check check : listChecks) {
 			if (!check.isOvercomed()) {
@@ -149,7 +160,7 @@ public class ChecksTM {
 		for (Check check : listChecks) {
 			if (!check.isOvercomed() &&
 				check.getLevelResult()!=State.Ok &&
-				!check.isAvoidEvidences()) {
+				check.getStore()!=StoreType.None) {
 				return false;
 			}
 		}
@@ -170,15 +181,25 @@ public class ChecksTM {
 	}
 	public String getHtmlValidationsBrSeparated() {
 		List<String> textValidations = new ArrayList<>();
-		for (Check resultValidation : listChecks) {
-			String htmlValidation = 
-				"<validac style=\"color:" + resultValidation.getStateResult().getColorCss() + "\">" + 
-				resultValidation.getDescription() + 
-				"</validac>";
-			textValidations.add(htmlValidation);
+		boolean manyChecks = listChecks.size()>1;
+		for (int i=0; i<listChecks.size(); i++) {
+			textValidations.add(getHtmlCheck(manyChecks, i));
 		}
 
 		return (textValidations.stream().collect(Collectors.joining("<br>")));
+	}
+
+	private String getHtmlCheck(boolean manyChecks, int i) {
+		Check resultValidation = listChecks.get(i);
+		String numCheck = "";
+		if (manyChecks) {
+			numCheck = String.valueOf(i+1) + ") ";
+		}
+		String htmlValidation = 
+			"<validac style=\"color:" + resultValidation.getStateResult().getColorCss() + "\">" + 
+			numCheck + resultValidation.getDescription() + 
+			"</validac>";
+		return htmlValidation;
 	}
 
 	public int getPositionInStep() {
@@ -241,9 +262,10 @@ public class ChecksTM {
 		for (int i=0; i<lastValidation; i++) {
 			listCodes.add(State.Ok);
 		}
-		for (Check resultValidation : listChecks) {
+		for (int i=0; i<listChecks.size(); i++) {
+			Check resultValidation = listChecks.get(i);
 			if (!resultValidation.isOvercomed()) {
-				listCodes.set(resultValidation.getId()-1, resultValidation.getLevelResult());
+				listCodes.set(i, resultValidation.getLevelResult());
 			}
 		}
 		
@@ -259,13 +281,16 @@ public class ChecksTM {
 	}
 
 	private int getIndexLastValidation() {
-		int maxIndexValidation = 0;
-		for (Check resultValidation : listChecks) {
-			if (resultValidation.getId() > maxIndexValidation) {
-				maxIndexValidation = resultValidation.getId();
-			}
-		}
-		
-		return maxIndexValidation;
+		return listChecks.size();
 	}
+	
+    private void sendNotificationsIfNeeded(Check check) {
+    	if (check.getSend()==SendType.Alert) {
+  	        InputParamsTM inputParams = suiteParent.getInputParams();
+	        if (inputParams.isAlarm()) {
+	            Alarm alarm = new Alarm();
+	            alarm.send(check);
+	        }
+    	}
+    }
 }

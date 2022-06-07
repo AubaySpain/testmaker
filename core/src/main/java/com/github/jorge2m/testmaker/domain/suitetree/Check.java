@@ -1,43 +1,35 @@
 package com.github.jorge2m.testmaker.domain.suitetree;
 
+import com.github.jorge2m.testmaker.conf.StoreType;
+import com.github.jorge2m.testmaker.conf.SendType;
 import com.github.jorge2m.testmaker.conf.State;
 
 
-
 public class Check {
-	//TODO este campo es prescindible cuando esté completada la migración a Aspectos
-    private int id;
     
+	private ChecksTM parentChecks;
 	private String description = "";
     private State levelResult = State.Undefined;
-    private boolean avoidEvidences = false;
-	boolean overcomed = false;
+    private boolean overcomed = false;
+	private StoreType store = StoreType.Evidences;
+	private SendType send = SendType.None;
 
     public Check() {}
-	
-    public Check(int id) {
-    	this.id = id;
-    }
     
-    public static Check of(int id, String description, boolean overcomed, State levelResult, boolean avoidEvidences) {
-    	Check resultValidation = of(id, levelResult);
+    public static Check of(
+    		String description, boolean overcomed, State levelResult, StoreType storeType, SendType sendType) {
+    	Check resultValidation = of(levelResult);
     	resultValidation.setDescription(description);
     	resultValidation.setOvercomed(overcomed);
-    	resultValidation.setAvoidEvidences(avoidEvidences);
+    	resultValidation.setStore(storeType);
+    	resultValidation.setSend(sendType);
     	return resultValidation;
     }
     
-    public static Check of(int id, State levelResult) {
-    	Check resultValidation = new Check(id);
+    public static Check of(State levelResult) {
+    	Check resultValidation = new Check();
     	resultValidation.setLevelResult(levelResult);
     	return resultValidation;
-    }
-    
-    public int getId() {
-		return id;
-	}
-    public void setId(int id) {
-    	this.id = id;
     }
 
     public String getDescription() {
@@ -58,16 +50,31 @@ public class Check {
 	public void setLevelResult(State levelError) {
 		this.levelResult = levelError;
 	}
-    public boolean isAvoidEvidences() {
-		return avoidEvidences;
-	}
-	public void setAvoidEvidences(boolean avoidEvidences) {
-		this.avoidEvidences = avoidEvidences;
-	}
     public boolean isOvercomed() {
 		return overcomed;
 	}
 	public void setOvercomed(boolean overcomed) {
 		this.overcomed = overcomed;
 	}
+    public StoreType getStore() {
+		return store;
+	}
+	public void setStore(StoreType store) {
+		this.store = store;
+	}
+    public SendType getSend() {
+		return send;
+	}
+	public void setSend(SendType send) {
+		this.send = send;
+	}
+
+	public ChecksTM getParentChecks() {
+		return parentChecks;
+	}
+
+	public void setParentChecks(ChecksTM parentChecks) {
+		this.parentChecks = parentChecks;
+	}	
+
 }

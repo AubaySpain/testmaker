@@ -44,6 +44,10 @@ public abstract class InputParamsTM {
 	public static final String RemoteParam = "remote";
 	public static final String RecicleWDParam = "reciclewd";
 	public static final String NetAnalysisParam = "net";
+	
+	public static final String AlarmParam = "alarm";
+	public static final String TeamsChannelParam = "teamschannel";
+	
 	public static final String StoreBdParam = "storebd";
 	public static final String MailsParam = "mails";
 	public static final String MailUserParam = "mailuser";
@@ -116,6 +120,12 @@ public abstract class InputParamsTM {
 
 	@FormParam(NetAnalysisParam)
 	String net;
+	
+	@FormParam(AlarmParam)
+	String alarm;
+	
+	@FormParam(TeamsChannelParam)
+	String teamschannel;
 
 	@FormParam(StoreBdParam)
 	String storebd;
@@ -295,6 +305,18 @@ public abstract class InputParamsTM {
 			.desc("Net Analysis (true, false)")
 			.build());
 
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.AlarmParam)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Teams Notification (true, false)")
+			.build());		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.TeamsChannelParam)
+			.required(false)
+			.hasArgs()
+			.desc("URL of the Teams Channel")
+			.build());		
+
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.StoreBdParam)
 			.required(false)
 			.hasArgs()
@@ -416,6 +438,8 @@ public abstract class InputParamsTM {
 		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
 		remote = cmdLine.getOptionValue(RemoteParam);
 		net = cmdLine.getOptionValue(NetAnalysisParam);
+		alarm = cmdLine.getOptionValue(AlarmParam);
+		teamschannel = cmdLine.getOptionValue(TeamsChannelParam);
 		storebd = cmdLine.getOptionValue(StoreBdParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
@@ -449,6 +473,8 @@ public abstract class InputParamsTM {
 		AsyncExec(AsyncExecParam),
 		Remote(RemoteParam),
 		NetAnalysis(NetAnalysisParam),
+		Alarm(AlarmParam),
+		TeamsChannel(TeamsChannelParam),
 		StoreBd(StoreBdParam),
 		Mails(MailsParam),
 		MailUser(MailUserParam),
@@ -516,6 +542,10 @@ public abstract class InputParamsTM {
 			return this.remote;
 		case NetAnalysis:
 			return this.net;
+		case Alarm:
+			return this.alarm;
+		case TeamsChannel:
+			return this.teamschannel;
 		case StoreBd:
 			return this.storebd;
 		case TypeAccess:
@@ -742,6 +772,22 @@ public abstract class InputParamsTM {
 		}
 		return false;
 	} 
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
+	}
+	public boolean isAlarm() {
+		if (alarm!=null) {
+			return ("true".compareTo(alarm)==0);
+		}
+		return false;
+	}	
+	public void setTeamsChannel(String teamschannel) {
+		this.teamschannel = teamschannel;
+	}
+	public String getTeamsChannel() {
+		return teamschannel;
+	}	
+	
 	public void setStoreBd(StoreUntil storeUntil) {
 		this.storebd = storeUntil.name();
 	}
