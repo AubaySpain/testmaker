@@ -1,6 +1,7 @@
 package com.github.jorge2m.testmaker.domain;
 
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
+import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.service.notifications.AlarmSender;
 
 public class Alarm {
@@ -11,8 +12,8 @@ public class Alarm {
 		this.alarmSender = AlarmSender.instance();
 	}
 	
-	public void send(Check check) {
-		alarmSender.send(check);
+	public void send(Check check, ChecksTM checksParent) {
+		alarmSender.send(check, checksParent);
 	}
 	
 }

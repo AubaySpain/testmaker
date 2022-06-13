@@ -7,7 +7,6 @@ import com.github.jorge2m.testmaker.conf.State;
 
 public class Check {
     
-	private ChecksTM parentChecks;
 	private String description = "";
     private State levelResult = State.Undefined;
     private boolean overcomed = false;
@@ -68,13 +67,5 @@ public class Check {
 	public void setSend(SendType send) {
 		this.send = send;
 	}
-
-	public ChecksTM getParentChecks() {
-		return parentChecks;
-	}
-
-	public void setParentChecks(ChecksTM parentChecks) {
-		this.parentChecks = parentChecks;
-	}	
 
 }

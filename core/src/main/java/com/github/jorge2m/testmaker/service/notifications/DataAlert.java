@@ -18,8 +18,7 @@ public class DataAlert {
 	private final String stepDescription;
 	private final Check check;
 	
-	private DataAlert(Check check) {
-		ChecksTM parentChecks = check.getParentChecks();
+	private DataAlert(Check check, ChecksTM parentChecks) {
 		SuiteTM suite = parentChecks.getSuiteParent();
 		TestCaseTM testCase = parentChecks.getTestCaseParent();
 		StepTM step = parentChecks.getStepParent();
@@ -31,8 +30,8 @@ public class DataAlert {
     	this.stepDescription = step.getDescripcion();
 	}
 	
-	public static DataAlert of(Check check) {
-		return new DataAlert(check);
+	public static DataAlert of(Check check, ChecksTM checksParent) {
+		return new DataAlert(check, checksParent);
 	}
 	
 	public String getUrlReportSuite() {

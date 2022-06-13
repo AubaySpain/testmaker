@@ -17,12 +17,12 @@ import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendTeams
 public class TeamsNotification implements AlarmSender {
 
 	@Override
-	public void send(Check check) {
+	public void send(Check check, ChecksTM parentChecks) {
         try {
         	HttpClient httpClient = createDefault();
-            HttpPost post = new HttpPost(getTeamsChanelURL(check));
+            HttpPost post = new HttpPost(getTeamsChanelURL(check, parentChecks));
             post.addHeader("Content-Type", "application/json");
-            String bodyMessage = getBodyMessage(check);
+            String bodyMessage = getBodyMessage(check, parentChecks);
             StringEntity entity = new StringEntity(bodyMessage, "UTF-8");
             post.setEntity(entity); 
             HttpResponse response = httpClient.execute(post);
@@ -37,15 +37,14 @@ public class TeamsNotification implements AlarmSender {
         }
 	}
 	
-	private String getTeamsChanelURL(Check check) {
-		ChecksTM parentChecks = check.getParentChecks();
+	private String getTeamsChanelURL(Check check, ChecksTM parentChecks) {
 		InputParamsTM inputParams = parentChecks.getSuiteParent().getInputParams();
 		return inputParams.getTeamsChannel();
 	}
 	
-    private String getBodyMessage(Check check) { 
+    private String getBodyMessage(Check check, ChecksTM checksParent) { 
 
-    	DataAlert dataAlert = DataAlert.of(check);
+    	DataAlert dataAlert = DataAlert.of(check, checksParent);
     	return "{\r\n"
 		+ "    \"@type\": \"MessageCard\",\r\n"
 		+ "    \"@context\": \"http://schema.org/extensions\",\r\n"

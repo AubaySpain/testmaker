@@ -128,7 +128,7 @@ public class ChecksTM {
 		return (listChecks.get(index));
 	}
 	public void add(Check check) {
-		check.setParentChecks(this);
+		//check.setParentChecks(this);
 		listChecks.add(check);
 		sendNotificationsIfNeeded(check);
 	}
@@ -289,7 +289,7 @@ public class ChecksTM {
   	        InputParamsTM inputParams = suiteParent.getInputParams();
 	        if (inputParams.isAlarm()) {
 	            Alarm alarm = new Alarm();
-	            alarm.send(check);
+	            alarm.send(check, this);
 	        }
     	}
     }
