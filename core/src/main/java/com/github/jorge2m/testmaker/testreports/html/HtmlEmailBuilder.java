@@ -18,15 +18,18 @@ public class HtmlEmailBuilder {
 	
 	private final List<SuiteTestCasesData> listSuitesNew;
 	private final List<SuiteTestCasesData> listSuitesOld;
+	private final String hostTestMaker;
 	private final boolean isNewData;
 	private final boolean isOldData;
 	private Totals totals = new Totals();
 	
 	public HtmlEmailBuilder(
 		List<SuiteTestCasesData> listSuitesNew,
-		List<SuiteTestCasesData> listSuitesOld) {
+		List<SuiteTestCasesData> listSuitesOld,
+		String hostTestMaker) {
 		this.listSuitesNew = listSuitesNew;
 		this.listSuitesOld = listSuitesOld;
+		this.hostTestMaker = hostTestMaker;
 		isNewData = listSuitesNew!=null && !listSuitesNew.isEmpty();
 		isOldData = listSuitesOld!=null && !listSuitesOld.isEmpty(); 
 	}
@@ -47,20 +50,21 @@ public class HtmlEmailBuilder {
 			"<tr style=\"background-color:#11F411;border:1px solid #000000;border-collapse:collapse;\">";
 		
 		html = html +
-			getColumn("ID TEST") + 
-			getColumn("TIPO TEST") +
-			getColumn("APPLICATION") +
+			getColumn("ID") + 
+			getColumn("SUITE") +
+			getColumn("APP") +
 			getColumn("CHANNEL") +
 			getColumn("DRIVER") +
 			getColumn("VERSIÓN") +
-			getColumn("#AVAILABILITY") +
+			getColumn("URL BASE") +
+			getColumn("#AVAILAB") +
 			getColumn("#OKs") +
 		    getColumn("#NOKs") +
 		    getColumn("#DEFECTs") +
 		    getColumn("#WARNs") +
 		    getColumn("#INFOs") +
 		    getColumn("#SKIPs") +
-		    getColumn("MINUTOS") +
+		    getColumn("MINUTES") +
 		    getColumn("STATE") +
 		    getColumn("REPORT");
 		
@@ -106,7 +110,8 @@ public class HtmlEmailBuilder {
 				suiteOld.getApp().compareTo(suiteNew.getApp())==0 &&
 				suiteOld.getChannel().compareTo(suiteNew.getChannel())==0 &&
 				suiteOld.getDriver().compareTo(suiteNew.getDriver())==0 &&
-				suiteOld.getVersion().compareTo(suiteNew.getVersion())==0) {
+				suiteOld.getVersion().compareTo(suiteNew.getVersion())==0 &&
+				suiteOld.getUrlBase().compareTo(suiteNew.getUrlBase())==0) {
 				return Optional.of(suiteTestCasesOld);
 			}
 		}
@@ -129,6 +134,7 @@ public class HtmlEmailBuilder {
 			TD_INI + "\">" + suiteNew.getDriver() + "</td>" +
 			TD_INI + "\">" + suiteNew.getVersion() + "</td>";
 		
+		html+= TD_INI + "text-align:center;\"><a href='" + suiteNew.getUrlBase() + "'>url</a></td>";
 		html+=TD_INI + " text-align:center; color:" + "darkGreen" + ";\">" + rowSuiteData.getAvailabilityTests(TypeSuite.NEW) + "</td>";
 		
 	    html+=TD_INI + " text-align:center; color:" + State.Ok.getColorCss() + ";\">" + getNumTestCasesHtml(State.Ok, rowSuiteData) + "</td>";
@@ -142,9 +148,14 @@ public class HtmlEmailBuilder {
 		    TD_INI + " text-align:right;\">" + rowSuiteData.getTimeMinutes() + "</td>" +
 		    TD_INI + "\">" + suiteNew.getStateExecution() + "</td>";
 		
-		html+=TD_INI + "\"><a href='" + rowSuiteData.getUrlReport(TypeSuite.NEW) + "'>Report HTML</a></td>";
+		html+=TD_INI + "\"><a href='" + rowSuiteData.getUrlReport(TypeSuite.NEW, hostTestMaker) + "'>report</a></td>";
 		if (isOldData) {
-			html+=TD_INI + "\"><a href='" + rowSuiteData.getUrlReport(TypeSuite.OLD) + "'>Report HTML</a></td>";
+			String reportURL = rowSuiteData.getUrlReport(TypeSuite.OLD, hostTestMaker);
+			if (reportURL!=null && reportURL.compareTo("")!=0) {
+				html+=TD_INI + "\"><a href='" + reportURL + "'>report</a></td>";
+			} else {
+				html+=TD_INI + "\"></td>";
+			}
 		}
 		
 		html+="</tr>";
@@ -155,7 +166,7 @@ public class HtmlEmailBuilder {
 	private String getNumTestCasesHtml(State state, RowSuiteData rowSuiteData) {
 		String numNew = rowSuiteData.getNumTestCases(state);
 		String oldBlock = "";
-		if (isOldData) {
+		if (rowSuiteData.isSuiteOld()) {
 			String numOld = rowSuiteData.getNumTestCases(state, TypeSuite.OLD);
 			if (!(numNew.compareTo("")==0 && numOld.compareTo("")==0)) {
 				if (numOld.compareTo("")==0) {
@@ -173,7 +184,7 @@ public class HtmlEmailBuilder {
 		String html=
 			"<tfoot style=\"font-weight: bold;\">" +
 			"<tr style=\"border:none;\">" +
-			"<td colspan=\"6\"></td>";
+			"<td colspan=\"7\"></td>";
 
 		String TD_INI = "<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:";
 		html+=TD_INI + "darkGreen" + ";\">" + totals.getTestCasesAvailability() + "</td>";
@@ -192,7 +203,7 @@ public class HtmlEmailBuilder {
 		if (isNewData) {
 			html+=
 				"<tr style=\"border:none;\">" +
-				"<td colspan=\"6\"></td>";
+				"<td colspan=\"7\"></td>";
 			
 			html+=TD_INI + "darkGreen" + ";\">" + totals.getPercentageTestCasesAvailable() + "%</td>";
 			html+=TD_INI + State.Ok.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Ok) + "%</td>";
@@ -262,6 +273,9 @@ public class HtmlEmailBuilder {
 		public void setHtml(String html) {
 			this.html = html;
 		}
+		public boolean isSuiteOld() {
+			return suiteOld!=null;
+		}
 		
 		public String getTimeMinutes() {
 			DecimalFormat df1 = new DecimalFormat("0.00");
@@ -277,11 +291,13 @@ public class HtmlEmailBuilder {
 				testCasesState.get(State.Defect);
 		}
 		
-		public String getUrlReport(TypeSuite typeSuite) {
-			return getUrlReport(typeSuite, "");
-		}
 		public String getUrlReport(TypeSuite typeSuite, String hostTestMaker) {
-			SuiteBean suite = getSuite(typeSuite).getSuite();
+			SuiteTestCasesData suiteData = getSuite(typeSuite);
+			if (suiteData==null) {
+				return null;
+			}
+			
+			SuiteBean suite = suiteData.getSuite();
 			String urlReport = suite.getUrlReportHtml().replace("\\", "/");
 			if (urlReport.indexOf("http")!=0) {
 				urlReport = hostTestMaker + "/" + urlReport;
@@ -300,7 +316,11 @@ public class HtmlEmailBuilder {
 		public Map<State,Integer> getTestCasesByState(TypeSuite typeSuite) {
 			Map<State,Integer> testCasesByState = getTestCasesByState(suiteNew.getTestCases());
 			if (typeSuite==TypeSuite.OLD) {
-				testCasesByState = getTestCasesByState(suiteOld.getTestCases());
+				if (isSuiteOld()) {
+					testCasesByState = getTestCasesByState(suiteOld.getTestCases());
+				} else {
+					testCasesByState = getInitZeroValues();
+				}
 			}
 			return testCasesByState;
 		}

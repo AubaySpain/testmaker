@@ -208,11 +208,20 @@ public class RestApiTM {
 			@QueryParam("application") String application,
 			@QueryParam("state") String state,
 			@QueryParam("date_from") String fechaDesde,
-			@QueryParam("date_to") String fechaHasta) throws Exception {
+			@QueryParam("date_to") String fechaHasta,
+			@QueryParam("date_from_old") String fechaDesdeOld, 
+			@QueryParam("date_to_old") String fechaHastaOld) throws Exception {
+		
 		List<SuiteBean> listSuites = getListSuitesRunData(
 				suite, channel, application, state, fechaDesde, fechaHasta);
-		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails)/*, host*/);
-		boolean sendedOk = sender.send(listSuites);
+		List<SuiteBean> listSuitesOld = null;
+		if (fechaDesdeOld!=null && fechaHastaOld!=null) {
+			listSuitesOld = getListSuitesRunData(
+					suite, channel, application, state, fechaDesdeOld, fechaHastaOld);
+		}
+		
+		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
+		boolean sendedOk = sender.send(listSuites, listSuitesOld);
 		if (!sendedOk) {
 			throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
 		}

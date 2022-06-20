@@ -10,18 +10,19 @@ public class HtmlStatsSuitesBuilder {
 
 	private final List<SuiteBean> listSuitesNew;
 	private final List<SuiteBean> listSuitesOld;
+	private final String hostTestMaker;
 	
 	public HtmlStatsSuitesBuilder(
-			List<SuiteBean> listSuitesNew, List<SuiteBean> listSuitesOld) {
+			List<SuiteBean> listSuitesNew, List<SuiteBean> listSuitesOld, String hostTestMaker) {
 		this.listSuitesNew = listSuitesNew;
 		this.listSuitesOld = listSuitesOld;
-		//this.hostTestMaker = hostTestMaker == null ? "" : hostTestMaker;
+		this.hostTestMaker = hostTestMaker == null ? "" : hostTestMaker;
 	}
 	
 	public String getHtml() throws Exception {
 		List<SuiteTestCasesData> testCasesDataNew = getTestCasesData(listSuitesNew); 
 		List<SuiteTestCasesData> testCasesDataOld =	getTestCasesData(listSuitesOld);
-		HtmlEmailBuilder htmlEmailBuilder = new HtmlEmailBuilder(testCasesDataNew, testCasesDataOld); 
+		HtmlEmailBuilder htmlEmailBuilder = new HtmlEmailBuilder(testCasesDataNew, testCasesDataOld, hostTestMaker); 
 		return htmlEmailBuilder.getHtml();
 	}
 	
@@ -31,7 +32,7 @@ public class HtmlStatsSuitesBuilder {
 		}
 		List<SuiteTestCasesData> listSuitesTestCases = new ArrayList<>();
 		if (listSuites!=null) {
-			for (SuiteBean suite : listSuitesNew) {
+			for (SuiteBean suite : listSuites) {
 				SuiteTestCasesData suiteTestCases = new SuiteTestCasesData(suite);
 				listSuitesTestCases.add(suiteTestCases);
 			}

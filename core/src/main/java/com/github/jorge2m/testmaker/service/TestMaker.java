@@ -233,12 +233,12 @@ public class TestMaker {
 	
 	public static String getHtmlStatsSuites(List<SuiteBean> listSuites) 
 			throws Exception {
-		return getHtmlStatsSuites(listSuites, null);
+		return getHtmlStatsSuites(listSuites, null, null);
 	}
 	
-	public static String getHtmlStatsSuites(List<SuiteBean> listSuitesNew, List<SuiteBean> listSuitesOld) 
+	public static String getHtmlStatsSuites(List<SuiteBean> listSuitesNew, List<SuiteBean> listSuitesOld, String hostTestMaker) 
 			throws Exception {
-		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuitesNew, listSuitesOld);
+		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuitesNew, listSuitesOld, hostTestMaker);
 		return getterHtmlSuites.getHtml();
 	}
 

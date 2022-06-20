@@ -18,14 +18,14 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 	private final String password;
 	private final List<String> toMails;
 	private final List<String> ccMails;
-	//private final String hostTestMaker;
+	private final String hostTestMaker;
 	
-	public SenderReportByMailAdapter(String user, String password, List<String> toMails, List<String> ccMails/*, String hostTestMaker*/) {
+	public SenderReportByMailAdapter(String user, String password, List<String> toMails, List<String> ccMails, String hostTestMaker) {
 		this.user = user;
 		this.password = password;
 		this.toMails = toMails==null ? new ArrayList<>() : toMails;				
 		this.ccMails = ccMails==null ? new ArrayList<>() : ccMails;
-		//this.hostTestMaker = hostTestMaker;
+		this.hostTestMaker = hostTestMaker;
 	}
 	
 	@Override
@@ -34,37 +34,54 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 	}
 	
 	@Override
-	public boolean send(List<SuiteBean> listSuites) {
+	public boolean send(List<SuiteBean> listSuites, List<SuiteBean> listSuitesOld) {
 		try {
-			InternetAddress[] myToList = InternetAddress.parse(String.join(",", toMails));
-			InternetAddress[] myCcList = InternetAddress.parse(String.join(",", ccMails));
-			ArrayList<AttachMail> listaAttachImages = new ArrayList<>();      
-			String mensajeHTML = getMessageHTML(listSuites);
-
-			Log4jTM.getGlobal().info(". Sending email...");
-			MailClient mailClient = new MailClient();
-			boolean sended = mailClient.mail(user, password, myToList, myCcList, getSubjectMail(listSuites), mensajeHTML, listaAttachImages);
-			if (sended) {
-				Log4jTM.getGlobal().info("Email sended!");
-				return true;
-			}
-			Log4jTM.getGlobal().fatal("Problem sending email");
-			return false;
+			String mensajeHTML = getMessageHTML(listSuites, listSuitesOld, hostTestMaker);
+			return sendHtml(mensajeHTML, listSuites);
 		}
 		catch (Exception e) {
 			Log4jTM.getGlobal().fatal("Problem sending email", e);
 			return false;
 		}
 	}
+	
+	@Override
+	public boolean send(List<SuiteBean> listSuites) {
+		try {
+			String mensajeHTML = getMessageHTML(listSuites, null, hostTestMaker);
+			return sendHtml(mensajeHTML, listSuites);
+		}
+		catch (Exception e) {
+			Log4jTM.getGlobal().fatal("Problem sending email", e);
+			return false;
+		}
+	}
+	
+	private boolean sendHtml(String html, List<SuiteBean> listSuites) throws Exception {
+		InternetAddress[] myToList = InternetAddress.parse(String.join(",", toMails));
+		InternetAddress[] myCcList = InternetAddress.parse(String.join(",", ccMails));
+		ArrayList<AttachMail> listaAttachImages = new ArrayList<>();      
 
-	private String getMessageHTML(List<SuiteBean> listSuites) throws Exception {
+		Log4jTM.getGlobal().info(". Sending email...");
+		MailClient mailClient = new MailClient();
+		boolean sended = mailClient.mail(user, password, myToList, myCcList, getSubjectMail(listSuites), html, listaAttachImages);
+		if (sended) {
+			Log4jTM.getGlobal().info("Email sended!");
+			return true;
+		}
+		Log4jTM.getGlobal().fatal("Problem sending email");
+		return false;
+	}
+
+	private String getMessageHTML(List<SuiteBean> listSuites, List<SuiteBean> listSuitesOld, String hostTestMaker) 
+			throws Exception {
 		String mensajeHTML =
 			"<p style=\"font:12pt Arial;\">" +
 			"Hi, <br><br>" +
 			"these TestSuites had been executed:" +
 			"</p>";
 
-		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuites, null);
+		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuites, listSuitesOld, hostTestMaker);
 		mensajeHTML+=getterHtmlSuites.getHtml();
 		return mensajeHTML;
 	}
