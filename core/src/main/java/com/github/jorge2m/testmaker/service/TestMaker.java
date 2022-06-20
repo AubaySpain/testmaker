@@ -30,7 +30,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
-import com.github.jorge2m.testmaker.testreports.html.GetterHtmlStatsSuites;
+import com.github.jorge2m.testmaker.testreports.html.HtmlStatsSuitesBuilder;
 
 public class TestMaker {
 	
@@ -231,10 +231,17 @@ public class TestMaker {
 		}
 	}
 	
-	public static String getHtmlStatsSuites(List<SuiteBean> listSuites, String hostTestMaker) throws Exception {
-		GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(listSuites, hostTestMaker);
+	public static String getHtmlStatsSuites(List<SuiteBean> listSuites) 
+			throws Exception {
+		return getHtmlStatsSuites(listSuites, null);
+	}
+	
+	public static String getHtmlStatsSuites(List<SuiteBean> listSuitesNew, List<SuiteBean> listSuitesOld) 
+			throws Exception {
+		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuitesNew, listSuitesOld);
 		return getterHtmlSuites.getHtml();
 	}
+
 
 	private static void runInTestNgSync(SuiteTM suite) {
 		TestNG tng = makeTestNG(suite);

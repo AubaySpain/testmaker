@@ -211,7 +211,7 @@ public class RestApiTM {
 			@QueryParam("date_to") String fechaHasta) throws Exception {
 		List<SuiteBean> listSuites = getListSuitesRunData(
 				suite, channel, application, state, fechaDesde, fechaHasta);
-		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
+		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails)/*, host*/);
 		boolean sendedOk = sender.send(listSuites);
 		if (!sendedOk) {
 			throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);

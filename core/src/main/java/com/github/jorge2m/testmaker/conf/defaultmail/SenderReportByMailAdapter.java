@@ -10,7 +10,7 @@ import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.SenderReportOutputPort;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
-import com.github.jorge2m.testmaker.testreports.html.GetterHtmlStatsSuites;
+import com.github.jorge2m.testmaker.testreports.html.HtmlStatsSuitesBuilder;
 
 public class SenderReportByMailAdapter implements SenderReportOutputPort {
 	
@@ -18,14 +18,14 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 	private final String password;
 	private final List<String> toMails;
 	private final List<String> ccMails;
-	private final String hostTestMaker;
+	//private final String hostTestMaker;
 	
-	public SenderReportByMailAdapter(String user, String password, List<String> toMails, List<String> ccMails, String hostTestMaker) {
+	public SenderReportByMailAdapter(String user, String password, List<String> toMails, List<String> ccMails/*, String hostTestMaker*/) {
 		this.user = user;
 		this.password = password;
 		this.toMails = toMails==null ? new ArrayList<>() : toMails;				
 		this.ccMails = ccMails==null ? new ArrayList<>() : ccMails;
-		this.hostTestMaker = hostTestMaker;
+		//this.hostTestMaker = hostTestMaker;
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 			"these TestSuites had been executed:" +
 			"</p>";
 
-		GetterHtmlStatsSuites getterHtmlSuites = new GetterHtmlStatsSuites(listSuites, hostTestMaker);
+		HtmlStatsSuitesBuilder getterHtmlSuites = new HtmlStatsSuitesBuilder(listSuites, null);
 		mensajeHTML+=getterHtmlSuites.getHtml();
 		return mensajeHTML;
 	}
