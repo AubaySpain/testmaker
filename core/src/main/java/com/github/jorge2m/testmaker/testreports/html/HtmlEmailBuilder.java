@@ -162,23 +162,6 @@ public class HtmlEmailBuilder {
 		rowSuiteData.setHtml(html);  
 		return rowSuiteData;
 	}
-	
-	private String getNumTestCasesHtml(State state, RowSuiteData rowSuiteData) {
-		String numNew = rowSuiteData.getNumTestCases(state);
-		String oldBlock = "";
-		if (rowSuiteData.isSuiteOld()) {
-			String numOld = rowSuiteData.getNumTestCases(state, TypeSuite.OLD);
-			if (!(numNew.compareTo("")==0 && numOld.compareTo("")==0)) {
-				if (numOld.compareTo("")==0) {
-					numOld = "0";
-				}
-				oldBlock = 
-						"<div style=\"display:inline; font:9pt Arial;color:grey;\">(" +
-						numOld + ")</div>";
-			}
-		}
-		return numNew + oldBlock;
-	}
 
 	private String makeHtmlTotals() {
 		String html=
@@ -206,12 +189,13 @@ public class HtmlEmailBuilder {
 				"<td colspan=\"7\"></td>";
 			
 			html+=TD_INI + "darkGreen" + ";\">" + totals.getPercentageTestCasesAvailable() + "%</td>";
-			html+=TD_INI + State.Ok.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Ok) + "%</td>";
-			html+=TD_INI + State.Nok.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Nok) + "%</td>";
-			html+=TD_INI + State.Defect.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Defect) + "%</td>";
-			html+=TD_INI + State.Warn.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Warn) + "%</td>";
-			html+=TD_INI + State.Info.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Info) + "%</td>";
-			html+=TD_INI + State.Skip.getColorCss() + ";\">" + totals.getPercentageTestCases(State.Skip) + "%</td>";
+			
+			html+=TD_INI + State.Ok.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Ok) + "</td>";
+			html+=TD_INI + State.Nok.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Nok) + "</td>";
+			html+=TD_INI + State.Defect.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Defect) + "</td>";
+			html+=TD_INI + State.Warn.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Warn) + "</td>";
+			html+=TD_INI + State.Info.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Info) + "</td>";
+			html+=TD_INI + State.Skip.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Skip) + "</td>";
 			html+=
 				"<td colspan=\"3\"></td>" +
 				"</tr>";
@@ -220,21 +204,59 @@ public class HtmlEmailBuilder {
 		return html;
 	}
 	
+	private String getNumTestCasesHtml(State state, RowSuiteData rowSuiteData) {
+		String numNew = rowSuiteData.getNumTestCases(state);
+		String deltaBlock = "";
+		if (rowSuiteData.isSuiteOld()) {
+			String numOld = rowSuiteData.getNumTestCases(state, TypeSuite.OLD);
+			deltaBlock = getDeltaTestsHtml(numNew, numOld);
+		}
+		return numNew + deltaBlock;
+	}
+	
 	private String getNumTestCasesTotalsHtml(State state) {
 		String numNew = totals.getNumTestCases(state);
-		String oldBlock = "";
+		String deltaBlock = "";
 		if (isOldData) {
 			String numOld = totals.getNumTestCases(state, TypeSuite.OLD);
-			if (!(numNew.compareTo("")==0 && numOld.compareTo("")==0)) {
-				if (numOld.compareTo("")==0) {
-					numOld = "0";
-				}
-				oldBlock = 
-						"<div style=\"display:inline; font:9pt Arial;color:grey;\">(" +
-						numOld + ")</div>";
-			}
+			deltaBlock = getDeltaTestsHtml(numNew, numOld); 
 		}
-		return numNew + oldBlock;
+		return numNew + deltaBlock;
+	}
+	
+	private String getPercentagesTotalsHtml(State state) {
+		String percentageNewStr = totals.getPercentageTestCases(state) + "%";
+		String deltaBlock = "";
+		if (isOldData) {
+			Float percentageNew = totals.getPercentageTestCasesFloat(state, TypeSuite.NEW);
+			Float percentageOld = totals.getPercentageTestCasesFloat(state, TypeSuite.OLD);
+			Float difference = percentageNew - percentageOld;
+			String differenceStr = String.format("%+.2f%n", difference) + "%";
+			deltaBlock = getDeltaHtml(differenceStr);
+		}
+		return percentageNewStr + deltaBlock;
+	}
+	
+	private String getDeltaTestsHtml(String numNew, String numOld) {
+		String oldBlock = "";
+		if (!(numNew.compareTo("")==0 && numOld.compareTo("")==0)) {
+			if (numNew.compareTo("")==0) {
+				numNew = "0";
+			}
+			if (numOld.compareTo("")==0) {
+				numOld = "0";
+			}
+			Integer difference = Integer.valueOf(numNew) - Integer.valueOf(numOld);
+			String differenceStr = String.format("%+d%n", difference);
+			oldBlock = getDeltaHtml(differenceStr);
+		}
+		return oldBlock;
+	}
+	
+	private String getDeltaHtml(String differenceStr) {
+		return 
+			"<div style=\"display:inline; font:9pt Arial;color:grey;\">(" +
+			differenceStr + ")</div>";
 	}
 	
     private String makeHtmlSaludoRobot() {
@@ -245,7 +267,6 @@ public class HtmlEmailBuilder {
     			"El Robot de Test" +
     			"</p>";
     }
-
 
 	static Map<State,Integer> getInitZeroValues() {
 		Map<State,Integer> mapReturn = new HashMap<>();
@@ -364,7 +385,7 @@ public class HtmlEmailBuilder {
 			try {
 				suiteMinutes+=Double.valueOf(rowSuiteData.getTimeMinutes());
 			} catch (NumberFormatException e) {
-				Log4jTM.getLogger().warn(String.format("Value $s not stored in totals because isn't float ", rowSuiteData.getTimeMinutes()));
+				Log4jTM.getLogger().warn(String.format("Value %s not stored in totals because isn't float ", rowSuiteData.getTimeMinutes()));
 			}
 			testCasesAvailabilityNew+=Integer.valueOf(rowSuiteData.getAvailabilityTests(TypeSuite.NEW));
 			addTestCases(rowSuiteData, TypeSuite.NEW);
@@ -403,9 +424,15 @@ public class HtmlEmailBuilder {
 		}
 		
 		public String getPercentageTestCases(State state, TypeSuite typeSuite) {
-			Map<State,Integer> testCasesByState = getTestCasesByState(typeSuite);
+			Float percentage = getPercentageTestCasesFloat(state, typeSuite);
 			DecimalFormat df1 = new DecimalFormat("0.00");
-			return df1.format(((testCasesByState.get(state) / getTotalTests(typeSuite)) * 100));
+			return df1.format(percentage);
+		}
+		
+		public Float getPercentageTestCasesFloat(State state, TypeSuite typeSuite) {
+			Map<State,Integer> testCasesByState = getTestCasesByState(typeSuite);
+			Float percentage = ((testCasesByState.get(state) / getTotalTests(typeSuite).floatValue()) * 100);
+			return percentage;
 		}
 		
 		public String getPercentageTestCasesAvailable() {
@@ -416,7 +443,7 @@ public class HtmlEmailBuilder {
 			Integer totalTests = getTotalTests(typeSuite);
 			Integer totalAvailab = getNumTestCasesAvailability(typeSuite);
 			DecimalFormat df1 = new DecimalFormat("0.00");
-			return df1.format(((totalAvailab / totalTests) * 100));
+			return df1.format(((totalAvailab / totalTests.floatValue()) * 100));
 		}
 
 		public String getSuiteMinutes() {

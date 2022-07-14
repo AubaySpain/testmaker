@@ -15,6 +15,8 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public class InfoValidation {
 
+	private enum ReturnValidation {BOOLEAN, CHECKSTM, OTHER}
+	
 	private final JoinPoint joinPoint;
 	private final MethodSignature methodSignature;
 	private final Validation valAnnotation;
@@ -28,6 +30,7 @@ public class InfoValidation {
 		this.resultMethod = resultMethod;
 		this.listResultValidations = getValResultFromMethodData();
 	}
+
 	
 	private InfoValidation(JoinPoint joinPoint) {
 		this.joinPoint = joinPoint;
@@ -48,6 +51,7 @@ public class InfoValidation {
 	public ChecksTM getListResultValidation() {
 		return listResultValidations;
 	}
+
 	
     private Validation getValidationAnnotation(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -68,46 +72,60 @@ public class InfoValidation {
     			.orElseThrow(() -> new NoSuchElementException());
     	
     	StepTM step = testCaseInThread.getLastStep();
-    	ChecksTM valResult = ChecksTM.getNew(step);
     	if (resultMethod!=null) {
-    		//One Validation
-	        if (resultMethod instanceof Boolean) {
-	        	Check validation = new Check();
-	        	validation.setOvercomed((Boolean)resultMethod);
-	        	valResult.add(validation);
-	        	return valResult;
-	        }
-	        //Many Validations
-	        if (resultMethod instanceof ChecksTM) {
-	        	valResult = (ChecksTM)resultMethod;
-	        	return valResult;
-	        }
-	        
-	        throw (new RuntimeException(
-	        	"The return of a method marked with @Validation annotation must be of type boolean or " + 
-	        	ChecksTM.class.getName()));
+    		return getValidationResult(step);
     	} else {
+    		ChecksTM valResult = ChecksTM.getNew(step);
     		valResult.add(new Check());
     		return valResult;
     	}
     }
+    
+    private ChecksTM getValidationResult(StepTM step) {
+    	ChecksTM valResult = ChecksTM.getNew(step);
+		switch (getReturnValidation()) {
+		case BOOLEAN:
+        	Check validation = new Check();
+        	validation.setOvercomed((Boolean)resultMethod);
+        	valResult.add(validation);
+        	return valResult;
+		case CHECKSTM:
+        	valResult = (ChecksTM)resultMethod;
+        	return valResult;
+        default:
+	        throw (new RuntimeException(
+		        	"The return of a method marked with @Validation annotation must be of type boolean or " + 
+		        	ChecksTM.class.getName()));
+		}
+    }
+    
+	private ReturnValidation getReturnValidation() {
+        if (resultMethod instanceof Boolean) {
+        	return ReturnValidation.BOOLEAN;
+        }
+        if (resultMethod instanceof ChecksTM) {
+        	return ReturnValidation.CHECKSTM;
+        }
+        return ReturnValidation.OTHER;
+	}
 
     private void modifyValidationResultAccordingAnnotationParams(ChecksTM valResult) {
-    	//Only exists annotations in the "One Validation" case
-    	if (valResult.size()>0) {
-	    	if ("".compareTo(valResult.get(0).getDescription())==0) {
-	    		MatcherWithMethodParams matcher = MatcherWithMethodParams.from(joinPoint);
-	    		String descripValidationMatched = matcher.match(valAnnotation.description());
-	    		valResult.get(0).setDescription(descripValidationMatched);
+    	if (getReturnValidation()==ReturnValidation.BOOLEAN) {
+	    	if (valResult.size()>0) {
+		    	if ("".compareTo(valResult.get(0).getDescription())==0) {
+		    		MatcherWithMethodParams matcher = MatcherWithMethodParams.from(joinPoint);
+		    		String descripValidationMatched = matcher.match(valAnnotation.description());
+		    		valResult.get(0).setDescription(descripValidationMatched);
+		    	}
+		    	
+		    	if (valResult.get(0).getLevelResult()==State.Undefined &&
+		    		valAnnotation.level()!=null) {
+		    		valResult.get(0).setLevelResult(valAnnotation.level());
+		    	}
+		    	
+	    		valResult.get(0).setStore(valAnnotation.store());
+	    		valResult.get(0).setSend(valAnnotation.send());
 	    	}
-	    	
-	    	if (valResult.get(0).getLevelResult()==State.Undefined &&
-	    		valAnnotation.level()!=null) {
-	    		valResult.get(0).setLevelResult(valAnnotation.level());
-	    	}
-	    	
-    		valResult.get(0).setStore(valAnnotation.store());
-    		valResult.get(0).setSend(valAnnotation.send());
     	}
     }
 }
