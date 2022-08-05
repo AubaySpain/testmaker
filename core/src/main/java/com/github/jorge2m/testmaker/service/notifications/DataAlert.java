@@ -3,6 +3,7 @@ package com.github.jorge2m.testmaker.service.notifications;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
@@ -17,6 +18,7 @@ public class DataAlert {
 	private final String testCaseName;
 	private final String stepDescription;
 	private final Check check;
+	private final ChecksTM parentChecks;
 	
 	private DataAlert(Check check, ChecksTM parentChecks) {
 		SuiteTM suite = parentChecks.getSuiteParent();
@@ -24,6 +26,7 @@ public class DataAlert {
 		StepTM step = parentChecks.getStepParent();
 		
 		this.check = check;
+		this.parentChecks = parentChecks;
     	this.suiteName = suite.getName();
     	this.urlReportSuite = suite.getDnsReportHtml();
     	this.testCaseName = testCase.getName();
@@ -59,6 +62,26 @@ public class DataAlert {
 
 	public String getStepDescription() {
 		return stepDescription;
+	}
+	
+	public String getCheckDescription() {
+		return check.getDescription();
+	}
+	
+	public State geteLevelCheck() {
+		return check.getLevelResult();
+	}
+	
+	public String getMethodValidation() {
+		return parentChecks.getPathMethod();
+	}
+	
+	public int getPositionValidationInStep() {
+		int position = parentChecks.getPositionInStep();
+		if (position < 1) {
+			position = parentChecks.getStepParent().getListChecksTM().size() + 1;
+		}
+		return position;
 	}
 
 	public Check getCheck() {

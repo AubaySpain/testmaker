@@ -62,7 +62,7 @@ public class TeamsNotification implements AlarmSender {
 		+ "            \"value\": \"" + JSONValue.escape(dataAlert.getStepDescription()) + "\"\r\n"
 		+ "        }, {\r\n"
 		+ "            \"name\": \"Check\",\r\n"
-		+ "            \"value\": \"" + JSONValue.escape(dataAlert.getCheck().getDescription()) + "\"\r\n"
+		+ "            \"value\": \"" + JSONValue.escape(dataAlert.getCheckDescription()) + "\"\r\n"
 		+ "        }],\r\n"
 		+ "        \"markdown\": true\r\n"
 		+ "    }],\r\n"

@@ -10,16 +10,18 @@ public class Check {
 	private String description = "";
     private State levelResult = State.Undefined;
     private boolean overcomed = false;
+    private String info = "";
 	private StoreType store = StoreType.Evidences;
 	private SendType send = SendType.None;
 
     public Check() {}
     
     public static Check of(
-    		String description, boolean overcomed, State levelResult, StoreType storeType, SendType sendType) {
+    		String description, boolean overcomed, State levelResult, String info, StoreType storeType, SendType sendType) {
     	Check resultValidation = of(levelResult);
     	resultValidation.setDescription(description);
     	resultValidation.setOvercomed(overcomed);
+    	resultValidation.setInfo(info);
     	resultValidation.setStore(storeType);
     	resultValidation.setSend(sendType);
     	return resultValidation;
@@ -36,6 +38,12 @@ public class Check {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
 	}
 	public State getLevelResult() {
 		return levelResult;
@@ -66,6 +74,46 @@ public class Check {
 	}
 	public void setSend(SendType send) {
 		this.send = send;
+	}
+	
+	public static BuilderCheck make(String description, boolean overcomed, State levelResult) {
+		return new BuilderCheck(description, overcomed, levelResult);
+	}
+	
+	public static class BuilderCheck {
+		private final String description;
+		private final boolean overcomed;
+		private final State levelResult;
+		
+		private StoreType store = StoreType.Evidences; 
+		private SendType send = SendType.None;
+		private String info;
+		
+		public BuilderCheck(String description, boolean overcomed, State levelResult) {
+			this.description = description;
+			this.overcomed = overcomed;
+			this.levelResult = levelResult;
+		}
+		
+		public BuilderCheck store(StoreType store) {
+			this.store = store;
+			return this;
+		}
+		
+		public BuilderCheck send(SendType send) {
+			this.send = send;
+			return this;
+		}		
+		
+		public BuilderCheck info(String info) {
+			this.info = info;
+			return this;
+		}
+
+		public Check build() {
+			return Check.of(description, overcomed, levelResult, info, store, send);
+		}
+
 	}
 
 }

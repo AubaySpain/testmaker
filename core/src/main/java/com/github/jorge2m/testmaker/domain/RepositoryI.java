@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import com.github.jorge2m.testmaker.domain.suitetree.Check;
+import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
@@ -13,6 +15,7 @@ public interface RepositoryI {
 	public Connection getConnection() throws ClassNotFoundException, SQLException;
 	public void store(SuiteBean suite, StoreUntil until);
 	public void delete(String suiteIdExec);
+	public void storeAlert(Check check, ChecksTM checksParent);
 	public SuiteBean getSuite(String idExecution) throws Exception;
 	public List<SuiteBean> getListSuitesBetween(Date fechaDesde, Date fechaHasta) throws Exception;
 	public List<SuiteBean> getListSuites() throws Exception;

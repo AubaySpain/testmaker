@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.ClickElement.BuilderClick;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.SelectElement.BuilderSelect;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.BuilderState;
@@ -15,6 +16,9 @@ public class PageObjTM extends SeleniumUtils {
 	
 	public PageObjTM(WebDriver driver) {
 		this.driver = driver;
+	}
+	public PageObjTM() {
+		this.driver = TestMaker.getDriverTestCase();
 	}
 
 	//Click

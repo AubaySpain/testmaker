@@ -133,19 +133,7 @@ public class ChecksTM {
 		sendNotificationsIfNeeded(check);
 	}
 	public void add(String description, boolean overcomed, State levelResult) {
-		add(description, overcomed, levelResult, StoreType.Evidences, SendType.None);
-	}
-	public void add(String description, boolean overcomed, State levelResult, StoreType store) {
-		Check resultValidation = Check.of(description, overcomed, levelResult, store, SendType.None);
-		add(resultValidation);
-	}
-	public void add(String description, boolean overcomed, State levelResult, SendType send) {
-		Check resultValidation = Check.of(description, overcomed, levelResult, StoreType.Evidences, send);
-		add(resultValidation);
-	}
-	public void add(String description, boolean overcomed, State levelResult, StoreType storeType, SendType sendType) {
-		Check resultValidation = Check.of(description, overcomed, levelResult, storeType, sendType);
-		add(resultValidation);
+		add(Check.make(description, overcomed, levelResult).build());
 	}
 
 	public boolean areAllChecksOvercomed() {
@@ -197,8 +185,17 @@ public class ChecksTM {
 		}
 		String htmlValidation = 
 			"<validac style=\"color:" + resultValidation.getStateResult().getColorCss() + "\">" + 
-			numCheck + resultValidation.getDescription() + 
-			"</validac>";
+			numCheck + resultValidation.getDescription();
+		
+		String info = resultValidation.getInfo();
+		if (info!=null && info.compareTo("")!=0 ) {
+			htmlValidation+=
+			    "<div style=\"border:1px solid;border-radius:5px;margin:5px;\">" + 
+			    resultValidation.getInfo() +
+			    "</div>";
+		}
+		
+		htmlValidation+="</validac>";
 		return htmlValidation;
 	}
 
@@ -288,8 +285,8 @@ public class ChecksTM {
     	if (check.getSend()==SendType.Alert) {
   	        InputParamsTM inputParams = suiteParent.getInputParams();
 	        if (inputParams.isAlarm()) {
-	            Alarm alarm = new Alarm();
-	            alarm.send(check, this);
+	            Alarm alarm = new Alarm(check, this);
+	            alarm.send();
 	        }
     	}
     }

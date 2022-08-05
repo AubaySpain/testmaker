@@ -12,11 +12,13 @@ import org.sqlite.SQLiteConfig.LockingMode;
 
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI;
+import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import com.github.jorge2m.testmaker.repository.jdbc.dao.AlertsDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.ConnectorBD;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.StepsDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.SuitesDAO;
@@ -34,6 +36,7 @@ public class RepositorySQLite implements RepositoryI {
 	private final TestCasesDAO testCasesDAO = new TestCasesDAO(connector);
 	private final StepsDAO stepsDAO = new StepsDAO(connector);
 	private final ValidationsDAO validationsDAO = new ValidationsDAO(connector);
+	private final AlertsDAO alertsDAO = new AlertsDAO(connector);
 	
 //	@Override
 //	public void storeAll(SuiteTM suite) {
@@ -48,6 +51,11 @@ public class RepositorySQLite implements RepositoryI {
 	@Override
 	public void store(SuiteBean suite, StoreUntil until) {
 		storeSuiteAndChildren(suite, until);
+	}
+	
+	@Override
+	public void storeAlert(Check check, ChecksTM checksParent) {
+		alertsDAO.insertAlert(check, checksParent);
 	}
 	
 	@Override
