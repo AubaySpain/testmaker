@@ -9,6 +9,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import com.github.jorge2m.testmaker.service.notifications.DataAlert;
 
 public interface RepositoryI {
 	
@@ -16,10 +17,12 @@ public interface RepositoryI {
 	public void store(SuiteBean suite, StoreUntil until);
 	public void delete(String suiteIdExec);
 	public void storeAlert(Check check, ChecksTM checksParent);
+	public List<DataAlert> getAlertsInPeriod(int periodMinutes, Check check, ChecksTM checksParent);
 	public SuiteBean getSuite(String idExecution) throws Exception;
 	public List<SuiteBean> getListSuitesBetween(Date fechaDesde, Date fechaHasta) throws Exception;
 	public List<SuiteBean> getListSuites() throws Exception;
 	public List<TestCaseBean> getListTestCases(String suiteExecId) throws Exception;
+	public boolean removeBD();
 
 	public enum StoreUntil {
 		nostore(false, false, false, false, false), 

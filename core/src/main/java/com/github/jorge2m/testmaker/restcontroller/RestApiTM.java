@@ -31,6 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.FileUtils;
@@ -417,10 +418,17 @@ public class RestApiTM {
 		inputParams.setAppEnum(appEnum);
 		inputParams.setTypeAccess(TypeAccess.Rest);
 		CreatorSuiteRun creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
-		//creatorSuiteRun.setInputParams(inputParams);
 		return (creatorSuiteRunService.getListAllTestCasesData());
 	}
-
+	
+	@DELETE
+	@Path("/bd")
+	public Response resetBD() {
+		if (TestMaker.removeBD()) {
+			return Response.ok().build();	
+		}
+		return Response.status(Status.SERVICE_UNAVAILABLE).build();
+	}
 	
 	@GET
 	@Path("/testserver")

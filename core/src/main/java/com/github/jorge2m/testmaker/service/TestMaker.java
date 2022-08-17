@@ -130,6 +130,9 @@ public class TestMaker {
 	public static void purgeSuite(SuiteBean suite) {
 		repository.delete(suite.getIdExecSuite());
 	}
+	public static boolean removeBD() {
+		return repository.removeBD();
+	}
 	
 	private static boolean neatStop(SuiteTM suite) {
 		suite.setStateExecution(StateExecution.Stopping);

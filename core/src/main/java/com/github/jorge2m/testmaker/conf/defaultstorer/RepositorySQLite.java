@@ -4,8 +4,11 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteConfig.LockingMode;
@@ -25,6 +28,7 @@ import com.github.jorge2m.testmaker.repository.jdbc.dao.SuitesDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.TestCasesDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.TestRunsDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.ValidationsDAO;
+import com.github.jorge2m.testmaker.service.notifications.DataAlert;
 import com.github.jorge2m.testmaker.testreports.html.ResourcesExtractor;
 
 public class RepositorySQLite implements RepositoryI {
@@ -38,16 +42,6 @@ public class RepositorySQLite implements RepositoryI {
 	private final ValidationsDAO validationsDAO = new ValidationsDAO(connector);
 	private final AlertsDAO alertsDAO = new AlertsDAO(connector);
 	
-//	@Override
-//	public void storeAll(SuiteTM suite) {
-//		storeSuiteAndChildren(suite);
-//	}
-	
-//	@Override
-//	public void storeSuite(SuiteTM suite) {
-//		storeOnlySuite(suite);
-//	}
-	
 	@Override
 	public void store(SuiteBean suite, StoreUntil until) {
 		storeSuiteAndChildren(suite, until);
@@ -56,6 +50,15 @@ public class RepositorySQLite implements RepositoryI {
 	@Override
 	public void storeAlert(Check check, ChecksTM checksParent) {
 		alertsDAO.insertAlert(check, checksParent);
+	}
+	
+	@Override
+	public List<DataAlert> getAlertsInPeriod(int periodMinutes, Check check, ChecksTM checksParent) {
+		List<DataAlert> alertsAll = alertsDAO.getAlerts(check, checksParent);
+		LocalDateTime fechaFrom = LocalDateTime.now().minusMinutes(periodMinutes);
+		return alertsAll.stream()
+			.filter(s -> convertToLocalDateTime(s.getFecha()).isAfter(fechaFrom))
+			.collect(Collectors.toList());
 	}
 	
 	@Override
@@ -83,6 +86,12 @@ public class RepositorySQLite implements RepositoryI {
 		return (testCasesDAO.getListTestCases(suiteExecId));
 	}
 	
+	@Override
+	public boolean removeBD() {
+		String pathBD = getSQLiteFilePathAutomaticTestingSchema();
+		return new File(pathBD).delete();
+	}
+	
 	private ConnectorBD getConnectorBD() {
 		return ( 
 			new ConnectorBD() {
@@ -106,11 +115,7 @@ public class RepositorySQLite implements RepositoryI {
 			}
 		);
 	}
-	
-//	private synchronized void storeOnlySuite(SuiteTM suite) {
-//		suitesDAO.insertOrReplaceSuite(suite.getSuiteBean());
-//	}
-	
+		
 	private synchronized void storeSuiteAndChildren(SuiteBean suite, StoreUntil until) {
 		if (!until.storeSuite()) {
 			return;
@@ -164,7 +169,7 @@ public class RepositorySQLite implements RepositoryI {
 				sqliteBdGrabed = true;
 			}
 		}
-	}
+	}	
 
 	private String getSQLitePathDirectory() {
 		String path = 
@@ -179,4 +184,9 @@ public class RepositorySQLite implements RepositoryI {
 			getSQLitePathDirectory() + 
 			ConstantesTM.SQLiteFileAutomaticTestingSchema);
 	}
+	
+	private LocalDateTime convertToLocalDateTime(Date dateToConvert) {
+	    return new Timestamp(dateToConvert.getTime()).toLocalDateTime();
+	}
+	
 }

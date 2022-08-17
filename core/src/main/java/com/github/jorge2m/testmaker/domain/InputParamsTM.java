@@ -46,6 +46,8 @@ public abstract class InputParamsTM {
 	public static final String NetAnalysisParam = "net";
 	
 	public static final String AlarmParam = "alarm";
+	public static final String MaxAlarmsParam = "maxalarms";
+	public static final String PeriodAlarmsParam = "periodalarms";
 	public static final String TeamsChannelParam = "teamschannel";
 	
 	public static final String StoreBdParam = "storebd";
@@ -123,6 +125,12 @@ public abstract class InputParamsTM {
 	
 	@FormParam(AlarmParam)
 	String alarm;
+	
+	@FormParam(MaxAlarmsParam)
+	String maxalarms;
+	
+	@FormParam(PeriodAlarmsParam)
+	String periodalarms;	
 	
 	@FormParam(TeamsChannelParam)
 	String teamschannel;
@@ -311,6 +319,21 @@ public abstract class InputParamsTM {
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Teams Notification (true, false)")
 			.build());		
+
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.MaxAlarmsParam)
+			.required(false)
+			.hasArgs()
+			.pattern("[0-9]+")
+			.desc("Max alarms in a period. By default 60 minutes (configurable via maxalarms param)")
+			.build());		
+		
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.PeriodAlarmsParam)
+			.required(false)
+			.hasArgs()
+			.pattern("[0-9]+")
+			.desc("Configure the period in minutes param maxalarms refers to")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.TeamsChannelParam)
 			.required(false)
 			.hasArgs()
@@ -438,8 +461,12 @@ public abstract class InputParamsTM {
 		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
 		remote = cmdLine.getOptionValue(RemoteParam);
 		net = cmdLine.getOptionValue(NetAnalysisParam);
+		
 		alarm = cmdLine.getOptionValue(AlarmParam);
+		maxalarms = cmdLine.getOptionValue(MaxAlarmsParam);
+		periodalarms = cmdLine.getOptionValue(PeriodAlarmsParam);
 		teamschannel = cmdLine.getOptionValue(TeamsChannelParam);
+		
 		storebd = cmdLine.getOptionValue(StoreBdParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
 		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
@@ -474,6 +501,8 @@ public abstract class InputParamsTM {
 		Remote(RemoteParam),
 		NetAnalysis(NetAnalysisParam),
 		Alarm(AlarmParam),
+		MaxAlarms(MaxAlarmsParam),
+		PeriodAlarms(PeriodAlarmsParam),		
 		TeamsChannel(TeamsChannelParam),
 		StoreBd(StoreBdParam),
 		Mails(MailsParam),
@@ -544,6 +573,10 @@ public abstract class InputParamsTM {
 			return this.net;
 		case Alarm:
 			return this.alarm;
+		case MaxAlarms:
+			return this.maxalarms;
+		case PeriodAlarms:
+			return this.periodalarms;
 		case TeamsChannel:
 			return this.teamschannel;
 		case StoreBd:
@@ -780,6 +813,18 @@ public abstract class InputParamsTM {
 			return ("true".compareTo(alarm)==0);
 		}
 		return false;
+	}	
+	public String getMaxAlarms() {
+		return this.maxalarms;
+	}
+	public void setMaxAlarms(String maxalarms) {
+		this.maxalarms = maxalarms;
+	}
+	public String getPeriodAlarms() {
+		return this.periodalarms;
+	}
+	public void setPeriodAlarms(String periodalarms) {
+		this.periodalarms = periodalarms;
 	}	
 	public void setTeamsChannel(String teamschannel) {
 		this.teamschannel = teamschannel;

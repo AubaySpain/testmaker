@@ -174,31 +174,6 @@ public class SuitesDAO {
 		}
 	}
 
-//	public SuiteBean get1rstSuiteAfter(Date fechaDesde) throws Exception {
-//		SuiteBean suiteToReturn = null;
-//		try (Connection conn = connector.getConnection();
-//			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc)) {
-//			try (ResultSet resultado = select.executeQuery()) {
-//				while (resultado.next()) {
-//					Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
-//					if (inicioDateSuite.after(fechaDesde)) {
-//						suiteToReturn = getSuite(resultado);
-//					} else {
-//						break;
-//					}
-//				}
-//			}
-//		} 
-//		catch (SQLException ex) {
-//			throw new RuntimeException(ex);
-//		} 
-//		catch (ClassNotFoundException ex) {
-//			throw new RuntimeException(ex);
-//		}
-//		
-//		return suiteToReturn;
-//	}
-	
 	public List<SuiteBean> getSuitesBetween(final Date fechaDesde, final Date fechaHasta) throws Exception {
 		Pair<Date,Date> desdeHastaPair = getDatesNormalized(fechaDesde, fechaHasta);
 		if (desdeHastaPair.getLeft().after(desdeHastaPair.getRight())) {

@@ -11,13 +11,13 @@ import org.json.simple.JSONValue;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
-import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendTeamsNotification;
+import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendNotification;
 
 
 public class TeamsNotification implements AlarmSender {
 
 	@Override
-	public void send(Check check, ChecksTM parentChecks) {
+	public void send(Check check, ChecksTM parentChecks) throws UnsendNotification {
         try {
         	HttpClient httpClient = createDefault();
             HttpPost post = new HttpPost(getTeamsChanelURL(check, parentChecks));
@@ -30,10 +30,10 @@ public class TeamsNotification implements AlarmSender {
             	String errorMessage = String.format(
             			"HttpError %s sending Teams Notification with body message %s", 
             			response.getStatusLine().getStatusCode(), bodyMessage);
-                throw new UnsendTeamsNotification(errorMessage);
+                throw new UnsendNotification(errorMessage);
             }
         } catch (Exception e) {
-            throw new UnsendTeamsNotification(e);
+            throw new UnsendNotification(e);
         }
 	}
 	
@@ -63,7 +63,10 @@ public class TeamsNotification implements AlarmSender {
 		+ "        }, {\r\n"
 		+ "            \"name\": \"Check\",\r\n"
 		+ "            \"value\": \"" + JSONValue.escape(dataAlert.getCheckDescription()) + "\"\r\n"
-		+ "        }],\r\n"
+		+ "        }, {\r\n"
+		+ "            \"name\": \"Info\",\r\n"
+		+ "            \"value\": \"" + JSONValue.escape(dataAlert.getInfoExecution()) + "\"\r\n"
+		+ "        }],\r\n"		
 		+ "        \"markdown\": true\r\n"
 		+ "    }],\r\n"
 		+ "    \"potentialAction\": [{\r\n"
