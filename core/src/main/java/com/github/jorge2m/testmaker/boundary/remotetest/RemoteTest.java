@@ -25,7 +25,6 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
-import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
 public class RemoteTest extends JaxRsClient {
 	
@@ -37,7 +36,7 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	public Optional<SuiteBean> execute(TestCaseTM testCase, Object testObject) 
-	throws Exception {
+			throws Exception {
 		InputParamsTM inputParams = testCase.getInputParamsSuite();
 		setIdExecSuite(inputParams, testCase);
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
@@ -50,13 +49,13 @@ public class RemoteTest extends JaxRsClient {
 	
 	private void setIdExecSuite(InputParamsTM inputParams, TestCaseTM testCase) {
 		//We need to unify idexecsuite in all testcases for send all to BrowserStack gathered under the same id
-		if (inputParams.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
+		//if (inputParams.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
 			inputParams.setIdExecSuite(testCase.getSuiteParent().getIdExecution());
-		}
+		//}
 	}
 	
 	private Optional<SuiteBean> executeTestFromFactory(TestCaseTM testCase, InputParamsTM inputParams, Serializable testObject) 
-	throws Exception {
+			throws Exception {
 		byte[] testSerialized = SerializationUtils.serialize(testObject);
 		String testSerializedStrB64 = Base64.getEncoder().encodeToString(testSerialized);
 		Log4jTM.getLogger().info("Object Serialized: " + testSerializedStrB64);

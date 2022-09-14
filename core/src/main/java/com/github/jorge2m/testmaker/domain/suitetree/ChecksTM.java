@@ -282,7 +282,8 @@ public class ChecksTM {
 	}
 	
     private void sendNotificationsIfNeeded(Check check) {
-    	if (check.getSend()==SendType.Alert) {
+    	if (check.getSend()==SendType.Alert &&
+    		!check.isOvercomed()) {
   	        InputParamsTM inputParams = suiteParent.getInputParams();
 	        if (inputParams.isAlarm()) {
 	            Alarm alarm = new Alarm(check, this);
