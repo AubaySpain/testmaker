@@ -14,13 +14,11 @@ import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM.*;
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils.getElementWeb;
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class BuscarWithoutRefactor implements Serializable {
 	

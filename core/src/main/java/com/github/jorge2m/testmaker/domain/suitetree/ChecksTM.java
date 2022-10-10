@@ -7,12 +7,8 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.conf.StoreType;
-import com.github.jorge2m.testmaker.conf.SendType;
 import com.github.jorge2m.testmaker.conf.State;
-import com.github.jorge2m.testmaker.domain.Alarm;
-import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
-
 
 public class ChecksTM {
 	
@@ -130,7 +126,6 @@ public class ChecksTM {
 	public void add(Check check) {
 		//check.setParentChecks(this);
 		listChecks.add(check);
-		sendNotificationsIfNeeded(check);
 	}
 	public void add(String description, boolean overcomed, State levelResult) {
 		add(Check.make(description, overcomed, levelResult).build());
@@ -280,16 +275,4 @@ public class ChecksTM {
 	private int getIndexLastValidation() {
 		return listChecks.size();
 	}
-	
-    private void sendNotificationsIfNeeded(Check check) {
-    	if (check.getSend()==SendType.Alert &&
-    		!check.isOvercomed()) {
-  	        InputParamsTM inputParams = suiteParent.getInputParams();
-	        if (inputParams.isAlarm()) {
-	            Alarm alarm = new Alarm(check, this);
-	            alarm.send();
-	        }
-    	}
-    }
-
 }

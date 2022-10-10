@@ -14,7 +14,7 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.service.testab.TestABOptimize;
 import com.github.jorge2m.testmaker.service.testab.TestABactData;
-import com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils;
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
 
 public class TestABOptimizeManager implements TestABmanager {
 	
@@ -130,9 +130,9 @@ public class TestABOptimizeManager implements TestABmanager {
 		String windowHandlerToReturn = driver.getWindowHandle();
 		try {
 			String titleTab = "SetCookie " + cookie.getName() + "_" + cookie.getValue();
-			SeleniumUtils.loadUrlInAnotherMinimumTab("https://" + cookie.getDomain() + cookie.getPath(), titleTab, driver);
+			PageObjTM.loadUrlInAnotherMinimumTab("https://" + cookie.getDomain() + cookie.getPath(), titleTab, driver);
 			driver.manage().addCookie(cookie);
-			SeleniumUtils.closeTabByTitleAndReturnToWidow(titleTab, windowHandlerToReturn, driver);
+			PageObjTM.closeTabByTitleAndReturnToWidow(titleTab, windowHandlerToReturn, driver);
 		}
 		catch (Exception e) {
 			Log4jTM.getLogger().warn("Problem activating TestAB via add of Cookie " + cookie.getName(), e);

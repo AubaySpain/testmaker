@@ -15,7 +15,7 @@ import com.github.jorge2m.testmaker.boundary.listeners.MyTransformer;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethod;
-import com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils;
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
 import com.github.jorge2m.testmaker.testreports.html.Reporter;
 
 public abstract class SuiteMaker {
@@ -49,7 +49,7 @@ public abstract class SuiteMaker {
 	private static synchronized String makeIdSuiteExecution() {
 		Calendar c1 = Calendar.getInstance(); 
 		String timestamp = new SimpleDateFormat("yyMMdd_HHmmssSS").format(c1.getTime());
-		SeleniumUtils.waitMillis(1);
+		PageObjTM.waitMillis(1);
 		return (timestamp);
 	}
 	

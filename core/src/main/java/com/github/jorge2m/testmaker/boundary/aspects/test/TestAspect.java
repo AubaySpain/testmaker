@@ -7,9 +7,14 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.testng.annotations.Test;
 
+import com.github.jorge2m.testmaker.conf.SendType;
+import com.github.jorge2m.testmaker.domain.Alarm;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
 import com.github.jorge2m.testmaker.domain.StateExecution;
+import com.github.jorge2m.testmaker.domain.suitetree.Check;
+import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
+import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
@@ -41,9 +46,13 @@ public class TestAspect {
 				.orElseThrow(() -> new NoSuchElementException());
 		
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
-		return executeTest(joinPoint, testCase);
+		Object test = executeTest(joinPoint, testCase);
+		if (!isTestExecutingInRemote(testCase)) {			
+			sendNotifications(testCase);
+		}
+		return test;
 	}
-
+	
 	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase) throws Throwable {
 		fitTestToRamp(testCase);
 		testCase.setStateRun(StateExecution.Running);
@@ -101,7 +110,7 @@ public class TestAspect {
 	}
 
 	private Object executeTestRemote(ProceedingJoinPoint joinPoint, TestCaseTM testCase) 
-	throws ExecuteRemoteTestException {
+			throws ExecuteRemoteTestException {
 		try {
 			Optional<SuiteBean> suiteBean = ServerSubscribers.sendTestToRemoteServer(testCase, joinPoint.getTarget());
 			if (!suiteBean.isPresent()) {
@@ -142,5 +151,30 @@ public class TestAspect {
 		}
 		return (presentTestCaseMethod.getName().compareTo(listTestCaseFilter.get(0))==0);
 	}
+
+	private boolean isTestExecutingInRemote(TestCaseTM testCase) {
+		return testCase.getSuiteParent().getInputParams().isTestExecutingInRemote();
+	}
+	
+	private void sendNotifications(TestCaseTM testCase) {
+		for (StepTM step : testCase.getListStep()) {
+			for (ChecksTM checks : step.getListChecksTM()) {
+				for (Check check : checks.getListChecks()) {
+					sendNotificationIfNeeded(check, checks, testCase.getSuiteParent());
+				}
+			}
+		}
+	}
+	
+    private void sendNotificationIfNeeded(Check check, ChecksTM checksParent, SuiteTM suiteParent) {
+    	if (check.getSend()==SendType.Alert &&
+    		!check.isOvercomed()) {
+  	        InputParamsTM inputParams = suiteParent.getInputParams();
+	        if (inputParams.isAlarm()) {
+	            Alarm alarm = new Alarm(check, checksParent);
+	            alarm.send();
+	        }
+    	}
+    }
 	
 }

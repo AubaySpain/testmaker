@@ -108,10 +108,9 @@ class FirefoxdriverMaker extends DriverMaker {
 		options = new FirefoxOptions().setBinary(fb);
 		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, "true");
 		options.setCapability("acceptSslCerts", true);
-		options.setCapability(FirefoxDriver.PROFILE, fp);
 		options.setProfile(fp);
 		options.setCapability("marionette", true);
-		System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, String.valueOf(true));
+		//System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, String.valueOf(true));
 		options.setHeadless(isHeadless);
 	}
 

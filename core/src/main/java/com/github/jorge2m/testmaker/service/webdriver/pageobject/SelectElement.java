@@ -53,7 +53,7 @@ public class SelectElement {
 		}
 		
 		if (waitLoadPage > 0) {
-			SeleniumUtils.waitForPageLoaded(driver, waitLoadPage);
+			PageObjTM.waitForPageLoaded(driver, waitLoadPage);
 		}
 	}
 	

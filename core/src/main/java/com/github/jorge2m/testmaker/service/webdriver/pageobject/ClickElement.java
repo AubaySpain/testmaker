@@ -39,7 +39,7 @@ public class ClickElement {
 		}
 		click(typeOfClick, elementLink);
 		if (waitLoadPage > 0) {
-			SeleniumUtils.waitForPageLoaded(driver, waitLoadPage);
+			PageObjTM.waitForPageLoaded(driver, waitLoadPage);
 		}
 	}
 	
@@ -73,9 +73,9 @@ public class ClickElement {
 			return null;
 		}
 		if (webelement==null) {
-			return SeleniumUtils.getElementVisible(driver, by);
+			return PageObjTM.getElementVisible(driver, by);
 		}
-		return SeleniumUtils.getElementVisible(webelement, by);
+		return PageObjTM.getElementVisible(webelement, by);
 	}
 	private WebElement getElementClickable() {
 		if (by==null) {
@@ -85,9 +85,9 @@ public class ClickElement {
 			return null;
 		}
 		if (webelement==null) {
-			return SeleniumUtils.getElementClickable(driver, by);
+			return PageObjTM.getElementClickable(driver, by);
 		}
-		return SeleniumUtils.getElementClickable(webelement, by, driver);
+		return PageObjTM.getElementClickable(webelement, by, driver);
 	}
 	
 	private void click(TypeClick typeOfClick, WebElement link) {
@@ -154,6 +154,9 @@ public class ClickElement {
 			this.waitLoadPage = seconds;
 			return this;
 		}
+		public BuilderClick waitLoadPage() {
+			return waitLoadPage(30);
+		}		
 		
 		public ClickElement build() {
 			ClickElement clickElement = new ClickElement(driver, webelement, by, state, typeOfClick, waitLink, waitLoadPage);

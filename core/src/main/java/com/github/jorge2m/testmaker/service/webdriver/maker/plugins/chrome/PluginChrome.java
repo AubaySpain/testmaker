@@ -8,11 +8,10 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
-
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State;
 
 public abstract class PluginChrome { 
 
@@ -49,7 +48,7 @@ public abstract class PluginChrome {
         
         //Wait 2 seconds for the page of Extensions
         String xpathLinkShortCuts = "//a[@class='extension-commands-config']";
-        new WebDriverWait(driver, 2).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathLinkShortCuts)));
+        PageObjTM.state(State.Visible, By.xpath(xpathLinkShortCuts), driver).wait(2).check();
         
         //Set the ShortCut Extension
         driver.findElement(By.xpath(xpathLinkShortCuts)).click();

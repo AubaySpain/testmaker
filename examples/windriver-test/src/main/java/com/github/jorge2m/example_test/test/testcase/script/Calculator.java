@@ -1,26 +1,14 @@
 package com.github.jorge2m.example_test.test.testcase.script;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.conf.State;
-import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 import io.appium.java_client.windows.WindowsDriver;
-
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM.*;
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.SeleniumUtils.getElementWeb;
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
-
-import java.io.Serializable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 //Important: this script is implemented against a spanish version of the Windows Calculator application. 
 //But this test includes comments in the code for the quick adaptation to a English Version.

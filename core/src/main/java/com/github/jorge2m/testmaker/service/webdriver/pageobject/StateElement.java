@@ -1,5 +1,7 @@
 package com.github.jorge2m.testmaker.service.webdriver.pageobject;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -27,7 +29,7 @@ public class StateElement {
 	}
 	
 	public boolean check() {
-		WebDriverWait wait = new WebDriverWait(driver, seconds);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 		ExpectedCondition<?> expectedCondition;
 		switch (state) {
 			case Present:
