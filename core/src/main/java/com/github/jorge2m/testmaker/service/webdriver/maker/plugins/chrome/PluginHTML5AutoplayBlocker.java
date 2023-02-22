@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class PluginHTML5AutoplayBlocker extends PluginChrome {
     
 	//How obtain the .crx file? -> https://www.maketecheasier.com/download-save-chrome-extension/
-    private final String fileName = "autoplay_blocker_1.4.0_0.crx";
+    private final String fileName = "autoplay_blocker_1.5.0_0.crx";
 //    private static final String PageSetup = "chrome-extension://icppkihnmgkncknjlfkkjgfgoifkcgii/options.html";
 //    private static final String XPathSelect = "//select[@id='default-mode']";
     

@@ -5,6 +5,7 @@ import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateEle
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -33,14 +34,34 @@ public class ClickElement {
 	}
 	
 	public void click() {
-		WebElement elementLink = getElementClick();
+		WebElement elementLink;
 		if (waitLink > 0) {
-			state(Clickable, elementLink, driver).wait(waitLink).check();
+			elementLink = waitForElementClickable(waitLink);
+		} else {
+			elementLink = getElementClick();			
 		}
+
 		click(typeOfClick, elementLink);
 		if (waitLoadPage > 0) {
 			PageObjTM.waitForPageLoaded(driver, waitLoadPage);
 		}
+	}
+	
+	private WebElement waitForElementClickable(int seconds) throws NoSuchElementException {
+		NoSuchElementException eFinal = new NoSuchElementException("Element not clickable");
+		for (int i=0; i<seconds; i++) {
+			try {
+				WebElement elementLink = getElementClick();
+				if (state(Clickable, elementLink, driver).check()) {
+					return elementLink;
+				}
+			}
+			catch (NoSuchElementException e) {
+				eFinal = e;
+			}
+			waitMillis(1000);
+		}
+		throw eFinal;
 	}
 	
 	private WebElement getElementClick() {

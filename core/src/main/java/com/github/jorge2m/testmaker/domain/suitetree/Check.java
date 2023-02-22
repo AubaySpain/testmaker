@@ -10,6 +10,7 @@ public class Check {
 	private String description = "";
     private State levelResult = State.Undefined;
     private boolean overcomed = false;
+    private String code = "";
     private String info = "";
 	private StoreType store = StoreType.Evidences;
 	private SendType send = SendType.None;
@@ -17,10 +18,11 @@ public class Check {
     public Check() {}
     
     public static Check of(
-    		String description, boolean overcomed, State levelResult, String info, StoreType storeType, SendType sendType) {
+    		String description, boolean overcomed, State levelResult, String code, String info, StoreType storeType, SendType sendType) {
     	Check resultValidation = of(levelResult);
     	resultValidation.setDescription(description);
     	resultValidation.setOvercomed(overcomed);
+    	resultValidation.setCode(code);
     	resultValidation.setInfo(info);
     	resultValidation.setStore(storeType);
     	resultValidation.setSend(sendType);
@@ -38,6 +40,12 @@ public class Check {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	public String getInfo() {
 		return info;
@@ -87,6 +95,7 @@ public class Check {
 		
 		private StoreType store = StoreType.Evidences; 
 		private SendType send = SendType.None;
+		private String code;
 		private String info;
 		
 		public BuilderCheck(String description, boolean overcomed, State levelResult) {
@@ -105,13 +114,18 @@ public class Check {
 			return this;
 		}		
 		
+		public BuilderCheck code(String code) {
+			this.code = code;
+			return this;
+		}
+		
 		public BuilderCheck info(String info) {
 			this.info = info;
 			return this;
 		}
 
 		public Check build() {
-			return Check.of(description, overcomed, levelResult, info, store, send);
+			return Check.of(description, overcomed, levelResult, code, info, store, send);
 		}
 
 	}

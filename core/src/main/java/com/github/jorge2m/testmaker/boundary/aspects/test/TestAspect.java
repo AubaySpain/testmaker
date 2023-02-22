@@ -169,12 +169,21 @@ public class TestAspect {
     private void sendNotificationIfNeeded(Check check, ChecksTM checksParent, SuiteTM suiteParent) {
     	if (check.getSend()==SendType.Alert &&
     		!check.isOvercomed()) {
-  	        InputParamsTM inputParams = suiteParent.getInputParams();
-	        if (inputParams.isAlarm()) {
+    		InputParamsTM inputParams = suiteParent.getInputParams();
+    		if (inputParams.isAlarm() &&
+	    		mustCheckSendAlarm(check, inputParams)) {
 	            Alarm alarm = new Alarm(check, checksParent);
 	            alarm.send();
-	        }
+    		}
     	}
+    }
+    
+    boolean mustCheckSendAlarm(Check check, InputParamsTM inputParams) {
+		List<String> listCodesAlarm = inputParams.getAlarmsToCheck();
+		if (listCodesAlarm.isEmpty()) {
+			return true;
+		}
+    	return listCodesAlarm.contains(check.getCode());
     }
 	
 }

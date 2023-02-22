@@ -46,6 +46,7 @@ public abstract class InputParamsTM {
 	public static final String NetAnalysisParam = "net";
 	
 	public static final String AlarmParam = "alarm";
+	public static final String AlarmsToCheckParam = "alarmstocheck";	
 	public static final String MaxAlarmsParam = "maxalarms";
 	public static final String PeriodAlarmsParam = "periodalarms";
 	public static final String TeamsChannelParam = "teamschannel";
@@ -125,6 +126,9 @@ public abstract class InputParamsTM {
 	
 	@FormParam(AlarmParam)
 	String alarm;
+	
+	@FormParam(AlarmsToCheckParam)
+	String alarmsToCheck;
 	
 	@FormParam(MaxAlarmsParam)
 	String maxalarms;
@@ -320,6 +324,13 @@ public abstract class InputParamsTM {
 			.desc("Teams Notification (true, false)")
 			.build());		
 
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.AlarmsToCheckParam)
+			.required(false)
+			.valueSeparator(',')
+			.hasArgs()
+			.desc("List of code alarms to check")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.MaxAlarmsParam)
 			.required(false)
 			.hasArgs()
@@ -463,6 +474,7 @@ public abstract class InputParamsTM {
 		net = cmdLine.getOptionValue(NetAnalysisParam);
 		
 		alarm = cmdLine.getOptionValue(AlarmParam);
+		alarmsToCheck = cmdLine.getOptionValue(AlarmsToCheckParam);
 		maxalarms = cmdLine.getOptionValue(MaxAlarmsParam);
 		periodalarms = cmdLine.getOptionValue(PeriodAlarmsParam);
 		teamschannel = cmdLine.getOptionValue(TeamsChannelParam);
@@ -501,6 +513,7 @@ public abstract class InputParamsTM {
 		Remote(RemoteParam),
 		NetAnalysis(NetAnalysisParam),
 		Alarm(AlarmParam),
+		AlarmsToCheck(AlarmsToCheckParam),
 		MaxAlarms(MaxAlarmsParam),
 		PeriodAlarms(PeriodAlarmsParam),		
 		TeamsChannel(TeamsChannelParam),
@@ -573,6 +586,8 @@ public abstract class InputParamsTM {
 			return this.net;
 		case Alarm:
 			return this.alarm;
+		case AlarmsToCheck:
+			return this.alarmsToCheck;
 		case MaxAlarms:
 			return this.maxalarms;
 		case PeriodAlarms:
@@ -814,6 +829,19 @@ public abstract class InputParamsTM {
 		}
 		return false;
 	}	
+	public String getAlarmsToCheckCommaSeparated() {
+		return this.alarmsToCheck;
+	}
+	public List<String> getAlarmsToCheck() {
+		if (alarmsToCheck!=null && "".compareTo(alarmsToCheck)!=0) {
+			String[] listAlarms = alarmsToCheck.split("\\s*,\\s*");
+			return Arrays.asList(listAlarms);
+		}
+		return Arrays.asList();
+	}
+	public void setAlarmsToCheck(String alarmsToCheck) {
+		this.alarmsToCheck = alarmsToCheck;
+	}
 	public String getMaxAlarms() {
 		return this.maxalarms;
 	}

@@ -100,7 +100,7 @@ class ChromedriverMaker extends DriverMaker {
 			//options.addArguments("--autoplay-policy", "--document-user-activation-required");        
 			//Arrancamos Chrome con la extensión HTML5Autoplay para que no se ejecute el autoplay de los vídeos y sea posible paralelizar varios Chromes en una misma máquina
 			List<PluginChrome.typePluginChrome> listPlugins = new ArrayList<>();
-			listPlugins.add(typePluginChrome.HTML5AutoplayBlocker);
+			//listPlugins.add(typePluginChrome.HTML5AutoplayBlocker);
 			for (typePluginChrome typePlugin : listPlugins) {
 				PluginChrome pluginChrome = PluginBrowserFactory.makePluginChrome(typePlugin);
 				pluginChrome.addPluginToChrome(options);
