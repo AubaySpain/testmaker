@@ -66,6 +66,7 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("--ignore-certificate-errors");	
 		options.addArguments("--no-proxy-server");
 		options.addArguments("--privileged");
+		options.addArguments("--remote-allow-origins=*");
 		options.addArguments("enable-automation"); 
 		activateLogs();
 	}
