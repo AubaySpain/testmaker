@@ -84,6 +84,10 @@ public class Check {
 		this.send = send;
 	}
 	
+	public static BuilderCheck make(String description, boolean overcomed) {
+		return new BuilderCheck(description, overcomed, State.Defect);
+	}	
+	
 	public static BuilderCheck make(String description, boolean overcomed, State levelResult) {
 		return new BuilderCheck(description, overcomed, levelResult);
 	}
@@ -97,6 +101,12 @@ public class Check {
 		private SendType send = SendType.None;
 		private String code;
 		private String info;
+		
+		public BuilderCheck(String description, boolean overcomed) {
+			this.description = description;
+			this.overcomed = overcomed;
+			this.levelResult = State.Defect;
+		}
 		
 		public BuilderCheck(String description, boolean overcomed, State levelResult) {
 			this.description = description;

@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Validation {
 	String description() default "";
-	State level() default State.Warn;
+	State level() default State.Defect;
 	StoreType store() default StoreType.Evidences;
 	SendType send() default SendType.None;
 }

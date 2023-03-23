@@ -127,6 +127,9 @@ public class ChecksTM {
 		//check.setParentChecks(this);
 		listChecks.add(check);
 	}
+	public void add(String description, boolean overcomed) {
+		add(description, overcomed, State.Defect);
+	}
 	public void add(String description, boolean overcomed, State levelResult) {
 		add(Check.make(description, overcomed, levelResult).build());
 	}
