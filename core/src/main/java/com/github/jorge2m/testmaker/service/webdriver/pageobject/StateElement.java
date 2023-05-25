@@ -18,13 +18,15 @@ public class StateElement {
 	private final WebElement webelement;
 	private final State state;
 	private final By by;
+	private final By byShadow;
 	private final int seconds;
 	
-	private StateElement(State state, WebDriver driver, WebElement webelement, By by, int seconds) {
+	private StateElement(State state, WebDriver driver, WebElement webelement, By by, By byShadow, int seconds) {
 		this.driver = driver;
 		this.webelement = webelement;
 		this.state = state;
 		this.by = by;
+		this.byShadow = byShadow;
 		this.seconds = seconds;
 	}
 	
@@ -64,75 +66,90 @@ public class StateElement {
 	
 	private ExpectedCondition<WebElement> getConditionForElementPresent() {
 		if (webelement==null) {
-			return ExpectedConditions.presenceOfElementLocated(by);
+			if (byShadow==null) {
+				return ExpectedConditionsTM.presenceOfElementLocated(by);
+			}
+			return ExpectedConditionsTM.presenceOfShadowElementLocated(by, byShadow);
 		} else {
 			if (by==null) {
-				return ExpectedConditions.presenceOfElementLocated(By.tagName("html"));
+				return ExpectedConditionsTM.presenceOfElementLocated(By.tagName("html"));
 			}
-			return ExpectedConditions.presenceOfNestedElementLocatedBy(webelement, by);
+			return ExpectedConditionsTM.presenceOfNestedElementLocatedBy(webelement, by);
 		}
 	}
 	
 	private ExpectedCondition<WebElement> getConditionForElementVisible() {
 		if (webelement==null) {
-			return ExpectedConditions.visibilityOfElementLocated(by);
+			if (byShadow==null) {
+				return ExpectedConditionsTM.visibilityOfElementLocated(by);
+			}
+			return ExpectedConditionsTM.visibilityOfShadowElementLocated(by, byShadow);			
 		} else {
 			if (by==null) {
-				return ExpectedConditions.visibilityOf(webelement);
+				return ExpectedConditionsTM.visibilityOf(webelement);
 			} else {
 				WebElement childElement = getChildElement(webelement, by);
 				if (childElement==null) {
 					return null;
 				}
-				return ExpectedConditions.visibilityOf(childElement);
+				return ExpectedConditionsTM.visibilityOf(childElement);
 			}
 		}
 	}
 	
 	private ExpectedCondition<Boolean> getConditionForElementInvisible() {
 		if (webelement==null) {
-			return ExpectedConditions.invisibilityOfElementLocated(by);
+			if (byShadow==null) {
+				return ExpectedConditionsTM.invisibilityOfElementLocated(by);
+			}
+			return ExpectedConditionsTM.invisibilityOfShadowElementLocated(by, byShadow);			
 		} else {
 			if (by==null) {
-				return ExpectedConditions.invisibilityOf(webelement);
+				return ExpectedConditionsTM.invisibilityOf(webelement);
 			} else {
 				WebElement childElement = getChildElement(webelement, by);
 				if (childElement==null) {
 					return null;
 				}
-				return ExpectedConditions.invisibilityOf(childElement);
+				return ExpectedConditionsTM.invisibilityOf(childElement);
 			}
 		}
 	}
 	
 	private ExpectedCondition<WebElement> getConditionForElementClickable() {
 		if (webelement==null) {
-			return ExpectedConditions.elementToBeClickable(by);
+			if (byShadow==null) {
+				return ExpectedConditionsTM.elementToBeClickable(by);
+			}
+			return ExpectedConditionsTM.elementShadowToBeClickable(by, byShadow);			
 		} else {
 			if (by==null) {
-				return ExpectedConditions.elementToBeClickable(webelement);
+				return ExpectedConditionsTM.elementToBeClickable(webelement);
 			} else {
 				WebElement childElement = getChildElement(webelement, by);
 				if (childElement==null) {
 					return null;
 				}
-				return ExpectedConditions.elementToBeClickable(childElement);
+				return ExpectedConditionsTM.elementToBeClickable(childElement);
 			}
 		}
 	}
 	
 	private ExpectedCondition<Boolean> getConditionForElementUnclickable() {
 		if (webelement==null) {
-			return ExpectedConditions.not(ExpectedConditions.elementToBeClickable(by));
+			if (byShadow==null) {
+				return ExpectedConditionsTM.not(ExpectedConditions.elementToBeClickable(by));
+			}
+			return ExpectedConditionsTM.not(ExpectedConditionsTM.elementShadowToBeClickable(by, byShadow));			
 		} else {
 			if (by==null) {
-				return ExpectedConditions.not(ExpectedConditions.elementToBeClickable(webelement));
+				return ExpectedConditionsTM.not(ExpectedConditionsTM.elementToBeClickable(webelement));
 			} else {
 				WebElement childElement = getChildElement(webelement, by);
 				if (childElement==null) {
 					return null;
 				}
-				return ExpectedConditions.not(ExpectedConditions.elementToBeClickable(childElement));
+				return ExpectedConditionsTM.not(ExpectedConditionsTM.elementToBeClickable(childElement));
 			}
 		}
 	}
@@ -145,13 +162,15 @@ public class StateElement {
 			return null;
 		}
 	}
-
+	
+	
 	
 	public static class BuilderState {
 		private final State state;
 		private final WebDriver driver;
 		private WebElement webelement;
 		private By by;
+		private By byShadow;
 		private int seconds;
 		
 		public BuilderState(State state, By by, WebDriver driver) {
@@ -173,13 +192,17 @@ public class StateElement {
 			this.by = by;
 			return this;
 		}
+		public BuilderState byShadow(By byShadow) {
+			this.byShadow = byShadow;
+			return this;
+		}
 		public BuilderState wait(int seconds) {
 			this.seconds = seconds;
 			return this;
 		}
 		
 		public StateElement build() {
-			StateElement stateElement = new StateElement(state, driver, webelement, by, seconds);
+			StateElement stateElement = new StateElement(state, driver, webelement, by, byShadow, seconds);
 			return stateElement;
 		}
 		public boolean check() {

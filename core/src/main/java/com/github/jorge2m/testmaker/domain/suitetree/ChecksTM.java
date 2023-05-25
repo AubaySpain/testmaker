@@ -14,6 +14,7 @@ public class ChecksTM {
 	
 	private List<Check> listChecks = new ArrayList<>();
 	private State stateValidation = State.Ok;
+	private String title="";
 	private boolean avoidEvidences;
 	private String pathMethod;
 
@@ -88,6 +89,15 @@ public class ChecksTM {
 	}
 	public void setStateValidation(State stateValidation) {
 		this.stateValidation = stateValidation;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public boolean isTitle() {
+		return (title!=null && "".compareTo(title)!=0);
 	}
 	public boolean isAvoidEvidences() {
 		return avoidEvidences;
@@ -168,11 +178,18 @@ public class ChecksTM {
 	public String getHtmlValidationsBrSeparated() {
 		List<String> textValidations = new ArrayList<>();
 		boolean manyChecks = listChecks.size()>1;
+		if (isTitle()) {
+			textValidations.add(getHtmlTitle());
+		}
 		for (int i=0; i<listChecks.size(); i++) {
 			textValidations.add(getHtmlCheck(manyChecks, i));
 		}
 
 		return (textValidations.stream().collect(Collectors.joining("<br>")));
+	}
+	
+	private String getHtmlTitle() {
+		return "<validac style=\"color:purple\">" + getTitle() + "</validac><br>"; 
 	}
 
 	private String getHtmlCheck(boolean manyChecks, int i) {

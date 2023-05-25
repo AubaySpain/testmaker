@@ -21,6 +21,7 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
+import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 
 public class TestCaseTM  {
 
@@ -83,6 +84,9 @@ public class TestCaseTM  {
 	
 	public String getName() {
 		return result.getName();
+	}
+	public String getCode() {
+		return TestNameUtils.getCodeFromTestCase(getName());
 	}
 	
 	public String getNameWithInputData() {

@@ -73,7 +73,7 @@ class ChromedriverMaker extends DriverMaker {
 	
 	private void activateLogs() {
 		LoggingPreferences logs = getLogsWebDriverEnabled();
-		options.setCapability(CapabilityType.LOGGING_PREFS, logs);
+		options.setCapability("goog:loggingPrefs", logs);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 	}
 	

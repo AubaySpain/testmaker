@@ -84,7 +84,7 @@ class FirefoxdriverMaker extends DriverMaker {
 	
 	private void activateLogs() {
 		LoggingPreferences logs = getLogsWebDriverEnabled();
-		options.setCapability(CapabilityType.LOGGING_PREFS, logs);
+		options.setCapability("goog:loggingPrefs", logs);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 	}
 	
@@ -106,7 +106,7 @@ class FirefoxdriverMaker extends DriverMaker {
 		FirefoxBinary fb = new FirefoxBinary();  
 		//fb.setTimeout(java.util.concurrent.TimeUnit.SECONDS.toMillis(60));
 		options = new FirefoxOptions().setBinary(fb);
-		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, "true");
+		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, "true");
 		options.setCapability("acceptSslCerts", true);
 		options.setProfile(fp);
 		options.setCapability("marionette", true);
@@ -116,7 +116,7 @@ class FirefoxdriverMaker extends DriverMaker {
 
 	private void activeLogs() {
 		LoggingPreferences logs = getLogsWebDriverEnabled();
-		options.setCapability(CapabilityType.LOGGING_PREFS, logs);
+		options.setCapability("goog:loggingPrefs", logs);
 	}
 
 	private void configNettrafficSnifer() {
