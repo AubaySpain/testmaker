@@ -15,7 +15,7 @@ public class RoundRobinTest {
 	public void test() throws MalformedURLException {
 		//Given
 		ServerSubscriber server1 = new ServerSubscriber(new URL("https://robotest1.mmmmm.com:444"));
-		ServerSubscriber server2 = new ServerSubscriber(new URL("https://robotest2.mmmmm.com:444"));
+		ServerSubscriber server2 = new ServerSubscriber(new URL("https://robotest1.mmmmm.com:444"));
 		ServerSubscriber server3 = new ServerSubscriber(new URL("https://robotest2.mmmmm.com:555"));
 		ServerSubscriber server4 = new ServerSubscriber(new URL("https://robotest2.mmmmm.com:777"));
 		

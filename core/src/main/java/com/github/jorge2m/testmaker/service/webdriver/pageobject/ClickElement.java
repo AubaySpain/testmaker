@@ -9,6 +9,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State;
 
@@ -21,9 +22,11 @@ public class ClickElement {
 	private final TypeClick typeOfClick;
 	private final int waitLink;
 	private final int waitLoadPage;
+	private final int x;
+	private final int y;
 	
 	private ClickElement(
-			WebDriver driver, WebElement webelement, By by, State state, TypeClick typeOfClick, int waitLink, int waitLoadPage) {
+			WebDriver driver, WebElement webelement, By by, State state, TypeClick typeOfClick, int waitLink, int waitLoadPage, int x, int y) {
 		this.driver = driver;
 		this.webelement = webelement;
 		this.by = by;
@@ -31,6 +34,8 @@ public class ClickElement {
 		this.state = state;
 		this.waitLink = waitLink;
 		this.waitLoadPage = waitLoadPage;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public void click() {
@@ -40,7 +45,6 @@ public class ClickElement {
 		} else {
 			elementLink = getElementClick();			
 		}
-
 		click(typeOfClick, elementLink);
 		if (waitLoadPage > 0) {
 			PageObjTM.waitForPageLoaded(driver, waitLoadPage);
@@ -127,7 +131,13 @@ public class ClickElement {
 	}
 	private void clickWebdriverFirst(WebElement link) {
 		try {
-			link.click();
+			if (x==0 && y==0) {
+				link.click();
+			} else {
+				new Actions(driver)
+					.moveToElement(link, x, y)
+					.click().build().perform();
+			}
 		}
 		catch (WebDriverException e) {
 			clickJavaScript(link);
@@ -142,6 +152,8 @@ public class ClickElement {
 		private TypeClick typeOfClick = TypeClick.webdriver;
 		private int waitLink = 0;
 		private int waitLoadPage = 30;
+		private int x = 0;
+		private int y = 0;
 		
 		public BuilderClick(By by, WebDriver driver) {
 			this.driver = driver;
@@ -178,9 +190,17 @@ public class ClickElement {
 		public BuilderClick waitLoadPage() {
 			return waitLoadPage(30);
 		}		
+		public BuilderClick setX(int x) {
+			this.x = x;
+			return this;
+		}
+		public BuilderClick setY(int y) {
+			this.y = y;
+			return this;
+		}
 		
 		public ClickElement build() {
-			ClickElement clickElement = new ClickElement(driver, webelement, by, state, typeOfClick, waitLink, waitLoadPage);
+			ClickElement clickElement = new ClickElement(driver, webelement, by, state, typeOfClick, waitLink, waitLoadPage, x, y);
 			return clickElement;
 		}
 		public void exec() {
