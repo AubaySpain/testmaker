@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.jorge2m</groupId>
 	<artifactId>testmaker</artifactId>
-	<version>2.2.2-SNAPSHOT</version>
+	<version>2.2.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>testmaker</name> 
@@ -117,10 +117,9 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>  
+				<version>3.8.0</version>  
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 				</configuration>
 			</plugin>
 			<plugin>

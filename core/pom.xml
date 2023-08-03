@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId> 
-		<version>2.2.2-SNAPSHOT</version>
+		<version>2.2.3-SNAPSHOT</version>
 		<!-- <relativePath>../pom.xml</relativePath>-->
 	</parent>
 	<artifactId>testmaker-core</artifactId>
@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
-			<version>5.3.3</version>
+			<version>5.4.1</version>
 		</dependency>
 		
 		<!-- Jersey/Jetty -->
@@ -179,13 +179,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.github.m50d</groupId>
+				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.11.1</version>
+				<version>1.14.0</version>
 				<configuration>
-					<complianceLevel>1.8</complianceLevel>
-					<source>1.8</source>
-					<target>1.8</target>
+					<complianceLevel>11</complianceLevel>
+					<source>11</source>
+					<target>11</target>
 					<showWeaveInfo>true</showWeaveInfo>
 					<verbose>true</verbose>
 					<Xlint>ignore</Xlint>
