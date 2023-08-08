@@ -40,11 +40,6 @@ public class BrowserStackDriverMaker extends DriverMaker {
 	}
 	
 	@Override
-	public void setupDriverVersion(String driverVersion) {
-		//Nothing to do. The Driver creation is managed in the BrowserStack platform
-	}
-	
-	@Override
 	public WebDriver build() {
 		WebDriver driver;
 		switch (channel) {

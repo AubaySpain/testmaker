@@ -19,7 +19,6 @@ public abstract class DriverMaker {
 	boolean nettraffic = false;
 	
 	abstract public String getTypeDriver();
-	abstract public void setupDriverVersion(String driverVersion);
 	abstract public WebDriver build();
 	
 	public DriverMaker setChannel(Channel channel) {
@@ -29,11 +28,6 @@ public abstract class DriverMaker {
 
 	public DriverMaker setNettraffic(boolean nettraffic) {
 		this.nettraffic = nettraffic;
-		return this;
-	}
-	
-	public DriverMaker setupDriverVersionFluent(String driverVersion) {
-		setupDriverVersion(driverVersion);
 		return this;
 	}
 	

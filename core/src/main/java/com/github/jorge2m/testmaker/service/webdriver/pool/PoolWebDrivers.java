@@ -74,15 +74,13 @@ public class PoolWebDrivers {
 		}
 	}
 
-	private WebDriver createAndStoreNewWebDriver(String driverId, Channel channel, TestRunTM testRun, String moreDataWdrv) {
-		InputParamsTM inputParams = testRun.getSuiteParent().getInputParams();
+	private WebDriver createAndStoreNewWebDriver(
+			String driverId, Channel channel, TestRunTM testRun, String moreDataWdrv) {
 		boolean netAnalysis = testRun.getSuiteParent().getInputParams().isNetAnalysis();
-		String driverVersion = inputParams.getDriverVersion();
 		WebDriver driver = 
 			FactoryWebdriverMaker.make(testRun)
 				.setChannel(channel)
 				.setNettraffic(netAnalysis)
-				.setupDriverVersionFluent(driverVersion)
 				.build();
 
 		storeWebDriver(driver, StoredWebDrv.stateWd.busy, driverId, moreDataWdrv);

@@ -18,8 +18,6 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowse
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
@@ -36,17 +34,6 @@ class ChromedriverMaker extends DriverMaker {
 			return EmbeddedDriver.chromehless.name();
 		}
 		return EmbeddedDriver.chrome.name();
-	}
-	
-	@Override
-	public void setupDriverVersion(String driverVersion) {
-		if (driverVersion!=null && "".compareTo(driverVersion)!=0) {
-			WebDriverManager.chromedriver().driverVersion(driverVersion).setup();
-			//ChromeDriverManager.chromedriver().version(driverVersion).setup();
-		} else {
-			WebDriverManager.chromedriver().setup();
-			//ChromeDriverManager.chromedriver().version(ChromeDriverVersionDefault).setup();
-		}
 	}
 	
 	@Override

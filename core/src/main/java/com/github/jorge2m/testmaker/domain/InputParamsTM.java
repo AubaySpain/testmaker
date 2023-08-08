@@ -56,7 +56,6 @@ public abstract class InputParamsTM {
 	public static final String MailUserParam = "mailuser";
 	public static final String MailPasswordParam = "mailpassword";
 	public static final String TypeAccessParam = "typeAccess";
-	public static final String DriverVersionParam = "driverVersion";
 	public static final String TestObjectParam = "testobject";
 	public static final String IdExecSuiteParam = "idexecsuite";
 	
@@ -144,9 +143,6 @@ public abstract class InputParamsTM {
 
 	@FormParam(TypeAccessParam)
 	String typeAccess = TypeAccess.CmdLine.name();
-	
-	@FormParam(DriverVersionParam)
-	String driverVersion;
 	
 	@FormParam(IdExecSuiteParam)
 	String idExecSuite;
@@ -375,13 +371,6 @@ public abstract class InputParamsTM {
 			.desc("Type of access. Posible values: " + Arrays.asList(TypeAccess.values()))
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.DriverVersionParam)
-			.required(false)
-			.hasArgs()
-			.pattern("\\d+(\\.\\d+)*")
-			.desc("Version of Driver (ChromeDriver, Geckodriver...) to use")
-			.build());
-		
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.IdExecSuiteParam)
 			.required(false)
 			.hasArgs()
@@ -481,7 +470,6 @@ public abstract class InputParamsTM {
 		
 		storebd = cmdLine.getOptionValue(StoreBdParam);
 		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
-		driverVersion = cmdLine.getOptionValue(DriverVersionParam);
 		idExecSuite = cmdLine.getOptionValue(IdExecSuiteParam);
 		
 		//BrowserStack
@@ -523,7 +511,6 @@ public abstract class InputParamsTM {
 		MailPassword(MailPasswordParam),
 		TypeAccess(TypeAccessParam),
 		IdExecSuite(IdExecSuiteParam),
-		DriverVersion(DriverVersionParam),
 		TestObject(TestObjectParam),
 		BStackUser(BStackUserParam),
 		BStackPassword(BStackPasswordParam),
@@ -598,8 +585,6 @@ public abstract class InputParamsTM {
 			return this.storebd;
 		case TypeAccess:
 			return this.typeAccess;
-		case DriverVersion:
-			return this.driverVersion;
 		case IdExecSuite:
 			return this.idExecSuite;
 		case BStackUser:
@@ -903,13 +888,6 @@ public abstract class InputParamsTM {
 		this.idExecSuite = idExecSuite;
 	}
 	
-	public String getDriverVersion() {
-		return driverVersion;
-	}
-	public void setDriverVersion(String driverVersion) {
-		this.driverVersion = driverVersion;
-	}
-
 	public String getTestObject() {
 		return testObject;
 	}

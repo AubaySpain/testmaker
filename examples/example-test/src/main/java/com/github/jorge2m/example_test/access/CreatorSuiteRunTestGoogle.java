@@ -10,9 +10,6 @@ import com.github.jorge2m.testmaker.domain.SuiteMaker;
 
 public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 
-	private final String ChromeDriverVersionDefault = "88.0.4324.96";
-	private final String GeckoDriverVersionDefault = "0.27.0";
-	
 	private CreatorSuiteRunTestGoogle() throws Exception {
 		super();
 	}
@@ -28,7 +25,6 @@ public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 	
 	@Override
 	public SuiteMaker getSuiteMaker() throws Exception {
-		setWebDriverVersion();
 		try {
 			switch ((Suites)inputParams.getSuite()) {
 			case SmokeTest:
@@ -44,16 +40,4 @@ public class CreatorSuiteRunTestGoogle extends CreatorSuiteRun {
 		return null;
 	}
 	
-	private void setWebDriverVersion() {
-		if (inputParams.getDriverVersion()==null) {
-			switch (inputParams.getDriver()) {
-			case "firefox":
-				inputParams.setDriverVersion(GeckoDriverVersionDefault);
-				break;
-			case "chrome":
-				inputParams.setDriverVersion(ChromeDriverVersionDefault);
-				break;
-			}
-		}
-	}
 }

@@ -37,16 +37,11 @@ public class SmokeTestSuite extends SuiteMaker {
 		}
 		
 		@Override
-		public void setupDriverVersion(String driverVersion) {
-			//Nothing to do in the case of the WinAppDriver
-		}
-		
-		@Override
 		public WebDriver build() {
 			DesiredCapabilities capabilities = new DesiredCapabilities();
 			capabilities.setCapability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
 			try {
-				WindowsDriver winDriver = new WindowsDriver(new URL("http://127.0.0.1:4723"), capabilities);
+				var winDriver = new WindowsDriver(new URL("http://127.0.0.1:4723"), capabilities);
 				return winDriver;
 			}
 			catch(MalformedURLException e){

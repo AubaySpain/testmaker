@@ -2,8 +2,6 @@ package com.github.jorge2m.testmaker.service.webdriver.maker;
 
 import java.awt.Toolkit;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
@@ -36,17 +34,6 @@ class FirefoxdriverMaker extends DriverMaker {
 		return EmbeddedDriver.firefox.name();
 	}
 	
-	@Override
-	public void setupDriverVersion(String driverVersion) {
-		if (driverVersion!=null && "".compareTo(driverVersion)!=0) {
-			WebDriverManager.firefoxdriver().driverVersion(driverVersion).setup();
-			//FirefoxDriverManager.firefoxdriver().version(driverVersion).setup();
-		} else {
-			WebDriverManager.firefoxdriver().setup();
-			//FirefoxDriverManager.firefoxdriver().version(GeckoDriverVersionDefault).setup();
-		}
-	}
-
 	@Override
 	public WebDriver build() {
 		initialConfig();
