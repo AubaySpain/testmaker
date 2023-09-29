@@ -98,7 +98,9 @@ class FirefoxdriverMaker extends DriverMaker {
 		options.setProfile(fp);
 		options.setCapability("marionette", true);
 		//System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, String.valueOf(true));
-		options.setHeadless(isHeadless);
+		if (isHeadless) {
+			options.addArguments("--headless=new");
+		}
 	}
 
 	private void activeLogs() {

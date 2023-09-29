@@ -68,8 +68,9 @@ class ChromedriverMaker extends DriverMaker {
 		if (channel==Channel.desktop && isHeadless) {
 			options.addArguments("--window-size=1920x1080");
 		}
-		
-		options.setHeadless(isHeadless);
+		if (isHeadless) {
+			options.addArguments("--headless=new");
+		}
 		addPlugins(isHeadless);
 		if (nettraffic) {
 			configNettrafficSnifer();
