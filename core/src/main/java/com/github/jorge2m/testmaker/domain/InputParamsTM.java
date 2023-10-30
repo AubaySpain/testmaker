@@ -1,5 +1,6 @@
 package com.github.jorge2m.testmaker.domain;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -23,11 +24,13 @@ import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 
-public abstract class InputParamsTM {
+public abstract class InputParamsTM implements Serializable {
 
-	abstract public List<OptionTMaker> getSpecificParameters();
-	abstract public void setSpecificDataFromCommandLine(CommandLine cmdLine);
-	abstract public Map<String,String> getSpecificParamsValues();
+	private static final long serialVersionUID = 1L;
+
+	public abstract List<OptionTMaker> getSpecificParameters();
+	public abstract void setSpecificDataFromCommandLine(CommandLine cmdLine);
+	public abstract Map<String,String> getSpecificParamsValues();
 	
 	public static final String SuiteNameParam = "suite";
 	public static final String DriverNameParam = "driver";
@@ -35,6 +38,7 @@ public abstract class InputParamsTM {
 	public static final String AppNameParam = "application";
 	public static final String VersionNameParam = "version";
 	public static final String URLNameParam = "url";
+	public static final String ExecInitUrlNameParam = "execiniturl";
 	public static final String TCaseNameParam = "tcases";
 	public static final String GroupsNameParam = "groups";
 	public static final String ThreadsParam = "threads";
@@ -45,6 +49,7 @@ public abstract class InputParamsTM {
 	public static final String RecicleWDParam = "reciclewd";
 	public static final String NetAnalysisParam = "net";
 	
+	public static final String NotificationParam = "notification";
 	public static final String AlarmParam = "alarm";
 	public static final String AlarmsToCheckParam = "alarmstocheck";	
 	public static final String MaxAlarmsParam = "maxalarms";
@@ -72,7 +77,7 @@ public abstract class InputParamsTM {
 	
 	public static final String patternTestCaseItem = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
 	
-	public enum ManagementWebdriver {recycle, discard}
+	public enum ManagementWebdriver { RECYCLE, DISCARD }
 	private Class<? extends Enum<?>> suiteEnum;
 	private Class<? extends Enum<?>> appEnum;
 	
@@ -98,6 +103,9 @@ public abstract class InputParamsTM {
 
 	@FormParam(URLNameParam)
 	String url;
+	
+	@FormParam(ExecInitUrlNameParam)
+	String execiniturl;
 
 	@FormParam(TCaseNameParam)
 	String tcasesCommaSeparated;
@@ -122,6 +130,9 @@ public abstract class InputParamsTM {
 
 	@FormParam(NetAnalysisParam)
 	String net;
+	
+	@FormParam(NotificationParam)
+	String notification;	
 	
 	@FormParam(AlarmParam)
 	String alarm;
@@ -208,41 +219,48 @@ public abstract class InputParamsTM {
 	
 	private List<OptionTMaker> getTmParameters() {
 		List<OptionTMaker> optionsTM = new ArrayList<>();
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.SuiteNameParam)
+		optionsTM.add(OptionTMaker.builder(SuiteNameParam)
 			.required(true)
 			.hasArg()
 			.possibleValues(suiteEnum)
 			.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.DriverNameParam)
+		optionsTM.add(OptionTMaker.builder(DriverNameParam)
 			.required(true)
 			.hasArg()
 			//.possibleValues(EmbebdedDriver.class)
 			.desc("WebDriver to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbeddedDriver.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ChannelNameParam)
+		optionsTM.add(OptionTMaker.builder(ChannelNameParam)
 			.required(true)
 			.hasArg()
 			.possibleValues(Channel.class)
 			.desc("Channel on which to run the webdriver. Possible values: " + Arrays.toString(Channel.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.AppNameParam)
+		optionsTM.add(OptionTMaker.builder(AppNameParam)
 			.required(true)
 			.hasArg()
 			.possibleValues(appEnum)
 			.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.URLNameParam)
+		optionsTM.add(OptionTMaker.builder(URLNameParam)
 			.required(false)
 			.hasArg()
 			.pattern(ConstantesTM.URL_Pattern)
 			.desc("Initial URL of the application Web to test")
 			.build());
-
+		
+		optionsTM.add(OptionTMaker.builder(URLNameParam)
+			.required(false)
+			.hasArg()
+			.pattern(ConstantesTM.URL_Pattern)
+			.desc("Initial URL of the application Web to test")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(InputParamsTM.TCaseNameParam)
 			.required(false)
 			.hasArgs()
@@ -251,103 +269,117 @@ public abstract class InputParamsTM {
 			.pattern(patternTestCaseItem)
 			.desc("List of testcases comma separated (p.e. OTR001,BOR001,FIC001{6-2})")
 			.build());
+
+		optionsTM.add(OptionTMaker.builder(ExecInitUrlNameParam)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Execution of initial URL")
+			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.GroupsNameParam)
+		optionsTM.add(OptionTMaker.builder(GroupsNameParam)
 			.required(false)
 			.hasArg()
 			.valueSeparator(',')
 			.desc("Groups of tests to include")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ThreadsParam)
+		optionsTM.add(OptionTMaker.builder(ThreadsParam)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Number or threads for paralelize TestCases")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ThreadsRampParam)
+		optionsTM.add(OptionTMaker.builder(ThreadsRampParam)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Ramp in seconds for reach maximum thread paralelization")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.VersionNameParam)
+		optionsTM.add(OptionTMaker.builder(VersionNameParam)
 			.required(false)
 			.hasArg()
 			.desc("Version of the TestSuite")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.ServerDNSNameParam)
+		optionsTM.add(OptionTMaker.builder(ServerDNSNameParam)
 			.required(false)
 			.hasArgs()
 			.desc("Server DNS where are ubicated the HTML reports (p.e. http://robottest.mangodev.net)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.RecicleWDParam)
+		optionsTM.add(OptionTMaker.builder(RecicleWDParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Gestion mode of webdriver. Possible values: true->reuse across testcases, false->don't reuse)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.AsyncExecParam)
+		optionsTM.add(OptionTMaker.builder(AsyncExecParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Execution Asynchronous (true, false)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.RemoteParam)
+		optionsTM.add(OptionTMaker.builder(RemoteParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Remote Execution (true, false)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.NetAnalysisParam)
+		optionsTM.add(OptionTMaker.builder(NetAnalysisParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Net Analysis (true, false)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.AlarmParam)
+		optionsTM.add(OptionTMaker.builder(NotificationParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
-			.desc("Teams Notification (true, false)")
+			.desc("Teams Notification Suite with problems (true, false)")
+			.build());		
+		
+		optionsTM.add(OptionTMaker.builder(AlarmParam)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Teams Notification check Alarm (true, false)")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.AlarmsToCheckParam)
+		optionsTM.add(OptionTMaker.builder(AlarmsToCheckParam)
 			.required(false)
 			.valueSeparator(',')
 			.hasArgs()
 			.desc("List of code alarms to check")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.MaxAlarmsParam)
+		optionsTM.add(OptionTMaker.builder(MaxAlarmsParam)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Max alarms in a period. By default 60 minutes (configurable via maxalarms param)")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.PeriodAlarmsParam)
+		optionsTM.add(OptionTMaker.builder(PeriodAlarmsParam)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Configure the period in minutes param maxalarms refers to")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.TeamsChannelParam)
+		optionsTM.add(OptionTMaker.builder(TeamsChannelParam)
 			.required(false)
 			.hasArgs()
 			.desc("URL of the Teams Channel")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.StoreBdParam)
+		optionsTM.add(OptionTMaker.builder(StoreBdParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(StoreUntil.class)
@@ -356,7 +388,7 @@ public abstract class InputParamsTM {
 				Arrays.toString(getNames(StoreUntil.class.getEnumConstants())))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.MailsParam)
+		optionsTM.add(OptionTMaker.builder(MailsParam)
 			.required(false)
 			.hasArgs()
 			.valueSeparator(',')
@@ -364,71 +396,71 @@ public abstract class InputParamsTM {
 			.desc("List of mail adresses comma separated")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.TypeAccessParam)
+		optionsTM.add(OptionTMaker.builder(TypeAccessParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(TypeAccess.class)
 			.desc("Type of access. Posible values: " + Arrays.asList(TypeAccess.values()))
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.IdExecSuiteParam)
+		optionsTM.add(OptionTMaker.builder(IdExecSuiteParam)
 			.required(false)
 			.hasArgs()
 			.desc("Id of SuiteTest Execution. For the case where you want to specify your own instead of the automatically generated one")
 			.build());		
 		
 		//BrowserStack
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackUserParam)
+		optionsTM.add(OptionTMaker.builder(BStackUserParam)
 			.required(false)
 			.hasArgs()
 			.desc("User of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackPasswordParam)
+		optionsTM.add(OptionTMaker.builder(BStackPasswordParam)
 			.required(false)
 			.hasArgs()
 			.desc("Password of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackOsParam)
+		optionsTM.add(OptionTMaker.builder(BStackOsParam)
 			.required(false)
 			.hasArgs()
-			.possibleValues(Arrays.asList("android"/*mobil*/, "iPhone"/*mobil*/, "Windows"/*desktop*/, "OS X"/*desktop*/))
+			.possibleValues(Arrays.asList("android", "iPhone", "Windows", "OS X"))
 			.desc("os of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackOsVersionParam)
+		optionsTM.add(OptionTMaker.builder(BStackOsVersionParam)
 			.required(false)
 			.hasArgs()
 			.desc("os Version of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackDeviceParam)
+		optionsTM.add(OptionTMaker.builder(BStackDeviceParam)
 			.required(false)
 			.hasArgs()
 			.desc("Devide of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackRealMobileParam)
+		optionsTM.add(OptionTMaker.builder(BStackRealMobileParam)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Indicator if a real movil-device is available in the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackBrowserParam)
+		optionsTM.add(OptionTMaker.builder(BStackBrowserParam)
 			.required(false)
 			.hasArgs()
 			.desc("Browser of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackBrowserVersionParam)
+		optionsTM.add(OptionTMaker.builder(BStackBrowserVersionParam)
 			.required(false)
 			.hasArgs()
 			.desc("Browser version of the BrowserStack Test Environment (only desktop)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.BStackResolutionParam)
+		optionsTM.add(OptionTMaker.builder(BStackResolutionParam)
 			.required(false)
 			.hasArgs()
 			.pattern("\\d+x\\d+")
@@ -444,6 +476,7 @@ public abstract class InputParamsTM {
 		application = cmdLine.getOptionValue(AppNameParam);
 		version = cmdLine.getOptionValue(VersionNameParam);
 		url = cmdLine.getOptionValue(URLNameParam);
+		execiniturl = cmdLine.getOptionValue(ExecInitUrlNameParam);
 		driver = cmdLine.getOptionValue(DriverNameParam);
 		serverDNS = cmdLine.getOptionValue(ServerDNSNameParam);
 		String[] groups = cmdLine.getOptionValues(GroupsNameParam);
@@ -462,6 +495,7 @@ public abstract class InputParamsTM {
 		remote = cmdLine.getOptionValue(RemoteParam);
 		net = cmdLine.getOptionValue(NetAnalysisParam);
 		
+		notification = cmdLine.getOptionValue(NotificationParam);
 		alarm = cmdLine.getOptionValue(AlarmParam);
 		alarmsToCheck = cmdLine.getOptionValue(AlarmsToCheckParam);
 		maxalarms = cmdLine.getOptionValue(MaxAlarmsParam);
@@ -492,6 +526,7 @@ public abstract class InputParamsTM {
 		Application(AppNameParam),
 		Version(VersionNameParam),
 		Url(URLNameParam),
+		ExecInitUrl(ExecInitUrlNameParam),
 		Tcases(TCaseNameParam),
 		Threads(ThreadsParam),
 		ThreadsRamp(ThreadsRampParam),
@@ -500,6 +535,7 @@ public abstract class InputParamsTM {
 		AsyncExec(AsyncExecParam),
 		Remote(RemoteParam),
 		NetAnalysis(NetAnalysisParam),
+		Notification(NotificationParam),
 		Alarm(AlarmParam),
 		AlarmsToCheck(AlarmsToCheckParam),
 		MaxAlarms(MaxAlarmsParam),
@@ -555,6 +591,8 @@ public abstract class InputParamsTM {
 			return this.version;
 		case Url:
 			return this.url;
+		case ExecInitUrl:
+			return this.execiniturl;
 		case Tcases:
 			return this.tcasesCommaSeparated;
 		case Threads:
@@ -571,6 +609,8 @@ public abstract class InputParamsTM {
 			return this.remote;
 		case NetAnalysis:
 			return this.net;
+		case Notification:
+			return this.notification;
 		case Alarm:
 			return this.alarm;
 		case AlarmsToCheck:
@@ -666,6 +706,18 @@ public abstract class InputParamsTM {
 	}
 	public void setUrlBase(String urlBase) {
 		this.url = urlBase;
+	}
+	public String getExecInitUrl() {
+		return this.execiniturl;
+	}
+	public void setExecInitUrl(String execiniturl) {
+		this.execiniturl = execiniturl;
+	}
+	public boolean isExecInitUrl() {
+		if (execiniturl==null) {
+			return true;
+		}
+		return ("true".compareTo(execiniturl)==0);
 	}
 	public String getDnsUrlAcceso() throws URISyntaxException {
 		URI uri = new URI(getUrlBase());
@@ -774,9 +826,9 @@ public abstract class InputParamsTM {
 	}
 	public ManagementWebdriver getTypeManageWebdriver() {
 		if (getRecicleWD()) {
-			return ManagementWebdriver.recycle;
+			return ManagementWebdriver.RECYCLE;
 		}
-		return ManagementWebdriver.discard;
+		return ManagementWebdriver.DISCARD;
 	}
 	public void setAsyncExec(String asyncexec) {
 		this.asyncexec = asyncexec;
@@ -804,7 +856,18 @@ public abstract class InputParamsTM {
 			return ("true".compareTo(net)==0);
 		}
 		return false;
-	} 
+	}
+	
+	public void setNotification(String notification) {
+		this.notification = notification;
+	}
+	public boolean isNotification() {
+		if (notification!=null) {
+			return ("true".compareTo(notification)==0);
+		}
+		return false;
+	}	
+	
 	public void setAlarm(String alarm) {
 		this.alarm = alarm;
 	}

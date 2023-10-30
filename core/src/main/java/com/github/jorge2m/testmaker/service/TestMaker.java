@@ -37,7 +37,6 @@ public class TestMaker {
 	private static RepositoryI repository = new RepositorySQLite(); 
 	
 	public static void run(SuiteTM suite, boolean async) {
-		//Log4jConfig.configLog4java(suite.getPathDirectory());
 		File path = new File(suite.getPathDirectory());
 		path.mkdir();
 		logIniTestSuite(suite);
@@ -74,10 +73,9 @@ public class TestMaker {
 			return suite.getSuiteBean();
 		}
 		SuiteBean suiteData = getSuiteStored(idExecution);
-		if (suiteData!=null) {
-			if (!suiteData.getStateExecution().isFinished()) {
+		if (suiteData!=null &&
+		   !suiteData.getStateExecution().isFinished()) {
 				suiteData.setStateExecution(StateExecution.Aborted);
-			}
 		}
 		return suiteData;
 	}
@@ -151,7 +149,7 @@ public class TestMaker {
 	}
 	
 	public static InputParamsTM getInputParamsSuite(ITestContext ctx) {
-		return (InputParamsTM)getSuiteExecuted(ctx).getInputParams();
+		return getSuiteExecuted(ctx).getInputParams();
 	}
 	
 	public static TestRunTM getTestRun(ITestContext ctx) {
@@ -164,13 +162,13 @@ public class TestMaker {
 	
 	public static SuiteTM getSuite() {
 		return TestCaseTM.getTestCaseInExecution()
-				.orElseThrow(() -> new NoSuchElementException())
+				.orElseThrow(NoSuchElementException::new)
 				.getSuiteParent();
 	}
 	
 	public static InputParamsTM getInputParamsSuite() {
 		return TestCaseTM.getTestCaseInExecution()
-				.orElseThrow(() -> new NoSuchElementException())
+				.orElseThrow(NoSuchElementException::new)
 				.getInputParamsSuite();
 	}
 	
@@ -188,7 +186,7 @@ public class TestMaker {
 			driver.quit();
 		}
 		getTestCase()
-			.orElseThrow(() -> new NoSuchElementException())
+			.orElseThrow(NoSuchElementException::new)
 			.makeInitObjects(InitObject.WebDriver);
 		
 	    return getDriverTestCase();
@@ -196,13 +194,13 @@ public class TestMaker {
 
 	public static StepTM getCurrentStepInExecution() {
 		return getTestCase()
-				.orElseThrow(() -> new NoSuchElementException())
+				.orElseThrow(NoSuchElementException::new)
 				.getCurrentStepInExecution();
 	}
 
 	public static StepTM getLastStep() {
 		return getTestCase()
-				.orElseThrow(() -> new NoSuchElementException())
+				.orElseThrow(NoSuchElementException::new)
 				.getLastStep();
 	}
 
@@ -250,13 +248,14 @@ public class TestMaker {
 		TestNG tng = makeTestNG(suite);
 		suite.start();
 		tng.run();
+		suite.sendAlarmsIfNeeded();
 		suite.end();
 	}
 
 	private static void runInTestNgAsync(SuiteTM suite) {
-		CompletableFuture.runAsync(() -> {
-			runInTestNgSync(suite);
-		});
+		CompletableFuture.runAsync(() -> 
+			runInTestNgSync(suite)
+		);
 	}
 
 	private static TestNG makeTestNG(SuiteTM suite) {

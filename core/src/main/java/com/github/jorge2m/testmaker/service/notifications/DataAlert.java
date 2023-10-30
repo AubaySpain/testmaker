@@ -11,10 +11,8 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
-import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.Utils;
-
 
 public class DataAlert {
 	
@@ -53,9 +51,9 @@ public class DataAlert {
 
 	private DataAlert(Check check, ChecksTM parentChecks) {
 		super();
-		SuiteBean suite = parentChecks.getSuiteParent().getSuiteBean(); 
-		TestCaseTM testCase = parentChecks.getTestCaseParent();
-		StepTM step = parentChecks.getStepParent();
+		var suite = parentChecks.getSuiteParent().getSuiteBean(); 
+		var testCase = parentChecks.getTestCaseParent();
+		var step = parentChecks.getStepParent();
 		
 		this.idExecSuite = suite.getIdExecSuite();
     	this.suiteName = suite.getName();
@@ -72,9 +70,77 @@ public class DataAlert {
     	this.urlReportSuite = suite.getUrlReportHtml();
 	}
 	
+	private DataAlert(Check check, StepTM step) {
+		super();
+		var suite = step.getSuiteParent().getSuiteBean(); 
+		var testCase = step.getTestCaseParent();
+		
+		this.idExecSuite = suite.getIdExecSuite();
+    	this.suiteName = suite.getName();
+    	this.testCaseName = testCase.getNameUnique();
+    	this.stepNumber = step.getNumber();
+    	this.validationNumber = 0;
+    	this.resultado = check.isOvercomed();
+    	this.levelCheck = check.getLevelResult();
+    	this.stepDescription = step.getDescripcion();
+    	this.checkDescription = check.getDescription();
+    	this.infoExecution = check.getInfo();
+    	this.methodValidation = "";
+    	this.fecha = new Date();
+    	this.urlReportSuite = suite.getUrlReportHtml();
+	}
+	
+	private DataAlert(StepTM step) {
+		super();
+		var suite = step.getSuiteParent().getSuiteBean(); 
+		var testCase = step.getTestCaseParent();
+		
+		this.idExecSuite = suite.getIdExecSuite();
+    	this.suiteName = suite.getName();
+    	this.testCaseName = testCase.getNameUnique();
+    	this.stepNumber = step.getNumber();
+    	this.validationNumber = 0;
+    	this.resultado = false;
+    	this.levelCheck = step.getResultSteps();
+    	this.stepDescription = step.getDescripcion();
+    	this.checkDescription = "";
+    	this.infoExecution = "";
+    	this.methodValidation = "";
+    	this.fecha = new Date();
+    	this.urlReportSuite = suite.getUrlReportHtml();
+	}	
+	
+	private DataAlert(SuiteTM suite) {
+		super();
+		var suiteBean = suite.getSuiteBean();
+		
+		this.idExecSuite = suiteBean.getIdExecSuite();
+    	this.suiteName = suiteBean.getName();
+    	this.testCaseName = "Undefined";
+    	this.stepNumber = 0;
+    	this.validationNumber = 0;
+    	this.resultado = false;
+    	this.levelCheck = State.Defect;
+    	this.stepDescription = "Undefined";
+    	this.checkDescription = "Undefined";
+    	this.infoExecution = "Undefined";
+    	this.methodValidation = "";
+    	this.fecha = new Date();
+    	this.urlReportSuite = suiteBean.getUrlReportHtml();
+	}	
+	
 	public static DataAlert of(Check check, ChecksTM checksParent) {
 		return new DataAlert(check, checksParent);
 	}
+	public static DataAlert of(Check check, StepTM step) {
+		return new DataAlert(check, step);
+	}
+	public static DataAlert of(StepTM step) {
+		return new DataAlert(step);
+	}
+	public static DataAlert of(SuiteTM suite) {
+		return new DataAlert(suite);
+	}	
 	
 	public String getIdExecSuite() {
 		return idExecSuite;

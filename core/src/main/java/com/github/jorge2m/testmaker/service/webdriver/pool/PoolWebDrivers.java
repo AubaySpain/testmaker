@@ -1,5 +1,6 @@
 package com.github.jorge2m.testmaker.service.webdriver.pool;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,23 +9,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.openqa.selenium.WebDriver;
 
 import com.github.jorge2m.testmaker.conf.Channel;
-import com.github.jorge2m.testmaker.domain.InputParamsTM;
-import com.github.jorge2m.testmaker.domain.InputParamsTM.ManagementWebdriver;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker;
 import com.github.jorge2m.testmaker.service.webdriver.pool.StoredWebDrv.stateWd;
 import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 
-/**
- * Clase encargada de gestionar un pool de objetos WebDriver
- * @author jorge.munoz
- *
- */
+import static com.github.jorge2m.testmaker.domain.InputParamsTM.ManagementWebdriver.*;
 
-public class PoolWebDrivers {
+public class PoolWebDrivers implements Serializable {
 
-	private final List<StoredWebDrv> poolWebDrivers = new CopyOnWriteArrayList<>();
+	private static final long serialVersionUID = 1L;
+	private final List<StoredWebDrv> listWebDrivers = new CopyOnWriteArrayList<>();
 	private final SuiteTM suite;
 	
 	public PoolWebDrivers(SuiteTM suite) {
@@ -41,19 +37,16 @@ public class PoolWebDrivers {
 	}
 
 	public void quitWebDriver(WebDriver driver, TestRunTM testRun) {
-		InputParamsTM inputData = testRun.getSuiteParent().getInputParams();
+		var inputData = testRun.getSuiteParent().getInputParams();
 		boolean netAnalysis = inputData.isNetAnalysis();
 		if (netAnalysis) {
 			NettrafficStorer.stopNetTrafficThread();
 		}
 
-		ManagementWebdriver managementWdrv = inputData.getTypeManageWebdriver();
-		switch (managementWdrv) {
-		case recycle:
+		if (inputData.getTypeManageWebdriver()==RECYCLE) {
 			deleteAllCookies(driver);
 			markWebDriverAsFreeInPool(driver);
-			break;
-		case discard:
+		} else {
 			removeWebDriverFromPool(driver);
 			try {
 				if (driver!=null) {
@@ -65,12 +58,13 @@ public class PoolWebDrivers {
 			}
 		}
 	}
+	
 	private void deleteAllCookies(WebDriver driver) {
 		try {
 			driver.manage().deleteAllCookies();
 		} 
 		catch (Exception e) {
-			suite.getLogger().warn("Problem deleting cookies for reciclye webdriver ", e.getMessage());
+			suite.getLogger().warn("Problem deleting cookies for reciclye webdriver %s", e.getMessage());
 		}
 	}
 
@@ -96,22 +90,20 @@ public class PoolWebDrivers {
 	 */
 	private synchronized WebDriver getFreeWebDriverFromPool(String driverId, String moreDataWdrv) {
 		WebDriver webdriverFree = null;
-		Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
+		Iterator<StoredWebDrv> itStrWd = listWebDrivers.iterator();
 		suite.getLogger().debug(": Buscando WebDriver free. Type {}, moreDataWrdrv {}", driverId, moreDataWdrv);
 		boolean encontrado = false;
 		while (itStrWd.hasNext() && !encontrado) {
 			StoredWebDrv strWd = itStrWd.next();
 			if (strWd.isFree() &&
-				strWd.getDriver().compareTo(driverId)==0) {
-				if (strWd.getMoreDataWdrv() == moreDataWdrv ||
-					strWd.getMoreDataWdrv().compareTo(moreDataWdrv)==0) {
-					webdriverFree = strWd.getWebDriver();
-					encontrado = true;
-					strWd.markAsBusy();
-					suite.getLogger().debug(
-						"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
-						strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
-				}
+				strWd.getDriver().compareTo(driverId)==0 &&
+				(strWd.getMoreDataWdrv().equals(moreDataWdrv) || strWd.getMoreDataWdrv().compareTo(moreDataWdrv)==0)) {
+				webdriverFree = strWd.getWebDriver();
+				encontrado = true;
+				strWd.markAsBusy();
+				suite.getLogger().debug(
+					"Encontrado -> Mark as Busy WebDriver: {} (state: {}, driver: {}, moreDataWdrv: {})", 
+					strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
 			}
 		}
 
@@ -139,7 +131,7 @@ public class PoolWebDrivers {
 	}
 
 	private void deleteStrWedDriver(StoredWebDrv strWd) {
-		poolWebDrivers.remove(strWd);
+		listWebDrivers.remove(strWd);
 		suite.getLogger().debug(
 			"Removed Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", 
 			strWd.getWebDriver(), strWd.getState(), strWd.getDriver(), strWd.getMoreDataWdrv());
@@ -155,13 +147,13 @@ public class PoolWebDrivers {
 	 */
 	private void storeWebDriver(WebDriver driver, stateWd state, String driverId, String moreDataWdrv) {
 		StoredWebDrv strWd = new StoredWebDrv(driver, state, driverId, moreDataWdrv);
-		poolWebDrivers.add(strWd);
+		listWebDrivers.add(strWd);
 		suite.getLogger().debug("Alta Stored WebDriver: {} (state: {}, type: {}, moreDataWdrv: {})", driver, state, driverId, moreDataWdrv);
 	}
 
 	private StoredWebDrv searchWebDriver(WebDriver driver) {
 		StoredWebDrv strWdRet = null;
-		Iterator<StoredWebDrv> itStrWd = poolWebDrivers.iterator();
+		Iterator<StoredWebDrv> itStrWd = listWebDrivers.iterator();
 		boolean encontrado = false;
 		while (itStrWd.hasNext() && !encontrado) {
 			StoredWebDrv strWd = itStrWd.next();
@@ -175,7 +167,7 @@ public class PoolWebDrivers {
 
 	public void removeAllStrWd() {
 		List<StoredWebDrv> strWdToDelete = new ArrayList<>();
-		for (StoredWebDrv strWd : poolWebDrivers) {
+		for (StoredWebDrv strWd : listWebDrivers) {
 			try {
 				strWdToDelete.add(strWd);
 				strWd.getWebDriver().quit();
@@ -185,7 +177,7 @@ public class PoolWebDrivers {
 			}
 		}
 
-		poolWebDrivers.removeAll(strWdToDelete);
+		listWebDrivers.removeAll(strWdToDelete);
 		suite.getLogger().info("Removed all WebDriver");
 	}
 

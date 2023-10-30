@@ -28,7 +28,7 @@ public class StepTM {
 	
 	private List<ChecksTM> listChecksTM = new ArrayList<>(); 
 	private String descripcion; 
-	private String res_expected; 
+	private String resExpected; 
 	private SaveWhen saveImagePage = SaveWhen.IfProblem;
 	private SaveWhen saveErrorPage = SaveWhen.IfProblem;
 	private SaveWhen saveHtmlPage = SaveWhen.Never;
@@ -36,10 +36,10 @@ public class StepTM {
 	private EvidencesWarehouse evidencesWarehouse;
 
 	private String pathMethod;
-	private int type_page; 
+	private int typePage; 
 	private long timeInicio = 0;
 	private long timeFin = 0;
-	private State result_steps = State.Ok;
+	private State resultSteps = State.Ok;
 	private boolean excepExists = true;
 	private StateExecution state = StateExecution.Started;
 	private boolean isStateUpdated = false;
@@ -132,10 +132,10 @@ public class StepTM {
 		this.descripcion = descripcion;
 	}
 	public String getResExpected() {
-		return res_expected;
+		return resExpected;
 	}
 	public void setResExpected(String res_expected) {
-		this.res_expected = res_expected;
+		this.resExpected = res_expected;
 	}
 	public SaveWhen getSaveImagePage() {
 		return saveImagePage;
@@ -180,10 +180,10 @@ public class StepTM {
 		this.pathMethod = pathMethod;
 	}
 	public int getTypePage() {
-		return type_page;
+		return typePage;
 	}
 	public void setTypePage(int type_page) {
-		this.type_page = type_page;
+		this.typePage = type_page;
 	}
 	public Date getHoraInicio() {
 		return new Date(getTimeInicio());
@@ -233,10 +233,10 @@ public class StepTM {
 	}
 
 	public State getResultSteps() {
-		return result_steps;
+		return resultSteps;
 	}
 	public void setResultSteps(State c_result_steps) {
-		this.result_steps = c_result_steps; 
+		this.resultSteps = c_result_steps; 
 		this.isStateUpdated = true;
 	}
 	public boolean isExcepExists() {
@@ -268,10 +268,10 @@ public class StepTM {
 		this.descripcion = text + this.descripcion;
 	}
 	public void addExpectedText(String text) {
-		this.res_expected+=text;
+		this.resExpected+=text;
 	}
 	public void replaceInExpected(String oldChar, String newChar) {
-		this.res_expected = this.res_expected.replace(oldChar, newChar);
+		this.resExpected = this.resExpected.replace(oldChar, newChar);
 	}
 	public String getPathClass() {
 		return ParsePathClass.getPathClass(getPathMethod());

@@ -6,7 +6,7 @@ import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.service.TestMaker;
-import com.github.jorge2m.testmaker.service.notifications.AlarmSender;
+import com.github.jorge2m.testmaker.service.notifications.CheckAlarmSender;
 import com.github.jorge2m.testmaker.service.notifications.DataAlert;
 import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendNotification;
 
@@ -17,7 +17,7 @@ public class Alarm {
 	private final Check check;
 	private final ChecksTM checksParent;
 	private final InputParamsTM inputParams;
-	private final AlarmSender alarmSender = AlarmSender.instance();
+	private final CheckAlarmSender alarmSender = CheckAlarmSender.instance();
 	private final RepositoryI repository = TestMaker.getRepository();
 	
 	public Alarm(Check check, ChecksTM checksParent) {

@@ -43,9 +43,9 @@ public class TestRunTM extends XmlTest {
 	}
 	
 	private State getStateFromTestCases() {
-		State stateReturn = State.Ok;
-		for (TestCaseTM testCase : getListTestCases()) {
-			State stateTestCase = testCase.getStateResult();
+		var stateReturn = State.Ok;
+		for (var testCase : getListTestCases()) {
+			var stateTestCase = testCase.getStateResult();
 			if (stateTestCase.isMoreCriticThan(stateReturn)) {
 				stateReturn = stateTestCase;
 			}

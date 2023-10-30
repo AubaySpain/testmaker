@@ -213,7 +213,7 @@ public class RestApiTM {
 			@QueryParam("date_from_old") String fechaDesdeOld, 
 			@QueryParam("date_to_old") String fechaHastaOld) throws Exception {
 		
-		List<SuiteBean> listSuites = getListSuitesRunData(
+		var listSuites = getListSuitesRunData(
 				suite, channel, application, state, fechaDesde, fechaHasta);
 		List<SuiteBean> listSuitesOld = null;
 		if (fechaDesdeOld!=null && fechaHastaOld!=null) {

@@ -11,14 +11,15 @@ import org.apache.logging.log4j.Logger;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
+import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
-import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.service.TestMaker;
+import com.github.jorge2m.testmaker.service.notifications.SuiteNotificationSender;
 import com.github.jorge2m.testmaker.service.webdriver.pool.PoolWebDrivers;
 import com.github.jorge2m.testmaker.testreports.html.GenerateReports;
 
@@ -27,7 +28,6 @@ public class SuiteTM extends XmlSuite {
 	private static final long serialVersionUID = 1L;
 	private final InputParamsTM inputParams;
 	private final String idSuiteExecution;
-	//private Logger logger;
 	private long threadId;
 	private StateExecution stateExecution = StateExecution.NotStarted;
 	private State result = State.Ok;
@@ -40,8 +40,6 @@ public class SuiteTM extends XmlSuite {
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
 		this.idSuiteExecution = idSuiteExecution;
 		this.inputParams = inputParams;
-//		Log4jConfig log4jFactory = new Log4jConfig();
-//		this.logger = log4jFactory.createSuiteLogger(idSuiteExecution, getPathLogFile());
 		this.poolWebDrivers = new PoolWebDrivers(this);
 	}
 	
@@ -83,7 +81,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public int getNumberTestCases() {
 		int numTestCases = 0;
-		for (TestRunTM testRun : getListTestRuns()) {
+		for (var testRun : getListTestRuns()) {
 			numTestCases+=testRun.getNumTestCases();
 		}
 		return numTestCases;
@@ -92,14 +90,27 @@ public class SuiteTM extends XmlSuite {
 	public int getNumberTestCases(StateExecution state) {
 		return getTestCases(state).size();
 	}
-	
+
 	public List<TestCaseTM> getTestCases(StateExecution state) {
+		return 
+			getTestCases().stream()
+				.filter(s -> s.getStateRun()==state)
+				.collect(Collectors.toList());
+	}
+	public List<TestCaseTM> getTestCases() {
 		return 
 			getListTestRuns().stream()
 				.map(s -> s.getListTestCases())
 				.flatMap(List::stream)
-				.filter(s -> s.getStateRun() == StateExecution.Running)
 				.collect(Collectors.toList());
+	}
+	
+	public List<StepTM> getSteps(State state) {
+		return getTestCases().stream()
+			.map(t -> t.getListStep())
+			.flatMap(List::stream)
+			.filter(s -> s.getResultSteps()==state)
+			.collect(Collectors.toList());
 	}
 	 
 	public PoolWebDrivers getPoolWebDrivers() {
@@ -128,9 +139,19 @@ public class SuiteTM extends XmlSuite {
 		Log4jTM.removeSuiteLogger(idSuiteExecution);
 	}
 	
+	public void sendAlarmsIfNeeded() {
+		result = getResultFromTestsRun();
+		if (result.isMoreCriticThan(State.Warn)) {
+			var suiteAlarm = SuiteNotificationSender.make();
+			if (suiteAlarm.canSend(this)) {
+				suiteAlarm.send(this);
+			}
+		}
+	}
+	
 	private State getResultFromTestsRun() {
-		State stateReturn = State.Ok;
-		for (TestRunTM testRun : getListTestRuns()) {
+		var stateReturn = State.Ok;
+		for (var testRun : getListTestRuns()) {
 			if (testRun.getResult().isMoreCriticThan(stateReturn)) {
 				stateReturn = testRun.getResult();
 			}
@@ -238,15 +259,11 @@ public class SuiteTM extends XmlSuite {
 				return suite;
 			}
 		}
-		//TestMaker.grabLog(Level.WARN, "Not found Suite associated", null);
-		//return listSuites.get(0);
 		return null;
 	}
 	
 	public SuiteBean getSuiteBean() {
-		SuiteBean suiteBean = new SuiteBean();
-		InputParamsTM inputParams = getInputParams();
-		
+		var suiteBean = new SuiteBean();
 		suiteBean.setIdExecSuite(getIdExecution());
 		suiteBean.setName(getName());
 		suiteBean.setVersion(inputParams.getVersion());
@@ -277,16 +294,12 @@ public class SuiteTM extends XmlSuite {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj==this) {
-			return true;
-		}
-		return false;
-//		if (!(obj instanceof SuiteTM)) {
-//			return false;
-//		}
-//		SuiteTM suite = (SuiteTM)obj;
-//		return (
-//			getIdExecution().compareTo(suite.getIdExecution())==0 &&
-//			getThreadId()==suite.getThreadId());
+		return (obj==this);
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.hashCode();
+	}
+	
 }

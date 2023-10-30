@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -42,7 +43,11 @@ class ChromedriverMaker extends DriverMaker {
 		preBuildConfig();
 		ChromeDriver driver = new ChromeDriver(options);
 		if (channel==Channel.desktop) {
-			driver.manage().window().maximize();
+			if (isHeadless) {
+				driver.manage().window().setSize(new Dimension(1920, 1080));
+			} else {
+				driver.manage().window().maximize();
+			}
 		}
 
 		deleteCookiesAndSetTimeouts(driver);
@@ -65,9 +70,9 @@ class ChromedriverMaker extends DriverMaker {
 	}
 	
 	private void preBuildConfig() {
-		if (channel==Channel.desktop && isHeadless) {
-			options.addArguments("--window-size=1920x1080");
-		}
+//		if (channel==Channel.desktop && isHeadless) {
+//			options.addArguments("--window-size=1920x1080");
+//		}
 		if (isHeadless) {
 			options.addArguments("--headless=new");
 		}

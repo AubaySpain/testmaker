@@ -42,20 +42,22 @@ public class InitTestObjects {
 	}
 	
 	private WebDriver getWebDriverForTestCase() {
-		InputParamsTM inputData = suiteParent.getInputParams();
-		WebDriver driver = suiteParent
+		var inputData = suiteParent.getInputParams();
+		var driver = suiteParent
 				.getPoolWebDrivers()
 				.getWebDriver(
 						inputData.getDriver(), 
 						inputData.getChannel(), 
 						testRunParent);
-		initDriverContent(driver, inputData.getUrlBase());
+		initDriverContent(driver, inputData);
 		return driver;
 	}
-	private void initDriverContent(WebDriver driver, String urlBase) {
+	private void initDriverContent(WebDriver driver, InputParamsTM inputData) {
 		try {
 			driver.manage().deleteAllCookies();
-			driver.get(urlBase);
+			if (inputData.isExecInitUrl()) {
+				driver.get(inputData.getUrlBase());
+			}
 		} 
 		catch (Exception e) {
 			suiteParent.getLogger().warn("Problem initializing Driver content ", e.getMessage());
