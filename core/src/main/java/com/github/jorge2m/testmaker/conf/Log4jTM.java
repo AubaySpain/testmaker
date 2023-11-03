@@ -3,7 +3,6 @@ package com.github.jorge2m.testmaker.conf;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
@@ -27,9 +26,9 @@ public class Log4jTM {
 	private static Logger loggerGlobal;
 	
 	public static Logger getLogger() {
-		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
+		var suite = SuiteTM.getSuiteCreatedInPresentThread();
 		if (suite==null) {
-			Optional<TestCaseTM> testCaseOp = TestCaseTM.getTestCaseInExecution();
+			var testCaseOp = TestCaseTM.getTestCaseInExecution();
 			if (testCaseOp.isPresent()) {
 				suite = testCaseOp.get().getSuiteParent();
 			}

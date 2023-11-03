@@ -8,10 +8,11 @@ import org.json.simple.JSONValue;
 
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendNotification;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 public class TeamsNotificationBase {
 
-	protected void sendToTeams(DataAlert dataAlert, String teamsUrl) throws UnsendNotification {
+	protected void sendToTeams(DataAlert dataAlert, String teamsUrl) {
         try (var httpClient = createDefault()) {
             var post = new HttpPost(teamsUrl);
             post.addHeader("Content-Type", "application/json");
@@ -26,7 +27,7 @@ public class TeamsNotificationBase {
                 throw new UnsendNotification(errorMessage);
             }
         } catch (Exception e) {
-            throw new UnsendNotification(e);
+        	Log4jTM.getLogger().error("Problem sending Teams Notification. {}. {}", e.getMessage(), e.getStackTrace());
         }
 	}	
 	
@@ -103,8 +104,7 @@ public class TeamsNotificationBase {
 		  + "            \"os\": \"default\",\r\n"
 		  + "            \"uri\": \"" + JSONValue.escape(dataAlert.getUrlReportSuite()) + "\"\r\n"
 		  + "        }]\r\n"
-		  + "    }]\r\n"
-		  + "}";	
+		  + "    }]\r\n";
     }
     
     protected boolean isVoid(String value) {

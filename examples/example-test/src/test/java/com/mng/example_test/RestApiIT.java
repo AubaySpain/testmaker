@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jorge2m.example_test.access.ServerRest;
@@ -316,13 +315,13 @@ public class RestApiIT extends JaxRsClient {
 		//Given
 		Form formParams = new Form();
 		MultivaluedMap<String, String> mapParams = formParams.asMap();
-		mapParams.putSingle(InputParamsTM.SuiteNameParam, "SmokeTest");
-		mapParams.putSingle(InputParamsTM.DriverNameParam, "chrome");
-		mapParams.putSingle(InputParamsTM.ChannelNameParam, "desktop");
-		mapParams.putSingle(InputParamsTM.AppNameParam, "google");
-		mapParams.putSingle(InputParamsTM.URLNameParam, "https://www.google.com");
-		mapParams.putSingle(InputParamsTM.TCaseNameParam, testCases);
-		mapParams.putSingle(InputParamsTM.AsyncExecParam, "false");
+		mapParams.putSingle(InputParamsTM.SUITE_NAME_PARAM, "SmokeTest");
+		mapParams.putSingle(InputParamsTM.DRIVER_NAME_PARAM, "chrome");
+		mapParams.putSingle(InputParamsTM.CHANNEL_NAME_PARAM, "desktop");
+		mapParams.putSingle(InputParamsTM.APP_NAME_PARAM, "google");
+		mapParams.putSingle(InputParamsTM.URL_NAME_PARAM, "https://www.google.com");
+		mapParams.putSingle(InputParamsTM.TCASE_NAME_PARAM, testCases);
+		mapParams.putSingle(InputParamsTM.ASYNC_EXEC_PARAM, "false");
 	
 		//When
 		Client client = getClientIgnoreCertificates();

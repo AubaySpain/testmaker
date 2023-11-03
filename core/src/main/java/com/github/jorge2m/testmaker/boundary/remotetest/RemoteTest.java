@@ -13,15 +13,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
-import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
-import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
@@ -29,7 +26,7 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMake
 
 public class RemoteTest extends JaxRsClient {
 	
-	private final static int MAX_RETRY_TEST = 3;
+	private static final int MAX_RETRY_TEST = 3;
 	private final ServerSubscriber server;
 	
 	public RemoteTest(ServerSubscriber server) {
@@ -38,10 +35,10 @@ public class RemoteTest extends JaxRsClient {
 	
 	public Optional<SuiteBean> execute(TestCaseTM testCase, Object testObject) 
 			throws Exception {
-		InputParamsTM inputParams = testCase.getInputParamsSuite();
+		var inputParams = testCase.getInputParamsSuite();
 		setIdExecSuite(inputParams, testCase);
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
-			Log4jTM.getLogger().info("Factory Test (" + testCase.getName() + ") -> Remote");
+			Log4jTM.getLogger().info("Factory Test (%s) -> Remote", testCase.getName());
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);
 		}
 		Log4jTM.getLogger().info("Standar Test -> Remote");
@@ -60,8 +57,8 @@ public class RemoteTest extends JaxRsClient {
 			throws Exception {
 		byte[] testSerialized = SerializationUtils.serialize(testObject);
 		String testSerializedStrB64 = Base64.getEncoder().encodeToString(testSerialized);
-		Log4jTM.getLogger().info("Object Serialized: " + testSerializedStrB64);
-		Optional<SuiteBean> suiteRemote = suiteRun(
+		Log4jTM.getLogger().info("Object Serialized: %s", testSerializedStrB64);
+		var suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
 				testSerializedStrB64);
@@ -73,7 +70,7 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private Optional<SuiteBean> executeTestStandar(TestCaseTM testCase, InputParamsTM inputParams) throws Exception {
-		Optional<SuiteBean> suiteRemote = suiteRun(
+		var suiteRemote = suiteRun(
 				inputParams, 
 				Arrays.asList(testCase.getName()), 
 				null);
@@ -86,22 +83,22 @@ public class RemoteTest extends JaxRsClient {
 	
 	private SuiteBean processTestCaseRemote(TestCaseTM testCase, SuiteBean suiteRemoteExecuted) {
 		//Get TestCase Remote
-		TestCaseBean testCaseRemote = getTestCaseRemote(suiteRemoteExecuted);
+		var testCaseRemote = getTestCaseRemote(suiteRemoteExecuted);
 		
 		//Coser TestCase
 		String throwableStrB64 = testCaseRemote.getThrowable();
-		Throwable throwable = (Throwable)fromStringB64(throwableStrB64);
+		var throwable = (Throwable)fromStringB64(throwableStrB64);
 		testCase.getResult().setThrowable(throwable);
 		testCase.getResult().setStatus(testCaseRemote.getStatusTng());
 		testCase.addSufixToName(testCaseRemote.getSpecificInputData());
 		
-		List<StepTM> listStepsRemote = testCaseRemote.getListStep();
-		for (StepTM stepRemote : listStepsRemote) {
+		var listStepsRemote = testCaseRemote.getListStep();
+		for (var stepRemote : listStepsRemote) {
 			testCase.addStep(stepRemote);
 			stepRemote.setParents(testCase);
 			stepRemote.getEvidencesWarehouse().setStep(stepRemote);
 			stepRemote.moveContentEvidencesToFile();
-			for (ChecksTM checks : stepRemote.getListChecksTM()) {
+			for (var checks : stepRemote.getListChecksTM()) {
 				checks.setParents(stepRemote);
 			}
 		}
@@ -110,12 +107,12 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private TestCaseBean getTestCaseRemote(SuiteBean suiteRemote) {
-		List<TestCaseBean> listTestCaseRemote = suiteRemote
+		var listTestCaseRemote = suiteRemote
 				.getListTestRun().get(0)
 				.getListTestCase();
-		TestCaseBean testToReturn = listTestCaseRemote.get(0);
-		for (TestCaseBean testCaseRemote : listTestCaseRemote) {
-			if (testCaseRemote.getListStep().size() > 0) {
+		var testToReturn = listTestCaseRemote.get(0);
+		for (var testCaseRemote : listTestCaseRemote) {
+			if (!testCaseRemote.getListStep().isEmpty()) {
 				testToReturn = testCaseRemote;
 				break;
 			}
@@ -128,17 +125,18 @@ public class RemoteTest extends JaxRsClient {
 	public Optional<SuiteBean> suiteRun(InputParamsTM inputParams, List<String> testCases, String testObjectSerialized) 
 	throws Exception {
 		Form formParams = getFormParams(inputParams.getAllParamsValues());
-		MultivaluedMap<String, String> mapParams = formParams.asMap();
+		var mapParams = formParams.asMap();
 		if (testCases!=null) {
-			mapParams.putSingle(InputParamsTM.TCaseNameParam, String.join(",", testCases));
+			mapParams.putSingle(InputParamsTM.TCASE_NAME_PARAM, String.join(",", testCases));
 		}
 		if (testObjectSerialized!=null) {
-			mapParams.putSingle(InputParamsTM.TestObjectParam, testObjectSerialized);
+			mapParams.putSingle(InputParamsTM.TEST_OBJECT_PARAM, testObjectSerialized);
 		}
-		mapParams.putSingle(InputParamsTM.AsyncExecParam, "false");
-		mapParams.putSingle(InputParamsTM.RemoteParam, "true");
+		mapParams.putSingle(InputParamsTM.ASYNC_EXEC_PARAM, "false");
+		mapParams.putSingle(InputParamsTM.REMOTE_PARAM, "true");
+		mapParams.putSingle(InputParamsTM.NOTIFICATION_PARAM, "false");
 
-		Client client = getClientIgnoreCertificates();
+		var client = getClientIgnoreCertificates();
 		return execRemoteSuiteRun(client, formParams, MAX_RETRY_TEST);
 	}
 	
@@ -157,12 +155,11 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private SuiteBean execRemoteSuiteRun(Client client, Form formParams) {
-		SuiteBean suiteData = 
+		return 
 			client
 				.target(server.getUrl() + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.form(formParams), SuiteBean.class);
-		return suiteData;
 	}
 	
 	private Form getFormParams(Map<String,String> params) {
@@ -177,7 +174,7 @@ public class RemoteTest extends JaxRsClient {
 	private static Object fromStringB64(String s) {
 		try {
 			byte [] data = Base64.getDecoder().decode( s );
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+			var ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object o  = ois.readObject();
 			ois.close();
 			return o;

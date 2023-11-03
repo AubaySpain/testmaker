@@ -32,50 +32,50 @@ public abstract class InputParamsTM implements Serializable {
 	public abstract void setSpecificDataFromCommandLine(CommandLine cmdLine);
 	public abstract Map<String,String> getSpecificParamsValues();
 	
-	public static final String SuiteNameParam = "suite";
-	public static final String DriverNameParam = "driver";
-	public static final String ChannelNameParam = "channel";
-	public static final String AppNameParam = "application";
-	public static final String VersionNameParam = "version";
-	public static final String URLNameParam = "url";
-	public static final String ExecInitUrlNameParam = "execiniturl";
-	public static final String TCaseNameParam = "tcases";
-	public static final String GroupsNameParam = "groups";
-	public static final String ThreadsParam = "threads";
-	public static final String ThreadsRampParam = "threadsramp";
-	public static final String ServerDNSNameParam = "serverDNS";
-	public static final String AsyncExecParam = "asyncexec";
-	public static final String RemoteParam = "remote";
-	public static final String RecicleWDParam = "reciclewd";
-	public static final String NetAnalysisParam = "net";
+	public static final String SUITE_NAME_PARAM = "suite";
+	public static final String DRIVER_NAME_PARAM = "driver";
+	public static final String CHANNEL_NAME_PARAM = "channel";
+	public static final String APP_NAME_PARAM = "application";
+	public static final String VERSION_NAME_PARAM = "version";
+	public static final String URL_NAME_PARAM = "url";
+	public static final String EXEC_INIT_URL_NAME_PARAM = "execiniturl";
+	public static final String TCASE_NAME_PARAM = "tcases";
+	public static final String GROUPS_NAME_PARAM = "groups";
+	public static final String THREADS_PARAM = "threads";
+	public static final String THREADS_RAMP_PARAM = "threadsramp";
+	public static final String SERVER_DNS_NAME_PARAM = "serverDNS";
+	public static final String ASYNC_EXEC_PARAM = "asyncexec";
+	public static final String REMOTE_PARAM = "remote";
+	public static final String RECICLE_WD_PARAM = "reciclewd";
+	public static final String NET_ANALYSIS_PARAM = "net";
 	
-	public static final String NotificationParam = "notification";
-	public static final String AlarmParam = "alarm";
-	public static final String AlarmsToCheckParam = "alarmstocheck";	
-	public static final String MaxAlarmsParam = "maxalarms";
-	public static final String PeriodAlarmsParam = "periodalarms";
-	public static final String TeamsChannelParam = "teamschannel";
+	public static final String NOTIFICATION_PARAM = "notification";
+	public static final String ALARM_PARAM = "alarm";
+	public static final String ALARMS_TO_CHECK_PARAM = "alarmstocheck";	
+	public static final String MAX_ALARMS_PARAM = "maxalarms";
+	public static final String PERIOD_ALARMS_PARAM = "periodalarms";
+	public static final String TEAMS_CHANNEL_PARAM = "teamschannel";
 	
-	public static final String StoreBdParam = "storebd";
-	public static final String MailsParam = "mails";
-	public static final String MailUserParam = "mailuser";
-	public static final String MailPasswordParam = "mailpassword";
-	public static final String TypeAccessParam = "typeAccess";
-	public static final String TestObjectParam = "testobject";
-	public static final String IdExecSuiteParam = "idexecsuite";
+	public static final String STORE_BD_PARAM = "storebd";
+	public static final String MAILS_PARAM = "mails";
+	public static final String MAIL_USER_PARAM = "mailuser";
+	public static final String MAIL_PASSWORD_PARAM = "mailpassword";
+	public static final String TYPE_ACCESS_PARAM = "typeAccess";
+	public static final String TEST_OBJECT_PARAM = "testobject";
+	public static final String ID_EXEC_SUITE_PARAM = "idexecsuite";
 	
 	//BrowserStack
-	public static final String BStackUserParam = "bstack_user"; //Mobil & Desktop
-	public static final String BStackPasswordParam = "bstack_password"; //Mobil & Desktop
-	public static final String BStackOsParam = "bstack_os"; //Mobil & Desktop
-	public static final String BStackOsVersionParam = "bstack_os_version"; //Mobil & Desktop
-	public static final String BStackDeviceParam = "bstack_device"; //Mobil
-	public static final String BStackRealMobileParam = "bstack_realMobile"; //Mobil 
-	public static final String BStackBrowserParam = "bstack_browser"; //Mobil & Desktop
-	public static final String BStackBrowserVersionParam = "bstack_browser_version"; //Desktop
-	public static final String BStackResolutionParam = "bstack_resolution"; //Desktop
+	public static final String BSTACK_USER_PARAM = "bstack_user"; //Mobil & Desktop
+	public static final String BSTACK_PASSWORD_PARAM = "bstack_password"; //Mobil & Desktop
+	public static final String BSTACK_OS_PARAM = "bstack_os"; //Mobil & Desktop
+	public static final String BSTACK_OS_VERSION_PARAM = "bstack_os_version"; //Mobil & Desktop
+	public static final String BSTACK_DEVICE_PARAM = "bstack_device"; //Mobil
+	public static final String BSTACK_REAL_MOBILE_PARAM = "bstack_realMobile"; //Mobil 
+	public static final String BSTACK_BROWSER_PARAM = "bstack_browser"; //Mobil & Desktop
+	public static final String BSTACK_BROWSER_VERSION_PARAM = "bstack_browser_version"; //Desktop
+	public static final String BSTACK_RESOLUTION_PARAM = "bstack_resolution"; //Desktop
 	
-	public static final String patternTestCaseItem = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
+	public static final String PATTERN_TESTCASE_ITEM = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
 	
 	public enum ManagementWebdriver { RECYCLE, DISCARD }
 	private Class<? extends Enum<?>> suiteEnum;
@@ -83,115 +83,115 @@ public abstract class InputParamsTM implements Serializable {
 	
 	public enum TypeAccess {Rest, CmdLine, Bat}
 
-	@FormParam(SuiteNameParam)
+	@FormParam(SUITE_NAME_PARAM)
 	String suite;
 
-	@FormParam(GroupsNameParam)
+	@FormParam(GROUPS_NAME_PARAM)
 	String groupsCommaSeparated;
 
-	@FormParam(DriverNameParam)
+	@FormParam(DRIVER_NAME_PARAM)
 	String driver;
 
-	@FormParam(ChannelNameParam)
+	@FormParam(CHANNEL_NAME_PARAM)
 	String channel;
 
-	@FormParam(AppNameParam)
+	@FormParam(APP_NAME_PARAM)
 	String application;
 
-	@FormParam(VersionNameParam)
+	@FormParam(VERSION_NAME_PARAM)
 	String version;
 
-	@FormParam(URLNameParam)
+	@FormParam(URL_NAME_PARAM)
 	String url;
 	
-	@FormParam(ExecInitUrlNameParam)
+	@FormParam(EXEC_INIT_URL_NAME_PARAM)
 	String execiniturl;
 
-	@FormParam(TCaseNameParam)
+	@FormParam(TCASE_NAME_PARAM)
 	String tcasesCommaSeparated;
 	
-	@FormParam(ThreadsParam)
+	@FormParam(THREADS_PARAM)
 	String threads;
 	
-	@FormParam(ThreadsRampParam)
+	@FormParam(THREADS_RAMP_PARAM)
 	String threadsramp;
 
-	@FormParam(ServerDNSNameParam)
+	@FormParam(SERVER_DNS_NAME_PARAM)
 	String serverDNS;
 
-	@FormParam(RecicleWDParam)
+	@FormParam(RECICLE_WD_PARAM)
 	String reciclewd;
 	
-	@FormParam(AsyncExecParam)
+	@FormParam(ASYNC_EXEC_PARAM)
 	String asyncexec;
 	
-	@FormParam(RemoteParam)
+	@FormParam(REMOTE_PARAM)
 	String remote;
 
-	@FormParam(NetAnalysisParam)
+	@FormParam(NET_ANALYSIS_PARAM)
 	String net;
 	
-	@FormParam(NotificationParam)
+	@FormParam(NOTIFICATION_PARAM)
 	String notification;	
 	
-	@FormParam(AlarmParam)
+	@FormParam(ALARM_PARAM)
 	String alarm;
 	
-	@FormParam(AlarmsToCheckParam)
+	@FormParam(ALARMS_TO_CHECK_PARAM)
 	String alarmsToCheck;
 	
-	@FormParam(MaxAlarmsParam)
+	@FormParam(MAX_ALARMS_PARAM)
 	String maxalarms;
 	
-	@FormParam(PeriodAlarmsParam)
+	@FormParam(PERIOD_ALARMS_PARAM)
 	String periodalarms;	
 	
-	@FormParam(TeamsChannelParam)
+	@FormParam(TEAMS_CHANNEL_PARAM)
 	String teamschannel;
 
-	@FormParam(StoreBdParam)
+	@FormParam(STORE_BD_PARAM)
 	String storebd;
 
-	@FormParam(TypeAccessParam)
+	@FormParam(TYPE_ACCESS_PARAM)
 	String typeAccess = TypeAccess.CmdLine.name();
 	
-	@FormParam(IdExecSuiteParam)
+	@FormParam(ID_EXEC_SUITE_PARAM)
 	String idExecSuite;
 	
-	@FormParam(TestObjectParam)
+	@FormParam(TEST_OBJECT_PARAM)
 	String testObject;
 	
 	//Browser Stack
-	@FormParam(BStackUserParam)
+	@FormParam(BSTACK_USER_PARAM)
 	String bStackUser;
 	
-	@FormParam(BStackPasswordParam)
+	@FormParam(BSTACK_PASSWORD_PARAM)
 	String bStackPassword;
 	
-	@FormParam(BStackOsParam)
+	@FormParam(BSTACK_OS_PARAM)
 	String bStackOs;
 	
-	@FormParam(BStackOsVersionParam)
+	@FormParam(BSTACK_OS_VERSION_PARAM)
 	String bStackOsVersion;
 	
-	@FormParam(BStackDeviceParam)
+	@FormParam(BSTACK_DEVICE_PARAM)
 	String bStackDevice;
 	
-	@FormParam(BStackRealMobileParam)
+	@FormParam(BSTACK_REAL_MOBILE_PARAM)
 	String bStackRealMobile;
 	
-	@FormParam(BStackBrowserParam)
+	@FormParam(BSTACK_BROWSER_PARAM)
 	String bStackBrowser;
 	
-	@FormParam(BStackBrowserVersionParam)
+	@FormParam(BSTACK_BROWSER_VERSION_PARAM)
 	String bStackBrowserVersion;
 	
-	@FormParam(BStackResolutionParam)
+	@FormParam(BSTACK_RESOLUTION_PARAM)
 	String bStackResolution;
 
-	public InputParamsTM() {}
+	protected InputParamsTM() {}
 
-	public InputParamsTM(Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) {
+	protected InputParamsTM(Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) {
 		this.suiteEnum = suiteEnum;
 		this.appEnum = appEnum;
 	}
@@ -212,174 +212,173 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	
 	public Map<String, String> getAllParamsValues() {
-		Map<String, String> paramsValuesTM = getTmParamsValues();
+		var paramsValuesTM = getTmParamsValues();
 		paramsValuesTM.putAll(getSpecificParamsValues());
 		return paramsValuesTM;
 	}
 	
 	private List<OptionTMaker> getTmParameters() {
 		List<OptionTMaker> optionsTM = new ArrayList<>();
-		optionsTM.add(OptionTMaker.builder(SuiteNameParam)
+		optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
 			.required(true)
 			.hasArg()
 			.possibleValues(suiteEnum)
 			.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(DriverNameParam)
+		optionsTM.add(OptionTMaker.builder(DRIVER_NAME_PARAM)
 			.required(true)
 			.hasArg()
 			//.possibleValues(EmbebdedDriver.class)
 			.desc("WebDriver to launch the Suite of Tests. Possible values: " + Arrays.asList(EmbeddedDriver.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(ChannelNameParam)
+		optionsTM.add(OptionTMaker.builder(CHANNEL_NAME_PARAM)
 			.required(true)
 			.hasArg()
 			.possibleValues(Channel.class)
 			.desc("Channel on which to run the webdriver. Possible values: " + Arrays.toString(Channel.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(AppNameParam)
+		optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
 			.required(true)
 			.hasArg()
 			.possibleValues(appEnum)
 			.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(URLNameParam)
+		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)
 			.hasArg()
 			.pattern(ConstantesTM.URL_Pattern)
 			.desc("Initial URL of the application Web to test")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(URLNameParam)
+		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)
 			.hasArg()
 			.pattern(ConstantesTM.URL_Pattern)
 			.desc("Initial URL of the application Web to test")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(InputParamsTM.TCaseNameParam)
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.TCASE_NAME_PARAM)
 			.required(false)
 			.hasArgs()
 			.valueSeparator(',')
-			//Examples: FIC001, FIC001{1}, FIC001{50-10}
-			.pattern(patternTestCaseItem)
+			.pattern(PATTERN_TESTCASE_ITEM)
 			.desc("List of testcases comma separated (p.e. OTR001,BOR001,FIC001{6-2})")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(ExecInitUrlNameParam)
+		optionsTM.add(OptionTMaker.builder(EXEC_INIT_URL_NAME_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Execution of initial URL")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(GroupsNameParam)
+		optionsTM.add(OptionTMaker.builder(GROUPS_NAME_PARAM)
 			.required(false)
 			.hasArg()
 			.valueSeparator(',')
 			.desc("Groups of tests to include")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(ThreadsParam)
+		optionsTM.add(OptionTMaker.builder(THREADS_PARAM)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Number or threads for paralelize TestCases")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(ThreadsRampParam)
+		optionsTM.add(OptionTMaker.builder(THREADS_RAMP_PARAM)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Ramp in seconds for reach maximum thread paralelization")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(VersionNameParam)
+		optionsTM.add(OptionTMaker.builder(VERSION_NAME_PARAM)
 			.required(false)
 			.hasArg()
 			.desc("Version of the TestSuite")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(ServerDNSNameParam)
+		optionsTM.add(OptionTMaker.builder(SERVER_DNS_NAME_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Server DNS where are ubicated the HTML reports (p.e. http://robottest.mangodev.net)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(RecicleWDParam)
+		optionsTM.add(OptionTMaker.builder(RECICLE_WD_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Gestion mode of webdriver. Possible values: true->reuse across testcases, false->don't reuse)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(AsyncExecParam)
+		optionsTM.add(OptionTMaker.builder(ASYNC_EXEC_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Execution Asynchronous (true, false)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(RemoteParam)
+		optionsTM.add(OptionTMaker.builder(REMOTE_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Remote Execution (true, false)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(NetAnalysisParam)
+		optionsTM.add(OptionTMaker.builder(NET_ANALYSIS_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Net Analysis (true, false)")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(NotificationParam)
+		optionsTM.add(OptionTMaker.builder(NOTIFICATION_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Teams Notification Suite with problems (true, false)")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(AlarmParam)
+		optionsTM.add(OptionTMaker.builder(ALARM_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Teams Notification check Alarm (true, false)")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(AlarmsToCheckParam)
+		optionsTM.add(OptionTMaker.builder(ALARMS_TO_CHECK_PARAM)
 			.required(false)
 			.valueSeparator(',')
 			.hasArgs()
 			.desc("List of code alarms to check")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(MaxAlarmsParam)
+		optionsTM.add(OptionTMaker.builder(MAX_ALARMS_PARAM)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Max alarms in a period. By default 60 minutes (configurable via maxalarms param)")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(PeriodAlarmsParam)
+		optionsTM.add(OptionTMaker.builder(PERIOD_ALARMS_PARAM)
 			.required(false)
 			.hasArgs()
 			.pattern("[0-9]+")
 			.desc("Configure the period in minutes param maxalarms refers to")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(TeamsChannelParam)
+		optionsTM.add(OptionTMaker.builder(TEAMS_CHANNEL_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("URL of the Teams Channel")
 			.build());		
 
-		optionsTM.add(OptionTMaker.builder(StoreBdParam)
+		optionsTM.add(OptionTMaker.builder(STORE_BD_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(StoreUntil.class)
@@ -388,7 +387,7 @@ public abstract class InputParamsTM implements Serializable {
 				Arrays.toString(getNames(StoreUntil.class.getEnumConstants())))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(MailsParam)
+		optionsTM.add(OptionTMaker.builder(MAILS_PARAM)
 			.required(false)
 			.hasArgs()
 			.valueSeparator(',')
@@ -396,71 +395,71 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("List of mail adresses comma separated")
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(TypeAccessParam)
+		optionsTM.add(OptionTMaker.builder(TYPE_ACCESS_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(TypeAccess.class)
 			.desc("Type of access. Posible values: " + Arrays.asList(TypeAccess.values()))
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(IdExecSuiteParam)
+		optionsTM.add(OptionTMaker.builder(ID_EXEC_SUITE_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Id of SuiteTest Execution. For the case where you want to specify your own instead of the automatically generated one")
 			.build());		
 		
 		//BrowserStack
-		optionsTM.add(OptionTMaker.builder(BStackUserParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_USER_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("User of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackPasswordParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_PASSWORD_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Password of the BrowserStack platform")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackOsParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_OS_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("android", "iPhone", "Windows", "OS X"))
 			.desc("os of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackOsVersionParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_OS_VERSION_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("os Version of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackDeviceParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_DEVICE_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Devide of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackRealMobileParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_REAL_MOBILE_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
 			.desc("Indicator if a real movil-device is available in the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackBrowserParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_BROWSER_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Browser of the BrowserStack Test Environment")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackBrowserVersionParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_BROWSER_VERSION_PARAM)
 			.required(false)
 			.hasArgs()
 			.desc("Browser version of the BrowserStack Test Environment (only desktop)")
 			.build());
 		
-		optionsTM.add(OptionTMaker.builder(BStackResolutionParam)
+		optionsTM.add(OptionTMaker.builder(BSTACK_RESOLUTION_PARAM)
 			.required(false)
 			.hasArgs()
 			.pattern("\\d+x\\d+")
@@ -471,94 +470,94 @@ public abstract class InputParamsTM implements Serializable {
 	}
 
 	private void setTmDataFromCommandLine(CommandLine cmdLine) {
-		channel = cmdLine.getOptionValue(ChannelNameParam);
-		suite = cmdLine.getOptionValue(SuiteNameParam);
-		application = cmdLine.getOptionValue(AppNameParam);
-		version = cmdLine.getOptionValue(VersionNameParam);
-		url = cmdLine.getOptionValue(URLNameParam);
-		execiniturl = cmdLine.getOptionValue(ExecInitUrlNameParam);
-		driver = cmdLine.getOptionValue(DriverNameParam);
-		serverDNS = cmdLine.getOptionValue(ServerDNSNameParam);
-		String[] groups = cmdLine.getOptionValues(GroupsNameParam);
+		channel = cmdLine.getOptionValue(CHANNEL_NAME_PARAM);
+		suite = cmdLine.getOptionValue(SUITE_NAME_PARAM);
+		application = cmdLine.getOptionValue(APP_NAME_PARAM);
+		version = cmdLine.getOptionValue(VERSION_NAME_PARAM);
+		url = cmdLine.getOptionValue(URL_NAME_PARAM);
+		execiniturl = cmdLine.getOptionValue(EXEC_INIT_URL_NAME_PARAM);
+		driver = cmdLine.getOptionValue(DRIVER_NAME_PARAM);
+		serverDNS = cmdLine.getOptionValue(SERVER_DNS_NAME_PARAM);
+		String[] groups = cmdLine.getOptionValues(GROUPS_NAME_PARAM);
 		if (groups!=null) {
 			groupsCommaSeparated = String.join(",", groups);
 		}
-		String[] tcases = cmdLine.getOptionValues(TCaseNameParam);
+		String[] tcases = cmdLine.getOptionValues(TCASE_NAME_PARAM);
 		if (tcases!=null) {
 			tcasesCommaSeparated = String.join(",", tcases);
 		}
 
-		threads = cmdLine.getOptionValue(ThreadsParam);
-		threadsramp = cmdLine.getOptionValue(ThreadsRampParam);
-		reciclewd = cmdLine.getOptionValue(RecicleWDParam);
-		asyncexec = cmdLine.getOptionValue(AsyncExecParam);
-		remote = cmdLine.getOptionValue(RemoteParam);
-		net = cmdLine.getOptionValue(NetAnalysisParam);
+		threads = cmdLine.getOptionValue(THREADS_PARAM);
+		threadsramp = cmdLine.getOptionValue(THREADS_RAMP_PARAM);
+		reciclewd = cmdLine.getOptionValue(RECICLE_WD_PARAM);
+		asyncexec = cmdLine.getOptionValue(ASYNC_EXEC_PARAM);
+		remote = cmdLine.getOptionValue(REMOTE_PARAM);
+		net = cmdLine.getOptionValue(NET_ANALYSIS_PARAM);
 		
-		notification = cmdLine.getOptionValue(NotificationParam);
-		alarm = cmdLine.getOptionValue(AlarmParam);
-		alarmsToCheck = cmdLine.getOptionValue(AlarmsToCheckParam);
-		maxalarms = cmdLine.getOptionValue(MaxAlarmsParam);
-		periodalarms = cmdLine.getOptionValue(PeriodAlarmsParam);
-		teamschannel = cmdLine.getOptionValue(TeamsChannelParam);
+		notification = cmdLine.getOptionValue(NOTIFICATION_PARAM);
+		alarm = cmdLine.getOptionValue(ALARM_PARAM);
+		alarmsToCheck = cmdLine.getOptionValue(ALARMS_TO_CHECK_PARAM);
+		maxalarms = cmdLine.getOptionValue(MAX_ALARMS_PARAM);
+		periodalarms = cmdLine.getOptionValue(PERIOD_ALARMS_PARAM);
+		teamschannel = cmdLine.getOptionValue(TEAMS_CHANNEL_PARAM);
 		
-		storebd = cmdLine.getOptionValue(StoreBdParam);
-		typeAccess = cmdLine.getOptionValue(TypeAccessParam);
-		idExecSuite = cmdLine.getOptionValue(IdExecSuiteParam);
+		storebd = cmdLine.getOptionValue(STORE_BD_PARAM);
+		typeAccess = cmdLine.getOptionValue(TYPE_ACCESS_PARAM);
+		idExecSuite = cmdLine.getOptionValue(ID_EXEC_SUITE_PARAM);
 		
 		//BrowserStack
-		bStackUser = cmdLine.getOptionValue(BStackUserParam);
-		bStackPassword = cmdLine.getOptionValue(BStackPasswordParam);
-		bStackOs = cmdLine.getOptionValue(BStackOsParam);
-		bStackOsVersion = cmdLine.getOptionValue(BStackOsVersionParam);
-		bStackDevice = cmdLine.getOptionValue(BStackDeviceParam);
-		bStackRealMobile = cmdLine.getOptionValue(BStackRealMobileParam);
-		bStackBrowser = cmdLine.getOptionValue(BStackBrowserParam);
-		bStackBrowserVersion = cmdLine.getOptionValue(BStackBrowserVersionParam);
-		bStackResolution = cmdLine.getOptionValue(BStackResolutionParam);
+		bStackUser = cmdLine.getOptionValue(BSTACK_USER_PARAM);
+		bStackPassword = cmdLine.getOptionValue(BSTACK_PASSWORD_PARAM);
+		bStackOs = cmdLine.getOptionValue(BSTACK_OS_PARAM);
+		bStackOsVersion = cmdLine.getOptionValue(BSTACK_OS_VERSION_PARAM);
+		bStackDevice = cmdLine.getOptionValue(BSTACK_DEVICE_PARAM);
+		bStackRealMobile = cmdLine.getOptionValue(BSTACK_REAL_MOBILE_PARAM);
+		bStackBrowser = cmdLine.getOptionValue(BSTACK_BROWSER_PARAM);
+		bStackBrowserVersion = cmdLine.getOptionValue(BSTACK_BROWSER_VERSION_PARAM);
+		bStackResolution = cmdLine.getOptionValue(BSTACK_RESOLUTION_PARAM);
 	}
 
 	private enum ParamTM {
-		Suite(SuiteNameParam),
-		Groups(GroupsNameParam),
-		Driver(DriverNameParam),
-		Channel(ChannelNameParam),
-		Application(AppNameParam),
-		Version(VersionNameParam),
-		Url(URLNameParam),
-		ExecInitUrl(ExecInitUrlNameParam),
-		Tcases(TCaseNameParam),
-		Threads(ThreadsParam),
-		ThreadsRamp(ThreadsRampParam),
-		ServerDNS(ServerDNSNameParam),
-		RecicleWD(RecicleWDParam),
-		AsyncExec(AsyncExecParam),
-		Remote(RemoteParam),
-		NetAnalysis(NetAnalysisParam),
-		Notification(NotificationParam),
-		Alarm(AlarmParam),
-		AlarmsToCheck(AlarmsToCheckParam),
-		MaxAlarms(MaxAlarmsParam),
-		PeriodAlarms(PeriodAlarmsParam),		
-		TeamsChannel(TeamsChannelParam),
-		StoreBd(StoreBdParam),
-		Mails(MailsParam),
-		MailUser(MailUserParam),
-		MailPassword(MailPasswordParam),
-		TypeAccess(TypeAccessParam),
-		IdExecSuite(IdExecSuiteParam),
-		TestObject(TestObjectParam),
-		BStackUser(BStackUserParam),
-		BStackPassword(BStackPasswordParam),
-		BStackOs(BStackOsParam),
-		BStackOsVersion(BStackOsVersionParam),
-		BStackDevice(BStackDeviceParam),
-		BStackRealMobile(BStackRealMobileParam),
-		BStackBrowser(BStackBrowserParam),
-		BStackBrowserVersion(BStackBrowserVersionParam),
-		BStackResolution(BStackResolutionParam);
+		SUITE(SUITE_NAME_PARAM),
+		GROUPS(GROUPS_NAME_PARAM),
+		DRIVER(DRIVER_NAME_PARAM),
+		CHANNEL(CHANNEL_NAME_PARAM),
+		APPLICATION(APP_NAME_PARAM),
+		VERSION(VERSION_NAME_PARAM),
+		URL(URL_NAME_PARAM),
+		EXEC_INIT_URL(EXEC_INIT_URL_NAME_PARAM),
+		TCASES(TCASE_NAME_PARAM),
+		THREADS(THREADS_PARAM),
+		THREADS_RAMP(THREADS_RAMP_PARAM),
+		SERVER_DNS(SERVER_DNS_NAME_PARAM),
+		RECICLE_WD(RECICLE_WD_PARAM),
+		ASYNC_EXEC(ASYNC_EXEC_PARAM),
+		REMOTE(REMOTE_PARAM),
+		NET_ANALYSIS(NET_ANALYSIS_PARAM),
+		NOTIFICATION(NOTIFICATION_PARAM),
+		ALARM(ALARM_PARAM),
+		ALARMS_TO_CHECK(ALARMS_TO_CHECK_PARAM),
+		MAX_ALARMS(MAX_ALARMS_PARAM),
+		PERIOD_ALARMS(PERIOD_ALARMS_PARAM),		
+		TEAMS_CHANNEL(TEAMS_CHANNEL_PARAM),
+		STORE_BD(STORE_BD_PARAM),
+		MAILS(MAILS_PARAM),
+		MAIL_USER(MAIL_USER_PARAM),
+		MAIL_PASSWORD(MAIL_PASSWORD_PARAM),
+		TYPE_ACCESS(TYPE_ACCESS_PARAM),
+		ID_EXEC_SUITE(ID_EXEC_SUITE_PARAM),
+		TEST_OBJECT(TEST_OBJECT_PARAM),
+		BSTACK_USER(BSTACK_USER_PARAM),
+		BSTACK_PASSWORD(BSTACK_PASSWORD_PARAM),
+		BSTACK_OS(BSTACK_OS_PARAM),
+		BSTACK_OS_VERSION(BSTACK_OS_VERSION_PARAM),
+		BSTACK_DEVICE(BSTACK_DEVICE_PARAM),
+		BSTACK_REAL_MOBILE(BSTACK_REAL_MOBILE_PARAM),
+		BSTACK_BROWSER(BSTACK_BROWSER_PARAM),
+		BSTACK_BROWSER_VERSION(BSTACK_BROWSER_VERSION_PARAM),
+		BSTACK_RESOLUTION(BSTACK_RESOLUTION_PARAM);
 		
-		public String nameParam;
+		String nameParam;
 		private ParamTM(String nameParam) {
 			this.nameParam = nameParam;
 		}
@@ -577,73 +576,73 @@ public abstract class InputParamsTM implements Serializable {
 	
 	private String getValueParam(ParamTM paramId) {
 		switch (paramId) {
-		case Suite:
+		case SUITE:
 			return this.suite;
-		case Groups:
+		case GROUPS:
 			return this.groupsCommaSeparated;
-		case Driver:
+		case DRIVER:
 			return this.driver;
-		case Channel:
+		case CHANNEL:
 			return this.channel;
-		case Application:
+		case APPLICATION:
 			return this.application;
-		case Version:
+		case VERSION:
 			return this.version;
-		case Url:
+		case URL:
 			return this.url;
-		case ExecInitUrl:
+		case EXEC_INIT_URL:
 			return this.execiniturl;
-		case Tcases:
+		case TCASES:
 			return this.tcasesCommaSeparated;
-		case Threads:
+		case THREADS:
 			return this.threads;
-		case ThreadsRamp:
+		case THREADS_RAMP:
 			return this.threadsramp;
-		case ServerDNS:
+		case SERVER_DNS:
 			return this.serverDNS;
-		case RecicleWD:
+		case RECICLE_WD:
 			return this.reciclewd;
-		case AsyncExec:
+		case ASYNC_EXEC:
 			return this.asyncexec;
-		case Remote:
+		case REMOTE:
 			return this.remote;
-		case NetAnalysis:
+		case NET_ANALYSIS:
 			return this.net;
-		case Notification:
+		case NOTIFICATION:
 			return this.notification;
-		case Alarm:
+		case ALARM:
 			return this.alarm;
-		case AlarmsToCheck:
+		case ALARMS_TO_CHECK:
 			return this.alarmsToCheck;
-		case MaxAlarms:
+		case MAX_ALARMS:
 			return this.maxalarms;
-		case PeriodAlarms:
+		case PERIOD_ALARMS:
 			return this.periodalarms;
-		case TeamsChannel:
+		case TEAMS_CHANNEL:
 			return this.teamschannel;
-		case StoreBd:
+		case STORE_BD:
 			return this.storebd;
-		case TypeAccess:
+		case TYPE_ACCESS:
 			return this.typeAccess;
-		case IdExecSuite:
+		case ID_EXEC_SUITE:
 			return this.idExecSuite;
-		case BStackUser:
+		case BSTACK_USER:
 			return bStackUser;
-		case BStackPassword:
+		case BSTACK_PASSWORD:
 			return bStackPassword;
-		case BStackOs:
+		case BSTACK_OS:
 			return bStackOs;
-		case BStackOsVersion:
+		case BSTACK_OS_VERSION:
 			return bStackOsVersion;
-		case BStackDevice:
+		case BSTACK_DEVICE:
 			return bStackDevice;
-		case BStackRealMobile:
+		case BSTACK_REAL_MOBILE:
 			return bStackRealMobile;
-		case BStackBrowser:
+		case BSTACK_BROWSER:
 			return bStackBrowser;
-		case BStackBrowserVersion:
+		case BSTACK_BROWSER_VERSION:
 			return bStackBrowserVersion;
-		case BStackResolution:
+		case BSTACK_RESOLUTION:
 			return bStackResolution;
 		default:
 			return "";
@@ -766,7 +765,7 @@ public abstract class InputParamsTM implements Serializable {
 		List<TestCaseParams> listTestCaseData = new ArrayList<>();
 		for (String testCaseItem : getListTestCaseItems()) {
 			TestCaseParams testCaseData = new TestCaseParams();
-			Pattern pattern = Pattern.compile(patternTestCaseItem);
+			Pattern pattern = Pattern.compile(PATTERN_TESTCASE_ITEM);
 			Matcher matcher = pattern.matcher(testCaseItem);
 			if (matcher.find()) {
 				testCaseData.setName(matcher.group(1));
