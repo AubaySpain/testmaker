@@ -21,7 +21,6 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
-import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -38,22 +37,19 @@ import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReports extends EmailableReporter {
 	
-	//static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
-
 	private SuiteBean suite;
 	private SuiteTM suiteTM;
 	private InputParamsTM inputParamsSuite;
 	private List<Integer> treeTable;
 	private String outputDirectory = "";
 	private String reportHtml = "";
-	private String output_library = "../..";
-	private String pathStatics = output_library + "/static";
+	private String outputLibrary = "../..";
+	private String pathStatics = outputLibrary + "/static";
 
 	@Override
 	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
 		super.generateReport(xmlSuites, suites, outputDirectory);
-		SuiteTM suiteTM = ((SuiteTM)xmlSuites.get(0));
-		this.suiteTM = suiteTM;
+		this.suiteTM = ((SuiteTM)xmlSuites.get(0));
 		this.suite = suiteTM.getSuiteBean();
 		this.inputParamsSuite = suiteTM.getInputParams();
 		this.treeTable = getMapTree(suite);
@@ -75,7 +71,7 @@ public class GenerateReports extends EmailableReporter {
 			outputDirectory + "/../../" + pathDirectoryInFromResources);
 	}
 
-	private void generateReportHTML() throws Exception {
+	private void generateReportHTML() {
 		pintaCabeceraHTML();
 		pintaHeadersTableMain();	
 		pintaTestRunsOfSuite();
@@ -162,7 +158,7 @@ public class GenerateReports extends EmailableReporter {
 		if (inputParamsSuite.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
 			String user = inputParamsSuite.getBStackUser();
 			String password = inputParamsSuite.getBStackPassword();
-			BrowserStackRestClient client = new BrowserStackRestClient(user, password);
+			var client = new BrowserStackRestClient(user, password);
 			return client.getUrlBuild(suite.getIdExecSuite());
 		}
 		return "";
@@ -197,7 +193,7 @@ public class GenerateReports extends EmailableReporter {
                                        "vertLineImg: \"" + pathStatics + "/images/blank.gif\", " + 
                                        "blankImg: \"" + pathStatics + "/images/blank.gif\", collapse: false, column: 1, striped: true, highlight: true, state:false});\n";
         reportHtml+="});\n";
-        reportHtml+="var outputReports = '" + output_library + "';";
+        reportHtml+="var outputReports = '" + outputLibrary + "';";
         reportHtml+="</script>\n";
         reportHtml+="       <link href=\"" + pathStatics + "/css/Report.css\" rel=\"stylesheet\" type=\"text/css\">\n";
         reportHtml+="</head>\n";
@@ -219,8 +215,8 @@ public class GenerateReports extends EmailableReporter {
 
 	void pintaTestRunsOfSuite() {
 		reportHtml+="<tbody id=\"treet2\">\n";
-		for (TestRunBean testRun : suite.getListTestRun()) {
-			DateFormat format = DateFormat.getDateTimeInstance();
+		for (var testRun : suite.getListTestRun()) {
+			var format = DateFormat.getDateTimeInstance();
 			String deviceInfo = "";
 			if (testRun.getDevice()!=null && "".compareTo(testRun.getDevice())!=0) {
 				deviceInfo = " [" + testRun.getDevice() + "]";
@@ -244,11 +240,11 @@ public class GenerateReports extends EmailableReporter {
 	}
 
 	void pintaTestCasesOfTestRun(TestRunBean testRun) {
-		List<TestCaseBean> listTestCases = testRun.getListTestCase();
+		var listTestCases = testRun.getListTestCase();
 		String TagTimeout = "@TIMEOUTSTEP";
 		for (int i=0; i<listTestCases.size(); i++) {
-			TestCaseBean testCase = listTestCases.get(i);
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			var testCase = listTestCases.get(i);
+			var format = new SimpleDateFormat("HH:mm:ss");
 			reportHtml+= 
 				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
@@ -341,7 +337,7 @@ public class GenerateReports extends EmailableReporter {
 				tdClassDate = "<td><font class=\"timeout\">";
 				timeout = true;
 			}
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			var format = new SimpleDateFormat("HH:mm:ss");
 			String diffInMilliesStr = String.valueOf(diffInMillies);
 			String fechaFinStr = format.format(step.getHoraFin());
 			if (diffInMillies < 0) {
@@ -378,8 +374,8 @@ public class GenerateReports extends EmailableReporter {
 	}
 
 	private void pintaValidacionesStep(StepTM step) {
-		List<ChecksTM> listChecksResult = step.getListChecksTM();
-		for (ChecksTM checksResult : listChecksResult) {
+		var listChecksResult = step.getListChecksTM();
+		for (var checksResult : listChecksResult) {
 			String descriptValid = checksResult.getHtmlValidationsBrSeparated();
 			reportHtml+= 
 				"<tr class=\"validation collapsed\"" + " met=\"" + step.getTestCaseParent().getIndexInTestRun() + "\">" +
@@ -410,7 +406,6 @@ public class GenerateReports extends EmailableReporter {
         String fileReport = suite.getPathReportHtml();;
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileReport), "UTF8"))) {
             out.write(reportHtml.toString());
-            out.close();
         } 
         catch (Exception e) {
         	suiteTM.getLogger().fatal("Problem creating file ReportHTML", e);
@@ -419,13 +414,13 @@ public class GenerateReports extends EmailableReporter {
 
     static List<Integer> getMapTree(SuiteBean suite) {
     	List<Integer> listMapReturn = new ArrayList<>();
-    	for (TestRunBean testRun : suite.getListTestRun()) {
+    	for (var testRun : suite.getListTestRun()) {
     		listMapReturn.add(0);
     		int posLastTestRun = listMapReturn.size();
-    		for (TestCaseBean testCase : testRun.getListTestCase()) {
+    		for (var testCase : testRun.getListTestCase()) {
     			listMapReturn.add(posLastTestRun);
         		int posLastTest = listMapReturn.size();
-    			for (StepTM step : testCase.getListStep()) {
+    			for (var step : testCase.getListStep()) {
     				listMapReturn.add(posLastTest);
             		int posLastStep = listMapReturn.size();
             		for (int i=0; i<step.getListChecksTM().size(); i++) {
@@ -449,7 +444,7 @@ public class GenerateReports extends EmailableReporter {
         	switch (typeAccess) {
         	case CmdLine:
         	case Bat:
-        		Pattern patternDrive = Pattern.compile("^[a-zA-Z]:");
+        		var patternDrive = Pattern.compile("^[a-zA-Z]:");
         		return (patternDrive.matcher(filePath).replaceFirst("\\\\\\\\" + getNamePC()));
         	case Rest:
         	default:
@@ -461,14 +456,13 @@ public class GenerateReports extends EmailableReporter {
 	private static String getNamePC() {
 		String hostname = "";
 		try {
-			InetAddress addr;
-			addr = InetAddress.getLocalHost();
+			var addr = InetAddress.getLocalHost();
 			hostname = addr.getHostName();
 		}
 		catch (UnknownHostException ex) {
 			hostname = "Unknown";
 		}
-		
 		return hostname;
 	}
+	
 }

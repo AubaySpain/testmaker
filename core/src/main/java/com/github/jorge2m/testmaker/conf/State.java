@@ -3,7 +3,8 @@ package com.github.jorge2m.testmaker.conf;
 public enum State  {
     Undefined(0, "black"),
     Ok(1, "green"),
-    Info(2, "blue"), 
+    Info(2, "blue"),
+    Retry(3, "grey"),
     Warn(4, "#8000ff"),
     Defect(6, "crimson"),
     Skip(8, "darkGrey"),
@@ -44,7 +45,7 @@ public enum State  {
                 return estado;
             }
         }
-        
         return null;
     }
+    
 }

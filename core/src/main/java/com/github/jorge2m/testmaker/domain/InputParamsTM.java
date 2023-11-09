@@ -41,6 +41,7 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String EXEC_INIT_URL_NAME_PARAM = "execiniturl";
 	public static final String TCASE_NAME_PARAM = "tcases";
 	public static final String GROUPS_NAME_PARAM = "groups";
+	public static final String RETRY_PARAM = "retry";
 	public static final String THREADS_PARAM = "threads";
 	public static final String THREADS_RAMP_PARAM = "threadsramp";
 	public static final String SERVER_DNS_NAME_PARAM = "serverDNS";
@@ -109,6 +110,9 @@ public abstract class InputParamsTM implements Serializable {
 
 	@FormParam(TCASE_NAME_PARAM)
 	String tcasesCommaSeparated;
+	
+	@FormParam(RETRY_PARAM)
+	String retry;	
 	
 	@FormParam(THREADS_PARAM)
 	String threads;
@@ -282,6 +286,13 @@ public abstract class InputParamsTM implements Serializable {
 			.valueSeparator(',')
 			.desc("Groups of tests to include")
 			.build());
+		
+		optionsTM.add(OptionTMaker.builder(RETRY_PARAM)
+			.required(false)
+			.hasArgs()
+			.pattern("[0-9]+")
+			.desc("Number or retrys of a TestCase with problems")
+			.build());		
 		
 		optionsTM.add(OptionTMaker.builder(THREADS_PARAM)
 			.required(false)
@@ -487,6 +498,7 @@ public abstract class InputParamsTM implements Serializable {
 			tcasesCommaSeparated = String.join(",", tcases);
 		}
 
+		retry = cmdLine.getOptionValue(RETRY_PARAM);
 		threads = cmdLine.getOptionValue(THREADS_PARAM);
 		threadsramp = cmdLine.getOptionValue(THREADS_RAMP_PARAM);
 		reciclewd = cmdLine.getOptionValue(RECICLE_WD_PARAM);
@@ -527,6 +539,7 @@ public abstract class InputParamsTM implements Serializable {
 		URL(URL_NAME_PARAM),
 		EXEC_INIT_URL(EXEC_INIT_URL_NAME_PARAM),
 		TCASES(TCASE_NAME_PARAM),
+		RETRY(RETRY_PARAM),
 		THREADS(THREADS_PARAM),
 		THREADS_RAMP(THREADS_RAMP_PARAM),
 		SERVER_DNS(SERVER_DNS_NAME_PARAM),
@@ -594,6 +607,8 @@ public abstract class InputParamsTM implements Serializable {
 			return this.execiniturl;
 		case TCASES:
 			return this.tcasesCommaSeparated;
+		case RETRY:
+			return this.retry;
 		case THREADS:
 			return this.threads;
 		case THREADS_RAMP:
@@ -790,6 +805,16 @@ public abstract class InputParamsTM implements Serializable {
 		}
 		return null;
 	}
+	
+	public String getRetry() {
+		return retry;
+	}
+	public Optional<Integer> getRetryNum() {
+		if (retry!=null) {
+			return Optional.of(Integer.valueOf(retry));
+		}
+		return Optional.empty();
+	}	
 	
 	public String getThreads() {
 		return threads;

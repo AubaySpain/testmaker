@@ -55,8 +55,8 @@ public class TestCaseTM  {
 	
 	private int getInvocationCountForTest() {
 		List<Integer> listCounts = new ArrayList<>();
-		List<TestCaseTM> listTestCases = testRunParent.getListTestCases();
-		for (TestCaseTM testCaseTM : listTestCases) {
+		var listTestCases = testRunParent.getListTestCases();
+		for (var testCaseTM : listTestCases) {
 			if (testCaseTM.getNameWithInputData().compareTo(getNameWithInputData())==0 &&
 				testCaseTM!=this) {
 				listCounts.add(testCaseTM.getInvocationCount());
@@ -64,7 +64,7 @@ public class TestCaseTM  {
 		}
 		
 		//Es el 1o
-		if (listCounts.size()==0) {
+		if (listCounts.isEmpty()) {
 			return 1;
 		}
 		//Buscamos un hueco entre los valores de counts existentes
@@ -120,7 +120,7 @@ public class TestCaseTM  {
 	}
 	
 	public int getIndexInTestRun() {
-		List<TestCaseTM> listTestCases = testRunParent.getListTestCases();
+		var listTestCases = testRunParent.getListTestCases();
 		for (int i=0; i<listTestCases.size(); i++) {
 			if (this==listTestCases.get(i)) {
 				return i;
@@ -134,51 +134,39 @@ public class TestCaseTM  {
 	}
 	
 	public String getTestPathDirectory() {
-		SuiteTM suiteParent = getSuiteParent();
+		var suiteP = getSuiteParent();
 		String suitePath = SuiteTM.getPathDirectory(
-				suiteParent.getName(), 
-				suiteParent.getIdExecution());
+				suiteP.getName(), 
+				suiteP.getIdExecution());
 		
-		TestRunTM testRunParent = getTestRunParent();
-		String testPath = 
+		return 
 			suitePath + File.separator + 
-			testRunParent.getName() + File.separator +
+			getTestRunParent().getName() + File.separator +
 			getNameUnique();
-		
-		return testPath;
 	}
 	
-	public static TestCaseTM getTestCase(ITestResult result) {
-		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
-			for (TestRunTM testRun : suite.getListTestRuns()) {
-				for (TestCaseTM testCase : testRun.getListTestCases()) {
-					if (testCase!=null) {
-						if (testCase.getResult().equals(result)) {
-							return testCase;
-						}
-					}
-				}
-			}
-		}
-		return null;
+	public static Optional<TestCaseTM> getTestCase(ITestResult result) {
+		return SuitesExecuted.getSuitesExecuted().stream()
+			.map(SuiteTM::getListTestRuns).flatMap(List::stream)
+			.map(TestRunTM::getListTestCases).flatMap(List::stream)
+			.filter(t -> t!=null && t.getResult().equals(result))
+			.filter(t -> t.getStateResult()!=State.Retry)
+			.findFirst();
 	}
 	
 	public static Optional<TestCaseTM> getTestCaseInExecution() {
 		Long threadId = Thread.currentThread().getId();
-		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
-			for (TestRunTM testRun : suite.getListTestRuns()) {
-				for (TestCaseTM testCase : testRun.getListTestCases()) {
-					if (testCase.getThreadId().compareTo(threadId)==0 &&
-						!testCase.getStateRun().isFinished()) {
-						return Optional.of(testCase);
-					}
-				}
-			}
-		}
-		return Optional.empty();
+		return SuitesExecuted.getSuitesExecuted().stream()
+			.map(SuiteTM::getListTestRuns).flatMap(List::stream)
+			.map(TestRunTM::getListTestCases).flatMap(List::stream)
+			.filter(t -> 
+				t.getThreadId().compareTo(threadId)==0 &&
+				!t.getStateRun().isFinished())
+			.findFirst();
 	}
+	
 	public static Optional<WebDriver> getDriverTestCase() {
-		Optional<TestCaseTM> testCaseTM = TestCaseTM.getTestCaseInExecution();
+		var testCaseTM = TestCaseTM.getTestCaseInExecution();
 		if (testCaseTM.isPresent()) {
 			return Optional.of(testCaseTM.get().getDriver());
 		}
@@ -199,9 +187,9 @@ public class TestCaseTM  {
 		this.listSteps = listSteps;
 	}
 
-	private State getStateFromSteps() {
-		State stateReturn = State.Ok;
-		for (StepTM step : getListStep()) {
+	public State getStateFromSteps() {
+		var stateReturn = State.Ok;
+		for (var step : getListStep()) {
 			if (step.getResultSteps().isMoreCriticThan(stateReturn)) {
 				stateReturn = step.getResultSteps();
 			}
@@ -211,7 +199,7 @@ public class TestCaseTM  {
 	
 	public StepTM getCurrentStepInExecution() {
 		StepTM stepReturn = null;
-		for (StepTM step : listSteps) {
+		for (var step : listSteps) {
 			if (!step.getState().isFinished()) {
 				stepReturn = step;
 			}
@@ -220,7 +208,7 @@ public class TestCaseTM  {
 	}
 	
 	public StepTM getLastStep() {
-		if (listSteps.size() > 0) {
+		if (!listSteps.isEmpty()) {
 			return (listSteps.get(listSteps.size() - 1));
 		}
 		return null;
@@ -272,13 +260,13 @@ public class TestCaseTM  {
 	}
 	public static void addNameSufix(String sufix) throws NoSuchElementException {
 		TestCaseTM.getTestCaseInExecution()
-			.orElseThrow(() -> new NoSuchElementException())
+			.orElseThrow(NoSuchElementException::new)
 			.addSufixToName(sufix);
 	}
 	
 	public TestCaseBean getTestCaseBean() {
-		TestCaseBean testCaseBean = new TestCaseBean();
-		SuiteTM suite = getSuiteParent();
+		var testCaseBean = new TestCaseBean();
+		var suite = getSuiteParent();
 		
 		testCaseBean.setIdExecSuite(suite.getIdExecution());
 		testCaseBean.setSuiteName(suite.getName());
@@ -295,14 +283,14 @@ public class TestCaseTM  {
 		Date fin = new Date(getResult().getEndMillis());
 		testCaseBean.setInicioDate(inicio);
 		testCaseBean.setFinDate(fin); 
-		testCaseBean.setDurationMillis(fin.getTime() - inicio.getTime());
+		testCaseBean.setDurationMillis((float)fin.getTime() - (float)inicio.getTime());
 		
 		testCaseBean.setNumberSteps(getListStep().size());
 		testCaseBean.setClassSignature(getResult().getInstanceName());
 		testCaseBean.setThrowable(toStringB64(getResult().getThrowable()));
 		
 		List<StepTM> listStepBean = new ArrayList<>();
-		for (StepTM step : getListStep()) {
+		for (var step : getListStep()) {
 			listStepBean.add(step);
 		}
 		testCaseBean.setListStep(listStepBean);
@@ -313,8 +301,8 @@ public class TestCaseTM  {
 	/** Write the object to a Base64 string. */
 	private static String toStringB64(Serializable o) {
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream( baos );
+			var baos = new ByteArrayOutputStream();
+			var oos = new ObjectOutputStream( baos );
 			oos.writeObject( o );
 			oos.close();
 			return Base64.getEncoder().encodeToString(baos.toByteArray()); 
@@ -323,4 +311,5 @@ public class TestCaseTM  {
 			return null;
 		}
 	}
+	
 }

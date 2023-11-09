@@ -37,7 +37,7 @@ public class StepAspect {
 	}
 
 	private void setInitDataStep(InfoStep infoStep, JoinPoint joinPoint, StepTM datosStep) {
-		MatcherWithMethodParams matcher = MatcherWithMethodParams.from(joinPoint);
+		var matcher = MatcherWithMethodParams.from(joinPoint);
 		String stepDescription = infoStep.getStepAnnotation().description();
 		String stepResExpected = infoStep.getStepAnnotation().expected();
 		datosStep.setDescripcion(matcher.match(stepDescription)); 

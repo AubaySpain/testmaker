@@ -28,11 +28,11 @@ public class ServerSubscribers {
 	
 	public static Optional<SuiteBean> sendTestToRemoteServer(TestCaseTM testCase, Object testObject) throws Exception {
 		for (int i=0; i<collection.size(); i++) {
-			ServerSubscriber server = collection.next();
-			RemoteTest remoteTest = new RemoteTest(server);
-			Optional<SuiteBean> suiteBean = remoteTest.execute(testCase, testObject);
-			if (suiteBean.isPresent()) {
-				return suiteBean;
+			var server = collection.next();
+			var remoteTest = new RemoteTest(server);
+			var suiteBeanOpt = remoteTest.execute(testCase, testObject);
+			if (suiteBeanOpt.isPresent()) {
+				return suiteBeanOpt;
 			}
 		}
 		return Optional.empty();

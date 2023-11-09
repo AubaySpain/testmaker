@@ -9,7 +9,6 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
-
 public class InvokeListener extends TestListenerAdapter implements ISuiteListener {
 	
 	HttpURLConnection httpUrlCallBack = null;
@@ -29,43 +28,44 @@ public class InvokeListener extends TestListenerAdapter implements ISuiteListene
 	@Override //Start TestRun
 	public synchronized void onStart(ITestContext testNgContext) {
 		//Inyectamos el ITestContext en el TestRun
-		TestRunTM testRun = (TestRunTM)testNgContext.getCurrentXmlTest();
+		var testRun = (TestRunTM)testNgContext.getCurrentXmlTest();
 		testRun.setTestNgContext(testNgContext);
 	}
 
 	@Override //End TestRun
 	public void onFinish(ITestContext testContext) {
-		TestRunTM testRun = (TestRunTM)testContext.getCurrentXmlTest();
+		var testRun = (TestRunTM)testContext.getCurrentXmlTest();
 		testRun.end();
 	}
 
 	@Override //Start TestCase
 	public synchronized void onTestStart(ITestResult result) {
-		TestRunTM testRun = getTestRun(result);
-		TestCaseTM testCase = new TestCaseTM(result);
-		//testCase.makeWebDriver();
+		var testRun = getTestRun(result);
+		var testCase = new TestCaseTM(result);
 		testRun.addTestCase(testCase);
 	}
 
 	@Override //End TestCase Success
 	public void onTestSuccess(ITestResult result) {
-		TestCaseTM testCase = TestCaseTM.getTestCase(result);
-		testCase.end();
+		var testCase = TestCaseTM.getTestCase(result);
+		if (testCase.isPresent()) {
+			testCase.get().end();
+		}
 	}
 
 	@Override //End TestCase Skipped
 	public void onTestSkipped(ITestResult result) {
-		TestCaseTM testCase = TestCaseTM.getTestCase(result);
-		if (testCase!=null) {
-			testCase.end(State.Skip);
+		var testCase = TestCaseTM.getTestCase(result);
+		if (testCase.isPresent()) {
+			testCase.get().end(State.Skip);
 		}
 	}
 
 	@Override //End TestCase Failure
 	public void onTestFailure(ITestResult result) {
-		TestCaseTM testCase = TestCaseTM.getTestCase(result);
-		if (testCase!=null) {
-			testCase.end(State.Nok);
+		var testCase = TestCaseTM.getTestCase(result);
+		if (testCase.isPresent()) {
+			testCase.get().end(State.Nok);
 		}
 		Log4jTM.getLogger().error("Exception for TestNG", result.getThrowable());
 	}

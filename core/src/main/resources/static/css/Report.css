@@ -25,6 +25,7 @@ br.clear {clear:left;}
 #treet2 td div.resultWarn {font-size:12px; color:#8000ff;}
 #treet2 td div.resultINFO {font-size:12px; color:darkblue;}
 #treet2 td div.resultOK {font-size:12px; color:blue;}
+#treet2 td div.resultRetry {font-size:12px; color:grey;}
 #treet2 td div.resultSKIP {font-size:12px; color:darkGrey;}
 #treet2 td div.diffsSi {color:red;}
 #treet2 td div.diffsNo {}
