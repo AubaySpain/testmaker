@@ -48,27 +48,32 @@ public class TestAspect {
 	
 	private Object manageTestExecution(TestCaseTM testCase, ProceedingJoinPoint joinPoint) 
 			throws Throwable {
-		Object test = null;
+		Object testResult = null;
+		Test test = getTestAnnotation(joinPoint); 
 		try {
-			test = executeTest(joinPoint, testCase);
+			testResult = executeTest(joinPoint, testCase);
+			testCase.setExceptionInExecution(false);
 		}
 		finally {
-			boolean isRetryNeeded = isRetryNeeded(testCase, 1);
+			boolean isRetryNeeded = isRetryNeeded(testCase, test, 1);
 			if (isRetryNeeded) {
-				test = retriesTestCase(testCase, joinPoint);
+				testResult = retriesTestCase(testCase, joinPoint);
 			} else {
 				sendNotifications(testCase);
 			}
 		}
-		return test;		
+		return testResult;		
 	}
 	
-	private boolean isRetryNeeded(TestCaseTM testCase, int numRetry) {
-		var inputParams = testCase.getSuiteParent().getInputParams();
-		var retryTimesOpt = inputParams.getRetryNum();
+	private boolean isRetryNeeded(TestCaseTM testCase, Test test, int numRetry) {
+		var suite = testCase.getSuiteParent();
+		var inputParams = suite.getInputParams();
+		var retryParamsOpt = inputParams.getRetryParams();
 		return 
-			retryTimesOpt.isPresent() &&
-			numRetry<=retryTimesOpt.get() &&
+			retryParamsOpt.isPresent() &&
+			test.retry() &&
+			numRetry<=retryParamsOpt.get().getRetriesTestCase() &&
+			suite.getNumTestCaseRetries() < retryParamsOpt.get().getRetriesMaxSuite() &&
 			!isTestExecutingInRemote(testCase) &&
 			isTestCaseError(testCase);
 	}
@@ -89,9 +94,9 @@ public class TestAspect {
 	
 	private int getRetryTimes(TestCaseTM testCase) {
 		var inputParams = testCase.getSuiteParent().getInputParams();
-		var retryTimesOpt = inputParams.getRetryNum();
-		if (!retryTimesOpt.isEmpty()) {
-			return retryTimesOpt.get();
+		var retryParamsOpt = inputParams.getRetryParams();
+		if (!retryParamsOpt.isEmpty()) {
+			return retryParamsOpt.get().getRetriesTestCase();
 		}
 		return 0;
 	}
@@ -109,26 +114,30 @@ public class TestAspect {
 
 	private Object retryTestCase(int retry, ProceedingJoinPoint joinPoint, TestCaseTM testCaseNew)
 			throws Throwable, Exception {
-		Object test = null;
+		Object testReturn = null;
+		Test test = getTestAnnotation(joinPoint);
 		try {
-			test = executeTest(joinPoint, testCaseNew);
+			testCaseNew.getSuiteParent().incrementTestCaseRetries();
+			testReturn = executeTest(joinPoint, testCaseNew);
+			testCaseNew.setExceptionInExecution(false);
 		} catch (Exception e) {
-			if (!isRetryNeeded(testCaseNew, retry+1)) {
+			if (!isRetryNeeded(testCaseNew, test, retry+1)) {
 				throw e;
 			}
 		}
 		finally {
-			if (!isRetryNeeded(testCaseNew, retry+1)) {			
+			if (!isRetryNeeded(testCaseNew, test, retry+1)) {			
 				sendNotifications(testCaseNew);
 			}
 		}
-		return test;
+		return testReturn;
 	}
 	
 	private boolean isTestCaseError(TestCaseTM testCase) {
 		return 
 			testCase.getStateFromSteps()==State.Defect || 
-			testCase.getStateFromSteps()==State.Nok;
+			testCase.getStateFromSteps()==State.Nok ||
+			testCase.isExceptionInExecution();
 	}
 	
 	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase) throws Throwable {
@@ -203,11 +212,16 @@ public class TestAspect {
 		var inputParams = testCase.getInputParamsSuite();
 		var methodSignature = (MethodSignature)joinPoint.getSignature();
 		if (executeTestLocal(inputParams, methodSignature.getMethod())) {
-			Test testAnnotation = methodSignature.getMethod().getAnnotation(Test.class);
+			Test testAnnotation = getTestAnnotation(joinPoint);
 			testCase.makeInitObjects(testAnnotation.create());
 			return joinPoint.proceed();
 		}
 		return null;
+	}
+	
+	private Test getTestAnnotation(ProceedingJoinPoint joinPoint) {
+		var methodSignature = (MethodSignature)joinPoint.getSignature();
+		return methodSignature.getMethod().getAnnotation(Test.class); 
 	}
 	
 	public static boolean executeTestRemote(InputParamsTM inputParams) {
@@ -221,7 +235,7 @@ public class TestAspect {
 		}
 		var listTestCaseFilter = inputParams.getListTestCasesName();
 		if (!inputParams.isTestExecutingInRemote() || 
-			!listTestCaseFilter.isEmpty()) {
+			listTestCaseFilter.isEmpty()) {
 			return true;
 		}
 		return (presentTestCaseMethod.getName().compareTo(listTestCaseFilter.get(0))==0);
@@ -244,10 +258,10 @@ public class TestAspect {
     private void sendNotificationIfNeeded(Check check, ChecksTM checksParent, SuiteTM suiteParent) {
     	if (check.getSend()==SendType.Alert &&
     		!check.isOvercomed()) {
-    		InputParamsTM inputParams = suiteParent.getInputParams();
+    		var inputParams = suiteParent.getInputParams();
     		if (inputParams.isAlarm() &&
 	    		mustCheckSendAlarm(check, inputParams)) {
-	            Alarm alarm = new Alarm(check, checksParent);
+	            var alarm = new Alarm(check, checksParent);
 	            alarm.send();
     		}
     	}

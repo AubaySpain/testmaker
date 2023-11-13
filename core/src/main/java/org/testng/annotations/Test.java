@@ -40,6 +40,8 @@ public @interface Test {
   @Deprecated
   public String[] parameters() default {};
 
+  public boolean retry() default true;
+  
   /**
    * The list of groups this method depends on.  Every method
    * member of one of these groups is guaranteed to have been

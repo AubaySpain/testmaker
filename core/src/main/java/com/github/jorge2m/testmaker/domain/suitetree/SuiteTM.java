@@ -31,6 +31,7 @@ public class SuiteTM extends XmlSuite {
 	private long threadId;
 	private StateExecution stateExecution = StateExecution.NotStarted;
 	private State result = State.Ok;
+	private int numTestCaseRetries = 0;
 	private String infoExecution;
 	private long timeInicio = 0;
 	private long timeFin = 0;
@@ -103,6 +104,15 @@ public class SuiteTM extends XmlSuite {
 				.map(s -> s.getListTestCases())
 				.flatMap(List::stream)
 				.collect(Collectors.toList());
+	}
+	
+	public List<StepTM> getStepsFromNoRetriedTestCases(State state) {
+		return getTestCases().stream()
+				.filter(s -> s.getStateResult()!=State.Retry)
+				.map(t -> t.getListStep())
+				.flatMap(List::stream)
+				.filter(s -> s.getResultSteps()==state)
+				.collect(Collectors.toList());		
 	}
 	
 	public List<StepTM> getSteps(State state) {
@@ -300,6 +310,14 @@ public class SuiteTM extends XmlSuite {
 	@Override
 	public int hashCode() {
 		return this.hashCode();
+	}
+
+	public int getNumTestCaseRetries() {
+		return numTestCaseRetries;
+	}
+
+	public void incrementTestCaseRetries() {
+		this.numTestCaseRetries+=1;
 	}
 	
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -35,6 +36,7 @@ public class TestCaseTM  {
 	private final long threadId;
 	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
+	private boolean exceptionInExecution = true;
 
 	public TestCaseTM(ITestResult result) {
 		this.testRunParent = (TestRunTM)result.getTestContext().getCurrentXmlTest();
@@ -151,6 +153,7 @@ public class TestCaseTM  {
 			.map(TestRunTM::getListTestCases).flatMap(List::stream)
 			.filter(t -> t!=null && t.getResult().equals(result))
 			.filter(t -> t.getStateResult()!=State.Retry)
+			.collect(Collectors.toList()).stream()
 			.findFirst();
 	}
 	
@@ -162,6 +165,7 @@ public class TestCaseTM  {
 			.filter(t -> 
 				t.getThreadId().compareTo(threadId)==0 &&
 				!t.getStateRun().isFinished())
+			.collect(Collectors.toList()).stream()
 			.findFirst();
 	}
 	
@@ -310,6 +314,14 @@ public class TestCaseTM  {
 		catch (Exception e) {
 			return null;
 		}
+	}
+
+	public boolean isExceptionInExecution() {
+		return exceptionInExecution;
+	}
+
+	public void setExceptionInExecution(boolean exceptionInExecution) {
+		this.exceptionInExecution = exceptionInExecution;
 	}
 	
 }

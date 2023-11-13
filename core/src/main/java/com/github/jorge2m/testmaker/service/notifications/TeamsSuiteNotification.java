@@ -43,7 +43,7 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
     }
     
     private Optional<DataAlert> getDataCheckAlert(SuiteTM suite, State state) {
-		var listSteps = suite.getSteps(state);
+		var listSteps = suite.getStepsFromNoRetriedTestCases(state);
 		if (!listSteps.isEmpty()) {
 			var firstStep = listSteps.get(0);
 			var listChecks = getListChecks(firstStep, state);

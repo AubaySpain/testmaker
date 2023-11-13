@@ -76,7 +76,8 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String BSTACK_BROWSER_VERSION_PARAM = "bstack_browser_version"; //Desktop
 	public static final String BSTACK_RESOLUTION_PARAM = "bstack_resolution"; //Desktop
 	
-	public static final String PATTERN_TESTCASE_ITEM = "([^\\{\\}]+)(?:\\{([0-9]+)(?:-([0-9]+)){0,1}\\}){0,1}";
+	public static final String PATTERN_TESTCASE_ITEM = "([^\\{\\}]+)(?:\\{(\\d+)(?:-(\\d+))?\\})?";
+	public static final String PATTERN_RETRY_PARAM = "(\\d)|(?:\\{(\\d+)(?:-(\\d+))?\\})?";
 	
 	public enum ManagementWebdriver { RECYCLE, DISCARD }
 	private Class<? extends Enum<?>> suiteEnum;
@@ -290,7 +291,7 @@ public abstract class InputParamsTM implements Serializable {
 		optionsTM.add(OptionTMaker.builder(RETRY_PARAM)
 			.required(false)
 			.hasArgs()
-			.pattern("[0-9]+")
+			.pattern(PATTERN_RETRY_PARAM)
 			.desc("Number or retrys of a TestCase with problems")
 			.build());		
 		
@@ -809,12 +810,29 @@ public abstract class InputParamsTM implements Serializable {
 	public String getRetry() {
 		return retry;
 	}
-	public Optional<Integer> getRetryNum() {
-		if (retry!=null) {
-			return Optional.of(Integer.valueOf(retry));
+	public Optional<RetryParams> getRetryParams() {
+		if (retry==null) {
+			return Optional.empty();
 		}
-		return Optional.empty();
-	}	
+		
+		var retryParams = new RetryParams();
+		var pattern = Pattern.compile(PATTERN_RETRY_PARAM);
+		var matcher = pattern.matcher(retry);
+		if (!matcher.find()) {
+			return Optional.empty();
+		}
+		if (matcher.group(1)!=null) {
+			retryParams.setRetriesTestCase(Integer.valueOf(matcher.group(1))); 
+		}
+		if (matcher.group(2)!=null) {
+			retryParams.setRetriesTestCase(Integer.valueOf(matcher.group(2)));
+		}
+		if (matcher.group(3)!=null) {
+			retryParams.setRetriesMaxSuite(Integer.valueOf(matcher.group(3)));
+		}
+		
+		return Optional.of(retryParams);
+	}
 	
 	public String getThreads() {
 		return threads;
@@ -1039,7 +1057,7 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	
 	public DataFilterTCases getDataFilter() {
-		DataFilterTCases dFilter = new DataFilterTCases(getChannel(), getApp());
+		var dFilter = new DataFilterTCases(getChannel(), getApp());
 		dFilter.setGroupsFilter(getGroupsFilter());
 		dFilter.setTestCasesFilter(getListTestCasesName());
 		return dFilter;

@@ -26,7 +26,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -38,7 +37,6 @@ import org.apache.commons.io.FileUtils;
 
 import com.github.jorge2m.testmaker.boundary.access.CmdLineMaker;
 import com.github.jorge2m.testmaker.boundary.access.MessageError;
-import com.github.jorge2m.testmaker.boundary.access.ResultCheckOptions;
 import com.github.jorge2m.testmaker.boundary.remotetest.JaxRsClient;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
@@ -51,7 +49,6 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
 import com.github.jorge2m.testmaker.domain.SenderReportOutputPort;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethodData;
 import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
@@ -62,9 +59,9 @@ public class RestApiTM {
 	@Context
 	private HttpServletRequest httpServletRequest;
 	
-	private final static CreatorSuiteRun creatorSuiteRun = ServerRestTM.getServerRestTM().getCreatorSuiteRun();
-	private final static Class<? extends Enum<?>> suiteEnum = ServerRestTM.getServerRestTM().getSuiteEnum();
-	private final static Class<? extends Enum<?>> appEnum = ServerRestTM.getServerRestTM().getAppEnum();
+	private static final CreatorSuiteRun creatorSuiteRun = ServerRestTM.getServerRestTM().getCreatorSuiteRun();
+	private static final Class<? extends Enum<?>> suiteEnum = ServerRestTM.getServerRestTM().getSuiteEnum();
+	private static final Class<? extends Enum<?>> appEnum = ServerRestTM.getServerRestTM().getAppEnum();
 	
 	List<String> listFormatsFecha = Arrays.asList("yyyy-MM-dd HH:mm:ss", "HH:mm:ss", "yyyy-MM-dd");
 
@@ -82,19 +79,19 @@ public class RestApiTM {
 		inputParams.setTypeAccess(TypeAccess.Rest);
 		setParamServerDNS(inputParams);
 		try {
-			CmdLineMaker cmdLineAccess = CmdLineMaker.from(inputParams);
-			ResultCheckOptions resultCheck = cmdLineAccess.checkOptionsValue();
+			var cmdLineAccess = CmdLineMaker.from(inputParams);
+			var resultCheck = cmdLineAccess.checkOptionsValue();
 			if (resultCheck.isOk()) {
-				CreatorSuiteRun creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
+				var creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
 				//creatorSuiteRun.setInputParams(inputParams);
-				SuiteTM suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec());
+				var suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec());
 				return Response
 						.status(Response.Status.OK) 
 						.entity(suite.getSuiteBean())
 						.build();
 			} else {
-				List<MessageError> listErrors = resultCheck.getListMessagesError();
-				GenericEntity<List<MessageError>> entity = new GenericEntity<List<MessageError>>(listErrors){};
+				var listErrors = resultCheck.getListMessagesError();
+				var entity = new GenericEntity<List<MessageError>>(listErrors){};
 				return Response
 						.status(Response.Status.BAD_REQUEST)
 						.entity(entity)
@@ -124,7 +121,7 @@ public class RestApiTM {
 	@Path("/suiterun/{idexecution}")
 	@Produces("application/json")
 	public SuiteBean getSuiteRunData(@PathParam("idexecution") String idSuiteExec) throws Exception {
-		SuiteBean suite = TestMaker.getSuite(idSuiteExec);
+		var suite = TestMaker.getSuite(idSuiteExec);
 		if (suite!=null) {
 			return suite;
 		} else {
@@ -135,7 +132,7 @@ public class RestApiTM {
 	@GET
 	@Path("/suiterun/{idexecution}/report")
 	public Response getSuiteReportHtml(@PathParam("idexecution") String idExecSuite) throws Exception {
-		SuiteBean suite = TestMaker.getSuite(idExecSuite);
+		var suite = TestMaker.getSuite(idExecSuite);
 		if (suite!=null) {
 			URI uriReport = UriBuilder.fromUri(suite.getUrlReportHtml()).build();
 			return Response.temporaryRedirect(uriReport).build();
@@ -153,7 +150,7 @@ public class RestApiTM {
 					@QueryParam("state") String state,
 					@QueryParam("date_from") String fechaDesde,
 					@QueryParam("date_to") String fechaHasta) throws Exception {
-		List<SuiteBean> listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
+		var listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
 		for (SuiteBean suiteBean : listSuites) {
 			purgeSuite(suiteBean);
 		}		
@@ -296,7 +293,7 @@ public class RestApiTM {
 	@DELETE
 	@Path("/suiterun/{idexecution}")
 	public void stopSuiteRun(@PathParam("idexecution") String idExecSuite) {
-		SuiteTM suite = TestMaker.getSuiteExecuted(idExecSuite);
+		var suite = TestMaker.getSuiteExecuted(idExecSuite);
 		if (suite!=null) {
 			TestMaker.stopSuite(suite);
 		}
@@ -309,7 +306,7 @@ public class RestApiTM {
 			@DefaultValue("false") @QueryParam("checkslave") boolean checkslave) {
 		
 		if (checkslave) {
-			Optional<Response> responseCheck = checkSlaveAvailability(urlslave);
+			var responseCheck = checkSlaveAvailability(urlslave);
 			if (responseCheck.isPresent()) {
 				return responseCheck.get();
 			}
@@ -318,7 +315,7 @@ public class RestApiTM {
 		//Subscribe slave to hub
 		try {
 			URL urlSubscriber = new URL(urlslave);
-			ServerSubscriber subscriber = new ServerSubscriber(urlSubscriber);
+			var subscriber = new ServerSubscriber(urlSubscriber);
 			ServerSubscribers.add(subscriber);
 		}
 		catch (MalformedURLException e) {
@@ -363,8 +360,8 @@ public class RestApiTM {
 	}
 	
 	private boolean checkServerAvailability(String urlSlave) throws Exception {
-		JaxRsClient jaxRsClient = new JaxRsClient();
-		Client client = jaxRsClient.getClientIgnoreCertificates();
+		var jaxRsClient = new JaxRsClient();
+		var client = jaxRsClient.getClientIgnoreCertificates();
 		try {
 			client
 				.target(urlSlave + "/testserver")
@@ -382,7 +379,7 @@ public class RestApiTM {
 	public Response removeSubscriber(@QueryParam("urlslave") String url) {
 		try {
 			URL urlSubscriber = new URL(url);
-			ServerSubscriber subscriber = new ServerSubscriber(urlSubscriber);
+			var subscriber = new ServerSubscriber(urlSubscriber);
 			ServerSubscribers.remove(subscriber);
 		}
 		catch (MalformedURLException e) {
@@ -470,4 +467,5 @@ public class RestApiTM {
 		}
 		return false;
 	}
+	
 }
