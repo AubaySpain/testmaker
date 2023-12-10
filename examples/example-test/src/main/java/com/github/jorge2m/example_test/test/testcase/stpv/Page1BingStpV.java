@@ -30,7 +30,7 @@ public class Page1BingStpV {
 	
 	@Validation (
 		description="Aparece la página con el buscador de Bing",
-		level=State.Defect)
+		level=State.DEFECT)
 	public boolean checkIsPage() {
 		return page1Bing.checkIsPage();
 	}
@@ -38,8 +38,8 @@ public class Page1BingStpV {
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y pulsamos ENTER",
 		expected="Aparecen resultados de búsqueda",
-		saveImagePage=SaveWhen.Always,
-		saveHtmlPage=SaveWhen.Always)
+		saveImagePage=SaveWhen.ALWAYS,
+		saveHtmlPage=SaveWhen.ALWAYS)
 	public Page2BingResultsStpV search(String textToSearch) {
 		page1Bing.searchText(textToSearch);
 

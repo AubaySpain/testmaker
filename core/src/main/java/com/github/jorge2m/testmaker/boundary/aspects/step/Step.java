@@ -12,8 +12,8 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Step {
 	String description() default "";
 	String expected() default "";
-	SaveWhen saveImagePage() default SaveWhen.IfProblem;
-	SaveWhen saveErrorData() default SaveWhen.IfProblem;
-	SaveWhen saveHtmlPage() default SaveWhen.Never;
-	SaveWhen saveNettraffic() default SaveWhen.Never;
+	SaveWhen saveImagePage() default SaveWhen.IF_PROBLEM;
+	SaveWhen saveErrorData() default SaveWhen.IF_PROBLEM;
+	SaveWhen saveHtmlPage() default SaveWhen.NEVER;
+	SaveWhen saveNettraffic() default SaveWhen.NEVER;
 }

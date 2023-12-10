@@ -20,7 +20,7 @@ br.clear {clear:left;}
 .tablemain div#device {color:#7401DF;}
 
 #treet2 {background-color:#91ff91; border:solid 1px;}
-#treet2 td div.resultNOK {font-size:12px; color:red; font-weight:bold;}
+#treet2 td div.resultKO {font-size:12px; color:red; font-weight:bold;}
 #treet2 td div.resultDefect {font-size:12px; color:crimson; font-weight:bold;}
 #treet2 td div.resultWarn {font-size:12px; color:#8000ff;}
 #treet2 td div.resultINFO {font-size:12px; color:darkblue;}

@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class StateElement {
 	
-	public enum State {Present, Visible, Invisible, Clickable, Unclickable}
+	public enum State { PRESENT, VISIBLE, INVISIBLE, CLICKABLE, UNCLICKABLE }
 	
 	private final WebDriver driver;
 	private final WebElement webelement;
@@ -34,19 +34,19 @@ public class StateElement {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 		ExpectedCondition<?> expectedCondition;
 		switch (state) {
-			case Present:
+			case PRESENT:
 				expectedCondition = getConditionForElementPresent();
 				break;
-			case Visible:
+			case VISIBLE:
 				expectedCondition = getConditionForElementVisible();
 				break;
-			case Invisible:
+			case INVISIBLE:
 				expectedCondition = getConditionForElementInvisible();
 				break;
-			case Clickable:
+			case CLICKABLE:
 				expectedCondition = getConditionForElementClickable();
 				break;
-			case Unclickable:
+			case UNCLICKABLE:
 			default:
 				expectedCondition = getConditionForElementUnclickable();
 		}
@@ -156,8 +156,7 @@ public class StateElement {
 	
 	private WebElement getChildElement(WebElement webelement, By child) {
 		try {
-			WebElement childElem = webelement.findElement(by);
-			return childElem;
+			return webelement.findElement(child);
 		} catch (NoSuchElementException e) {
 			return null;
 		}
@@ -202,8 +201,7 @@ public class StateElement {
 		}
 		
 		public StateElement build() {
-			StateElement stateElement = new StateElement(state, driver, webelement, by, byShadow, seconds);
-			return stateElement;
+			return new StateElement(state, driver, webelement, by, byShadow, seconds);
 		}
 		public boolean check() {
 			return build().check();

@@ -57,7 +57,7 @@ public class InvokeListener extends TestListenerAdapter implements ISuiteListene
 	public void onTestSkipped(ITestResult result) {
 		var testCase = TestCaseTM.getTestCase(result);
 		if (testCase.isPresent()) {
-			testCase.get().end(State.Skip);
+			testCase.get().end(State.SKIP);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class InvokeListener extends TestListenerAdapter implements ISuiteListene
 	public void onTestFailure(ITestResult result) {
 		var testCase = TestCaseTM.getTestCase(result);
 		if (testCase.isPresent()) {
-			testCase.get().end(State.Nok);
+			testCase.get().end(State.KO);
 		}
 		Log4jTM.getLogger().error("Exception for TestNG", result.getThrowable());
 	}

@@ -8,12 +8,12 @@ import com.github.jorge2m.testmaker.conf.State;
 public class Check {
     
 	private String description = "";
-    private State levelResult = State.Undefined;
+    private State levelResult = State.UNDEFINED;
     private boolean overcomed = false;
     private String code = "";
     private String info = "";
-	private StoreType store = StoreType.Evidences;
-	private SendType send = SendType.None;
+	private StoreType store = StoreType.EVIDENCES;
+	private SendType send = SendType.NONE;
 
     public Check() {}
     
@@ -58,7 +58,7 @@ public class Check {
 	}
 	public State getStateResult() {
 		if (isOvercomed()) {
-			return State.Ok;
+			return State.OK;
 		}
 		return getLevelResult();
 	}
@@ -85,7 +85,7 @@ public class Check {
 	}
 	
 	public static BuilderCheck make(String description, boolean overcomed) {
-		return new BuilderCheck(description, overcomed, State.Defect);
+		return new BuilderCheck(description, overcomed, State.DEFECT);
 	}	
 	
 	public static BuilderCheck make(String description, boolean overcomed, State levelResult) {
@@ -97,15 +97,15 @@ public class Check {
 		private final boolean overcomed;
 		private final State levelResult;
 		
-		private StoreType store = StoreType.Evidences; 
-		private SendType send = SendType.None;
+		private StoreType store = StoreType.EVIDENCES; 
+		private SendType send = SendType.NONE;
 		private String code;
 		private String info;
 		
 		public BuilderCheck(String description, boolean overcomed) {
 			this.description = description;
 			this.overcomed = overcomed;
-			this.levelResult = State.Defect;
+			this.levelResult = State.DEFECT;
 		}
 		
 		public BuilderCheck(String description, boolean overcomed, State levelResult) {

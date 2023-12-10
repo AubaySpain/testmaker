@@ -7,14 +7,14 @@ import java.util.List;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 
-public class EvidencesWarehouse {
+public class StepEvidencesWarehouse {
 	
-	private List<StepEvidenceContent> storedEvidences = new ArrayList<StepEvidenceContent>();
+	private List<StepEvidenceContent> storedEvidences = new ArrayList<>();
 	private StepTM step;
 
-	public EvidencesWarehouse() {}
+	public StepEvidencesWarehouse() {}
 	
-	public EvidencesWarehouse(StepTM step) {
+	public StepEvidencesWarehouse(StepTM step) {
 		this.step = step;
 	}
 	
@@ -32,9 +32,9 @@ public class EvidencesWarehouse {
 		storedEvidences.add(stepEvidenceContent);
 	}
 	public String getEvidenceContent(StepEvidence evidence) {
-		for (StepEvidenceContent evidenceContent : storedEvidences) {
-			if (evidenceContent.getStepEvidence()==evidence) {
-				return evidenceContent.getContent();
+		for (var stepEvidenceContent : storedEvidences) {
+			if (stepEvidenceContent.getStepEvidence()==evidence) {
+				return stepEvidenceContent.getContent();
 			}
 		}
 		return "";
@@ -45,7 +45,7 @@ public class EvidencesWarehouse {
 			if (typeStorage.inFile()) {
 				createPathForEvidencesStore(step);
 			}
-			for (StepEvidence evidence : StepEvidence.values()) {
+			for (var evidence : StepEvidence.values()) {
 				if (step.isNecessaryStorage(evidence)) {
 					storeEvidence(evidence, typeStorage);
 				}
@@ -54,7 +54,7 @@ public class EvidencesWarehouse {
 	}
 	
 	private void storeEvidence(StepEvidence evidence, Storage typeStorage) {
-		EvidenceStorer evidenceStorer = evidenceStorerFactory(evidence);
+		var evidenceStorer = evidenceStorerFactory(evidence);
 		if (evidenceStorer!=null) {
 			if (typeStorage.inFile() && !evidenceStorer.existsFileEvidence(step)) {
 				evidenceStorer.captureAndStoreContent(step);
@@ -68,7 +68,7 @@ public class EvidencesWarehouse {
 	}
 	
 	private boolean existsEvidenceInMemory(StepEvidence evidenceType) {
-		for (StepEvidenceContent stepEvidence : storedEvidences) {
+		for (var stepEvidence : storedEvidences) {
 			if (stepEvidence.getStepEvidence()==evidenceType) {
 				return true;
 			}
@@ -77,14 +77,14 @@ public class EvidencesWarehouse {
 	}
 	
 	public void moveContentEvidencesToFile() {
-		List<StepEvidenceContent> listStepEvidences = getStoredEvidences();
-		if (listStepEvidences.size()==0) {
+		var listStepEvidences = getStoredEvidences();
+		if (listStepEvidences.isEmpty()) {
 			return;
 		}
 		
 		createPathForEvidencesStore(step);
 		for (StepEvidenceContent evidence : listStepEvidences) {
-			EvidenceStorer evidenceStorer = evidenceStorerFactory(evidence.getStepEvidence());
+			StepEvidenceStorer evidenceStorer = evidenceStorerFactory(evidence.getStepEvidence());
 			if (evidenceStorer!=null) {
 				evidenceStorer.saveContentEvidenceInFile(
 					evidence.getContent(), 
@@ -94,16 +94,16 @@ public class EvidencesWarehouse {
 		storedEvidences.clear();
 	}
 	
-	private EvidenceStorer evidenceStorerFactory(StepEvidence evidence) {
+	private StepEvidenceStorer evidenceStorerFactory(StepEvidence evidence) {
 		switch (evidence) {
-		case Har:
+		case HAR:
 			return new NettrafficStorer();
-		case Imagen:
+		case IMAGEN:
 			return new HardcopyStorer();
-		case ErrorPage:
+		case ERROR_PAGE:
 			TestRunTM testRun = step.getTestRunParent();
 			return testRun.getStorerErrorEvidence();
-		case Html:
+		case HTML:
 			return new HtmlStorer();
 		default:
 			return null;
@@ -111,8 +111,8 @@ public class EvidencesWarehouse {
 	}
 
 	private boolean isNecessariStorage(StepTM step ) {
-		for (StepEvidence evidence : StepEvidence.values()) {
-			if (step.isNecessaryStorage(evidence)) {
+		for (var stepEvidence : StepEvidence.values()) {
+			if (step.isNecessaryStorage(stepEvidence)) {
 				return true;
 			}
 		}

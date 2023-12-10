@@ -1,16 +1,17 @@
 package com.github.jorge2m.testmaker.service.webdriver.pageobject;
 
 public enum TypeClick {
-    webdriver, 
-    javascript;
+    WEBDRIVER, 
+    JAVASCRIPT;
 	
 	public static TypeClick next(TypeClick typeClick) {
 		switch (typeClick) {
-		case webdriver:
-			return javascript;
-		case javascript:
+		case WEBDRIVER:
+			return JAVASCRIPT;
+		case JAVASCRIPT:
 		default:
-			return webdriver;
+			return WEBDRIVER;
 		}
 	}
+	
 }

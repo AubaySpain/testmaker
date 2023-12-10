@@ -17,11 +17,11 @@ public class Page2BingResults extends PageObjTM {
 	}
 	
 	public boolean checkIsResultsUntil(int maxSeconds) {
-		return state(State.Visible, By.xpath(XPathListResults)).wait(maxSeconds).check();
+		return state(State.VISIBLE, By.xpath(XPathListResults)).wait(maxSeconds).check();
 	}
 	
 	public boolean checkIsNumResultsUntil(int maxSeconds) {
-		return state(State.Visible, By.xpath(XPathNumResults)).wait(maxSeconds).check();
+		return state(State.VISIBLE, By.xpath(XPathNumResults)).wait(maxSeconds).check();
 	}
 	
 	public long getNumResults() {

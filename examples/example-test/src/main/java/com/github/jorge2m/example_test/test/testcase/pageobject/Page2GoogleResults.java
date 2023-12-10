@@ -19,12 +19,12 @@ public class Page2GoogleResults extends PageObjTM {
 	
 	public boolean checkAreResultsUntil(int maxSeconds) {
 		By byEntradaResultado = By.xpath(XPathResult);
-		return (state(Present, byEntradaResultado).wait(maxSeconds).check());
+		return (state(PRESENT, byEntradaResultado).wait(maxSeconds).check());
 	}
 	
 	public boolean checkIsNumResultsUntil(int maxSeconds) {
 		By byNumResults = By.id(IdNumResults);
-		return (state(Visible, byNumResults).wait(maxSeconds).check());
+		return (state(VISIBLE, byNumResults).wait(maxSeconds).check());
 	}
 	
 	public long getNumResults() {

@@ -96,7 +96,7 @@ public class StepsDAO {
 		StepTM stepData = new StepTM();
 		stepData.setDescripcion(rowStep.getString("DESCRIPTION"));
 		stepData.setResExpected(rowStep.getString("RES_EXPECTED"));
-		stepData.setResultSteps(State.valueOf(rowStep.getString("RESULTADO")));
+		stepData.setResultSteps(State.from(rowStep.getString("RESULTADO")));
 		stepData.setExcepExists(rowStep.getBoolean("EXCEPCION"));
 		
 		Date dateInicio = Utils.getDateFormat(ToMillis).parse(rowStep.getString("INICIO"));

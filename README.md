@@ -59,7 +59,7 @@ public void searchInGoogle(String textToSearch, WebDriver driver) {
 
 ## Get detailed report about the execution
 
-Report that shows in detail all the Steps and Validations executed in each TestCase, including links to each Step-Evidence and classifying the result in many levels: `NOK`, `Defect`, `Warn`, `Info` and `OK`.
+Report that shows in detail all the Steps and Validations executed in each TestCase, including links to each Step-Evidence and classifying the result in many levels: `KO`, `DEFECT`, `WARN`, `INFO` and `OK`.
 ![](/images_doc/ResultExample.png?raw=true)
 
 ## Expose execution from Command Line

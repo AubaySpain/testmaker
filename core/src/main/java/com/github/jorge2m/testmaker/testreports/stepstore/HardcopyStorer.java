@@ -14,10 +14,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
-public class HardcopyStorer extends EvidenceStorer {
+public class HardcopyStorer extends StepEvidenceStorer {
 	
 	public HardcopyStorer() {
-		super(StepEvidence.Imagen);
+		super(StepEvidence.IMAGEN);
 	}
 	
 	@Override

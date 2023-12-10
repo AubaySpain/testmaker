@@ -30,12 +30,12 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
 	}	
 	
     private DataAlert getDataAlert(SuiteTM suite) {
-    	var dataCheckAlert = getDataCheckAlert(suite, Defect);
+    	var dataCheckAlert = getDataCheckAlert(suite, DEFECT);
     	if (!dataCheckAlert.isEmpty()) {
     		return dataCheckAlert.get();
     	}
     	
-   		dataCheckAlert = getDataCheckAlert(suite, Nok);
+   		dataCheckAlert = getDataCheckAlert(suite, KO);
    		if (!dataCheckAlert.isEmpty()) {
    			return dataCheckAlert.get();
    		}
@@ -50,7 +50,7 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
 			if (!listChecks.isEmpty()) {
 				return Optional.of(DataAlert.of(listChecks.get(0), firstStep));
 			}
-			if (state==Nok) {
+			if (state==KO) {
 				return Optional.of(DataAlert.of(firstStep));
 			}
 		}

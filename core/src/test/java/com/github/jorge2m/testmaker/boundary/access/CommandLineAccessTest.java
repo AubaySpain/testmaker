@@ -39,7 +39,7 @@ public class CommandLineAccessTest {
     	
     	//Then
     	assertTrue(check);
-    	assertTrue(storedErrors.size()==0);
+    	assertTrue(storedErrors.isEmpty());
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class CommandLineAccessTest {
     	
     	//Then
     	assertTrue(check);
-    	assertTrue(storedErrors.size()==0);
+    	assertTrue(storedErrors.isEmpty());
 	}
 	
 	private enum TestEnum {unitario, integrado, endtoend} 
@@ -101,7 +101,7 @@ public class CommandLineAccessTest {
     	
     	//Then
     	assertTrue(check);
-    	assertTrue(storedErrors.size()==0);
+    	assertTrue(storedErrors.isEmpty());
 	}
 	
 	@Test

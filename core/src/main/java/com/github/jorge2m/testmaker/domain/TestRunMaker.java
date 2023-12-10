@@ -16,7 +16,7 @@ import org.testng.xml.XmlSuite;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.domain.testfilter.FilterTestsSuiteXML;
 import com.github.jorge2m.testmaker.service.webdriver.maker.DriverMaker;
-import com.github.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
+import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidenceStorer;
 
 public class TestRunMaker {
 
@@ -26,7 +26,7 @@ public class TestRunMaker {
 
 	private List<String> groups = new ArrayList<>();
 	private Map<String,String> dependencyGroups = new HashMap<>();
-	private EvidenceStorer storerErrorStep = null;
+	private StepEvidenceStorer storerErrorStep = null;
 	private DriverMaker driverMakerUser = null;
 	
 	private TestRunMaker(String id, List<String> listClases) {
@@ -63,7 +63,7 @@ public class TestRunMaker {
 		this.dependencyGroups.putAll(dependencyGroups);
 	}
 
-	public void setStorerErrorStep(EvidenceStorer storerErrorStep) {
+	public void setStorerErrorStep(StepEvidenceStorer storerErrorStep) {
 		this.storerErrorStep = storerErrorStep;
 	}
 	

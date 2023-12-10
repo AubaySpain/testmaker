@@ -59,7 +59,7 @@ public class HtmlEmailBuilder {
 			getColumn("URL BASE") +
 			getColumn("#AVAILAB") +
 			getColumn("#OKs") +
-		    getColumn("#NOKs") +
+		    getColumn("#KOs") +
 		    getColumn("#DEFECTs") +
 		    getColumn("#WARNs") +
 		    getColumn("#INFOs") +
@@ -137,14 +137,14 @@ public class HtmlEmailBuilder {
 		html+= TD_INI + "text-align:center;\"><a href='" + suiteNew.getUrlBase() + "'>url</a></td>";
 		html+=TD_INI + " text-align:center; color:" + "darkGreen" + ";\">" + rowSuiteData.getAvailabilityTests(TypeSuite.NEW) + "</td>";
 		
-	    html+=TD_INI + " text-align:center; color:" + State.Ok.getColorCss() + ";\">" + getNumTestCasesHtml(State.Ok, rowSuiteData) + "</td>";
-		html+=TD_INI + " text-align:center; color:" + State.Nok.getColorCss() + ";\">" + getNumTestCasesHtml(State.Nok, rowSuiteData) + "</td>";
-		html+=TD_INI + " text-align:center; color:" + State.Defect.getColorCss() + ";\">" + getNumTestCasesHtml(State.Defect, rowSuiteData) + "</td>";
-		html+=TD_INI + " text-align:center; color:" + State.Warn.getColorCss() + ";\">" + getNumTestCasesHtml(State.Warn, rowSuiteData) + "</td>";
-		html+=TD_INI + " text-align:center; color:" + State.Info.getColorCss() + ";\">" + getNumTestCasesHtml(State.Info, rowSuiteData) + "</td>";
+	    html+=TD_INI + " text-align:center; color:" + State.OK.getColorCss() + ";\">" + getNumTestCasesHtml(State.OK, rowSuiteData) + "</td>";
+		html+=TD_INI + " text-align:center; color:" + State.KO.getColorCss() + ";\">" + getNumTestCasesHtml(State.KO, rowSuiteData) + "</td>";
+		html+=TD_INI + " text-align:center; color:" + State.DEFECT.getColorCss() + ";\">" + getNumTestCasesHtml(State.DEFECT, rowSuiteData) + "</td>";
+		html+=TD_INI + " text-align:center; color:" + State.WARN.getColorCss() + ";\">" + getNumTestCasesHtml(State.WARN, rowSuiteData) + "</td>";
+		html+=TD_INI + " text-align:center; color:" + State.INFO.getColorCss() + ";\">" + getNumTestCasesHtml(State.INFO, rowSuiteData) + "</td>";
 		
 		html+=
-		    TD_INI + " text-align:center; color:" + State.Skip.getColorCss() + ";\">" + rowSuiteData.getNumTestCases(State.Skip) + "</td>" +
+		    TD_INI + " text-align:center; color:" + State.SKIP.getColorCss() + ";\">" + rowSuiteData.getNumTestCases(State.SKIP) + "</td>" +
 		    TD_INI + " text-align:right;\">" + rowSuiteData.getTimeMinutes() + "</td>" +
 		    TD_INI + "\">" + suiteNew.getStateExecution() + "</td>";
 		
@@ -172,12 +172,12 @@ public class HtmlEmailBuilder {
 		String TD_INI = "<td style=\"border:1px solid #000000;padding-left: 10px; padding-right: 10px; text-align:center; color:";
 		html+=TD_INI + "darkGreen" + ";\">" + totals.getTestCasesAvailability() + "</td>";
 		
-		html+=TD_INI + State.Ok.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Ok) + "</td>";
-		html+=TD_INI + State.Nok.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Nok) + "</td>";
-		html+=TD_INI + State.Defect.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Defect) + "</td>";
-		html+=TD_INI + State.Warn.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Warn) + "</td>";
-		html+=TD_INI + State.Info.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Info) + "</td>";
-		html+=TD_INI + State.Skip.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.Skip) + "</td>";
+		html+=TD_INI + State.OK.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.OK) + "</td>";
+		html+=TD_INI + State.KO.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.KO) + "</td>";
+		html+=TD_INI + State.DEFECT.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.DEFECT) + "</td>";
+		html+=TD_INI + State.WARN.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.WARN) + "</td>";
+		html+=TD_INI + State.INFO.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.INFO) + "</td>";
+		html+=TD_INI + State.SKIP.getColorCss() + ";\">" + getNumTestCasesTotalsHtml(State.SKIP) + "</td>";
 		
 		html+=TD_INI + totals.getSuiteMinutes() + "</td>" +
 			"<td colspan=\"2\"></td>" +
@@ -190,12 +190,12 @@ public class HtmlEmailBuilder {
 			
 			html+=TD_INI + "darkGreen" + ";\">" + totals.getPercentageTestCasesAvailable() + "%</td>";
 			
-			html+=TD_INI + State.Ok.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Ok) + "</td>";
-			html+=TD_INI + State.Nok.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Nok) + "</td>";
-			html+=TD_INI + State.Defect.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Defect) + "</td>";
-			html+=TD_INI + State.Warn.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Warn) + "</td>";
-			html+=TD_INI + State.Info.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Info) + "</td>";
-			html+=TD_INI + State.Skip.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.Skip) + "</td>";
+			html+=TD_INI + State.OK.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.OK) + "</td>";
+			html+=TD_INI + State.KO.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.KO) + "</td>";
+			html+=TD_INI + State.DEFECT.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.DEFECT) + "</td>";
+			html+=TD_INI + State.WARN.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.WARN) + "</td>";
+			html+=TD_INI + State.INFO.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.INFO) + "</td>";
+			html+=TD_INI + State.SKIP.getColorCss() + ";\">" + getPercentagesTotalsHtml(State.SKIP) + "</td>";
 			html+=
 				"<td colspan=\"3\"></td>" +
 				"</tr>";
@@ -306,10 +306,10 @@ public class HtmlEmailBuilder {
 		public int getAvailabilityTests(TypeSuite typeSuite) {
 			Map<State,Integer> testCasesState = getTestCasesByState(typeSuite);
 			return 
-				testCasesState.get(State.Ok) + 
-				testCasesState.get(State.Info) + 
-				testCasesState.get(State.Warn) + 
-				testCasesState.get(State.Defect);
+				testCasesState.get(State.OK) + 
+				testCasesState.get(State.INFO) + 
+				testCasesState.get(State.WARN) + 
+				testCasesState.get(State.DEFECT);
 		}
 		
 		public String getUrlReport(TypeSuite typeSuite, String hostTestMaker) {

@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -23,13 +22,14 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
+import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidencesWarehouse;
 
 public class TestCaseTM  {
 
 	private int invocationCount;
 	private List<StepTM> listSteps = new ArrayList<>();
-	private StateExecution stateRun = StateExecution.Started;
-	private State state = State.Ok;
+	private StateExecution stateRun = StateExecution.STARTED;
+	private State state = State.OK;
 	private final SuiteTM suiteParent;
 	private final TestRunTM testRunParent;
 	private final ITestResult result;
@@ -37,8 +37,10 @@ public class TestCaseTM  {
 	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
 	private boolean exceptionInExecution = true;
+	private TestCaseEvidencesWarehouse evidencesWarehouse;
 
 	public TestCaseTM(ITestResult result) {
+		this.evidencesWarehouse = new TestCaseEvidencesWarehouse(this);
 		this.testRunParent = (TestRunTM)result.getTestContext().getCurrentXmlTest();
 		this.suiteParent = (SuiteTM)testRunParent.getSuite();
 		this.result = result;
@@ -107,6 +109,7 @@ public class TestCaseTM  {
 	}
 	
 	public void end(State state) {
+		storeEvidences();
 		stopTest();
 		this.state = state;
 	}
@@ -117,7 +120,7 @@ public class TestCaseTM  {
 	}
 	
 	private void stopTest() {
-		setStateRun(StateExecution.Finished);
+		setStateRun(StateExecution.FINISHED);
 		initTestObjects.stopTestSignal();
 	}
 	
@@ -148,25 +151,34 @@ public class TestCaseTM  {
 	}
 	
 	public static Optional<TestCaseTM> getTestCase(ITestResult result) {
-		return SuitesExecuted.getSuitesExecuted().stream()
-			.map(SuiteTM::getListTestRuns).flatMap(List::stream)
-			.map(TestRunTM::getListTestCases).flatMap(List::stream)
-			.filter(t -> t!=null && t.getResult().equals(result))
-			.filter(t -> t.getStateResult()!=State.Retry)
-			.collect(Collectors.toList()).stream()
-			.findFirst();
+		for (var suite : SuitesExecuted.getSuitesExecuted()) {
+		    for (var testRun : suite.getListTestRuns()) {
+		        for (var testCase : testRun.getListTestCases()) {
+		            if (testCase != null &&
+		                testCase.getResult().equals(result) &&
+		                testCase.getStateResult() != State.RETRY) {
+		                return Optional.of(testCase);
+		            }
+		        }
+		    }
+		}
+		return Optional.empty();
 	}
 	
 	public static Optional<TestCaseTM> getTestCaseInExecution() {
-		Long threadId = Thread.currentThread().getId();
-		return SuitesExecuted.getSuitesExecuted().stream()
-			.map(SuiteTM::getListTestRuns).flatMap(List::stream)
-			.map(TestRunTM::getListTestCases).flatMap(List::stream)
-			.filter(t -> 
-				t.getThreadId().compareTo(threadId)==0 &&
-				!t.getStateRun().isFinished())
-			.collect(Collectors.toList()).stream()
-			.findFirst();
+        Long threadId = Thread.currentThread().getId();
+        for (var suite : SuitesExecuted.getSuitesExecuted()) {
+            for (var testRun : suite.getListTestRuns()) {
+            	//Defensive copy for avoid ConcurrentModificationException
+            	for (var testCase : new ArrayList<>(testRun.getListTestCases())) {
+                    if (testCase.getThreadId().compareTo(threadId) == 0 && 
+                    	!testCase.getStateRun().isFinished()) {
+                        return Optional.of(testCase);
+                    }
+                }
+            }
+        }
+        return Optional.empty();        
 	}
 	
 	public static Optional<WebDriver> getDriverTestCase() {
@@ -192,7 +204,7 @@ public class TestCaseTM  {
 	}
 
 	public State getStateFromSteps() {
-		var stateReturn = State.Ok;
+		var stateReturn = State.OK;
 		for (var step : getListStep()) {
 			if (step.getResultSteps().isMoreCriticThan(stateReturn)) {
 				stateReturn = step.getResultSteps();
@@ -288,6 +300,7 @@ public class TestCaseTM  {
 		testCaseBean.setInicioDate(inicio);
 		testCaseBean.setFinDate(fin); 
 		testCaseBean.setDurationMillis((float)fin.getTime() - (float)inicio.getTime());
+		testCaseBean.setTestPathDirectory(getTestPathDirectory());
 		
 		testCaseBean.setNumberSteps(getListStep().size());
 		testCaseBean.setClassSignature(getResult().getInstanceName());
@@ -322,6 +335,10 @@ public class TestCaseTM  {
 
 	public void setExceptionInExecution(boolean exceptionInExecution) {
 		this.exceptionInExecution = exceptionInExecution;
+	}
+	
+	private void storeEvidences() {
+		evidencesWarehouse.captureAndStore();
 	}
 	
 }

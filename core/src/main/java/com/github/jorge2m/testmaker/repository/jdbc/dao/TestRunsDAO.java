@@ -14,11 +14,9 @@ import static com.github.jorge2m.testmaker.repository.jdbc.dao.Utils.DateFormat.
 
 public class TestRunsDAO {
 	
-	//static Logger pLogger = LogManager.getLogger(Log4jConfig.log4jLogger);
-
 	private final ConnectorBD connector;
 
-	private static String SQLSelectTestRunsSuite = 
+	private static final String SQL_SELECT_TESTRUNS_SUITE = 
 		"SELECT " +
 		    "IDEXECSUITE, " +
 		    "SUITE, " +
@@ -34,7 +32,7 @@ public class TestRunsDAO {
 		"WHERE IDEXECSUITE = ? " + 
 		"ORDER BY INICIO";
 
-	private static String SQLInsertTestRun = 
+	private static final String SQL_INSERT_TESTRUN = 
 		"INSERT INTO TESTRUNS (" +
 			"IDEXECSUITE, " + 
 			"SUITE, " + 
@@ -48,9 +46,9 @@ public class TestRunsDAO {
 			"BROWSER ) " + 
 		"VALUES (?,?,?,?,?,?,?,?,?,?)";
 	
-	public static String SQLDeleteTestRun = 
-		"DELETE FROM TESTRUNS " +
-		"WHERE 	IDEXECSUITE = ?";
+	public static final String SQL_DELETE_TESTRUN =
+		    "DELETE FROM TESTRUNS " +
+		    "WHERE IDEXECSUITE = ?";
 
 	public TestRunsDAO(ConnectorBD connector) {
 		this.connector = connector;
@@ -59,7 +57,7 @@ public class TestRunsDAO {
     public List<TestRunBean> getListTestRuns(String idSuite) throws Exception {
     	List<TestRunBean> listTestRuns = new ArrayList<>();
         try (Connection conn = connector.getConnection();
-            PreparedStatement select = conn.prepareStatement(SQLSelectTestRunsSuite)) {
+            PreparedStatement select = conn.prepareStatement(SQL_SELECT_TESTRUNS_SUITE)) {
             select.setString(1, idSuite);
             try (ResultSet resultado = select.executeQuery()) {
                 while (resultado.next()) {
@@ -68,12 +66,9 @@ public class TestRunsDAO {
             }
             return listTestRuns;
         } 
-        catch (SQLException ex) {
+        catch (SQLException | ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         } 
-        catch (ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
     }   
     
     private TestRunBean getTestRun(ResultSet rowTestRun) throws Exception {
@@ -81,7 +76,7 @@ public class TestRunsDAO {
     	testRunData.setIdExecSuite(rowTestRun.getString("IDEXECSUITE"));
     	testRunData.setSuiteName(rowTestRun.getString("SUITE"));
     	testRunData.setName(rowTestRun.getString("NAME"));
-    	testRunData.setResult(State.valueOf(rowTestRun.getString("RESULT")));
+    	testRunData.setResult(State.from(rowTestRun.getString("RESULT")));
     	testRunData.setDevice(rowTestRun.getString("DEVICE"));
     	
         String inicioDate = rowTestRun.getString("INICIO");
@@ -99,43 +94,37 @@ public class TestRunsDAO {
     	return testRunData;
     }
 
-	public void insertTestRun(TestRunBean testRun) {
-		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement insert = conn.prepareStatement(SQLInsertTestRun)) {
-				insert.setString(1, testRun.getIdExecSuite());
-				insert.setString(2, testRun.getSuiteName()); 
-				insert.setString(3, testRun.getName()); 
-				insert.setString(4, testRun.getDevice()); 
-				insert.setString(5, testRun.getResult().name()); 
-				insert.setString(6, Utils.getDateFormat(ToSeconds).format(testRun.getInicioDate()));
-				insert.setString(7, Utils.getDateFormat(ToSeconds).format(testRun.getFinDate()));
-				insert.setFloat(8, testRun.getDurationMillis());
-				insert.setInt(9, testRun.getNumberTestCases());
-				insert.setString(10, testRun.getDriver());
-				insert.executeUpdate();
-			} catch (SQLException ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-		catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    public void insertTestRun(TestRunBean testRun) {
+        try (var conn = connector.getConnection();
+             var insert = conn.prepareStatement(SQL_INSERT_TESTRUN)) {
+
+            insert.setString(1, testRun.getIdExecSuite());
+            insert.setString(2, testRun.getSuiteName());
+            insert.setString(3, testRun.getName());
+            insert.setString(4, testRun.getDevice());
+            insert.setString(5, testRun.getResult().name());
+            insert.setString(6, Utils.getDateFormat(ToSeconds).format(testRun.getInicioDate()));
+            insert.setString(7, Utils.getDateFormat(ToSeconds).format(testRun.getFinDate()));
+            insert.setFloat(8, testRun.getDurationMillis());
+            insert.setInt(9, testRun.getNumberTestCases());
+            insert.setString(10, testRun.getDriver());
+
+            insert.executeUpdate();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
 	public void deleteTestRuns(String idSuite) {
 		try (Connection conn = connector.getConnection();
-			PreparedStatement delete = conn.prepareStatement(SQLDeleteTestRun)) {
+			PreparedStatement delete = conn.prepareStatement(SQL_DELETE_TESTRUN)) {
 			delete.setString(1, idSuite);
 			delete.executeUpdate();
 		} 
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
+	
 }

@@ -38,7 +38,7 @@ public class CheckerJSerrors implements Checker {
 				    descripValidac,
 				    resultadoOK || (resultadoLogs.getResultado()==ResultadoErrores.Resultado.MAX_ERRORES), level)
 				.info(getInfoError(resultadoLogs))
-				.store(StoreType.None)
+				.store(StoreType.NONE)
 				.build());
 		}
 		

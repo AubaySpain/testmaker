@@ -18,16 +18,18 @@ import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 
+import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
+
 /**
  * NetTraffic Manager based into BrowserMobProxy Class.
  * Stored in each Thread -> 1 proxy for each TestNG Method (test case)
  * Project info: https://github.com/lightbody/browsermob-proxy
  *
  */
-public class NettrafficStorer extends EvidenceStorer {
+public class NettrafficStorer extends StepEvidenceStorer {
 	
 	public NettrafficStorer() {
-		super(StepEvidence.Har);
+		super(HAR);
 	}
 	
 	@Override
@@ -40,7 +42,7 @@ public class NettrafficStorer extends EvidenceStorer {
 			content = writer.toString();
 		}
 		catch (IOException e) {
-			step.getSuiteParent().getLogger().warn("Exception writing har. " + e);
+			step.getSuiteParent().getLogger().warn("Exception writing har. {}", e);
 		}
 		return content;
 	}
@@ -52,26 +54,23 @@ public class NettrafficStorer extends EvidenceStorer {
 			copyHarToHarp(getPathFile(step));
 			Thread.sleep(1000);
 		}
-		catch (Exception e) {
-			step.getSuiteParent().getLogger().warn("Exception writing copying har to harp. " + e);
+		catch (IOException | InterruptedException e) {
+			step.getSuiteParent().getLogger().warn("Exception writing copying har to harp. %s", e);
 		}
 	}
 	
-	private void copyHarToHarp(String nameFileHar) throws Exception {
-		File fileHar = new File(nameFileHar);
-		File fileHarp = new File(nameFileHar.replace(StepEvidence.Har.fileExtension, StepEvidence.Harp.fileExtension));
-		InputStream inHar = new FileInputStream(fileHar);
-		OutputStream outHarp = new FileOutputStream(fileHarp);
-		outHarp.write("onInputData(".getBytes());
-		try {
-			IOUtils.copy(inHar, outHarp);
-			outHarp.write(");".getBytes());
-		}
-		finally {
-			IOUtils.closeQuietly(inHar);
-			IOUtils.closeQuietly(outHarp);
-		}
-	}
+	private void copyHarToHarp(String nameFileHar) throws IOException {
+	    File fileHar = new File(nameFileHar);
+	    File fileHarp = new File(nameFileHar.replace(HAR.getFileExtension(), HARP.getFileExtension()));
+
+	    try (InputStream inHar = new FileInputStream(fileHar);
+	         OutputStream outHarp = new FileOutputStream(fileHarp)) {
+
+	        outHarp.write("onInputData(".getBytes());
+	        IOUtils.copy(inHar, outHarp);
+	        outHarp.write(");".getBytes());
+	    }
+	}	
 	
 	public void resetAndStartNetTraffic() {
 		ReverseProxy.getProxy().newHar();
@@ -84,7 +83,7 @@ public class NettrafficStorer extends EvidenceStorer {
 				int port = proxy.getPort();
 				proxy.stop();
 				ReverseProxy.destroyProxy();
-				Log4jTM.getLogger().info("Stop Proxy NetTraffic with port " + port);
+				Log4jTM.getLogger().info("Stop Proxy NetTraffic with port {}", port);
 			}
 		}
 	}

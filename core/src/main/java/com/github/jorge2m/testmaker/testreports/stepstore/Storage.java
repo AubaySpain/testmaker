@@ -2,9 +2,9 @@ package com.github.jorge2m.testmaker.testreports.stepstore;
 
 public enum Storage {
 
-	File(true, false), 
-	Memory(false, true), 
-	FileAndMemory(true, true);
+	FILE(true, false), 
+	MEMORY(false, true), 
+	FILE_AND_MEMORY(true, true);
 	
 	boolean file;
 	boolean memory;

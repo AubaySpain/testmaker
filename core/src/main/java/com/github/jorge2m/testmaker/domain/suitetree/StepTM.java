@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen;
@@ -12,7 +11,7 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
 import com.github.jorge2m.testmaker.service.TestMaker;
-import com.github.jorge2m.testmaker.testreports.stepstore.EvidencesWarehouse;
+import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidencesWarehouse;
 import com.github.jorge2m.testmaker.testreports.stepstore.NettrafficStorer;
 import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
 import com.github.jorge2m.testmaker.testreports.stepstore.Storage;
@@ -29,24 +28,24 @@ public class StepTM {
 	private List<ChecksTM> listChecksTM = new ArrayList<>(); 
 	private String descripcion; 
 	private String resExpected; 
-	private SaveWhen saveImagePage = SaveWhen.IfProblem;
-	private SaveWhen saveErrorPage = SaveWhen.IfProblem;
-	private SaveWhen saveHtmlPage = SaveWhen.Never;
-	private SaveWhen saveNettraffic= SaveWhen.Never;
-	private EvidencesWarehouse evidencesWarehouse;
+	private SaveWhen saveImagePage = SaveWhen.IF_PROBLEM;
+	private SaveWhen saveErrorPage = SaveWhen.IF_PROBLEM;
+	private SaveWhen saveHtmlPage = SaveWhen.NEVER;
+	private SaveWhen saveNettraffic= SaveWhen.NEVER;
+	private StepEvidencesWarehouse evidencesWarehouse;
 
 	private String pathMethod;
 	private int typePage; 
 	private long timeInicio = 0;
 	private long timeFin = 0;
-	private State resultSteps = State.Ok;
+	private State resultSteps = State.OK;
 	private boolean excepExists = true;
-	private StateExecution state = StateExecution.Started;
+	private StateExecution state = StateExecution.STARTED;
 	private boolean isStateUpdated = false;
 	
 	public StepTM() {
-		evidencesWarehouse = new EvidencesWarehouse(this);
-		Optional<TestCaseTM> testCaseOp = TestMaker.getTestCase();
+		evidencesWarehouse = new StepEvidencesWarehouse(this);
+		var testCaseOp = TestMaker.getTestCase();
 		if (testCaseOp.isPresent()) {
 			testCaseParent = testCaseOp.get();
 			testRunParent = testCaseParent.getTestRunParent();
@@ -73,10 +72,6 @@ public class StepTM {
 		return suiteParent;
 	}
 	
-//	@JsonIgnore
-//	public WebDriver getDriver() {
-//		return testCase.getDriver();
-//	}
 	public String getOutputDirectorySuite() {
 		return getTestRunParent().getTestNgContext().getOutputDirectory();
 	}
@@ -94,11 +89,11 @@ public class StepTM {
 	public void end(boolean exceptionReceived) {
 		setExcepExists(exceptionReceived); 
 		if (exceptionReceived) {
-			setResultSteps(State.Nok);
+			setResultSteps(State.KO);
 		}
 		captureAndStoreEvidences();
 		setTimeFin(System.currentTimeMillis());
-		setState(StateExecution.Finished);
+		setState(StateExecution.FINISHED);
 	}
 	
 	public String getPathDirectory() {
@@ -107,9 +102,9 @@ public class StepTM {
 	
 	public void captureAndStoreEvidences() {
 		if (suiteParent.getInputParams().isTestExecutingInRemote()) {
-			evidencesWarehouse.captureAndStore(Storage.Memory);
+			evidencesWarehouse.captureAndStore(Storage.MEMORY);
 		} else {
-			evidencesWarehouse.captureAndStore(Storage.File);
+			evidencesWarehouse.captureAndStore(Storage.FILE);
 		}
 	}
 	public void moveContentEvidencesToFile() {
@@ -134,8 +129,8 @@ public class StepTM {
 	public String getResExpected() {
 		return resExpected;
 	}
-	public void setResExpected(String res_expected) {
-		this.resExpected = res_expected;
+	public void setResExpected(String resExpected) {
+		this.resExpected = resExpected;
 	}
 	public SaveWhen getSaveImagePage() {
 		return saveImagePage;
@@ -166,10 +161,10 @@ public class StepTM {
 		}
 	}
 
-	public EvidencesWarehouse getEvidencesWarehouse() {
+	public StepEvidencesWarehouse getEvidencesWarehouse() {
 		return evidencesWarehouse;
 	}
-	public void setEvidencesWarehouse(EvidencesWarehouse evidencesWarehouse) {
+	public void setEvidencesWarehouse(StepEvidencesWarehouse evidencesWarehouse) {
 		this.evidencesWarehouse = evidencesWarehouse;
 	}
 
@@ -182,8 +177,8 @@ public class StepTM {
 	public int getTypePage() {
 		return typePage;
 	}
-	public void setTypePage(int type_page) {
-		this.typePage = type_page;
+	public void setTypePage(int typePage) {
+		this.typePage = typePage;
 	}
 	public Date getHoraInicio() {
 		return new Date(getTimeInicio());
@@ -235,8 +230,8 @@ public class StepTM {
 	public State getResultSteps() {
 		return resultSteps;
 	}
-	public void setResultSteps(State c_result_steps) {
-		this.resultSteps = c_result_steps; 
+	public void setResultSteps(State resultSteps) {
+		this.resultSteps = resultSteps; 
 		this.isStateUpdated = true;
 	}
 	public boolean isExcepExists() {
@@ -282,7 +277,7 @@ public class StepTM {
 	public String getNameMethod() {
 		return ParsePathClass.getNameMethod(getPathMethod());
 	}
-	public void setNOKstateByDefault() {
+	public void setKOstateByDefault() {
 		setExcepExists(true); 
 	}
 	public void addChecksTM(ChecksTM checksTM) {
@@ -291,14 +286,14 @@ public class StepTM {
 	}
 	public SaveWhen getWhenSave(StepEvidence evidencia) {
 		switch (evidencia) {
-		case Html:
+		case HTML:
 			return saveHtmlPage;
-		case ErrorPage:
+		case ERROR_PAGE:
 			return saveErrorPage;
-		case Har:
-		case Harp:
+		case HAR:
+		case HARP:
 			return saveNettraffic;
-		case Imagen:
+		case IMAGEN:
 		default:
 			return saveImagePage;
 		}
@@ -306,12 +301,12 @@ public class StepTM {
 	public boolean isNecessaryStorage(StepEvidence evidencia) {
 		SaveWhen saveEvidenceWhen = getWhenSave(evidencia);
 		switch (saveEvidenceWhen) {
-		case Always:
+		case ALWAYS:
 			return true;
-		case Never:
+		case NEVER:
 			return false;
-		case IfProblem:
-			if (getResultSteps()!=State.Ok &&
+		case IF_PROBLEM:
+			if (getResultSteps()!=State.OK &&
 				!isAllValidationsWithAvoidEvidences()) {
 				return true;
 			}

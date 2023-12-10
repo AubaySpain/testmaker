@@ -87,7 +87,7 @@ public class ValidationsDAO {
 
 	private ChecksTM getValidation(ResultSet rowValidation) throws Exception {
 		ChecksTM validationData = new ChecksTM();
-		validationData.setStateValidation(State.valueOf(rowValidation.getString("RESULTADO")));
+		validationData.setStateValidation(State.from(rowValidation.getString("RESULTADO")));
 		
 		List<Check> listChecks = getListChecks(
 				rowValidation.getString("LIST_CHECKS"), 
@@ -160,7 +160,7 @@ public class ValidationsDAO {
 			Check check = new Check();
 			check.setDescription(checksDescr.get(i));
 			if (levels.size()>i) {
-				check.setLevelResult(State.valueOf(levels.get(i)));
+				check.setLevelResult(State.from(levels.get(i)));
 			}
 			if (overcomeds.size()>i) {
 				check.setOvercomed(overcomeds.get(i));

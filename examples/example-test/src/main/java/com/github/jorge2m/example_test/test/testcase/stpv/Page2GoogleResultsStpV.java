@@ -22,16 +22,16 @@ public class Page2GoogleResultsStpV {
 		int maxSeconds = 2;
 		validations.add(
 			"Aparece alguna entrada de resultado (la esperamos hasta " + maxSeconds + " segundos)",
-			page2GoogleResults.checkAreResultsUntil(maxSeconds), State.Defect);
+			page2GoogleResults.checkAreResultsUntil(maxSeconds), State.DEFECT);
 		validations.add(
 			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2GoogleResults.checkIsNumResultsUntil(maxSeconds),
-			State.Info);
+			State.INFO);
 		
 		numResults = page2GoogleResults.getNumResults();
 		validations.add(
 			"El número de entradas obtenido (" + numResults + ") es mayor que 0",
-			numResults > 0, State.Info);
+			numResults > 0, State.INFO);
 		
 		return validations;
 	}

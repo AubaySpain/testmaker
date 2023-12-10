@@ -2,13 +2,13 @@ package com.github.jorge2m.testmaker.domain;
 
 
 public enum StateExecution { 
-	NotStarted(false), 
-	Started(false), 
-	Running(false),
-	Finished(true), 
-	Stopping(false), 
-	Stopped(true),
-	Aborted(true);
+	NOT_STARTED(false), 
+	STARTED(false), 
+	RUNNING(false),
+	FINISHED(true), 
+	STOPPING(false), 
+	STOPPED(true),
+	ABORTED(true);
 	
 	boolean finished;
 	private StateExecution(boolean finished) {

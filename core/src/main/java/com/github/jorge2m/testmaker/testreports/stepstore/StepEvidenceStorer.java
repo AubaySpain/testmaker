@@ -6,18 +6,18 @@ import java.io.FileWriter;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
-public abstract class EvidenceStorer {
+public abstract class StepEvidenceStorer {
 	
-	final StepEvidence evidenceType;
-	String content;
+	private final StepEvidence evidenceType;
+	private String content;
 
-	abstract protected String captureContent(StepTM step);
+	protected abstract String captureContent(StepTM step);
 	
 	public void captureAndStoreContent(StepTM step) {
 		this.content = captureContent(step);
 	}
 	
-	public EvidenceStorer(StepEvidence evidenceType) {
+	protected StepEvidenceStorer(StepEvidence evidenceType) {
 		this.evidenceType = evidenceType;
 	}
 	
@@ -25,10 +25,6 @@ public abstract class EvidenceStorer {
 		return content;
 	}
 	
-	public void recoveryContent(StepTM step) {
-		this.content = step.getEvidencesWarehouse().getEvidenceContent(evidenceType);
-	}
-
 	public boolean existsFileEvidence(StepTM step) {
 		String pathFile = getPathFile(step);
 		return new File(pathFile).exists();
@@ -46,12 +42,16 @@ public abstract class EvidenceStorer {
 	}
 	
 	public void saveContentEvidenceInFile(String content, String pathFile) {
+		saveContentEvidence(content, pathFile);
+	}
+	
+	public static void saveContentEvidence(String content, String pathFile) {
 		File file = new File(pathFile);
 		try (FileWriter fw = new FileWriter(file)) {
 			fw.write(content);
 		}
 		catch (Exception e) {
-			Log4jTM.getLogger().warn("Problem saving File " + pathFile, e);
+			Log4jTM.getLogger().warn("Problem saving File {}", pathFile, e);
 		}
 	}
 	

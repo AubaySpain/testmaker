@@ -77,7 +77,7 @@ public class TestMaker {
 		var suiteData = getSuiteStored(idExecution);
 		if (suiteData!=null &&
 		   !suiteData.getStateExecution().isFinished()) {
-				suiteData.setStateExecution(Aborted);
+				suiteData.setStateExecution(ABORTED);
 		}
 		return suiteData;
 	}
@@ -133,8 +133,8 @@ public class TestMaker {
 	}
 	
 	private static boolean neatStop(SuiteTM suite) {
-		suite.setStateExecution(Stopping);
-		var validStates = Arrays.asList(Stopped, Finished);
+		suite.setStateExecution(STOPPING);
+		var validStates = Arrays.asList(STOPPED, FINISHED);
 		return (waitForSuiteInState(suite, validStates, 15));
 	}
 	private static boolean waitForSuiteInState(SuiteTM suite, List<StateExecution> validStates, int maxSeconds) {
@@ -223,7 +223,7 @@ public class TestMaker {
 	}
 
 	public static void skipTestsIfSuiteEnded(SuiteTM suite) {
-		var statesSuiteEnded = Arrays.asList(Stopping, Stopped,	Finished);
+		var statesSuiteEnded = Arrays.asList(STOPPING, STOPPED,	FINISHED);
 		if (statesSuiteEnded.contains(suite.getStateExecution())) {
 			throw new SkipException("Suite " + suite.getName() + " in state " + suite.getStateExecution());
 		}

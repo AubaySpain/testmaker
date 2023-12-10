@@ -46,7 +46,6 @@ import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
-import com.github.jorge2m.testmaker.domain.SenderReportOutputPort;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethodData;
@@ -218,7 +217,7 @@ public class RestApiTM {
 					suite, channel, application, state, fechaDesdeOld, fechaHastaOld);
 		}
 		
-		SenderReportOutputPort sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
+		var sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
 		boolean sendedOk = sender.send(listSuites, listSuitesOld);
 		if (!sendedOk) {
 			throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);

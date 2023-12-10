@@ -22,6 +22,7 @@ public class TestCaseBean {
 	private Date finDate; 
 	private float durationMillis;
 	private int numberSteps;
+	private String testPathDirectory;
 	private String classSignature;
 	private String throwable;
 
@@ -109,6 +110,13 @@ public class TestCaseBean {
 	public void setDurationMillis(float durationMillis) {
 		this.durationMillis = durationMillis;
 	}
+	public String getTestPathDirectory() {
+		return this.testPathDirectory;
+	}
+	public void setTestPathDirectory(String testPathDirectory) {
+		this.testPathDirectory = testPathDirectory;
+	}
+	
 	public int getNumberSteps() {
 		return numberSteps;
 	}

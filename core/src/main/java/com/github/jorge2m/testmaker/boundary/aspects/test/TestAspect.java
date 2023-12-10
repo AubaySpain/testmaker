@@ -13,7 +13,6 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.Alarm;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
-import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -23,6 +22,8 @@ import com.github.jorge2m.testmaker.service.TestMaker;
 import java.lang.reflect.Method;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
+
+import static com.github.jorge2m.testmaker.domain.StateExecution.*;
 
 @Aspect
 public class TestAspect {
@@ -103,7 +104,7 @@ public class TestAspect {
 	
 	private Pair<TestCaseTM, Object> manageRetryTestCase(int retry, TestCaseTM testCaseActual, ProceedingJoinPoint joinPoint) 
 			throws Throwable {
-		testCaseActual.end(State.Retry);
+		testCaseActual.end(State.RETRY);
 		var testCaseNew = new TestCaseTM(testCaseActual.getResult());
 		TestMaker.skipTestsIfSuiteEnded(testCaseNew.getSuiteParent());
 		testCaseActual.getTestRunParent().addTestCase(testCaseNew);
@@ -113,7 +114,7 @@ public class TestAspect {
 	}
 
 	private Object retryTestCase(int retry, ProceedingJoinPoint joinPoint, TestCaseTM testCaseNew)
-			throws Throwable, Exception {
+			throws Throwable {
 		Object testReturn = null;
 		Test test = getTestAnnotation(joinPoint);
 		try {
@@ -135,14 +136,14 @@ public class TestAspect {
 	
 	private boolean isTestCaseError(TestCaseTM testCase) {
 		return 
-			testCase.getStateFromSteps()==State.Defect || 
-			testCase.getStateFromSteps()==State.Nok ||
+			testCase.getStateFromSteps()==State.DEFECT || 
+			testCase.getStateFromSteps()==State.KO ||
 			testCase.isExceptionInExecution();
 	}
 	
 	private Object executeTest(ProceedingJoinPoint joinPoint, TestCaseTM testCase) throws Throwable {
 		fitTestToRamp(testCase);
-		testCase.setStateRun(StateExecution.Running);
+		testCase.setStateRun(RUNNING);
 		if (executeTestRemote(testCase.getSuiteParent().getInputParams())) {
 			return executeTestRemote(joinPoint, testCase);
 		} else {
@@ -190,7 +191,7 @@ public class TestAspect {
 	}
 	
 	private int getTestCasesRunning(SuiteTM suiteTM) {
-		return suiteTM.getNumberTestCases(StateExecution.Running);
+		return suiteTM.getNumberTestCases(RUNNING);
 	}
 
 	private Object executeTestRemote(ProceedingJoinPoint joinPoint, TestCaseTM testCase) 
@@ -256,7 +257,7 @@ public class TestAspect {
 	}
 	
     private void sendNotificationIfNeeded(Check check, ChecksTM checksParent, SuiteTM suiteParent) {
-    	if (check.getSend()==SendType.Alert &&
+    	if (check.getSend()==SendType.ALERT &&
     		!check.isOvercomed()) {
     		var inputParams = suiteParent.getInputParams();
     		if (inputParams.isAlarm() &&

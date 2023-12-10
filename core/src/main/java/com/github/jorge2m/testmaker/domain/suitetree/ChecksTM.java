@@ -13,7 +13,7 @@ import com.github.jorge2m.testmaker.domain.util.ParsePathClass;
 public class ChecksTM {
 	
 	private List<Check> listChecks = new ArrayList<>();
-	private State stateValidation = State.Ok;
+	private State stateValidation = State.OK;
 	private String title="";
 	private boolean avoidEvidences;
 	private String pathMethod;
@@ -138,7 +138,7 @@ public class ChecksTM {
 		listChecks.add(check);
 	}
 	public void add(String description, boolean overcomed) {
-		add(description, overcomed, State.Defect);
+		add(description, overcomed, State.DEFECT);
 	}
 	public void add(String description, boolean overcomed, State levelResult) {
 		add(Check.make(description, overcomed, levelResult).build());
@@ -155,8 +155,8 @@ public class ChecksTM {
 	public boolean calculateAvoidEvidences() {
 		for (Check check : listChecks) {
 			if (!check.isOvercomed() &&
-				check.getLevelResult()!=State.Ok &&
-				check.getStore()!=StoreType.None) {
+				check.getLevelResult()!=State.OK &&
+				check.getStore()!=StoreType.NONE) {
 				return false;
 			}
 		}
@@ -228,10 +228,10 @@ public class ChecksTM {
 	public State calculateStateValidation() {
 		State stateToReturn;
 		if (isStepFinishedWithException()) {
-			return State.Nok;
+			return State.KO;
 		}
 		
-		stateToReturn = State.Ok;
+		stateToReturn = State.OK;
 		for (Check check : listChecks) {
 			if (!check.isOvercomed()) {
 				//sound();
@@ -272,7 +272,7 @@ public class ChecksTM {
 		List<State> listCodes = new ArrayList<>();
 		int lastValidation = getIndexLastValidation();
 		for (int i=0; i<lastValidation; i++) {
-			listCodes.add(State.Ok);
+			listCodes.add(State.OK);
 		}
 		for (int i=0; i<listChecks.size(); i++) {
 			Check resultValidation = listChecks.get(i);

@@ -56,7 +56,7 @@ public class ClickElement {
 		for (int i=0; i<seconds; i++) {
 			try {
 				WebElement elementLink = getElementClick();
-				if (state(Clickable, elementLink, driver).check()) {
+				if (state(CLICKABLE, elementLink, driver).check()) {
 					return elementLink;
 				}
 			}
@@ -70,11 +70,11 @@ public class ClickElement {
 	
 	private WebElement getElementClick() {
 		switch (state) {
-		case Present:
+		case PRESENT:
 			return getElementPresent();
-		case Visible:
+		case VISIBLE:
 			return getElementVisible();
-		case Clickable:
+		case CLICKABLE:
 			return getElementClickable();
 		default:
 			return null;
@@ -104,7 +104,7 @@ public class ClickElement {
 	}
 	private WebElement getElementClickable() {
 		if (by==null) {
-			if (state(Clickable, webelement, driver).check()) {
+			if (state(CLICKABLE, webelement, driver).check()) {
 				return webelement;
 			}
 			return null;
@@ -117,10 +117,10 @@ public class ClickElement {
 	
 	private void click(TypeClick typeOfClick, WebElement link) {
 		switch (typeOfClick) {
-		case javascript:
+		case JAVASCRIPT:
 			clickJavaScript(link);
 			break;
-		case webdriver:
+		case WEBDRIVER:
 		default:
 			clickWebdriverFirst(link);
 		}
@@ -148,8 +148,8 @@ public class ClickElement {
 		private final WebDriver driver;
 		private WebElement webelement = null;
 		private By by = null;
-		private State state = State.Present;
-		private TypeClick typeOfClick = TypeClick.webdriver;
+		private State state = State.PRESENT;
+		private TypeClick typeOfClick = TypeClick.WEBDRIVER;
 		private int waitLink = 0;
 		private int waitLoadPage = 30;
 		private int x = 0;
@@ -169,7 +169,7 @@ public class ClickElement {
 			return this;
 		}
 		public BuilderClick state(State state) {
-			if (state!=State.Present && state!=State.Clickable && state!=State.Visible) {
+			if (state!=State.PRESENT && state!=State.CLICKABLE && state!=State.VISIBLE) {
 				throw new IllegalArgumentException("Param state state only accept values Present, Clickable and Visible");
 			}
 			this.state = state;

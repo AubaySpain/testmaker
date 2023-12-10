@@ -29,8 +29,8 @@ public class SuiteTM extends XmlSuite {
 	private final InputParamsTM inputParams;
 	private final String idSuiteExecution;
 	private long threadId;
-	private StateExecution stateExecution = StateExecution.NotStarted;
-	private State result = State.Ok;
+	private StateExecution stateExecution = StateExecution.NOT_STARTED;
+	private State result = State.OK;
 	private int numTestCaseRetries = 0;
 	private String infoExecution;
 	private long timeInicio = 0;
@@ -108,7 +108,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public List<StepTM> getStepsFromNoRetriedTestCases(State state) {
 		return getTestCases().stream()
-				.filter(s -> s.getStateResult()!=State.Retry)
+				.filter(s -> s.getStateResult()!=State.RETRY)
 				.map(t -> t.getListStep())
 				.flatMap(List::stream)
 				.filter(s -> s.getResultSteps()==state)
@@ -129,7 +129,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public void start() {
 		this.threadId = Thread.currentThread().getId();
-		stateExecution = StateExecution.Started;
+		stateExecution = StateExecution.STARTED;
 		timeInicio = (new Date()).getTime(); 
 		SuitesExecuted.add(this);
 		if (inputParams.getStoreBd().storeSuite()) {
@@ -138,7 +138,7 @@ public class SuiteTM extends XmlSuite {
 	}
 	
 	public void end() {
-		stateExecution = StateExecution.Finished;
+		stateExecution = StateExecution.FINISHED;
 		result = getResultFromTestsRun();
 		timeFin = (new Date()).getTime(); 
 		poolWebDrivers.removeAllStrWd();
@@ -151,7 +151,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public void sendAlarmsIfNeeded() {
 		result = getResultFromTestsRun();
-		if (result.isMoreCriticThan(State.Warn)) {
+		if (result.isMoreCriticThan(State.WARN)) {
 			var suiteAlarm = SuiteNotificationSender.make();
 			if (suiteAlarm.canSend(this)) {
 				suiteAlarm.send(this);
@@ -160,7 +160,7 @@ public class SuiteTM extends XmlSuite {
 	}
 	
 	private State getResultFromTestsRun() {
-		var stateReturn = State.Ok;
+		var stateReturn = State.OK;
 		for (var testRun : getListTestRuns()) {
 			if (testRun.getResult().isMoreCriticThan(stateReturn)) {
 				stateReturn = testRun.getResult();
@@ -243,14 +243,14 @@ public class SuiteTM extends XmlSuite {
 		}
 		return (
 			userDir +
-			ConstantesTM.directoryOutputTests);
+			ConstantesTM.DIRECTORY_OUTPUT_TESTS);
 	}
 	
 	public String getPathReportHtml() {
-		return (getPathDirectory() + File.separator + ConstantesTM.nameReportHTMLTSuite);
+		return (getPathDirectory() + File.separator + ConstantesTM.NAME_REPORT_HTML_TSUITE);
 	}
 	public String getPathLogFile() {
-		return (getPathDirectory() + File.separator + ConstantesTM.nameLogFileSuite);
+		return (getPathDirectory() + File.separator + ConstantesTM.MAME_LOG_FILE_SUITE);
 	}
 	
 	public String getDnsReportHtml() {

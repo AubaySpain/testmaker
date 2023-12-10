@@ -48,7 +48,7 @@ public class GenericChecks extends PageObjTM {
 			return this;
 		}
 		public BuilderCheck jsErrors() {
-			jsErrors = Info;
+			jsErrors = INFO;
 			return this;
 		}
 
@@ -57,7 +57,7 @@ public class GenericChecks extends PageObjTM {
 			return this;
 		}
 		public BuilderCheck netTraffic() {
-			netTraffic = Warn;
+			netTraffic = WARN;
 			return this;
 		}
 		

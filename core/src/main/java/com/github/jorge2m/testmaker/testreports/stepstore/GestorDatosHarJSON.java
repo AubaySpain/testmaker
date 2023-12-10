@@ -20,7 +20,7 @@ public class GestorDatosHarJSON {
 	}
 	
 	public GestorDatosHarJSON(StepTM step) throws Exception {
-		String ficheroHAR = StepEvidence.Har.getPathFile(step);
+		String ficheroHAR = StepEvidence.HAR.getPathFile(step);
 		parseHAR(ficheroHAR);
 	}
 	

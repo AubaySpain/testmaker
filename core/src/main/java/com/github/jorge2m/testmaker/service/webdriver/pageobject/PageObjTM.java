@@ -1,6 +1,6 @@
 package com.github.jorge2m.testmaker.service.webdriver.pageobject;
 
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.Clickable;
+import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.CLICKABLE;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class PageObjTM {
     
 	public static WebElement getElementClickable(WebDriver driver, By by) {
 		for (WebElement element : driver.findElements(by)) {
-			if (PageObjTM.state(Clickable, element, driver).check()) {
+			if (PageObjTM.state(CLICKABLE, element, driver).check()) {
 				return element;
 			}
 		}
@@ -171,7 +171,7 @@ public class PageObjTM {
 	}
     public static WebElement getElementClickable(WebElement elementInput, By by, WebDriver driver) {
         for (WebElement element : elementInput.findElements(by)) {
-        	if (PageObjTM.state(Clickable, element, driver).check()) {
+        	if (PageObjTM.state(CLICKABLE, element, driver).check()) {
                 return element;
             }
         }

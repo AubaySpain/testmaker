@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.v117.network.Network;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
@@ -41,17 +44,27 @@ class ChromedriverMaker extends DriverMaker {
 	public WebDriver build() {
 		initialConfig();
 		preBuildConfig();
-		ChromeDriver driver = new ChromeDriver(options);
+		var chromeDriver = new ChromeDriver(options);
 		if (channel==Channel.desktop) {
 			if (isHeadless) {
-				driver.manage().window().setSize(new Dimension(1920, 1080));
+				chromeDriver.manage().window().setSize(new Dimension(1920, 1080));
 			} else {
-				driver.manage().window().maximize();
+				chromeDriver.manage().window().maximize();
 			}
 		}
+		
+		setUserAgent(chromeDriver);
+		deleteCookiesAndSetTimeouts(chromeDriver);
+		return chromeDriver;
+	}
+	
+	private void setUserAgent(ChromeDriver driver) {
+        String currentUserAgent = (String) ((JavascriptExecutor)driver).executeScript("return navigator.userAgent;");
+		String modifiedUserAgent =  currentUserAgent + " (MangoRobotest)";
 
-		deleteCookiesAndSetTimeouts(driver);
-		return driver;
+        DevTools devTools = driver.getDevTools();
+        devTools.createSession();
+		devTools.send(Network.setUserAgentOverride(modifiedUserAgent, Optional.empty(), Optional.empty(), Optional.empty()));
 	}
 
 	private void initialConfig() {
@@ -64,15 +77,12 @@ class ChromedriverMaker extends DriverMaker {
 	}
 	
 	private void activateLogs() {
-		LoggingPreferences logs = getLogsWebDriverEnabled();
+		var logs = getLogsWebDriverEnabled();
 		options.setCapability("goog:loggingPrefs", logs);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 	}
 	
 	private void preBuildConfig() {
-//		if (channel==Channel.desktop && isHeadless) {
-//			options.addArguments("--window-size=1920x1080");
-//		}
 		if (isHeadless) {
 			options.addArguments("--headless=new");
 		}

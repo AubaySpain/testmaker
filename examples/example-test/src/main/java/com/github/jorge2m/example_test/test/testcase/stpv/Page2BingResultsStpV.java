@@ -23,16 +23,16 @@ public class Page2BingResultsStpV {
 		validations.add(
 			"Aparece algún resultado (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2BingResults.checkIsResultsUntil(maxSeconds),
-			State.Defect);
+			State.DEFECT);
 		validations.add(
 			"Aparece el número de entradas (lo esperamos hasta " + maxSeconds + " segundos)",
 			page2BingResults.checkIsNumResultsUntil(maxSeconds),
-			State.Info);
+			State.INFO);
 		
 		numResults = page2BingResults.getNumResults();
 		validations.add(
 			"El número de entradas obtenido (" + numResults + ") es mayor que 0",
-			numResults > 0, State.Info);
+			numResults > 0, State.INFO);
 		
 		return validations;
 	}

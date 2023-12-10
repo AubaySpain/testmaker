@@ -19,8 +19,8 @@ public class UtilsChecker {
 		GestorDatosHarJSON gestorHAR = null;
 		
 		StepTM step = TestMaker.getLastStep();
-		SaveWhen whenSaveNettraffic = step.getWhenSave(StepEvidence.Har);
-		if (whenSaveNettraffic == SaveWhen.Always &&
+		SaveWhen whenSaveNettraffic = step.getWhenSave(StepEvidence.HAR);
+		if (whenSaveNettraffic == SaveWhen.ALWAYS &&
 			driver.toString().toLowerCase().contains("firefox")) {
 			try {
 				gestorHAR = new GestorDatosHarJSON(step);

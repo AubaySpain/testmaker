@@ -174,7 +174,7 @@ public class RepositorySQLite implements RepositoryI {
 	private String getSQLitePathDirectory() {
 		String path = 
 			System.getProperty("user.dir") + File.separator + 
-			ConstantesTM.directoryOutputTests + File.separator + 
+			ConstantesTM.DIRECTORY_OUTPUT_TESTS + File.separator + 
 			"sqlite" + File.separator;
 		return path;
 	}
@@ -182,7 +182,7 @@ public class RepositorySQLite implements RepositoryI {
 	private String getSQLiteFilePathAutomaticTestingSchema() {
 		return (
 			getSQLitePathDirectory() + 
-			ConstantesTM.SQLiteFileAutomaticTestingSchema);
+			ConstantesTM.SQLITE_FILE_AUTOMATIC_TESTING_SCHEMA);
 	}
 	
 	private LocalDateTime convertToLocalDateTime(Date dateToConvert) {

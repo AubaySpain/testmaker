@@ -13,16 +13,16 @@ import org.testng.xml.XmlTest;
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.service.webdriver.maker.DriverMaker;
-import com.github.jorge2m.testmaker.testreports.stepstore.EvidenceStorer;
+import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidenceStorer;
 
 public class TestRunTM extends XmlTest {
 
 	private static final long serialVersionUID = -4002416107477209626L;
-	private StateExecution stateExecution = StateExecution.Started;
-	private State state = State.Ok;
+	private StateExecution stateExecution = StateExecution.STARTED;
+	private State state = State.OK;
 	public XmlGroups x_xmlGroupsVisible;
 	private ITestContext testNgContext;
-	private EvidenceStorer storerErrorEvidence = null;
+	private StepEvidenceStorer storerErrorEvidence = null;
 	private List<TestCaseTM> listTestCases = new ArrayList<>();
 	//private BrowserStackDesktop browserStackDesktop = null;
 	//private BrowserStackMobil browserStackMobil = null;
@@ -39,11 +39,11 @@ public class TestRunTM extends XmlTest {
 
 	public void end() {
 		state = getStateFromTestCases();
-		stateExecution = StateExecution.Stopped;
+		stateExecution = StateExecution.STOPPED;
 	}
 	
 	private State getStateFromTestCases() {
-		var stateReturn = State.Ok;
+		var stateReturn = State.OK;
 		for (var testCase : getListTestCases()) {
 			var stateTestCase = testCase.getStateResult();
 			if (stateTestCase.isMoreCriticThan(stateReturn)) {
@@ -79,11 +79,11 @@ public class TestRunTM extends XmlTest {
 		setTestRunOutputDirectory(suiteDirectory);
 	}
 
-	public EvidenceStorer getStorerErrorEvidence() {
+	public StepEvidenceStorer getStorerErrorEvidence() {
 		return storerErrorEvidence;
 	}
 
-	public void setStorerErrorStep(EvidenceStorer storerErrorEvidence) {
+	public void setStorerErrorStep(StepEvidenceStorer storerErrorEvidence) {
 		this.storerErrorEvidence = storerErrorEvidence;
 	}
 

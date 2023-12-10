@@ -48,7 +48,7 @@ public abstract class PluginChrome {
         
         //Wait 2 seconds for the page of Extensions
         String xpathLinkShortCuts = "//a[@class='extension-commands-config']";
-        PageObjTM.state(State.Visible, By.xpath(xpathLinkShortCuts), driver).wait(2).check();
+        PageObjTM.state(State.VISIBLE, By.xpath(xpathLinkShortCuts), driver).wait(2).check();
         
         //Set the ShortCut Extension
         driver.findElement(By.xpath(xpathLinkShortCuts)).click();

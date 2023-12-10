@@ -97,7 +97,7 @@ public class SenderReportByMailAdapter implements SenderReportOutputPort {
 		String subjectMail = 
 			"Result TestSuite " + suite.getName() + 
 			" (" + suite.getApp() + " / " + suite.getUrlBase() + ")";
-		if (suite.getResult().isMoreCriticThan(State.Warn)) {
+		if (suite.getResult().isMoreCriticThan(State.WARN)) {
 			return (subjectMail + " (With Problems)");
 		} else {
 			return (subjectMail + " (OK)");

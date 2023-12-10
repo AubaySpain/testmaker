@@ -108,7 +108,7 @@ public class ServerCmdLine {
 		
 		if (cmdLine.hasOption(urlinislaveparam)) {
 			String urlIniServerSlave = cmdLine.getOptionValue(urlinislaveparam);
-			if (checkPatternValue(ConstantesTM.URL_Pattern, urlIniServerSlave)) {
+			if (checkPatternValue(ConstantesTM.URL_PATTERN, urlIniServerSlave)) {
 				resultParse.setUrlIniServerSlave(urlIniServerSlave);
 			}
 			else {
@@ -120,7 +120,7 @@ public class ServerCmdLine {
 		
 		if (cmdLine.hasOption(urlhubparam)) {
 			String urlHub = cmdLine.getOptionValue(urlhubparam);
-			if (checkPatternValue(ConstantesTM.URL_Pattern, urlHub)) {
+			if (checkPatternValue(ConstantesTM.URL_PATTERN, urlHub)) {
 				resultParse.setUrlServerHub(urlHub);
 			}
 			else {
@@ -132,7 +132,7 @@ public class ServerCmdLine {
 		
 		if (cmdLine.hasOption(urlslaveparam)) {
 			String urlServerSlave = cmdLine.getOptionValue(urlslaveparam);
-			if (checkPatternValue(ConstantesTM.URL_Pattern, urlServerSlave)) {
+			if (checkPatternValue(ConstantesTM.URL_PATTERN, urlServerSlave)) {
 				resultParse.setUrlServerSlave(urlServerSlave);
 			}
 			else {

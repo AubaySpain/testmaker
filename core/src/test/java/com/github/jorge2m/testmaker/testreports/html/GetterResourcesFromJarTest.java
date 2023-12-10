@@ -38,7 +38,7 @@ public class GetterResourcesFromJarTest {
 		assertEquals("js", directory.nameDirectory);
 		assertEquals("static/js/", directory.pathFromResources);
 		assertTrue(directory.listDirectories.size()==1);
-		assertTrue(directory.listFiles.size()==0);
+		assertTrue(directory.listFiles.isEmpty());
 		Directory dirDojo = directory.listDirectories.get(0);
 		assertEquals("dojo", dirDojo.nameDirectory);
 		assertEquals("static/js/dojo/", dirDojo.pathFromResources);

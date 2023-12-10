@@ -120,7 +120,7 @@ public class DataAlert {
     	this.stepNumber = 0;
     	this.validationNumber = 0;
     	this.resultado = false;
-    	this.levelCheck = State.Defect;
+    	this.levelCheck = State.DEFECT;
     	this.stepDescription = "Undefined";
     	this.checkDescription = "Undefined";
     	this.infoExecution = "Undefined";

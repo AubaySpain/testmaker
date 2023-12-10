@@ -83,7 +83,7 @@ public class TestCasesDAO {
     	testCaseData.setTestRunName(rowTestRun.getString("TESTRUN"));  
     	testCaseData.setName(rowTestRun.getString("NAME"));
     	testCaseData.setDescription(rowTestRun.getString("DESCRIPTION"));  
-    	testCaseData.setResult(State.valueOf(rowTestRun.getString("RESULT")));
+    	testCaseData.setResult(State.from(rowTestRun.getString("RESULT")));
     	
         String inicioDate = rowTestRun.getString("INICIO");
         testCaseData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));

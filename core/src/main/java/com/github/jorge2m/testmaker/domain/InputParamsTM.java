@@ -255,14 +255,14 @@ public abstract class InputParamsTM implements Serializable {
 		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)
 			.hasArg()
-			.pattern(ConstantesTM.URL_Pattern)
+			.pattern(ConstantesTM.URL_PATTERN)
 			.desc("Initial URL of the application Web to test")
 			.build());
 		
 		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)
 			.hasArg()
-			.pattern(ConstantesTM.URL_Pattern)
+			.pattern(ConstantesTM.URL_PATTERN)
 			.desc("Initial URL of the application Web to test")
 			.build());		
 		

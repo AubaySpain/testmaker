@@ -22,7 +22,7 @@ public class SuitesDAO {
 	
 	private final ConnectorBD connector;
 	
-	private static final String ListFieldsSuiteTable = 
+	private static final String LIST_FIELDS_SUITE_TABLE = 
 		"IDEXECSUITE, " +
 		"SUITE, " + 
 		"VERSION, " + 
@@ -40,12 +40,12 @@ public class SuitesDAO {
 		"URLBASE, " + 
 		"STATE_EXECUTION ";
 
-	private static final String SQLInsertOrReplaceSuite = 
-		"INSERT OR REPLACE INTO SUITES (" + ListFieldsSuiteTable + ")" +
+	private static final String SQL_INSERT_OR_REPLACE_SUITE = 
+		"INSERT OR REPLACE INTO SUITES (" + LIST_FIELDS_SUITE_TABLE + ")" +
 		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	private static final String SQLSelectSuite = 
-		"SELECT " + ListFieldsSuiteTable  +
+	private static final String SQL_SELECT_SUITE = 
+		"SELECT " + LIST_FIELDS_SUITE_TABLE  +
 		"  FROM SUITES " +
 		"WHERE IDEXECSUITE = ? " +
 		"ORDER BY IDEXECSUITE DESC";
@@ -55,12 +55,12 @@ public class SuitesDAO {
 //		"  FROM SUITES " +
 //		"WHERE IDEXECSUITE >= ?";
 
-	private static final String SQLDeleteSuite = 
+	private static final String SQL_DELETE_SUITE = 
 		"DELETE FROM SUITES " +
 		"WHERE IDEXECSUITE = ? ";
 
-	private static final String SQLSelectSuitesIdDesc = 
-		"SELECT " + ListFieldsSuiteTable + 
+	private static final String SQL_SELECT_SUITES_ID_DESC = 
+		"SELECT " + LIST_FIELDS_SUITE_TABLE + 
 		"FROM SUITES  " + 
 		"ORDER BY IDEXECSUITE DESC";
 
@@ -71,7 +71,7 @@ public class SuitesDAO {
 	public List<SuiteBean> getListSuitesIdDesc() throws Exception {
 		List<SuiteBean> listSuites = new ArrayList<>();
 		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc)) {
+			PreparedStatement select = conn.prepareStatement(SQL_SELECT_SUITES_ID_DESC)) {
 			try (ResultSet resultado = select.executeQuery()) {
 				while (resultado.next()) {
 					listSuites.add(getSuite(resultado));
@@ -90,7 +90,7 @@ public class SuitesDAO {
 	public SuiteBean getSuite(String suiteExecId) throws Exception {
 		SuiteBean suiteData = null;
 		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement select = conn.prepareStatement(SQLSelectSuite)) {
+			try (PreparedStatement select = conn.prepareStatement(SQL_SELECT_SUITE)) {
 				select.setString(1, suiteExecId);
 				try (ResultSet resultado = select.executeQuery()) {
 					if (resultado.next()) {
@@ -115,7 +115,7 @@ public class SuitesDAO {
 		suiteData.setChannel(Channel.valueOf(rowSuite.getString("CHANNEL")));
 		suiteData.setApp(rowSuite.getString("APP"));
 		suiteData.setDriver(rowSuite.getString("BROWSER"));
-		suiteData.setResult(State.valueOf(rowSuite.getString("RESULT")));
+		suiteData.setResult(State.from(rowSuite.getString("RESULT")));
 
 		String inicioDate = rowSuite.getString("INICIO");
 		suiteData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
@@ -140,7 +140,7 @@ public class SuitesDAO {
 
 	public void insertOrReplaceSuite(SuiteBean suiteData) {
 		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement insert = conn.prepareStatement(SQLInsertOrReplaceSuite)) {
+			try (PreparedStatement insert = conn.prepareStatement(SQL_INSERT_OR_REPLACE_SUITE)) {
 				insert.setString(1, suiteData.getIdExecSuite());
 				insert.setString(2, suiteData.getName()); 
 				insert.setString(3, suiteData.getVersion()); 
@@ -166,10 +166,7 @@ public class SuitesDAO {
 				throw new RuntimeException(ex);
 			}
 		}
-		catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		}
-		catch (ClassNotFoundException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
@@ -181,14 +178,14 @@ public class SuitesDAO {
 		}
 		
 		List<SuiteBean> suitesToReturn = new ArrayList<>();
-		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(SQLSelectSuitesIdDesc);
-			ResultSet resultado = select.executeQuery()) {
-			while (resultado.next()) {
-				Date inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultado.getString("INICIO"));
-				Interval interval = dateInterval(inicioDateSuite, desdeHastaPair);
+		try (var conn = connector.getConnection();
+			var selectStatement = conn.prepareStatement(SQL_SELECT_SUITES_ID_DESC);
+			var resultSet = selectStatement.executeQuery()) {
+			while (resultSet.next()) {
+				var inicioDateSuite = Utils.getDateFormat(ToSeconds).parse(resultSet.getString("INICIO"));
+				var interval = dateInterval(inicioDateSuite, desdeHastaPair);
 				if (interval==Interval.BETWEEN) {
-					suitesToReturn.add(getSuite(resultado));
+					suitesToReturn.add(getSuite(resultSet));
 				}
 				if (interval==Interval.BEFORE) {
 					break;
@@ -262,7 +259,7 @@ public class SuitesDAO {
 	
 	public void deleteSuite(String idSuite) {
 		try (Connection conn = connector.getConnection();
-			PreparedStatement delete = conn.prepareStatement(SQLDeleteSuite)) {
+			PreparedStatement delete = conn.prepareStatement(SQL_DELETE_SUITE)) {
 			delete.setString(1, idSuite);
 			delete.executeUpdate();
 		} 

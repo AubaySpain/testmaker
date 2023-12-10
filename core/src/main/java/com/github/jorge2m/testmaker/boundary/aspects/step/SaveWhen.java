@@ -1,11 +1,12 @@
 package com.github.jorge2m.testmaker.boundary.aspects.step;
 
 public enum SaveWhen {
-	Always, 
-	Never, 
-	IfProblem;
+	ALWAYS, 
+	NEVER, 
+	IF_PROBLEM;
 	
-	boolean IfProblemSave() {
-		return (this==Always || this==IfProblem);
+	boolean ifProblemSave() {
+		return (this==ALWAYS || this==IF_PROBLEM);
 	}
+	
 }

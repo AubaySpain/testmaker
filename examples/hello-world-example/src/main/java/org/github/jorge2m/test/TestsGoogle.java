@@ -27,8 +27,8 @@ public class TestsGoogle {
 	@Step (
 		description="Input the text <b>#{textToSearch}</b> and click button \"Search with Google\"",
 		expected="At leas one entry with the text #{textToSearch} appears",
-		saveImagePage=SaveWhen.Always,
-		saveHtmlPage=SaveWhen.Always)
+		saveImagePage=SaveWhen.ALWAYS,
+		saveHtmlPage=SaveWhen.ALWAYS)
 	public void searchInGoogle(String textToSearch, WebDriver driver) {
 		//Input Text to Search
 		By byInputSearch = By.xpath("//input[@name='q']");
@@ -42,9 +42,9 @@ public class TestsGoogle {
 	
 	@Validation (
 		description="Appears at least an entry that contains the text #{textSearched}",
-		level=State.Defect)
+		level=State.DEFECT)
 	public boolean checkTextSearched(String textSearched, int maxWait, WebDriver driver) {
 		By entryWithTextBy = By.xpath("//h3[text()[contains(.,'" + textSearched + "')]]");
-		return state(Visible, entryWithTextBy, driver).wait(maxWait).check();
+		return state(VISIBLE, entryWithTextBy, driver).wait(maxWait).check();
 	}
 }

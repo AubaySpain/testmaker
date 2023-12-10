@@ -123,7 +123,7 @@ public class TestAspectTest {
 		SuiteTM suite = Mockito.mock(SuiteTM.class);
 		Mockito.when(suite.getThreadCount()).thenReturn(maxNumThreads);
 		Mockito.when(suite.getInputParams()).thenReturn(inputParams);
-		Mockito.when(suite.getNumberTestCases(StateExecution.Running)).thenReturn(numTestCasesRunning);
+		Mockito.when(suite.getNumberTestCases(StateExecution.RUNNING)).thenReturn(numTestCasesRunning);
 		Mockito.when(suite.getTimeFromInit(TimeUnit.SECONDS)).thenReturn(timeFromInit);
 		
 		return suite;

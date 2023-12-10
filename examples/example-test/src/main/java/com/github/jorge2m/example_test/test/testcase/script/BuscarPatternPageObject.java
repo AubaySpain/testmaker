@@ -53,7 +53,7 @@ public class BuscarPatternPageObject implements Serializable {
 	
 	@Validation (
 		description="Aparecen más resultados en Google (<b>#{numResultsGoogle}</b> obtenidos) que en Bing (<b>#{numResultsBing}</b> obtenidos)",
-		level=State.Warn)
+		level=State.WARN)
 	public boolean checkMoreResulstsInGoogle(float numResultsGoogle, float numResultsBing) {
 		return (numResultsGoogle > numResultsBing);
 	}

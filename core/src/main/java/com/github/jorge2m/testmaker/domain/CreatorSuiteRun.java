@@ -46,7 +46,7 @@ public abstract class CreatorSuiteRun {
 
 	public List<TestMethodData> getListAllTestCasesData() throws Exception {
 		List<TestMethodData> listTestMethods = new ArrayList<>();
-		for (TestMethod testMethod : getListAllTestCases()) {
+		for (var testMethod : getListAllTestCases()) {
 			listTestMethods.add(testMethod.getData());
 		}
 		return listTestMethods;

@@ -1,7 +1,7 @@
 package com.github.jorge2m.example_test.test.testcase.pageobject;
 
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM.state;
-import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.Visible;
+import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.VISIBLE;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -26,7 +26,7 @@ public class Page1Bing {
 	
 	public boolean checkIsPage() {
 		By formSearchBy = By.xpath(XPathFormSearch);
-		return (state(Visible, formSearchBy, driver).check());
+		return (state(VISIBLE, formSearchBy, driver).check());
 	}
 	
 	public void searchText(String textToSearch) {

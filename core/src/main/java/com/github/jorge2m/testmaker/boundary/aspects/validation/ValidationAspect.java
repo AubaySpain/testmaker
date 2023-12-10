@@ -58,10 +58,10 @@ public class ValidationAspect {
     	ChecksTM checksResult = infoValidation.getListResultValidation();
     	step.addChecksTM(checksResult);
     	if (exceptionThrown) {
-    		checksResult.getStepParent().setNOKstateByDefault();
+    		checksResult.getStepParent().setKOstateByDefault();
     	}
     	checksResult.checkValidations();
-    	if (step.getState()==StateExecution.Finished) {
+    	if (step.getState()==StateExecution.FINISHED) {
     		//Nos encontramos en una Validación asociada a un @Step pero posterior a él
     		boolean exceptionInStep = step.isExcepExists() || exceptionThrown;
     		step.end(exceptionInStep);

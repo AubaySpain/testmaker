@@ -70,12 +70,12 @@ public class BuscarWithoutRefactor implements Serializable {
 		By byEntradaResultado = By.xpath("//h3[@class[contains(.,'LC20lb')]]");
 		validations.add(
 			"Aparece alguna entrada de resultado",
-			state(Visible, byEntradaResultado, driver).check(), State.Defect);
+			state(VISIBLE, byEntradaResultado, driver).check(), State.DEFECT);
 		
 		numResultsGoogle = getNumResultsGoogle(driver);
 		validations.add(
 			"El número de entradas obtenido (" + numResultsGoogle + ") es mayor que 0",
-			numResultsGoogle > 0, State.Defect);
+			numResultsGoogle > 0, State.DEFECT);
 		
 		return validations;
 	}
@@ -90,17 +90,17 @@ public class BuscarWithoutRefactor implements Serializable {
 	
 	@Validation (
 		description="Aparece la página con el buscador de Bing",
-		level=State.Defect)
+		level=State.DEFECT)
 	public boolean checkPageSearchBing(WebDriver driver) {
 		By formSearchBy = By.xpath("//form[@action='/search' and @id='sb_form']");
-		return (state(Visible, formSearchBy, driver).check());
+		return (state(VISIBLE, formSearchBy, driver).check());
 	}
 	
 	@Step (
 		description="Introducimos el texto <b>#{textToSearch}</b> y clickamos el icono de la Lupa",
 		expected="Aparecen resultados de búsqueda",
-		saveImagePage=SaveWhen.Always,
-		saveHtmlPage=SaveWhen.Always)
+		saveImagePage=SaveWhen.ALWAYS,
+		saveHtmlPage=SaveWhen.ALWAYS)
 	public void searchInBing(String textToSearch, WebDriver driver) {
 		By byInputInicio = By.id("sb_form_q");
 		driver.findElement(byInputInicio).sendKeys(textToSearch);
@@ -116,14 +116,14 @@ public class BuscarWithoutRefactor implements Serializable {
 		numResultsBing = getNumResultsBing(driver);
 		validations.add(
 			"El número de entradas obtenido (" + numResultsBing + ") es mayor que 0",
-			numResultsGoogle > 0, State.Defect);
+			numResultsGoogle > 0, State.DEFECT);
 		
 		return validations;
 	}
 	
 	@Validation (
 		description="Aparecen más resultados en Google (<b>#{numResultsGoogle}</b> obtenidos) que en Bing (<b>#{numResultsBing}</b> obtenidos)",
-		level=State.Warn)
+		level=State.WARN)
 	public boolean checkMoreResulstsInGoogle(float numResultsGoogle, float numResultsBing) {
 		return (numResultsGoogle > numResultsBing);
 	}

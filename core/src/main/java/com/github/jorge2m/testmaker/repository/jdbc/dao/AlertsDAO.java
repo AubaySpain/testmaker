@@ -16,10 +16,8 @@ import com.github.jorge2m.testmaker.service.notifications.DataAlert;
 public class AlertsDAO {
 	
 	private final ConnectorBD connector;
-	
 
-
-	private static final String SQLInsertAlert = 
+	private static final String SQL_INSERT_ALERT = 
 		"INSERT INTO ALERTS (" +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -37,7 +35,7 @@ public class AlertsDAO {
 		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	private static final String TAG_OPERATOR = "@TagOperator";
-	private static final String SQLSelectAlertsWithTag =
+	private static final String SQL_SELECT_ALERTS_WITH_TAG =
 		"SELECT " +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -62,15 +60,15 @@ public class AlertsDAO {
 	
 	private String getSqlSelectAlerts(DataAlert dataAlert) {
 		if (dataAlert.getMethodValidation()==null) {
-			return SQLSelectAlertsWithTag.replace(TAG_OPERATOR, "IS");
+			return SQL_SELECT_ALERTS_WITH_TAG.replace(TAG_OPERATOR, "IS");
 		}
-		return SQLSelectAlertsWithTag.replace(TAG_OPERATOR, "=");
+		return SQL_SELECT_ALERTS_WITH_TAG.replace(TAG_OPERATOR, "=");
 	}	
 	
 	public void insertAlert(Check check, ChecksTM checksParent) {
 		DataAlert dataAlert = DataAlert.of(check, checksParent);
 		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement insert = conn.prepareStatement(SQLInsertAlert)) {
+			try (PreparedStatement insert = conn.prepareStatement(SQL_INSERT_ALERT)) {
 				insert.setString(1, dataAlert.getIdExecSuite());
 				insert.setString(2, dataAlert.getSuiteName());
 				insert.setString(3, dataAlert.getTestCaseName());
@@ -130,7 +128,7 @@ public class AlertsDAO {
 			rowSuite.getInt("STEP_NUMBER"),
 			rowSuite.getInt("VALIDATION_NUMBER"),
 			Boolean.valueOf(rowSuite.getBoolean("RESULTADO")),
-			State.valueOf(rowSuite.getString("LEVEL")),
+			State.from(rowSuite.getString("LEVEL")),
 			rowSuite.getString("DESCRIPTION_STEP"),
 			rowSuite.getString("DESCRIPTION_CHECK"),
 			rowSuite.getString("INFO_EXECUTION"),

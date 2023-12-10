@@ -29,10 +29,10 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
-import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobilI;
 import com.github.jorge2m.testmaker.testreports.browserstack.BrowserStackRestClient;
 import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
+import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
+
 import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReports extends EmailableReporter {
@@ -64,8 +64,8 @@ public class GenerateReports extends EmailableReporter {
 	}
 
 	private void deployStaticsIfNotExist() throws Exception {
-		ResourcesExtractor resExtractor = ResourcesExtractor.getNew();
-		String pathDirectoryInFromResources =  ConstantesTM.nameDirectoryStatics;
+		var resExtractor = ResourcesExtractor.getNew();
+		String pathDirectoryInFromResources =  ConstantesTM.NAME_DIRECTORY_STATICS;
 		resExtractor.copyDirectoryResources(
 			pathDirectoryInFromResources, 
 			outputDirectory + "/../../" + pathDirectoryInFromResources);
@@ -129,7 +129,7 @@ public class GenerateReports extends EmailableReporter {
 			
 			String dataDiv = "";
 			if (inputParamsSuite.getChannel()==Channel.desktop) {
-				BrowserStackDesktopI bsData = new BrowserStackDataDesktop(inputParamsSuite);
+				var bsData = new BrowserStackDataDesktop(inputParamsSuite);
 				dataDiv = 
 					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getOs() + " " + bsData.getOsVersion() + "</div>" + 
 					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getBrowser() + " " + bsData.getBrowserVersion() + "</div>";
@@ -138,7 +138,7 @@ public class GenerateReports extends EmailableReporter {
 						"<div style=\"font-size:11;padding-right:4px;\">" + bsData.getResolution() + "</div>";
 				}
 			} else {
-				BrowserStackMobilI bsData = new BrowserStackDataMobil(inputParamsSuite);
+				var bsData = new BrowserStackDataMobil(inputParamsSuite);
 				dataDiv = 
 					"<div style=\"font-size:11;padding-right:9px;\">" + bsData.getOs() + " " + bsData.getOsVersion() + "</div>" +
 					"<div style=\"font-size:11;padding-right:8px;\">" + bsData.getDevice() + "</div>" +
@@ -207,7 +207,7 @@ public class GenerateReports extends EmailableReporter {
         reportHtml+="  <a href=\"emailable-report.html\" target=\"_blank\" class=\"linkTestNG\">Emailable Report</a>";
         reportHtml+="</div>\n";
         reportHtml+="<div class=\"divTestNG\">";
-        reportHtml+="  <a href=\"" + ConstantesTM.nameLogFileSuite + "\" target=\"_blank\" class=\"linkTestNG\">" + ConstantesTM.nameLogFileSuite + "</a>";
+        reportHtml+="  <a href=\"" + ConstantesTM.MAME_LOG_FILE_SUITE + "\" target=\"_blank\" class=\"linkTestNG\">" + ConstantesTM.MAME_LOG_FILE_SUITE + "</a>";
         reportHtml+="</div>";        
         reportHtml+="<br>\n";
         reportHtml+="<br>\n";
@@ -245,14 +245,23 @@ public class GenerateReports extends EmailableReporter {
 		for (int i=0; i<listTestCases.size(); i++) {
 			var testCase = listTestCases.get(i);
 			var format = new SimpleDateFormat("HH:mm:ss");
+			
+			String linkTestException = "<br><br>";
+			if (TestCaseEvidence.EXCEPTION.fileExists(testCase)) {
+				linkTestException = 
+					"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.EXCEPTION) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.EXCEPTION.getNameIcon() + "\" title=\"" + TestCaseEvidence.EXCEPTION.getTagInfo() + "\"/>" +
+					"</a>";
+			}
+			
 			reportHtml+= 
 				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
 				"  <td class=\"nowrap\">" + testCase.getNameUnique() + "</td>" + 
 				"  <td>" + testCase.getNumberSteps() + "</td>" + 
 				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
-				"  <td>" + testCase.getDurationMillis() + "</td>" + 
-				"  <td><br><br></td>" + 
+				"  <td>" + testCase.getDurationMillis() + "</td>" +
+				"  <td>" + linkTestException + "</td>" +
 				"  <td colspan=2>" + testCase.getDescription() + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getInicioDate()) + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getFinDate()) + "</td>" +
@@ -271,43 +280,37 @@ public class GenerateReports extends EmailableReporter {
 	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {
 		boolean timeout = false;
 		int stepNumber = 0;
-		for (StepTM step : testCase.getListStep()) {
+		for (var step : testCase.getListStep()) {
 			stepNumber+=1;
 
-			String ImageFileStep = Imagen.getPathFile(step);
-			File indexFile = new File(ImageFileStep);
 			String linkHardcopy = "";
-			if (indexFile.exists()) {
+			if (IMAGEN.fileExists(step)) {
 				linkHardcopy = 
-					"<a href=\"" + getRelativePathEvidencia(step, Imagen) + "\" target=\"_blank\">" + 
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Imagen.getNameIcon() + "\" title=\"" + Imagen.getTagInfo() + "\"/>" +
+					"<a href=\"" + getRelativePathEvidencia(step, IMAGEN) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + IMAGEN.getNameIcon() + "\" title=\"" + IMAGEN.getTagInfo() + "\"/>" +
 					"</a>";
 			}
 			
-			String HtmlFileStep = Html.getPathFile(step);
-			indexFile = new File(HtmlFileStep);
 			String linkHtml = "";
-			if (indexFile.exists()) {
+			if (HTML.fileExists(step)) {
 				linkHtml = 
-					"<a href=\"" + getRelativePathEvidencia(step, Html) + "\" target=\"_blank\">" + 
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Html.getNameIcon() + "\" title=\"" + Html.getTagInfo() + "\"/>" +
+					"<a href=\"" + getRelativePathEvidencia(step, HTML) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + HTML.getNameIcon() + "\" title=\"" + HTML.getTagInfo() + "\"/>" +
 					"</a>";
 			}
 
-			String ErrorFileStep = ErrorPage.getPathFile(step);
-			indexFile = new File(ErrorFileStep);
 			String linkError = "";
-			if (indexFile.exists()) {
+			if (ERROR_PAGE.fileExists(step)) {
 				linkError = 
-					"<a href=\"" + getRelativePathEvidencia(step, ErrorPage) + "\" target=\"_blank\">" + 
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + ErrorPage.getNameIcon() + "\" title=\"" + ErrorPage.getTagInfo() + "\"/>" +
+					"<a href=\"" + getRelativePathEvidencia(step, ERROR_PAGE) + "\" target=\"_blank\">" + 
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + ERROR_PAGE.getNameIcon() + "\" title=\"" + ERROR_PAGE.getTagInfo() + "\"/>" +
 					"</a>";
 			}
 
-			String HARPFileStep = Harp.getPathFile(step);
-			indexFile = new File(HARPFileStep);
+			String harpFileStep = HARP.getPathFile(step);
+			File indexFile = new File(harpFileStep);
 			String linkHarp = "";
-			if (indexFile.exists()) {
+			if (HARP.fileExists(step)) {
 				String pathHARP = getDnsOfFileReport(
 					indexFile.getAbsolutePath(), 
 					inputParamsSuite.getWebAppDNS(), 
@@ -315,19 +318,19 @@ public class GenerateReports extends EmailableReporter {
 				
 				linkHarp = 
 					" \\ <a href=\"" + ConstantesTM.URL_SOFTWAREISHARD + pathHARP + "\" target=\"_blank\">" +
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Harp.getNameIcon() + "\" title=\"" + Harp.getTagInfo() + "\"/>" +
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + HARP.getNameIcon() + "\" title=\"" + HARP.getTagInfo() + "\"/>" +
 					"</a>";
 			}
 
-			String HARFileStep = Har.getPathFile(step);
+			String harFileStep = HAR.getPathFile(step);
 			String linkHar = "";
-			indexFile = new File(HARFileStep);
+			indexFile = new File(harFileStep);
 			if (indexFile.exists()) {
-				linkHar = " \\ <a href=\"" + getRelativePathEvidencia(step, Har) + "\" target=\"_blank\">NetJSON</a>";
+				linkHar = " \\ <a href=\"" + getRelativePathEvidencia(step, HAR) + "\" target=\"_blank\">NetJSON</a>";
 				
 				linkHar = 
-					" \\ <a href=\"" + getRelativePathEvidencia(step, Har) + "\" target=\"_blank\">" +
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + Har.getNameIcon() + "\" title=\"" + Har.getTagInfo() + "\"/>" +
+					" \\ <a href=\"" + getRelativePathEvidencia(step, HAR) + "\" target=\"_blank\">" +
+					"<img width=\"22\" src=\"" + pathStatics + "/images/" + HAR.getNameIcon() + "\" title=\"" + HAR.getTagInfo() + "\"/>" +
 					"</a>";
 			}
 
@@ -372,6 +375,13 @@ public class GenerateReports extends EmailableReporter {
 		String testCaseNameUnique = step.getTestCaseParent().getNameUnique();
 		return ("./" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
 	}
+	
+	private String getRelativePathEvidencia(TestCaseBean testcase, TestCaseEvidence evidence) {
+		String fileName = evidence.getNameFileEvidence();
+		String testRunName = testcase.getTestRunName();
+		String testCaseNameUnique = testcase.getNameUnique();
+		return ("./" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
+	}	
 
 	private void pintaValidacionesStep(StepTM step) {
 		var listChecksResult = step.getListChecksTM();
@@ -437,7 +447,7 @@ public class GenerateReports extends EmailableReporter {
      * @param serverDNS: del tipo "http://robottest.mangodev.net + :port si fuera preciso)  
      */
     public static String getDnsOfFileReport(String filePath, String applicationDNS, TypeAccess typeAccess) {
-        String pathReport = filePath.substring(filePath.indexOf(ConstantesTM.directoryOutputTests));
+        String pathReport = filePath.substring(filePath.indexOf(ConstantesTM.DIRECTORY_OUTPUT_TESTS));
         if (applicationDNS!=null && "".compareTo(applicationDNS)!=0) {
             return (applicationDNS + "/" + pathReport);
         } else {

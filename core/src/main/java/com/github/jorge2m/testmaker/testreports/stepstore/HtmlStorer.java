@@ -2,10 +2,10 @@ package com.github.jorge2m.testmaker.testreports.stepstore;
 
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 
-public class HtmlStorer extends EvidenceStorer {
+public class HtmlStorer extends StepEvidenceStorer {
 
 	public HtmlStorer() {
-		super(StepEvidence.Html);
+		super(StepEvidence.HTML);
 	}
 	
 	@Override

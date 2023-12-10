@@ -44,7 +44,7 @@ public class Calculator {
 	
 	@Validation (
 		description="The result is <b>#{resultExpected}</b>",
-		level=State.Defect)
+		level=State.DEFECT)
 	public boolean checkResult(String resultExpected, WindowsDriver driver) {
 		String result = getCalculatorResultText(driver);
 		return result.compareTo(resultExpected)==0;

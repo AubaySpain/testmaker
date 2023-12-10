@@ -1,15 +1,15 @@
 package com.github.jorge2m.testmaker.conf;
 
 public enum State  {
-    Undefined(0, "black"),
-    Ok(1, "green"),
-    Info(2, "blue"),
-    Retry(3, "grey"),
-    Warn(4, "#8000ff"),
-    Defect(6, "crimson"),
-    Skip(8, "darkGrey"),
-    Nok(11, "red"),
-    Stopped(11, "red");
+    UNDEFINED(0, "black"),
+    OK(1, "green"),
+    INFO(2, "blue"),
+    RETRY(3, "grey"),
+    WARN(4, "#8000ff"),
+    DEFECT(6, "crimson"),
+    SKIP(8, "darkGrey"),
+    KO(11, "red"),
+    STOPPED(11, "red");
     
     private final int criticity;
     private final String colorCss;
@@ -46,6 +46,15 @@ public enum State  {
             }
         }
         return null;
+    }
+    
+    public static State from(String value) {
+    	//Temporal If
+    	if ("NOK".compareTo(value.toUpperCase())==0) {
+    		value = "KO";
+    	}
+    	
+   		return State.valueOf(value.toUpperCase());
     }
     
 }
