@@ -1,6 +1,6 @@
 package com.github.jorge2m.testmaker.domain;
 
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,17 +20,17 @@ public class InputParamsTMTest {
 		List<TestCaseParams> listTestCaseData = inputParams.getListTestCasesData();
 		
 		//Then
-		assertTrue(listTestCaseData.size()==3);
-		assertTrue(listTestCaseData.get(0).getName().compareTo("FIC001")==0);
-		assertTrue(listTestCaseData.get(0).getInvocationCount()==null);
-		assertTrue(listTestCaseData.get(0).getThreadPoolSize()==null);
+		assertEquals(listTestCaseData.size(), 3);
+		assertEquals(listTestCaseData.get(0).getName(), "FIC001");
+		assertEquals(listTestCaseData.get(0).getInvocationCount(), null);
+		assertEquals(listTestCaseData.get(0).getThreadPoolSize(), null);
 		
-		assertTrue(listTestCaseData.get(1).getName().compareTo("BOR001")==0);
-		assertTrue(listTestCaseData.get(1).getInvocationCount()==1);
-		assertTrue(listTestCaseData.get(1).getThreadPoolSize()==null);
+		assertEquals(listTestCaseData.get(1).getName(), "BOR001");
+		assertEquals(listTestCaseData.get(1).getInvocationCount(), Integer.valueOf(1));
+		assertEquals(listTestCaseData.get(1).getThreadPoolSize(), null);
 		
-		assertTrue(listTestCaseData.get(2).getName().compareTo("COM001_Compra")==0);
-		assertTrue(listTestCaseData.get(2).getInvocationCount()==10);
-		assertTrue(listTestCaseData.get(2).getThreadPoolSize()==5);
+		assertEquals(listTestCaseData.get(2).getName(), "COM001_Compra");
+		assertEquals(listTestCaseData.get(2).getInvocationCount(), Integer.valueOf(10));
+		assertEquals(listTestCaseData.get(2).getThreadPoolSize(), Integer.valueOf(5));
 	}
 }

@@ -9,23 +9,23 @@ import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.St
 
 public class Page2BingResults extends PageObjTM {
 	
-	private final static String XPathNumResults = "//span[@class='sb_count']";
-	private final static String XPathListResults = "//ol[@id='b_results']";
+	private static final String XPATH_NUM_RESULTS = "//span[@class='sb_count']";
+	private static final String XPATH_LIST_RESULTS = "//ol[@id='b_results']";
 	
 	public Page2BingResults(WebDriver driver) {
 		super(driver);
 	}
 	
 	public boolean checkIsResultsUntil(int maxSeconds) {
-		return state(State.VISIBLE, By.xpath(XPathListResults)).wait(maxSeconds).check();
+		return state(State.VISIBLE, By.xpath(XPATH_LIST_RESULTS)).wait(maxSeconds).check();
 	}
 	
 	public boolean checkIsNumResultsUntil(int maxSeconds) {
-		return state(State.VISIBLE, By.xpath(XPathNumResults)).wait(maxSeconds).check();
+		return state(State.VISIBLE, By.xpath(XPATH_NUM_RESULTS)).wait(maxSeconds).check();
 	}
 	
 	public long getNumResults() {
-		WebElement numResultsElem = getElementWeb(By.xpath(XPathNumResults), driver);
+		WebElement numResultsElem = getElementWeb(By.xpath(XPATH_NUM_RESULTS), driver);
 		return Utils.getLongFromElement(numResultsElem);
 	}
 }

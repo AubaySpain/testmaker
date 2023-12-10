@@ -23,13 +23,13 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 public class CmdLineMaker {
 
 	private final String[] args;
-    private static final String HelpNameParam = "help";
+    private static final String HELP_NAME_PARAM = "help";
     private final InputParamsTM inputParams;
 	
 	private final CommandLineParser parser = new DefaultParser();
 	private final CommandLine cmdLine;
 	
-	private CmdLineMaker(String args[], InputParamsTM inputParams) throws ParseException {
+	private CmdLineMaker(String[] args, InputParamsTM inputParams) throws ParseException {
 		this.args = args;
 		this.inputParams = inputParams;
 		this.cmdLine = getParsedOptions();
@@ -38,11 +38,11 @@ public class CmdLineMaker {
 		}
 	}
 	
-	public static CmdLineMaker from(String args[], InputParamsTM inputParams) throws ParseException {
+	public static CmdLineMaker from(String[] args, InputParamsTM inputParams) throws ParseException {
 		return new CmdLineMaker(args, inputParams);
 	}
 	
-	public static CmdLineMaker from(String args[]) throws ParseException {
+	public static CmdLineMaker from(String[] args) throws ParseException {
 		return new CmdLineMaker(args, null);
 	}	
 	public static CmdLineMaker from(InputParamsTM inputParams) throws Exception {
@@ -109,7 +109,7 @@ public class CmdLineMaker {
 	 */
 	private CommandLine checkHelpParameterCase(String[] args) {
 		Options options = new Options();
-		Option helpOption = Option.builder(HelpNameParam)
+		Option helpOption = Option.builder(HELP_NAME_PARAM)
 			.required(false)
 			.desc("shows this message")
 			.build();
@@ -117,7 +117,7 @@ public class CmdLineMaker {
 		try {
 			options.addOption(helpOption);
 			CommandLine cmdLineHelp = parser.parse(options, args);
-			if (cmdLineHelp.hasOption(HelpNameParam)) {
+			if (cmdLineHelp.hasOption(HELP_NAME_PARAM)) {
 				printHelpSyntaxis(options);
 				return cmdLineHelp;
 			}
@@ -138,20 +138,18 @@ public class CmdLineMaker {
 
 	boolean checkOptionsValue(List<MessageError> storedErrors) {
 		if (cmdLine==null ||
-			HelpNameParam.compareTo(cmdLine.getOptions()[0].getOpt())==0) {
+			HELP_NAME_PARAM.compareTo(cmdLine.getOptions()[0].getOpt())==0) {
 			return false;
 		}
 		
 		boolean check = true;
-		for (OptionTMaker optionTMaker : inputParams.getListAllOptions()) {
+		for (var optionTMaker : inputParams.getListAllOptions()) {
 			String nameParam = optionTMaker.getOption().getOpt();
 			String valueOption = cmdLine.getOptionValue(nameParam);
-			if (optionTMaker.getOption().isRequired()) {
-				if (valueOption==null) {
-			    	String saltoLinea = System.getProperty("line.separator");
-					storedErrors.add(new MessageError("Mandatory param " + nameParam + " doesn't exists" + saltoLinea));
-					check = false;
-				}
+			if (optionTMaker.getOption().isRequired() && valueOption==null) {
+		    	String saltoLinea = System.getProperty("line.separator");
+				storedErrors.add(new MessageError("Mandatory param " + nameParam + " doesn't exists" + saltoLinea));
+				check = false;
 			}
 			if (valueOption!=null) {
 				if (!optionTMaker.getOption().hasValueSeparator()) {

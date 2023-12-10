@@ -13,7 +13,7 @@ import com.github.jorge2m.testmaker.conf.Log4jTM;
 
 public class BrowserStackRestClient extends JaxRsClient {
 
-	private final static String APIEndpoint = "https://api.browserstack.com/automate/";
+	private static final String APIEndpoint = "https://api.browserstack.com/automate/";
 	private final Client client;
 	
 	public BrowserStackRestClient(String user, String password) {

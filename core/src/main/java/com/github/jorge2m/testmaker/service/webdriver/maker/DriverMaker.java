@@ -18,8 +18,8 @@ public abstract class DriverMaker {
 	Channel channel = Channel.desktop;
 	boolean nettraffic = false;
 	
-	abstract public String getTypeDriver();
-	abstract public WebDriver build();
+	public abstract String getTypeDriver();
+	public abstract WebDriver build();
 	
 	public DriverMaker setChannel(Channel channel) {
 		this.channel = channel;
@@ -32,8 +32,7 @@ public abstract class DriverMaker {
 	}
 	
 	Proxy getProxyForNettraffic() {
-		Proxy seleniumProxy = ClientUtil.createSeleniumProxy(ReverseProxy.getProxy());
-		return seleniumProxy;
+		return ClientUtil.createSeleniumProxy(ReverseProxy.getProxy());
 	}
 
 	LoggingPreferences getLogsWebDriverEnabled() {

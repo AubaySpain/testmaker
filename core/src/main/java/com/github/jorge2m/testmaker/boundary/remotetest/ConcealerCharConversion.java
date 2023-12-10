@@ -22,7 +22,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
  */
 public class ConcealerCharConversion {
 
-	private final static List<String> listWrongIsoChars = Arrays.asList(
+	private static final List<String> LIST_WRONG_ISO_CHARS = Arrays.asList(
 		"Â", "Â¡", "Â¢", "Â£", "Â¤", "Â¥", "Â¦", "Â§", "Â¨", "Â©", "Âª", "Â«", "Â", "Â­", "Â®", "Â¯", "Â°", "Â±", "Â²", 
 		"Â³", "Â´", "Âµ", "Â", "Â·", "Â¸", "Â¹", "Âº", "Â»", "Â¼", "Â½", "Â¾", "Â¿", "Ã€", "Ã",	"Ã‚", "Ãƒ", "Ã„", "Ã…", 
 		"Ã†", "Ã‡", "Ãˆ", "Ã‰", "ÃŠ", "Ã‹", "ÃŒ", "ÃŽ",	"Ã‘", "Ã’", "Ã“", "Ã”", "Ã•", "Ã–", "Ã—", "Ã˜", "Ã™", "Ãš", "Ã›", 
@@ -67,7 +67,7 @@ public class ConcealerCharConversion {
 	}
 	
 	private static boolean isConvertedOk(String text) {
-		for (String item : listWrongIsoChars) {
+		for (String item : LIST_WRONG_ISO_CHARS) {
 			if (text.contains(item)) {
 				return false;
 			}

@@ -77,20 +77,14 @@ public class FilterSuites {
 	}
 	
 	private boolean filterMatches(SuiteBean suiteData) {
-		if (suite!=null) {
-			if (suite.compareTo(suiteData.getName())!=0) {
-				return false;
-			}
+		if (suite!=null && suite.compareTo(suiteData.getName())!=0) {
+			return false;
 		}
-		if (channel!=null) {
-			if (channel!=suiteData.getChannel()) {
-				return false;
-			}
+		if (channel!=null && channel!=suiteData.getChannel()) {
+			return false;
 		}
-		if (application!=null) {
-			if (application.compareTo(suiteData.getApp())!=0) {
-				return false;
-			}
+		if (application!=null && application.compareTo(suiteData.getApp())!=0) {
+			return false;
 		}
 		if (state!=null && state!=SetSuiteRun.all) {
 			if (state==SetSuiteRun.running && suiteData.getStateExecution().isFinished()) {
@@ -109,14 +103,13 @@ public class FilterSuites {
 	
 	List<SuiteBean> getListSuitesInMemory() {
 		List<SuiteBean> listSuitesToReturn = new ArrayList<>();
-		for (SuiteTM suite : SuitesExecuted.getSuitesExecuted()) {
-			listSuitesToReturn.add(suite.getSuiteBean());
+		for (SuiteTM suiteExecuted : SuitesExecuted.getSuitesExecuted()) {
+			listSuitesToReturn.add(suiteExecuted.getSuiteBean());
 		}
 		listSuitesToReturn.sort(Comparator.comparing(SuiteBean::getIdExecSuite).reversed());
 		return listSuitesToReturn;
 	}
 	
-	//TODO tests
 	List<SuiteBean> getListSuitesInMemoryBetween(Date fechaDesde, Date fechaHasta) {
 		List<SuiteBean> listSuitesReturn = new ArrayList<>();
 		List<SuiteBean> listSuites = getListSuitesInMemory();
@@ -132,10 +125,7 @@ public class FilterSuites {
 		if (fechaDesde!=null && suite.getInicioDate().before(fechaDesde)) {
 			return false;
 		}
-		if (fechaHasta!=null && suite.getInicioDate().after(fechaHasta)) {
-			return false;
-		}
-		return true;
+		return (fechaHasta==null || !suite.getInicioDate().after(fechaHasta));
 	}
 	
 }

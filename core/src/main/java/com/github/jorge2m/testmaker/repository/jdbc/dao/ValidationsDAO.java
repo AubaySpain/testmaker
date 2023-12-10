@@ -19,7 +19,7 @@ public class ValidationsDAO {
 	
 	private final ConnectorBD connector;
 	
-	private final static String lineSeparator = System.lineSeparator();
+	private static final String LINE_SEPARATOR = System.lineSeparator();
 	
 	public static String SQLSelectValidationsStep =
 		"SELECT " +
@@ -111,13 +111,13 @@ public class ValidationsDAO {
 				insert.setString(7, validations.getStateValidation().toString());
 				
 				List<String> listTextChecks = validations.getTextValidations();
-				insert.setString(8, listTextChecks.stream().collect(Collectors.joining(lineSeparator))); 
+				insert.setString(8, listTextChecks.stream().collect(Collectors.joining(LINE_SEPARATOR))); 
 				
 				List<State> listStateChecks = validations.getListStateValidations();
-				insert.setString(9, listStateChecks.stream().map(e -> e.toString()).collect(Collectors.joining(lineSeparator)));
+				insert.setString(9, listStateChecks.stream().map(e -> e.toString()).collect(Collectors.joining(LINE_SEPARATOR)));
 				
 				List<Boolean> listOvercomedChecks = validations.getListOvercomedValidations();
-				insert.setString(10, listOvercomedChecks.stream().map(e -> e.toString()).collect(Collectors.joining(lineSeparator)));
+				insert.setString(10, listOvercomedChecks.stream().map(e -> e.toString()).collect(Collectors.joining(LINE_SEPARATOR)));
 				
 				insert.executeUpdate();
 			} catch (SQLException ex) {
@@ -141,12 +141,12 @@ public class ValidationsDAO {
 			return listChecksReturn;
 		}
 		
-		checksDescr = Arrays.asList(checksStr.split(lineSeparator));
+		checksDescr = Arrays.asList(checksStr.split(LINE_SEPARATOR));
 		if (levelsStr!=null && "".compareTo(levelsStr)!=0) {
-			levels = Arrays.asList(levelsStr.split(lineSeparator));
+			levels = Arrays.asList(levelsStr.split(LINE_SEPARATOR));
 		}
 		if (overcomedsStr!=null && "".compareTo(overcomedsStr)!=0) {
-			List<String> listOvercomeds = Arrays.asList(overcomedsStr.split(lineSeparator));
+			List<String> listOvercomeds = Arrays.asList(overcomedsStr.split(LINE_SEPARATOR));
 			for (String overcomedStr : listOvercomeds) {
 				if ("true".compareTo(overcomedStr)==0) {
 					overcomeds.add(Boolean.TRUE);

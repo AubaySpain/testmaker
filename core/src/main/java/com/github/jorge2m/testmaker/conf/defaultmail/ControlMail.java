@@ -23,34 +23,34 @@ public class ControlMail {
         MimeMessage message = new MimeMessage(Session.getDefaultInstance(properties,authenticator));
         message.setFrom(new InternetAddress(info.getFrom()));
         if (info.getTo() != null) {
-            InternetAddress toRecipients[] = new InternetAddress[info.getTo().length];
-            for (int i = 0; i < info.getTo().length; i++)
+            InternetAddress[] toRecipients = new InternetAddress[info.getTo().length];
+            for (int i = 0; i < info.getTo().length; i++) {
                 toRecipients[i] = new InternetAddress(info.getTo()[i]);
-            
+            }
             message.setRecipients(MimeMessage.RecipientType.TO, toRecipients);
         }
 
         if (info.getCC() != null) {
-            InternetAddress CCRecipients[] = new InternetAddress[info.getCC().length];
-            for (int i = 0; i < info.getCC().length; i++)
+            InternetAddress[] CCRecipients = new InternetAddress[info.getCC().length];
+            for (int i = 0; i < info.getCC().length; i++) {
                 CCRecipients[i] = new InternetAddress(info.getCC()[i]);
-            
+            }
             message.setRecipients(MimeMessage.RecipientType.CC, CCRecipients);
         }
 
         if (info.getCCO() != null) {
-            InternetAddress CCORecipients[] = new InternetAddress[info.getCCO().length];
-            for (int i = 0; i < info.getCCO().length; i++)
+            InternetAddress[] CCORecipients = new InternetAddress[info.getCCO().length];
+            for (int i = 0; i < info.getCCO().length; i++) {
                 CCORecipients[i] = new InternetAddress(info.getCCO()[i]);
-            
+            }
             message.setRecipients(MimeMessage.RecipientType.BCC, CCORecipients);
         }
 
         if (info.getReplyTo() != null) {
-            InternetAddress replyTo[] = new InternetAddress[info.getReplyTo().length];
-            for (int i = 0; i < info.getReplyTo().length; i++)
+            InternetAddress[] replyTo = new InternetAddress[info.getReplyTo().length];
+            for (int i = 0; i < info.getReplyTo().length; i++) {
                 replyTo[i] = new InternetAddress(info.getReplyTo()[i]);
-            
+            }
             message.setReplyTo(replyTo);
         }
         

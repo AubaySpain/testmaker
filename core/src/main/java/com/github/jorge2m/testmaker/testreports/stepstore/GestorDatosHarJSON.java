@@ -46,12 +46,10 @@ public class GestorDatosHarJSON {
         while (iteratorEntries.hasNext()) {
             JSONObject entrieJSON = (JSONObject)iteratorEntries.next();
             JSONObject requestJSON = (JSONObject)entrieJSON.get("request");
-            if (requestJSON.get("url")!=null) {
-                if ("".compareTo(urlFilter1)==0 || requestJSON.get("url").toString().indexOf(urlFilter1)>0) {
-                    if ("".compareTo(urlFilter2)==0 || ("".compareTo(urlFilter2)!=0 && requestJSON.get("url").toString().indexOf(urlFilter2)>0)) {
-                        entriesFilteredToReturn.add(entrieJSON);
-                    }
-                }
+            if (requestJSON.get("url")!=null &&
+               ("".compareTo(urlFilter1)==0 || requestJSON.get("url").toString().indexOf(urlFilter1)>0) &&
+               ("".compareTo(urlFilter2)==0 || ("".compareTo(urlFilter2)!=0 && requestJSON.get("url").toString().indexOf(urlFilter2)>0))) {
+               entriesFilteredToReturn.add(entrieJSON);
             }
         }
 	    

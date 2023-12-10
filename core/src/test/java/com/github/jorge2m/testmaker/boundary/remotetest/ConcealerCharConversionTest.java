@@ -13,11 +13,11 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public class ConcealerCharConversionTest {
 
-	private final static String TestCaseDescr = "DescripciÃ³n del TestCase";
-	private final static String StepDescr = "DescripciÃ³n step Ãmbitos";
-	private final static String StepResExpected = "Codificación correcta";
-	private final static String Check1Descr = "DescripciÃ³n check1 MÃ©ritos";
-	private final static String Check2Descr = "Descripción check2 correcta";
+	private static final String TEST_CASE_DESCR = "DescripciÃ³n del TestCase";
+	private static final String STEP_DESCR = "DescripciÃ³n step Ãmbitos";
+	private static final String STEP_RES_EXPECTED = "Codificación correcta";
+	private static final String CHECK1_DESCR = "DescripciÃ³n check1 MÃ©ritos";
+	private static final String CHECK2_DESCR = "Descripción check2 correcta";
 	
 	@Test
 	public void testConceal() {
@@ -33,26 +33,26 @@ public class ConcealerCharConversionTest {
 		Check check2 = checks.get(1);
 		
 		//Then
-		assertTrue("Descripción del TestCase".compareTo(testCase.getDescription())==0);
-		assertTrue("Descripción step Ámbitos".compareTo(step.getDescripcion())==0);
-		assertTrue(StepResExpected.compareTo(step.getResExpected())==0);
-		assertTrue("Descripción check1 Méritos".compareTo(check1.getDescription())==0);
-		assertTrue(Check2Descr.compareTo(check2.getDescription())==0);
+		assertEquals("Descripción del TestCase", testCase.getDescription());
+		assertEquals("Descripción step Ámbitos", step.getDescripcion());
+		assertEquals(STEP_RES_EXPECTED, step.getResExpected());
+		assertEquals("Descripción check1 Méritos", check1.getDescription());
+		assertEquals(CHECK2_DESCR, check2.getDescription());
 	}
 
 	private TestCaseBean makeTestCase() {
 		TestCaseBean testCase = new TestCaseBean();
-		testCase.setDescription(TestCaseDescr);
+		testCase.setDescription(TEST_CASE_DESCR);
 		
 		StepTM step = new StepTM();
-		step.setDescripcion(StepDescr);
-		step.setResExpected(StepResExpected);
+		step.setDescripcion(STEP_DESCR);
+		step.setResExpected(STEP_RES_EXPECTED);
 		
 		ChecksTM checks = new ChecksTM();
 		Check check1 = new Check();
 		Check check2 = new Check();
-		check1.setDescription(Check1Descr);
-		check2.setDescription(Check2Descr);
+		check1.setDescription(CHECK1_DESCR);
+		check2.setDescription(CHECK2_DESCR);
 		
 		testCase.setListStep(Arrays.asList(step));
 		step.setListChecksTM(Arrays.asList(checks));

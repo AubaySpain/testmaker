@@ -13,8 +13,8 @@ public class ReverseProxy {
 	private static ThreadLocal<BrowserMobProxy> proxyInThread;
 	private static LinkedList<Integer> listPortsAssigned; 
 	
-	private final static int INIT_PORT = 1000;
-	private final static int MAX_SIZE_LIST_PORTS = 25;
+	private static final int INIT_PORT = 1000;
+	private static final int MAX_SIZE_LIST_PORTS = 25;
 	
 	public static BrowserMobProxy getProxy() {
 		return makeProxyInThread();

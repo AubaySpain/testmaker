@@ -36,6 +36,8 @@ import static com.github.jorge2m.testmaker.domain.StateExecution.*;
 
 public class TestMaker {
 	
+	private TestMaker() {}
+	
 	private static RepositoryI repository = new RepositorySQLite(); 
 	
 	public static void run(SuiteTM suite, boolean async) {

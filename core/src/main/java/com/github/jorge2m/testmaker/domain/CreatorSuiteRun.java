@@ -15,9 +15,9 @@ public abstract class CreatorSuiteRun {
 	
 	public abstract SuiteMaker getSuiteMaker() throws Exception;
 	
-	public CreatorSuiteRun() throws Exception { }
+	protected CreatorSuiteRun() throws Exception { }
 	
-	public CreatorSuiteRun(InputParamsTM inputParams) throws Exception {
+	protected CreatorSuiteRun(InputParamsTM inputParams) throws Exception {
 		this.inputParams = inputParams;
 		this.suiteMaker = getSuiteMaker();
 	}

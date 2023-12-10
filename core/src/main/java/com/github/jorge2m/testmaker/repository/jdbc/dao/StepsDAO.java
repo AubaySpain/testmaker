@@ -20,7 +20,7 @@ public class StepsDAO {
 	
 	private final ConnectorBD connector;
 	
-	public static String SQLSelectStepsTestCase =
+	private static final String SQL_SELECT_STEPS_TESTCASE =
 		"SELECT " +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -40,7 +40,7 @@ public class StepsDAO {
 			"TEST=? AND " +
 			"METHOD=? ";
 
-	public static String SQLInsertStep = 
+	private static final String SQL_INSERT_STEP = 
 		"INSERT INTO STEPS (" +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -57,39 +57,32 @@ public class StepsDAO {
 			"STATE ) " + 
 		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
-	public static String SQLDeleteSteps = 
+	private static final String SQL_DELETE_STEPS = 
 		"DELETE FROM STEPS " + 
 		"WHERE IDEXECSUITE = ?";
 		
-//    public static String SQLDeleteHistorical = 
-//        "DELETE FROM METHODS " +
-//        "WHERE INICIO < ?;";
-
 	public StepsDAO(ConnectorBD connector) {
 		this.connector = connector;
 	}
 
 	public List<StepTM> getListSteps(String idSuite, String testRun, String testCase) 
-	throws Exception {
+			throws Exception {
 		List<StepTM> listSteps = new ArrayList<>();
 		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(SQLSelectStepsTestCase)) {
+			var select = conn.prepareStatement(SQL_SELECT_STEPS_TESTCASE)) {
 			select.setString(1, idSuite);
 			select.setString(2, testRun);
 			select.setString(3, testCase);
-			try (ResultSet resultado = select.executeQuery()) {
-				while (resultado.next()) {
-					listSteps.add(getStep(resultado, idSuite, testRun, testCase));
+			try (var result = select.executeQuery()) {
+				while (result.next()) {
+					listSteps.add(getStep(result, idSuite, testRun, testCase));
 				}
 			}
 			return listSteps;
 		} 
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 
 	private StepTM getStep(ResultSet rowStep, String idSuite, String testRun, String testCase) throws Exception {
@@ -118,7 +111,7 @@ public class StepsDAO {
 
 	public void insertStep(StepTM step) {
 		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement insert = conn.prepareStatement(SQLInsertStep)) {
+			try (var insert = conn.prepareStatement(SQL_INSERT_STEP)) {
 				SuiteBean suite = step.getSuiteParent().getSuiteBean(); 
 				insert.setString(1, suite.getIdExecSuite());
 				insert.setString(2, suite.getName()); 
@@ -138,25 +131,20 @@ public class StepsDAO {
 				throw new RuntimeException(ex);
 			}
 		}
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 
 	public void deleteSteps(String idExecSuite) {
 		try (Connection conn = connector.getConnection();
-			PreparedStatement delete = conn.prepareStatement(SQLDeleteSteps)) {
+			PreparedStatement delete = conn.prepareStatement(SQL_DELETE_STEPS)) {
 			delete.setString(1, idExecSuite);
 			delete.executeUpdate();
 		} 
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	} 
+	
 }

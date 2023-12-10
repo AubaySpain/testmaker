@@ -87,37 +87,28 @@ public class AlertsDAO {
 				throw new RuntimeException(ex);
 			}
 		}
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}	
 	
 	public List<DataAlert> getAlerts(Check check, ChecksTM checksParent) {
 		List<DataAlert> listAlerts = new ArrayList<>();
-		DataAlert dataAlert = DataAlert.of(check, checksParent);
-		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(getSqlSelectAlerts(dataAlert))) {
+		var dataAlert = DataAlert.of(check, checksParent);
+		try (var conn = connector.getConnection();
+			var select = conn.prepareStatement(getSqlSelectAlerts(dataAlert))) {
 			select.setString(1, dataAlert.getCheckDescription());
 			select.setString(2, dataAlert.getMethodValidation());
-			try (ResultSet resultado = select.executeQuery()) {
-				while (resultado.next()) {
-					listAlerts.add(getAlert(resultado));
+			try (var result = select.executeQuery()) {
+				while (result.next()) {
+					listAlerts.add(getAlert(result));
 				}
 			}
 			return listAlerts;
 		} 
-		catch (SQLException ex) {
+		catch (SQLException | ParseException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ParseException ex) {
-			throw new RuntimeException(ex);
-		}		
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 	
 	private DataAlert getAlert(ResultSet rowSuite) throws SQLException, ParseException {

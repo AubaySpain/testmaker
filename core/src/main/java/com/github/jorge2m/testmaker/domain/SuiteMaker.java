@@ -20,7 +20,7 @@ import com.github.jorge2m.testmaker.testreports.html.Reporter;
 
 public abstract class SuiteMaker {
 
-	private final static int DEFAULT_THREAD_COUNT = 3;
+	private static final int DEFAULT_THREAD_COUNT = 3;
 	
 	private final String idSuiteExecution;
 	private final InputParamsTM inputData;
