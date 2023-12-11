@@ -79,12 +79,9 @@ public class SuitesDAO {
 			}
 			return listSuites;
 		} 
-		catch (SQLException ex) {
+		catch (SQLException | ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		} 
-		catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 
 	public SuiteBean getSuite(String suiteExecId) throws Exception {
@@ -130,7 +127,7 @@ public class SuitesDAO {
 		suiteData.setUrlBase(rowSuite.getString("URLBASE"));
 		suiteData.setPathReportHtml(rowSuite.getString("PATH_REPORT"));
 		suiteData.setUrlReportHtml(rowSuite.getString("URL_REPORT"));
-		suiteData.setStateExecution(StateExecution.valueOf(rowSuite.getString("STATE_EXECUTION")));
+		suiteData.setStateExecution(StateExecution.from(rowSuite.getString("STATE_EXECUTION")));
 		
 		TestRunsDAO testRunsDAO = new TestRunsDAO(connector);
 		suiteData.setListTestRun(testRunsDAO.getListTestRuns(rowSuite.getString("IDEXECSUITE")));

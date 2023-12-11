@@ -6,7 +6,8 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public enum TestCaseEvidence {
-	EXCEPTION("Exception.txt", "exception.gif", "Exception info"); 
+	EXCEPTION("Exception.txt", "exception.gif", "Exception info"),
+	LOGS("Logs.txt", "logs.gif", "Logs");
 	
 	private String fileName;
 	private String nameIcon;

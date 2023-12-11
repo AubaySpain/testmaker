@@ -246,14 +246,6 @@ public class GenerateReports extends EmailableReporter {
 			var testCase = listTestCases.get(i);
 			var format = new SimpleDateFormat("HH:mm:ss");
 			
-			String linkTestException = "<br><br>";
-			if (TestCaseEvidence.EXCEPTION.fileExists(testCase)) {
-				linkTestException = 
-					"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.EXCEPTION) + "\" target=\"_blank\">" + 
-					"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.EXCEPTION.getNameIcon() + "\" title=\"" + TestCaseEvidence.EXCEPTION.getTagInfo() + "\"/>" +
-					"</a>";
-			}
-			
 			reportHtml+= 
 				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
@@ -261,7 +253,7 @@ public class GenerateReports extends EmailableReporter {
 				"  <td>" + testCase.getNumberSteps() + "</td>" + 
 				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
 				"  <td>" + testCase.getDurationMillis() + "</td>" +
-				"  <td>" + linkTestException + "</td>" +
+				"  <td>" + getLinksEvidencesTestCase(testCase) + "</td>" +
 				"  <td colspan=2>" + testCase.getDescription() + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getInicioDate()) + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getFinDate()) + "</td>" +
@@ -273,8 +265,31 @@ public class GenerateReports extends EmailableReporter {
 			if (timeoutStep) {
 				font = "<font class=\"timeout\">";
 			}
-			reportHtml = reportHtml.replaceAll(TagTimeout, font);
+			reportHtml = reportHtml.replace(TagTimeout, font);
 		}
+	}
+	
+	private String getLinksEvidencesTestCase(TestCaseBean testCase) {
+		String linksTest = "";
+		if (TestCaseEvidence.EXCEPTION.fileExists(testCase)) {
+			linksTest+= 
+				"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.EXCEPTION) + "\" target=\"_blank\">" + 
+				"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.EXCEPTION.getNameIcon() + "\" title=\"" + TestCaseEvidence.EXCEPTION.getTagInfo() + "\"/>" +
+				"</a>";
+		}
+		
+		if (TestCaseEvidence.LOGS.fileExists(testCase)) {
+			linksTest+=
+				"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.LOGS) + "\" target=\"_blank\">" + 
+				"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.LOGS.getNameIcon() + "\" title=\"" + TestCaseEvidence.LOGS.getTagInfo() + "\"/>" +
+				"</a>";
+		}
+		
+		if ("".compareTo(linksTest)==0) {
+			return "<br><br>";
+		}
+		
+		return linksTest; 
 	}
 
 	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {

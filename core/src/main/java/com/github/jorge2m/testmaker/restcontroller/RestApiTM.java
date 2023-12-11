@@ -82,7 +82,6 @@ public class RestApiTM {
 			var resultCheck = cmdLineAccess.checkOptionsValue();
 			if (resultCheck.isOk()) {
 				var creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
-				//creatorSuiteRun.setInputParams(inputParams);
 				var suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec());
 				return Response
 						.status(Response.Status.OK) 
@@ -142,17 +141,25 @@ public class RestApiTM {
 	
 	@DELETE
 	@Path("/suiterun/report")
-	public void deleteSuiteReports(
+	public Response deleteSuiteReports(
 					@QueryParam("suite") String suite,
 					@QueryParam("channel") String channel,
 					@QueryParam("application") String application,
 					@QueryParam("state") String state,
 					@QueryParam("date_from") String fechaDesde,
 					@QueryParam("date_to") String fechaHasta) throws Exception {
-		var listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
-		for (SuiteBean suiteBean : listSuites) {
-			purgeSuite(suiteBean);
-		}		
+		try {
+			var listSuites = getListSuitesRunData(suite, channel, application, state, fechaDesde, fechaHasta);
+			for (SuiteBean suiteBean : listSuites) {
+				purgeSuite(suiteBean);
+			}
+			return Response.ok().build();
+		}
+		catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error in server: " + e.getMessage())
+                    .build();
+		}
 	}
 	
 	private void purgeSuite(SuiteBean suite) throws IOException {
@@ -209,20 +216,26 @@ public class RestApiTM {
 			@QueryParam("date_from_old") String fechaDesdeOld, 
 			@QueryParam("date_to_old") String fechaHastaOld) throws Exception {
 		
-		var listSuites = getListSuitesRunData(
-				suite, channel, application, state, fechaDesde, fechaHasta);
-		List<SuiteBean> listSuitesOld = null;
-		if (fechaDesdeOld!=null && fechaHastaOld!=null) {
-			listSuitesOld = getListSuitesRunData(
-					suite, channel, application, state, fechaDesdeOld, fechaHastaOld);
+		try {
+			var listSuites = getListSuitesRunData(
+					suite, channel, application, state, fechaDesde, fechaHasta);
+			List<SuiteBean> listSuitesOld = null;
+			if (fechaDesdeOld!=null && fechaHastaOld!=null) {
+				listSuitesOld = getListSuitesRunData(
+						suite, channel, application, state, fechaDesdeOld, fechaHastaOld);
+			}
+			
+			var sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
+			boolean sendedOk = sender.send(listSuites, listSuitesOld);
+			if (!sendedOk) {
+				throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
+			}
+			return Response.ok().build();
+		} catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error in server: " + e.getMessage())
+                    .build();
 		}
-		
-		var sender = new SenderReportByMailAdapter(user, password, getMails(toMails), getMails(ccMails), host);
-		boolean sendedOk = sender.send(listSuites, listSuitesOld);
-		if (!sendedOk) {
-			throw new WebApplicationException("Problem sending email", Response.Status.INTERNAL_SERVER_ERROR);
-		}
-		return Response.ok().build();
 		
 	}
 	
@@ -244,22 +257,20 @@ public class RestApiTM {
 						   @QueryParam("state") String state,
 						   @QueryParam("date_from") String fechaDesde,
 						   @QueryParam("date_to") String fechaHasta) throws Exception {
-		if (channel!=null) {
-			if (!enumContains(Channel.class, channel)) {
-				throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("Parameter 'channel' incorrect. Possible values: " + Arrays.asList(Channel.values()))
-					.build());
-			}
+		if (channel!=null && !enumContains(Channel.class, channel)) {
+			throw new WebApplicationException(Response
+				.status(Response.Status.BAD_REQUEST)
+				.entity("Parameter 'channel' incorrect. Possible values: " + Arrays.asList(Channel.values()))
+				.build());
 		}
-		if (state!=null) {
-			if (!enumContains(SetSuiteRun.class, state)) {
-				throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("Parameter 'state' incorrect. Possible values: " + Arrays.asList(SetSuiteRun.values()))
-					.build());
-			}
+		
+		if (state!=null && !enumContains(SetSuiteRun.class, state)) {
+			throw new WebApplicationException(Response
+				.status(Response.Status.BAD_REQUEST)
+				.entity("Parameter 'state' incorrect. Possible values: " + Arrays.asList(SetSuiteRun.values()))
+				.build());
 		}
+		
 		Date dateDesde = null;
 		if (fechaDesde!=null) {
 			try {
@@ -450,8 +461,7 @@ public class RestApiTM {
 
 	private Date getFecha(String fecha, SimpleDateFormat fechaFormat) {
 		try {
-			Date date = fechaFormat.parse(fecha);
-			return date;
+			return fechaFormat.parse(fecha);
 		}
 		catch (ParseException e) {
 			return null;

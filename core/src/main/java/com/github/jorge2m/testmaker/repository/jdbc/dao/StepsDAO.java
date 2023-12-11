@@ -97,7 +97,7 @@ public class StepsDAO {
 		Date dateFin = Utils.getDateFormat(ToMillis).parse(rowStep.getString("FIN"));
 		stepData.setTimeInicio(dateFin.getTime());
 		
-		stepData.setState(StateExecution.valueOf(rowStep.getString("STATE")));
+		stepData.setState(StateExecution.from(rowStep.getString("STATE")));
 		
 		ValidationsDAO validatiosnDAO = new ValidationsDAO(connector);
 		stepData.setListChecksTM(validatiosnDAO.getListValidations(

@@ -5,14 +5,21 @@ import java.io.StringWriter;
 
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
-public class ExceptionStorer extends TestCaseEvidenceStorer {
+public class ExceptionStorer extends TestCaseEvidenceStorerBase {
 
-	public ExceptionStorer() {
-		super(TestCaseEvidence.EXCEPTION);
+	public ExceptionStorer(TestCaseTM testcase) {
+		super(TestCaseEvidence.EXCEPTION, testcase);
 	}
 	
 	@Override
-	protected String captureContent(TestCaseTM testcase) {
+	protected void store() {
+		String content = getContent();
+		if ("".compareTo(content)!=0) {
+			storeInFile(content);
+		}
+	}
+	
+	private String getContent() {
 		Throwable exception = testcase.getResult().getThrowable();
 		if (exception!=null) {
 			return getStackTraceString(exception);

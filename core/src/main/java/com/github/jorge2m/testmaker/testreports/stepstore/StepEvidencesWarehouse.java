@@ -84,7 +84,7 @@ public class StepEvidencesWarehouse {
 		
 		createPathForEvidencesStore(step);
 		for (StepEvidenceContent evidence : listStepEvidences) {
-			StepEvidenceStorer evidenceStorer = evidenceStorerFactory(evidence.getStepEvidence());
+			var evidenceStorer = evidenceStorerFactory(evidence.getStepEvidence());
 			if (evidenceStorer!=null) {
 				evidenceStorer.saveContentEvidenceInFile(
 					evidence.getContent(), 

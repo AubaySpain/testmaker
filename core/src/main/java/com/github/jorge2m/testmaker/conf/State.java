@@ -51,7 +51,7 @@ public enum State  {
     public static State from(String value) {
     	//Temporal If
     	if ("NOK".compareTo(value.toUpperCase())==0) {
-    		value = "KO";
+    		return KO;
     	}
     	
    		return State.valueOf(value.toUpperCase());

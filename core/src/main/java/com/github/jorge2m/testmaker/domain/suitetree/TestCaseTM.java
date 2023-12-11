@@ -22,7 +22,7 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
-import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidencesWarehouse;
+import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidencesStorer;
 
 public class TestCaseTM  {
 
@@ -37,10 +37,9 @@ public class TestCaseTM  {
 	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
 	private boolean exceptionInExecution = true;
-	private TestCaseEvidencesWarehouse evidencesWarehouse;
+	private String logs;
 
 	public TestCaseTM(ITestResult result) {
-		this.evidencesWarehouse = new TestCaseEvidencesWarehouse(this);
 		this.testRunParent = (TestRunTM)result.getTestContext().getCurrentXmlTest();
 		this.suiteParent = (SuiteTM)testRunParent.getSuite();
 		this.result = result;
@@ -108,15 +107,26 @@ public class TestCaseTM  {
 		return nameTest;
 	}
 	
+	public String getLogs() {
+		return logs;
+	}
+	public void setLogs(String logs) {
+		this.logs = logs;
+	}
+	
 	public void end(State state) {
-		storeEvidences();
-		stopTest();
+		finish();
 		this.state = state;
 	}
 	
-	public void end() {
-		stopTest();
+	public void end() {		
+		finish();
 		this.state = getStateFromSteps();
+	}
+	
+	private void finish() {
+		storeEvidences();
+		stopTest();		
 	}
 	
 	private void stopTest() {
@@ -294,6 +304,7 @@ public class TestCaseTM  {
 		testCaseBean.setIndexInTestRun(getIndexInTestRun());
 		testCaseBean.setResult(getStateResult());
 		testCaseBean.setStatusTng(getResult().getStatus());
+		testCaseBean.setLogs(getLogs());
 		
 		Date inicio = new Date(getResult().getStartMillis());
 		Date fin = new Date(getResult().getEndMillis());
@@ -338,7 +349,7 @@ public class TestCaseTM  {
 	}
 	
 	private void storeEvidences() {
-		evidencesWarehouse.captureAndStore();
+		new TestCaseEvidencesStorer(this).captureAndStore();
 	}
 	
 }

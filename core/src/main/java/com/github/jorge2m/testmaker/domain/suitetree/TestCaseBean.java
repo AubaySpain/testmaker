@@ -25,6 +25,7 @@ public class TestCaseBean {
 	private String testPathDirectory;
 	private String classSignature;
 	private String throwable;
+	private String logs;
 
 	public List<StepTM> getListStep() {
 		return listStep;
@@ -135,5 +136,11 @@ public class TestCaseBean {
 	public void setThrowable(String throwable) {
 		this.throwable = throwable;
 	}
+	public String getLogs() {
+		return logs;
+	}
+	public void setLogs(String logs) {
+		this.logs = logs;
+	}	
 
 }

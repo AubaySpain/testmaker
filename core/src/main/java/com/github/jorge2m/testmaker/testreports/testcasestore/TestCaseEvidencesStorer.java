@@ -4,13 +4,13 @@ import java.io.File;
 
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
-public class TestCaseEvidencesWarehouse {
+public class TestCaseEvidencesStorer {
 
 	private TestCaseTM testcase;
 
-	public TestCaseEvidencesWarehouse() {}
+	public TestCaseEvidencesStorer() {}
 	
-	public TestCaseEvidencesWarehouse(TestCaseTM testcase) {
+	public TestCaseEvidencesStorer(TestCaseTM testcase) {
 		this.testcase = testcase;
 	}
 	
@@ -29,18 +29,10 @@ public class TestCaseEvidencesWarehouse {
 	}
 	
 	private void storeEvidence(TestCaseEvidence evidence) {
-		var evidenceStorer = evidenceStorerFactory(evidence);
-		if (evidenceStorer!=null && !evidenceStorer.existsFileEvidence(testcase)) {
-			evidenceStorer.captureAndStoreContent(testcase);
-			evidenceStorer.storeContentInFile(testcase);
+		var evidenceStorer = TestCaseEvidenceStorerBase.evidenceStorerFactory(evidence, testcase);
+		if (evidenceStorer!=null && !evidenceStorer.existsFileEvidence()) {
+			evidenceStorer.store();
 		}
-	}
-	
-	private TestCaseEvidenceStorer evidenceStorerFactory(TestCaseEvidence evidence) {
-		if (evidence==TestCaseEvidence.EXCEPTION) {
-			return new ExceptionStorer(); 
-		}
-		return null;
 	}
 		
 }
