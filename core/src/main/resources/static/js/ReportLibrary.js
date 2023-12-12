@@ -130,32 +130,26 @@
 })(jQuery);
 
 //JORGE'S MODIFICATION - INI
-$(document).ready(function(){ //Función para ordenar alfabéticamente
+$(document).ready(function(){
 	$('.link-sort-table').click(function(e) {
 		var $sort = this;
 		var $table = $('#tableMain');
-		var $rows = $('tbody > tr.method',$table); //Seleccionamos sólo las líneas correspondientes a métodos-->
-		$rows.sort(function(a, b){ // Ordenamos los métodos según el valor del 2º td (nombre del caso de prueba)-->
-			var keyA = $('td:eq(1)',a).text();
-			var keyB = $('td:eq(1)',b).text();
+		var $rows = $('tbody > tr.method', $table);
+		$rows.sort(function(a, b){
+			var keyA = $('td:eq(1)', a).text();
+			var keyB = $('td:eq(1)', b).text();
 			var keyAres = $(a).attr('met');
 			var keyBres = $(b).attr('met');
-			if($($sort).hasClass('asc')){
-				return (keyA > keyB) ? 1 : 0;
+			if ($($sort).hasClass('asc')) {
+				return (keyA > keyB) ? 1 : -1;
 			} else {
-				if($($sort).hasClass('desc')){
-					return (keyA < keyB) ? 1 : 0;
-				}
-				else {
-					return (keyAres > keyBres) ? 1 : 0;
+				if ($($sort).hasClass('desc')) {
+					return (keyA < keyB) ? 1 : -1;
+				} else {
+					return (keyAres > keyBres) ? 1 : -1;
 				}
 			}
-		});
-		$.each($rows, function(index, row){
-		  var $myrow = $(row);
-		  var $rows2 = $("tbody > tr[met='" + $myrow.attr('met') +"']",$table);
-		  $table.append($rows2);
-		});
+		}).appendTo($table);
 		e.preventDefault();
 	});
 });
