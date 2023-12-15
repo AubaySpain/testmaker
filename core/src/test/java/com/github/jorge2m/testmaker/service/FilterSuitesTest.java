@@ -49,7 +49,7 @@ public class FilterSuitesTest {
 		assertTrue(listSuites.contains(suite3));
 		assertTrue(listSuites.contains(suite4));
 		assertTrue(listSuites.contains(suite5));
-		assertTrue(listSuites.size()==5);
+		assertEquals(5, listSuites.size());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class FilterSuitesTest {
 		//Then
 		assertTrue(listSuites.contains(suite2));
 		assertTrue(listSuites.contains(suite3));
-		assertTrue(listSuites.size()==2);
+		assertEquals(2, listSuites.size());
 	}
 	
 	@Test
@@ -78,7 +78,7 @@ public class FilterSuitesTest {
 		assertTrue(listSuites.contains(suite1));
 		assertTrue(listSuites.contains(suite2));
 		assertTrue(listSuites.contains(suite5));
-		assertTrue(listSuites.size()==3);
+		assertEquals(3, listSuites.size());
 	}
 	
 	@Test
@@ -94,7 +94,7 @@ public class FilterSuitesTest {
 		//Then
 		assertTrue(listSuites.contains(suite3));
 		assertTrue(listSuites.contains(suite4));
-		assertTrue(listSuites.size()==2);
+		assertEquals(2, listSuites.size());
 	}
 	
 	private FilterSuites createFilterSuitesSpy(FilterSuites filterSuites) throws Exception {

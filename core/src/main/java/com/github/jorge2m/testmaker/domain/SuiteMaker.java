@@ -55,7 +55,7 @@ public abstract class SuiteMaker {
 	
 	public List<TestMethod> getListTests() {
 		XmlTest testRun = getTestRun();
-		return (filterSuiteXML.getInitialTestCaseCandidatesToExecute(testRun));
+		return filterSuiteXML.getInitialTestCaseCandidatesToExecute(testRun);
 	}
 
 	public SuiteTM getSuite() {

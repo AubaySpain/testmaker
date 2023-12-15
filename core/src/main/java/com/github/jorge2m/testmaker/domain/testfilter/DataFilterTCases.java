@@ -9,7 +9,8 @@ public class DataFilterTCases {
 	private final Channel channel; 
 	private final Enum<?> app;
 	private List<String> groupsFilter;
-	private List<String> testCasesFilter;
+	private List<String> testCasesIncludedFilter;
+	private List<String> testCasesExcludeFilter;
 	
 	public DataFilterTCases(Channel channel, Enum<?> app) {
 		this.channel = channel;
@@ -22,12 +23,18 @@ public class DataFilterTCases {
 	public void setGroupsFilter(List<String> groupsFilter) {
 		this.groupsFilter = groupsFilter;
 	}
-	public List<String> getTestCasesFilter() {
-		return testCasesFilter;
+	public List<String> getTestCasesIncludedFilter() {
+		return testCasesIncludedFilter;
 	}
-	public void setTestCasesFilter(List<String> testCasesFilter) {
-		this.testCasesFilter = testCasesFilter;
+	public void setTestCasesIncludedFilter(List<String> testCasesIncludedFilter) {
+		this.testCasesIncludedFilter = testCasesIncludedFilter;
 	}
+	public List<String> getTestCasesExcludedFilter() {
+		return testCasesExcludeFilter;
+	}
+	public void setTestCasesExcludedFilter(List<String> testCasesExcludeFilter) {
+		this.testCasesExcludeFilter = testCasesExcludeFilter;
+	}	
 	public Channel getChannel() {
 		return channel;
 	}
@@ -37,23 +44,32 @@ public class DataFilterTCases {
 	
 	public boolean isSomeFilterActive() {
 		return (
-			isActiveFilterByTestCases() ||
+			isActiveFilterByTestCasesIncluded() ||
+			isActiveFilterByTestCasesExcluded() ||
 			isActiveFilterByGroups()
 		);
 	}
 	
-    public boolean isActiveFilterByTestCases() {
+    public boolean isActiveFilterByTestCasesIncluded() {
     	return (
-    		testCasesFilter!=null && 
-    		testCasesFilter.size()!=0 && 
-    		"*".compareTo(testCasesFilter.get(0))!=0
+    		testCasesIncludedFilter!=null && 
+    		!testCasesIncludedFilter.isEmpty() && 
+    		"*".compareTo(testCasesIncludedFilter.get(0))!=0
+    	);
+    }
+    
+    public boolean isActiveFilterByTestCasesExcluded() {
+    	return (
+    		testCasesExcludeFilter!=null && 
+    		!testCasesExcludeFilter.isEmpty() && 
+    		"*".compareTo(testCasesExcludeFilter.get(0))!=0
     	);
     }
     
     public boolean isActiveFilterByGroups() {
     	return (
     		groupsFilter!=null && 
-    		groupsFilter.size()!=0 && 
+    		!groupsFilter.isEmpty() && 
     		"*".compareTo(groupsFilter.get(0))!=0
     	);
     }

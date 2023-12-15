@@ -28,13 +28,13 @@ public class FilterTestsSuiteXML {
 
     private FilterTestsSuiteXML(DataFilterTCases dFilter) {
     	this.dFilter = dFilter;
-        GroupsChannelApps groupChannel = GroupsChannelApps.getNew(dFilter.getChannel(), dFilter.getApp());
+        var groupChannel = GroupsChannelApps.getNew(dFilter.getChannel(), dFilter.getApp());
         this.groupsToExclude = groupChannel.getGroupsExcluded();
         this.groupsToInclude = groupChannel.getGroupsIncluded();
     }
     
     public static FilterTestsSuiteXML getNew(DataFilterTCases dFilter) {
-    	return (new FilterTestsSuiteXML(dFilter));
+    	return new FilterTestsSuiteXML(dFilter);
     }
     
     public DataFilterTCases dFilter() {
@@ -89,8 +89,8 @@ public class FilterTestsSuiteXML {
     	if (!dFilter.isSomeFilterActive()) {
     		return listToFilter;
     	}
-    	List<TestMethod> listTestsFilreredByGroups = getListTestsFilteredByGroups(listToFilter);
-    	return (getListTestsFilteredByTestCases(listTestsFilreredByGroups));
+    	var listTestsFilreredByGroups = getListTestsFilteredByGroups(listToFilter);
+    	return getListTestsFilteredByTestCases(listTestsFilreredByGroups);
     }
     
     private List<TestMethod> getListTestsFilteredByGroups(List<TestMethod> listToFilter) {
@@ -110,20 +110,44 @@ public class FilterTestsSuiteXML {
     }
     
     private List<TestMethod> getListTestsFilteredByTestCases(List<TestMethod> listToFilter) {
-    	if (!dFilter.isActiveFilterByTestCases()) {
+    	if (!dFilter.isActiveFilterByTestCasesIncluded() && 
+    		!dFilter.isActiveFilterByTestCasesExcluded()) {
     		return listToFilter;
     	}
     	
-    	List<TestMethod> listTestsFiltered = new ArrayList<>();
-    	for (TestMethod testMethod : listToFilter) {
-    		String methodName = testMethod.getData().getTestCaseName();
-    		if (TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesFilter())) {
-    			listTestsFiltered.add(testMethod);
-    		}
+    	var listFilteredByTestCasesIncluded = filterByTestCasesIncluded(listToFilter);
+    	return filterByTestCasesExcluded(listFilteredByTestCasesIncluded);
+    }
+    
+    private List<TestMethod> filterByTestCasesIncluded(List<TestMethod> listToFilter) {
+    	if (!dFilter.isActiveFilterByTestCasesIncluded()) {
+    		return listToFilter;
     	}
     	
-    	return listTestsFiltered;
+        List<TestMethod> filteredList = new ArrayList<>(listToFilter);
+
+        filteredList.removeIf(testMethod -> {
+            String methodName = testMethod.getData().getTestCaseName();
+            return !TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesIncludedFilter());
+        });
+
+        return filteredList;
     }
+    
+    private List<TestMethod> filterByTestCasesExcluded(List<TestMethod> listToFilter) {
+    	if (!dFilter.isActiveFilterByTestCasesExcluded()) {
+    		return listToFilter;
+    	}
+    	
+        List<TestMethod> filteredList = new ArrayList<>(listToFilter);
+
+        filteredList.removeIf(testMethod -> {
+            String methodName = testMethod.getData().getTestCaseName();
+            return TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesExcludedFilter());
+        });
+
+        return filteredList;
+    }    
      
     private boolean groupsContainsAnyGroup(String[] groupsTest, List<String> possibleGroups) {
     	if (possibleGroups==null) {
@@ -148,7 +172,7 @@ public class FilterTestsSuiteXML {
             for (var xmlClass : testRun.getClasses()) {
                 var methodListToRun = getAllMethodsFilteredByInclude(xmlClass);
                 for (var method : methodListToRun) {
-                   List<Annotation> annotationsList = new ArrayList<>(Arrays.asList(method.getDeclaredAnnotations()));
+                   var annotationsList = new ArrayList<>(Arrays.asList(method.getDeclaredAnnotations()));
                    for (var annotation : annotationsList) {
                        if (annotation.annotationType()==org.testng.annotations.Test.class &&
                            ((Test)annotation).enabled()) {

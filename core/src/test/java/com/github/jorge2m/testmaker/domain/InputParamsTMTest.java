@@ -3,21 +3,20 @@ package com.github.jorge2m.testmaker.domain;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Test;
 
 public class InputParamsTMTest {
 
 	@Test
-	public void testGetListTestCasesData() {
+	public void testGetListTestCasesIncludedData() {
 		//Given
 		String listTestCaseItems = "FIC001,BOR001{1},COM001_Compra{10-5}";
-		InputParamsTM inputParams = new InputParamsBasic();
+		var inputParams = new InputParamsBasic();
 		inputParams.setListTestCaseItems(Arrays.asList(listTestCaseItems.split(",")));
 		
 		//When
-		List<TestCaseParams> listTestCaseData = inputParams.getListTestCasesData();
+		var listTestCaseData = inputParams.getListTestCasesIncludedData();
 		
 		//Then
 		assertEquals(listTestCaseData.size(), 3);
@@ -33,4 +32,5 @@ public class InputParamsTMTest {
 		assertEquals(listTestCaseData.get(2).getInvocationCount(), Integer.valueOf(10));
 		assertEquals(listTestCaseData.get(2).getThreadPoolSize(), Integer.valueOf(5));
 	}
+	
 }

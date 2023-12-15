@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.FormParam;
 
@@ -40,6 +41,7 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String URL_NAME_PARAM = "url";
 	public static final String EXEC_INIT_URL_NAME_PARAM = "execiniturl";
 	public static final String TCASE_NAME_PARAM = "tcases";
+	public static final String TCASE_EXCLUDED_NAME_PARAM = "tcasesexcluded";
 	public static final String GROUPS_NAME_PARAM = "groups";
 	public static final String RETRY_PARAM = "retry";
 	public static final String THREADS_PARAM = "threads";
@@ -111,6 +113,9 @@ public abstract class InputParamsTM implements Serializable {
 
 	@FormParam(TCASE_NAME_PARAM)
 	String tcasesCommaSeparated;
+	
+	@FormParam(TCASE_EXCLUDED_NAME_PARAM)
+	String tcasesexcludedCommaSeparated;
 	
 	@FormParam(RETRY_PARAM)
 	String retry;	
@@ -273,6 +278,13 @@ public abstract class InputParamsTM implements Serializable {
 			.pattern(PATTERN_TESTCASE_ITEM)
 			.desc("List of testcases comma separated (p.e. OTR001,BOR001,FIC001{6-2})")
 			.build());
+
+		optionsTM.add(OptionTMaker.builder(InputParamsTM.TCASE_EXCLUDED_NAME_PARAM)
+			.required(false)
+			.hasArgs()
+			.valueSeparator(',')
+			.desc("List of testcases excluded comma separated (p.e. OTR001,BOR001,FIC001)")
+			.build());		
 
 		optionsTM.add(OptionTMaker.builder(EXEC_INIT_URL_NAME_PARAM)
 			.required(false)
@@ -490,6 +502,7 @@ public abstract class InputParamsTM implements Serializable {
 		execiniturl = cmdLine.getOptionValue(EXEC_INIT_URL_NAME_PARAM);
 		driver = cmdLine.getOptionValue(DRIVER_NAME_PARAM);
 		serverDNS = cmdLine.getOptionValue(SERVER_DNS_NAME_PARAM);
+		
 		String[] groups = cmdLine.getOptionValues(GROUPS_NAME_PARAM);
 		if (groups!=null) {
 			groupsCommaSeparated = String.join(",", groups);
@@ -497,6 +510,10 @@ public abstract class InputParamsTM implements Serializable {
 		String[] tcases = cmdLine.getOptionValues(TCASE_NAME_PARAM);
 		if (tcases!=null) {
 			tcasesCommaSeparated = String.join(",", tcases);
+		}
+		String[] tcasesexcluded = cmdLine.getOptionValues(TCASE_EXCLUDED_NAME_PARAM);
+		if (tcasesexcluded!=null) {
+			tcasesexcludedCommaSeparated = String.join(",", tcasesexcluded);
 		}
 
 		retry = cmdLine.getOptionValue(RETRY_PARAM);
@@ -540,6 +557,7 @@ public abstract class InputParamsTM implements Serializable {
 		URL(URL_NAME_PARAM),
 		EXEC_INIT_URL(EXEC_INIT_URL_NAME_PARAM),
 		TCASES(TCASE_NAME_PARAM),
+		TCASES_EXCLUDED(TCASE_EXCLUDED_NAME_PARAM),
 		RETRY(RETRY_PARAM),
 		THREADS(THREADS_PARAM),
 		THREADS_RAMP(THREADS_RAMP_PARAM),
@@ -608,6 +626,8 @@ public abstract class InputParamsTM implements Serializable {
 			return this.execiniturl;
 		case TCASES:
 			return this.tcasesCommaSeparated;
+		case TCASES_EXCLUDED:
+			return this.tcasesexcludedCommaSeparated;			
 		case RETRY:
 			return this.retry;
 		case THREADS:
@@ -768,43 +788,56 @@ public abstract class InputParamsTM implements Serializable {
 		String[] tcases = listTestCases.toArray(new String[listTestCases.size()]);
 		tcasesCommaSeparated = String.join(",", tcases);
 	}
-	public List<String> getListTestCasesName() {
-		List<String> listTestCasesName = new ArrayList<>();
-		List<TestCaseParams> listTestCasesData = getListTestCasesData();
-		for (TestCaseParams testCaseData : listTestCasesData) {
-			listTestCasesName.add(testCaseData.getName());
-		}
-		return listTestCasesName;
+	
+	public List<String> getListTestCasesIncludedName() {
+        return getListTestCasesIncludedData().stream()
+                .map(TestCaseParams::getName)
+                .collect(Collectors.toList());
 	}
 	
-	public List<TestCaseParams> getListTestCasesData() {
-		List<TestCaseParams> listTestCaseData = new ArrayList<>();
-		for (String testCaseItem : getListTestCaseItems()) {
-			TestCaseParams testCaseData = new TestCaseParams();
-			Pattern pattern = Pattern.compile(PATTERN_TESTCASE_ITEM);
-			Matcher matcher = pattern.matcher(testCaseItem);
-			if (matcher.find()) {
-				testCaseData.setName(matcher.group(1));
-				if (matcher.group(2)!=null) {
-					testCaseData.setInvocationCount(Integer.valueOf(matcher.group(2)));
-					if (matcher.group(3)!=null) {
-						testCaseData.setThreadPoolSize(Integer.valueOf(matcher.group(3)));
-					}
-				}
-			} else {
-				testCaseData.setName(testCaseItem);
-			}
-			listTestCaseData.add(testCaseData);
-		}
-		return listTestCaseData; 
-	}
+    public List<TestCaseParams> getListTestCasesIncludedData() {
+        return getListTestCaseItems().stream()
+                .map(this::parseTestCaseItem)
+                .collect(Collectors.toList());
+    }
+    
+    private TestCaseParams parseTestCaseItem(String testCaseItem) {
+        Pattern pattern = Pattern.compile(PATTERN_TESTCASE_ITEM);
+        Matcher matcher = pattern.matcher(testCaseItem);
+        TestCaseParams testCaseData = new TestCaseParams();
+        if (matcher.find()) {
+            testCaseData.setName(matcher.group(1));
+            if (matcher.group(2) != null) {
+                testCaseData.setInvocationCount(Integer.valueOf(matcher.group(2)));
+                if (matcher.group(3) != null) {
+                    testCaseData.setThreadPoolSize(Integer.valueOf(matcher.group(3)));
+                }
+            }
+        } else {
+            testCaseData.setName(testCaseItem);
+        }
+        return testCaseData;
+    }    
+	
 	public TestCaseParams getTestCaseParams(String nameTestCase) {
-		for (TestCaseParams testCaseData : getListTestCasesData()) {
+		for (var testCaseData : getListTestCasesIncludedData()) {
 			if (TestNameUtils.isMethodNameTestCase(nameTestCase, testCaseData.getName())) {
 				return testCaseData;
 			}
 		}
 		return null;
+	}
+
+	public List<String> getListTestCaseExcludedItems() {
+		if (tcasesexcludedCommaSeparated!=null) {
+			String[] tcases = tcasesexcludedCommaSeparated.split(",");
+			return Arrays.asList(tcases);
+		}
+		return Arrays.asList();
+	}
+	public void setListTestCaseExcludedItems(List<String> listTestCasesExcluded) {
+		String[] tcases = listTestCasesExcluded.toArray(new String[listTestCasesExcluded.size()]);
+		tcasesexcludedCommaSeparated = String.join(",", tcases);
 	}
 	
 	public String getRetry() {
@@ -1059,7 +1092,8 @@ public abstract class InputParamsTM implements Serializable {
 	public DataFilterTCases getDataFilter() {
 		var dFilter = new DataFilterTCases(getChannel(), getApp());
 		dFilter.setGroupsFilter(getGroupsFilter());
-		dFilter.setTestCasesFilter(getListTestCasesName());
+		dFilter.setTestCasesIncludedFilter(getListTestCasesIncludedName());
+		dFilter.setTestCasesExcludedFilter(getListTestCaseExcludedItems());
 		return dFilter;
 	}
 

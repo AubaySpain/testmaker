@@ -234,7 +234,7 @@ public class TestAspect {
 		if (executeTestRemote(inputParams)) {
 			return false;
 		}
-		var listTestCaseFilter = inputParams.getListTestCasesName();
+		var listTestCaseFilter = inputParams.getListTestCasesIncludedName();
 		if (!inputParams.isTestExecutingInRemote() || 
 			listTestCaseFilter.isEmpty()) {
 			return true;

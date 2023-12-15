@@ -121,6 +121,22 @@ public class TestFilterTNGxmlTRun {
     }
     
     @Test
+    public void filterExcludeTestCases() {
+        InputParamsTM inputData = getInputDataBasic();
+        String testExpectedToBeExcluded = TestNGxmlStub.methodGroupGaleriaProductoToInclude;
+        inputData.setListTestCaseExcludedItems(Arrays.asList(testExpectedToBeExcluded));
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        
+        //Code to test
+        XmlTest testRun = testStub.getTestRun();
+        
+        String textExpectedToBeIncluded = TestNGxmlStub.methodGroupMiCuentaToInclude;
+        assertTrue("The new method " + testExpectedToBeExcluded + " is not included", !classIncludesMethod(testRun.getXmlClasses().get(0), testExpectedToBeExcluded));
+        assertTrue("The old method " + textExpectedToBeIncluded + " is included", classIncludesMethod(testRun.getXmlClasses().get(0), textExpectedToBeIncluded));
+        assertEquals("No remains dependencies-group", 0, testRun.getXmlDependencyGroups().size());
+    }    
+    
+    @Test
     public void filterIncludeTwoTestCaseByName_1groupRemains() {
         InputParamsTM inputData = getInputDataBasic();
         inputData.setListTestCaseItems(

@@ -43,13 +43,13 @@ public class TestMaker {
 	public static void run(SuiteTM suite, boolean async) {
 		File path = new File(suite.getPathDirectory());
 		path.mkdir();
-		logIniTestSuite(suite);
+		//logIniTestSuite(suite);
 		if (async) {
 			runInTestNgAsync(suite);
 		} else {
 			runInTestNgSync(suite);
 		}
-		logFinTestSuite(suite);
+		//logFinTestSuite(suite);
 	}
 	
 	private static void logIniTestSuite(SuiteTM suite) {
