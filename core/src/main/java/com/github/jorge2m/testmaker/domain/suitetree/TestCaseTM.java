@@ -310,7 +310,7 @@ public class TestCaseTM  {
 		Date fin = new Date(getResult().getEndMillis());
 		testCaseBean.setInicioDate(inicio);
 		testCaseBean.setFinDate(fin); 
-		testCaseBean.setDurationMillis((float)fin.getTime() - (float)inicio.getTime());
+		testCaseBean.setDurationMillis((float)(fin.getTime() - inicio.getTime()));
 		testCaseBean.setTestPathDirectory(getTestPathDirectory());
 		
 		testCaseBean.setNumberSteps(getListStep().size());
