@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State;
 
 public class ClickElement {
@@ -140,6 +141,7 @@ public class ClickElement {
 			}
 		}
 		catch (WebDriverException e) {
+			Log4jTM.getLogger().warn("Exception in webdriver click, trying to execute a JavaScript click...", e);
 			clickJavaScript(link);
 		}
 	}
@@ -200,8 +202,7 @@ public class ClickElement {
 		}
 		
 		public ClickElement build() {
-			ClickElement clickElement = new ClickElement(driver, webelement, by, state, typeOfClick, waitLink, waitLoadPage, x, y);
-			return clickElement;
+			return new ClickElement(driver, webelement, by, state, typeOfClick, waitLink, waitLoadPage, x, y);
 		}
 		public void exec() {
 			build().click();

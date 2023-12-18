@@ -227,7 +227,7 @@ public class GenerateReports extends EmailableReporter {
 				"  <td class=\"nowrap\">" + testRun.getName() + deviceInfo + "</td>" + 
 				"  <td>" + testRun.getNumberTestCases() + "</td>" + 
 				"  <td><div class=\"result" + testRun.getResult() + "\">" + testRun.getResult() + "</div></td>" + 
-				"  <td>" + testRun.getDurationMillis() + "</td>" + "               <td></td>" + 
+				"  <td>" + toSeconds(testRun.getDurationMillis()) + "</td>" + "               <td></td>" + 
 				"  <td></td>" + 
 				"  <td></td>" +
 				"  <td>" + format.format(testRun.getInicioDate()) + "</td>" + 
@@ -238,7 +238,7 @@ public class GenerateReports extends EmailableReporter {
 			pintaTestCasesOfTestRun(testRun);
 		}
 	}
-
+	
 	void pintaTestCasesOfTestRun(TestRunBean testRun) {
 		var listTestCases = testRun.getListTestCase();
 		String TagTimeout = "@TIMEOUTSTEP";
@@ -252,7 +252,7 @@ public class GenerateReports extends EmailableReporter {
 				"  <td class=\"nowrap\">" + testCase.getNameUnique() + "</td>" + 
 				"  <td>" + testCase.getNumberSteps() + "</td>" + 
 				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
-				"  <td>" + testCase.getDurationMillis() + "</td>" +
+				"  <td>" + toSeconds(testCase.getDurationMillis()) + "</td>" +
 				"  <td>" + getLinksEvidencesTestCase(testCase) + "</td>" +
 				"  <td colspan=2>" + testCase.getDescription() + "</td>" + 
 				"  <td>" + TagTimeout + format.format(testCase.getInicioDate()) + "</td>" + 
@@ -356,10 +356,10 @@ public class GenerateReports extends EmailableReporter {
 				timeout = true;
 			}
 			var format = new SimpleDateFormat("HH:mm:ss");
-			String diffInMilliesStr = String.valueOf(diffInMillies);
+			String diffInSecondsStr = toSeconds(diffInMillies);
 			String fechaFinStr = format.format(step.getHoraFin());
 			if (diffInMillies < 0) {
-				diffInMilliesStr = "?";
+				diffInSecondsStr = "?";
 				fechaFinStr = "?";
 			}
 
@@ -369,7 +369,7 @@ public class GenerateReports extends EmailableReporter {
 				"     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
 				"     <td>" + step.getNumChecksTM() + "</td>" + 
 				"     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
-				"     <td>" + diffInMilliesStr + "</td>" + 
+				"     <td>" + diffInSecondsStr + "</td>" + 
 				"     <td class=\"nowrap\">" + linkHardcopy + linkHtml + linkError + linkHarp + linkHar + "</td>" + 
 				"     <td>" + step.getDescripcion() + "</td>" + 
 				"     <td>" + step.getResExpected() + "</td>" +
@@ -488,6 +488,11 @@ public class GenerateReports extends EmailableReporter {
 			hostname = "Unknown";
 		}
 		return hostname;
+	}
+	
+	private String toSeconds(float millis) {
+	    float seconds = Math.round(millis / 100.0f) / 10.0f;
+	    return seconds + "s";
 	}
 	
 }
