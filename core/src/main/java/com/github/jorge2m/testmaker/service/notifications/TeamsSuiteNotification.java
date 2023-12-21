@@ -48,6 +48,10 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
 			var firstStep = listSteps.get(0);
 			var listChecks = getListChecks(firstStep, state);
 			if (!listChecks.isEmpty()) {
+				var checkNotOvercomed = getCheckNotOvercomed(listChecks);
+				if (checkNotOvercomed.isPresent()) {
+					return Optional.of(DataAlert.of(checkNotOvercomed.get(), firstStep));
+				}
 				return Optional.of(DataAlert.of(listChecks.get(0), firstStep));
 			}
 			if (state==KO) {
@@ -55,6 +59,15 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
 			}
 		}
 		return Optional.empty();
+    }
+    
+    private Optional<Check> getCheckNotOvercomed(List<Check> listChecks) {
+    	for (var check : listChecks) {
+    		if (!check.isOvercomed()) {
+    			return Optional.of(check);
+    		}
+    	}
+    	return Optional.empty();
     }
 	
     private List<Check> getListChecks(StepTM step, State state) {

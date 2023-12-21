@@ -47,6 +47,7 @@ import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers.ServerSubscriber;
+import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethodData;
 import com.github.jorge2m.testmaker.service.TestMaker;
@@ -126,6 +127,18 @@ public class RestApiTM {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
+	
+	@GET
+	@Path("/suiterun/{idexecution}/status")
+	@Produces("application/json")
+	public StateExecution getSuiteRunStatus(@PathParam("idexecution") String idSuiteExec) throws Exception {
+		var suite = TestMaker.getSuite(idSuiteExec);
+		if (suite!=null) {
+			return suite.getStateExecution();
+		} else {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+	}	
 	
 	@GET
 	@Path("/suiterun/{idexecution}/report")
