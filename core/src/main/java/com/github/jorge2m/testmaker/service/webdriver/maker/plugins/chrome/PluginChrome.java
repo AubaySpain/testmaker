@@ -2,7 +2,6 @@ package com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -15,12 +14,15 @@ import com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.St
 
 public abstract class PluginChrome { 
 
-    public String folderInResources = "pluginsBrowser"; 
-    public static enum typePluginChrome { HTML5AutoplayBlocker }
+    public static final String FLODER_IN_RESOURCES = "pluginsBrowser"; 
     
-    public void addPluginToChrome(ChromeOptions options, String fileNamePlugin) {
-    	String pathPlugin = "/" + this.folderInResources + "/" + fileNamePlugin;
-        try (InputStream inputStream = getClass().getResourceAsStream(pathPlugin)) {
+    public enum TypePluginChrome { HTML5_AUTOPLAY_BLOCKER, MOVAVI_SCREEN_RECORDER }
+    
+    protected abstract String getCrxFileName();
+    
+    public void addPluginToChrome(ChromeOptions options) {
+    	String pathPlugin = "/" + FLODER_IN_RESOURCES + "/" + getCrxFileName();
+        try (var inputStream = getClass().getResourceAsStream(pathPlugin)) {
             File tmpFile = File.createTempFile("pluginChrome", "temp.crx");
             tmpFile.deleteOnExit();
             FileUtils.copyInputStreamToFile(inputStream, tmpFile);
@@ -60,5 +62,4 @@ public abstract class PluginChrome {
         //driver.switchTo().window(windowHandle);
     }
     
-    public abstract void addPluginToChrome(ChromeOptions options);
 }

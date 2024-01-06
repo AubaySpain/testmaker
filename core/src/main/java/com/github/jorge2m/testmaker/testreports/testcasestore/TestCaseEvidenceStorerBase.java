@@ -12,6 +12,10 @@ public abstract class TestCaseEvidenceStorerBase {
 	protected final TestCaseTM testcase;
 
 	public static TestCaseEvidenceStorerBase evidenceStorerFactory(TestCaseEvidence evidence, TestCaseTM testcase) {
+		if (evidence==TestCaseEvidence.VIDEO) {
+			return new VideoStorer(testcase);
+		}
+		
 		if (evidence==TestCaseEvidence.EXCEPTION) {
 			return new ExceptionStorer(testcase); 
 		}

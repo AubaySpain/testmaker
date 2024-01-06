@@ -9,13 +9,12 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
-import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDesktopI;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackMobilI;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
-
 
 public class BrowserStackDriverMaker extends DriverMaker {
 	
@@ -25,12 +24,12 @@ public class BrowserStackDriverMaker extends DriverMaker {
 	String userBStack;
 	String passBStack;
 	
-	public BrowserStackDriverMaker(TestRunTM testRun) {
-		this.inputParams = testRun.getSuiteParent().getInputParams();
+	public BrowserStackDriverMaker(TestCaseTM testCase) {
+		this.inputParams = testCase.getSuiteParent().getInputParams();
 		buildProject = 
-			testRun.getSuite().getName() + 
-			" (" + testRun.getSuiteParent().getIdExecution() + ")";
-		sessionName = testRun.getName();
+			testCase.getSuiteParent().getName() + 
+			" (" + testCase.getSuiteParent().getIdExecution() + ")";
+		sessionName = testCase.getTestRunParent().getName();
 		setChannel(inputParams.getChannel());
 	}
 

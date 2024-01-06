@@ -214,7 +214,7 @@ public class TestAspect {
 		var methodSignature = (MethodSignature)joinPoint.getSignature();
 		if (executeTestLocal(inputParams, methodSignature.getMethod())) {
 			Test testAnnotation = getTestAnnotation(joinPoint);
-			testCase.makeInitObjects(testAnnotation.create());
+			testCase.init(testAnnotation.create());
 			return joinPoint.proceed();
 		}
 		return null;

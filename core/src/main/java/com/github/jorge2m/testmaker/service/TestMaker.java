@@ -189,7 +189,7 @@ public class TestMaker {
 		}
 		getTestCase()
 			.orElseThrow(NoSuchElementException::new)
-			.makeInitObjects(InitObject.WebDriver);
+			.init(InitObject.WebDriver);
 		
 	    return getDriverTestCase();
 	}

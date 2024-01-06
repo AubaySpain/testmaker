@@ -1,0 +1,40 @@
+{
+   "action": {
+      "default_icon": "icon.png",
+      "default_title": "Sgreen: Record Screen"
+   },
+   "author": "https://github.com/maltoze",
+   "commands": {
+     "_execute_action": {
+       "suggested_key": {
+         "windows": "Alt+P",
+         "mac": "Command+Shift+Y",
+         "chromeos": "Alt+P",
+         "linux": "Alt+P"
+       }
+     }
+   },   
+   "background": {
+      "service_worker": "serviceWorker.js",
+      "type": "module"
+   },
+   "description": "A screen recorder chrome extension",
+   "icons": {
+      "128": "icon.png",
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5Hx/mOPyIKGCr44u4YOdQnzHHLqu1l8iXkUiw0PxzkQ0alK0PEvuPyA7DawZ3vp9Zg4ILINwavauMvWlz+qF3FqRf4L1APgfr9kbWSgXlxAzi1tc8fSrCf3i8GO79aYK1fw9vlJYOtBzzN2s7Be5ONIJOQgGkRd2WyZW+bj6SMF2cLKHtmcbvrB+IjiQzNly7f5eOC/RQR1LPE0vfd03TKZunirXoHVCLcbQjqe512+SDBTnQ0wsPZ25j4BGLGJ696cAbjZmXvLllgfWzD8gTQ76+FbIGQg+qe7ExmNBaH7MblldzLMdtfS849WtQ+jlh9T2ZA/4mhtfg7FBhw3mGwIDAQAB",
+   "manifest_version": 3,
+   "minimum_chrome_version": "116",
+   "name": "Sgreen",
+   "permissions": [ "tabCapture", "activeTab", "offscreen", "storage", "desktopCapture", "scripting" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.1.2",
+   "web_accessible_resources": [ {
+      "matches": [ "\u003Call_urls>" ],
+      "resources": [ "assets/constants-1491974f.js", "assets/sdk-3856d75a.js", "assets/sdk-b7a746d2.css", "assets/sdk-f7aba7f5.js", "assets/src/entries/contentScript/primary/main-bb129543.js", "assets/utils-e2656ec5.js", "src/entries/background/offscreen.html", "src/entries/contentScript/primary/main.js", "src/entries/tabs/main.html" ],
+      "use_dynamic_url": true
+   } ]
+}

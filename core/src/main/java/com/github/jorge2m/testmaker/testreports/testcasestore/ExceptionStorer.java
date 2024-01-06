@@ -33,4 +33,5 @@ public class ExceptionStorer extends TestCaseEvidenceStorerBase {
         throwable.printStackTrace(printWriter);
         return stringWriter.toString();
     }
+    
 }

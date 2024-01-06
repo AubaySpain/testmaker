@@ -1,0 +1,1 @@
+(async()=>{await import(chrome.runtime.getURL("assets/src/entries/contentScript/primary/main-bb129543.js"))})();

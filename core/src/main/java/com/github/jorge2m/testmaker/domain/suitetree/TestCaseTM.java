@@ -48,7 +48,7 @@ public class TestCaseTM  {
 		this.initTestObjects = new InitTestObjects(this);
 	}
 	
-	public void makeInitObjects(InitObject initObject) {
+	public void init(InitObject initObject) {
 		initTestObjects.make(initObject);
 	}
 	

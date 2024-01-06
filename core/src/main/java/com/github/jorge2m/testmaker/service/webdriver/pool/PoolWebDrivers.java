@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker;
 import com.github.jorge2m.testmaker.service.webdriver.pool.StoredWebDrv.stateWd;
@@ -27,13 +28,13 @@ public class PoolWebDrivers implements Serializable {
 		this.suite = suite;
 	}
 
-	public WebDriver getWebDriver(String driverId, Channel channel, TestRunTM testRun) {
-		String moreDataWdrv = getMoreDataWdrv(driverId, testRun);
+	public WebDriver getWebDriver(String driverId, Channel channel, TestCaseTM testCase) {
+		String moreDataWdrv = getMoreDataWdrv(driverId, testCase.getTestRunParent());
 		WebDriver driver = getFreeWebDriverFromPool(driverId, moreDataWdrv);
 		if (driver != null) {
 			return driver;
 		}
-		return createAndStoreNewWebDriver(driverId, channel, testRun, moreDataWdrv);
+		return createAndStoreNewWebDriver(driverId, channel, testCase, moreDataWdrv);
 	}
 
 	public void quitWebDriver(WebDriver driver, TestRunTM testRun) {
@@ -69,10 +70,10 @@ public class PoolWebDrivers implements Serializable {
 	}
 
 	private WebDriver createAndStoreNewWebDriver(
-			String driverId, Channel channel, TestRunTM testRun, String moreDataWdrv) {
-		boolean netAnalysis = testRun.getSuiteParent().getInputParams().isNetAnalysis();
+			String driverId, Channel channel, TestCaseTM testCase, String moreDataWdrv) {
+		boolean netAnalysis = testCase.getSuiteParent().getInputParams().isNetAnalysis();
 		WebDriver driver = 
-			FactoryWebdriverMaker.make(testRun)
+			FactoryWebdriverMaker.make(testCase)
 				.setChannel(channel)
 				.setNettraffic(netAnalysis)
 				.build();

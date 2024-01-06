@@ -1,5 +1,6 @@
 package com.github.jorge2m.testmaker.service.webdriver.maker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +21,20 @@ import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
-import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
+import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome;
 
 class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
 	private final boolean isHeadless;
+	private final boolean isRecord;
+	private final String pathTestCase;
 	private ChromeOptions options = new ChromeOptions();
 	
-	public ChromedriverMaker(boolean isHeadless) {
+	public ChromedriverMaker(boolean isHeadless, boolean isRecord, String pathTestCase) {
 		this.isHeadless = isHeadless;
+		this.isRecord = isRecord;
+		this.pathTestCase = pathTestCase;
 	}
 	
 	@Override
@@ -72,8 +77,21 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("--no-proxy-server");
 		options.addArguments("--privileged");
 		options.addArguments("--remote-allow-origins=*");
-		options.addArguments("enable-automation"); 
+		options.addArguments("enable-automation");
+		if (isRecord) {
+			createPathForEvidencesStore();
+			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+			chromePrefs.put("download.default_directory", pathTestCase);
+			options.setExperimentalOption("prefs", chromePrefs);
+		}
 		activateLogs();
+	}
+	
+	private void createPathForEvidencesStore() {
+		File directorio = new File(pathTestCase);
+		if (!directorio.exists()) {
+			directorio.mkdirs();
+		}
 	}
 	
 	private void activateLogs() {
@@ -100,12 +118,11 @@ class ChromedriverMaker extends DriverMaker {
 	 */
 	private void addPlugins(boolean isHeadless) {
 		if (!isHeadless) {
-			//TODO Desde Chrome61 ya es posible desactivar el autoplay directamente desde el navegador (chrome://flags/#autoplay-policy)
-			//options.addArguments("--autoplay-policy", "--document-user-activation-required");        
-			//Arrancamos Chrome con la extensión HTML5Autoplay para que no se ejecute el autoplay de los vídeos y sea posible paralelizar varios Chromes en una misma máquina
-			List<PluginChrome.typePluginChrome> listPlugins = new ArrayList<>();
-			//listPlugins.add(typePluginChrome.HTML5AutoplayBlocker);
-			for (typePluginChrome typePlugin : listPlugins) {
+			List<PluginChrome.TypePluginChrome> listPlugins = new ArrayList<>();
+			if (isRecord) {
+				listPlugins.add(TypePluginChrome.MOVAVI_SCREEN_RECORDER);
+			}
+			for (var typePlugin : listPlugins) {
 				PluginChrome pluginChrome = PluginBrowserFactory.makePluginChrome(typePlugin);
 				pluginChrome.addPluginToChrome(options);
 			}

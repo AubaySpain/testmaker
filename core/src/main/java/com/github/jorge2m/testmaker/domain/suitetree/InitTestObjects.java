@@ -9,13 +9,15 @@ public class InitTestObjects {
 
 	private final SuiteTM suiteParent;
 	private final TestRunTM testRunParent;
+	private final TestCaseTM testCase;
 	private InitObject makedObject;
 	
 	private WebDriver driver;
 	
 	public InitTestObjects(TestCaseTM testCase) {
-		suiteParent = testCase.getSuiteParent();
-		testRunParent = testCase.getTestRunParent();
+		this.suiteParent = testCase.getSuiteParent();
+		this.testRunParent = testCase.getTestRunParent();
+		this.testCase = testCase;
 	}
 	
 	public void make(InitObject initObject) {
@@ -23,6 +25,9 @@ public class InitTestObjects {
 		switch (initObject) {
 		case WebDriver:
 			this.driver = getWebDriverForTestCase();
+			if (suiteParent.getInputParams().isAvailableRecord()) {
+				VideoRecorder.make(driver).start();
+			}
 			break;
 		case None:
 			break;
@@ -43,14 +48,14 @@ public class InitTestObjects {
 	
 	private WebDriver getWebDriverForTestCase() {
 		var inputData = suiteParent.getInputParams();
-		var driver = suiteParent
+		var newDriver = suiteParent
 				.getPoolWebDrivers()
 				.getWebDriver(
 						inputData.getDriver(), 
 						inputData.getChannel(), 
-						testRunParent);
-		initDriverContent(driver, inputData);
-		return driver;
+						testCase);
+		initDriverContent(newDriver, inputData);
+		return newDriver;
 	}
 	private void initDriverContent(WebDriver driver, InputParamsTM inputData) {
 		try {

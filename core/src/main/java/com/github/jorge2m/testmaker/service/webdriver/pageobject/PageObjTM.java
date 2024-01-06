@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.openqa.selenium.Alert;
@@ -88,7 +89,97 @@ public class PageObjTM {
 		return new BuilderSelect(webelement, value, driver);
 	}
 	
+	//More
+	public BuilderClick click(String xpath) {
+		return new BuilderClick(By.xpath(xpath), driver);
+	}
+	
+	public BuilderState state(State state, String xpath) {
+		return new BuilderState(state, By.xpath(xpath), driver);
+	}
+	
+	public BuilderSelect select(String xpath, String value) {
+		return new BuilderSelect(By.xpath(xpath), value, driver);
+	}
+	
+	public Optional<WebElement> getElementIfExists(String xpath) {
+		try {
+			return Optional.of(getElement(xpath));
+		} catch (NoSuchElementException e) {
+			return Optional.empty();
+		}
+	}
+	public WebElement getElement(String xpath) {
+		return getElement(By.xpath(xpath));
+	}
+	public List<WebElement> getElements(String xpath) {
+		return getElements(By.xpath(xpath));
+	}
+	public List<WebElement> getElements(WebElement element, String xpath) {
+		return element.findElements(By.xpath(xpath));
+	}	
+	public WebElement getElement(By by) {
+		return driver.findElement(by);
+	}
+	public WebElement getElement(WebElement element, String xpathChild) {
+		return element.findElement(By.xpath(xpathChild));
+	}
+	public WebElement getElement(WebElement element, By byChild) {
+		return element.findElement(byChild);
+	}	
+	public List<WebElement> getElements(By by) {
+		return driver.findElements(by);
+	}
+	
+	public WebElement getElementVisible(String xpath) {
+		return getElementVisible(driver, By.xpath(xpath));
+	}
+	
+	public List<WebElement> getElementsVisible(String xpath) {
+		return getElementsVisible(driver, By.xpath(xpath));
+	}
+	
+	public int getNumElementsVisible(String xpath) {
+		return getNumElementsVisible(driver, By.xpath(xpath));
+	}
+	
+    public List<WebElement> getElementsVisible(WebElement elementInput, String xpath) {
+    	List<WebElement> listaReturn = new ArrayList<>();
+        for (WebElement element : elementInput.findElements(By.xpath(xpath))) {
+            if (element.isDisplayed()) {
+                listaReturn.add(element);
+            }
+        }
+        return listaReturn;
+    }	
 
+	public WebElement getElementPriorizingDisplayed(String xpath) {
+		List<WebElement> elementsVisible = getElementsVisible(xpath);
+		if (!elementsVisible.isEmpty()) {
+			return elementsVisible.get(0);
+		}
+		List<WebElement> elementsPresent = getElements(xpath);
+		if (!elementsPresent.isEmpty()) {
+			return elementsPresent.get(0);
+		}
+		return null;
+	}
+
+	public WebElement getElementWeb(String xpath) {
+		return getElementWeb(By.xpath(xpath), driver);
+	}
+	
+    public void moveToElement(String xpath) {
+        moveToElement(By.xpath(xpath));
+    }
+    public void moveToElement(By by) {
+        WebElement webElem = driver.findElement(by);
+        moveToElement(webElem);
+    }
+    public void moveToElement(WebElement element) {
+    	moveToElement(element, driver);
+    }
+    
 	//Selenium Utils
     public static boolean titleContainsUntil(final WebDriver driver, final String title, int seconds) {
         try {

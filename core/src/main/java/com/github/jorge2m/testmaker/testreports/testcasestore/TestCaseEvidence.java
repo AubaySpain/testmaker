@@ -6,6 +6,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 
 public enum TestCaseEvidence {
+	VIDEO("Video.mp4", "video.gif", "Video with the Test Case execution"),
 	EXCEPTION("Exception.txt", "exception.gif", "Exception info"),
 	LOGS("Logs.txt", "logs.gif", "Logs");
 	

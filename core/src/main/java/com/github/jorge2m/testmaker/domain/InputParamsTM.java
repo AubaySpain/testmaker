@@ -51,6 +51,7 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String REMOTE_PARAM = "remote";
 	public static final String RECICLE_WD_PARAM = "reciclewd";
 	public static final String NET_ANALYSIS_PARAM = "net";
+	public static final String RECORD_PARAM = "record";
 	
 	public static final String NOTIFICATION_PARAM = "notification";
 	public static final String ALARM_PARAM = "alarm";
@@ -140,6 +141,9 @@ public abstract class InputParamsTM implements Serializable {
 
 	@FormParam(NET_ANALYSIS_PARAM)
 	String net;
+	
+	@FormParam(RECORD_PARAM)
+	String record;	
 	
 	@FormParam(NOTIFICATION_PARAM)
 	String notification;	
@@ -361,6 +365,13 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Net Analysis (true, false)")
 			.build());
 
+		optionsTM.add(OptionTMaker.builder(RECORD_PARAM)
+				.required(false)
+				.hasArgs()
+				.possibleValues(Arrays.asList("true", "false"))
+				.desc("Record Video (true, false)")
+				.build());		
+
 		optionsTM.add(OptionTMaker.builder(NOTIFICATION_PARAM)
 			.required(false)
 			.hasArgs()
@@ -523,6 +534,7 @@ public abstract class InputParamsTM implements Serializable {
 		asyncexec = cmdLine.getOptionValue(ASYNC_EXEC_PARAM);
 		remote = cmdLine.getOptionValue(REMOTE_PARAM);
 		net = cmdLine.getOptionValue(NET_ANALYSIS_PARAM);
+		record = cmdLine.getOptionValue(RECORD_PARAM);
 		
 		notification = cmdLine.getOptionValue(NOTIFICATION_PARAM);
 		alarm = cmdLine.getOptionValue(ALARM_PARAM);
@@ -566,6 +578,7 @@ public abstract class InputParamsTM implements Serializable {
 		ASYNC_EXEC(ASYNC_EXEC_PARAM),
 		REMOTE(REMOTE_PARAM),
 		NET_ANALYSIS(NET_ANALYSIS_PARAM),
+		RECORD(RECORD_PARAM),
 		NOTIFICATION(NOTIFICATION_PARAM),
 		ALARM(ALARM_PARAM),
 		ALARMS_TO_CHECK(ALARMS_TO_CHECK_PARAM),
@@ -644,6 +657,8 @@ public abstract class InputParamsTM implements Serializable {
 			return this.remote;
 		case NET_ANALYSIS:
 			return this.net;
+		case RECORD:
+			return this.record;			
 		case NOTIFICATION:
 			return this.notification;
 		case ALARM:
@@ -758,7 +773,20 @@ public abstract class InputParamsTM implements Serializable {
 		URI uri = new URI(getUrlBase());
 		return (uri.getScheme() + "://" + uri.getHost());
 	}
+	
+	public EmbeddedDriver getDriverType() {
+		return EmbeddedDriver.valueOf(driver);
+	}
+	
 	public String getDriver() {
+		if (isRecord()) {
+			if (driver.compareTo(EmbeddedDriver.chromehless.name())==0) {
+				return EmbeddedDriver.chrome.name();
+			}
+			if (driver.compareTo(EmbeddedDriver.firefoxhless.name())==0) {
+				return EmbeddedDriver.firefox.name();
+			}			
+		}
 		return this.driver;
 	}
 	public void setDriver(String driver) {
@@ -931,6 +959,19 @@ public abstract class InputParamsTM implements Serializable {
 			return ("true".compareTo(net)==0);
 		}
 		return false;
+	}
+	
+	public void setRecord(String record) {
+		this.record = record;
+	}
+	public boolean isRecord() {
+		if (record!=null) {
+			return ("true".compareTo(record)==0);
+		}
+		return false;
+	}	
+	public boolean isAvailableRecord() {
+		return isRecord() && getDriverType().supportsVideo();
 	}
 	
 	public void setNotification(String notification) {

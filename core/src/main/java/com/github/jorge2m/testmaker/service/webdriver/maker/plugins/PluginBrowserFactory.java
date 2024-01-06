@@ -2,24 +2,23 @@ package com.github.jorge2m.testmaker.service.webdriver.maker.plugins;
 
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginHTML5AutoplayBlocker;
-import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.typePluginChrome;
+import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginSgreenRecorder;
+import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox.typePluginFirefox;
 
 
 public class PluginBrowserFactory {
     
-    public static PluginChrome makePluginChrome(typePluginChrome typePlugin) {
-        PluginChrome pluginMaked = null; 
+    public static PluginChrome makePluginChrome(TypePluginChrome typePlugin) {
         switch (typePlugin) {
-        case HTML5AutoplayBlocker:
-            pluginMaked = new PluginHTML5AutoplayBlocker();
-            break;
+        case HTML5_AUTOPLAY_BLOCKER:
+            return new PluginHTML5AutoplayBlocker();
+        case MOVAVI_SCREEN_RECORDER:
+        	return PluginSgreenRecorder.makePlugin();
         default:
-            break;
+        	return null;
         }
-        
-        return pluginMaked;
     }
     
     @SuppressWarnings("unused")
