@@ -271,18 +271,8 @@ public class GenerateReports extends EmailableReporter {
 	
 	private String getLinksEvidencesTestCase(TestCaseBean testCase) {
 		String linksTest = "";
-		if (TestCaseEvidence.EXCEPTION.fileExists(testCase)) {
-			linksTest+= 
-				"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.EXCEPTION) + "\" target=\"_blank\">" + 
-				"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.EXCEPTION.getNameIcon() + "\" title=\"" + TestCaseEvidence.EXCEPTION.getTagInfo() + "\"/>" +
-				"</a>";
-		}
-		
-		if (TestCaseEvidence.LOGS.fileExists(testCase)) {
-			linksTest+=
-				"<a href=\"" + getRelativePathEvidencia(testCase, TestCaseEvidence.LOGS) + "\" target=\"_blank\">" + 
-				"<img width=\"22\" src=\"" + pathStatics + "/images/" + TestCaseEvidence.LOGS.getNameIcon() + "\" title=\"" + TestCaseEvidence.LOGS.getTagInfo() + "\"/>" +
-				"</a>";
+		for (var testCaseEvidence : TestCaseEvidence.values()) {
+			linksTest+=getHtmlLink(testCase, testCaseEvidence);
 		}
 		
 		if ("".compareTo(linksTest)==0) {
@@ -290,6 +280,16 @@ public class GenerateReports extends EmailableReporter {
 		}
 		
 		return linksTest; 
+	}
+	
+	private String getHtmlLink(TestCaseBean testCase, TestCaseEvidence testCaseEvidence) {
+		if (!testCaseEvidence.fileExists(testCase)) {
+			return "";
+		}
+		return
+			"<a href=\"" + getRelativePathEvidencia(testCase, testCaseEvidence) + "\" target=\"_blank\">" + 
+			"<img width=\"25\" style=\"padding:3\" src=\"" + pathStatics + "/images/" + testCaseEvidence.getNameIcon() + "\" title=\"" + testCaseEvidence.getTagInfo() + "\"/>" +
+			"</a>";			
 	}
 
 	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {

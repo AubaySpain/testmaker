@@ -23,8 +23,8 @@ public class Reporter implements IReporter {
 
 	@Override
 	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
-		SuiteTM suite = (SuiteTM)xmlSuites.get(0);
-		GenerateReports report = new GenerateReports();
+		var suite = (SuiteTM)xmlSuites.get(0);
+		var report = new GenerateReports();
 		report.generateReport(xmlSuites, suites, suite.getPathDirectory());
 	}
 }

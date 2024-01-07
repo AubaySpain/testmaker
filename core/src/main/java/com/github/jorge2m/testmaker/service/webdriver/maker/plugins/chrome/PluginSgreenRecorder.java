@@ -3,12 +3,9 @@ package com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 
@@ -137,55 +134,26 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
 		keyPressAltR();
 	}
 	
-	private void keyPressAltR() {
-        // Abre una nueva pestaña
-        ((JavascriptExecutor) driver).executeScript("window.open()");
-
-        // Cambia el enfoque a la nueva pestaña
-        for (String handle : driver.getWindowHandles()) {
-            driver.switchTo().window(handle);
-        }
-
-        // Ejecuta el código de la extensión en la pestaña actual
-        ejecutarCodigoExtension(driver);
+	 private void keyPressAltR() {
+         try {
+             Robot robot = new Robot();
+        	 bringChromeToFront();
+        	 PageObjTM.waitMillis(300);
+            
+        	 robot.keyPress(KeyEvent.VK_ALT);
+        	 robot.keyPress(KeyEvent.VK_P);
+        	 robot.keyRelease(KeyEvent.VK_P);
+        	 robot.keyRelease(KeyEvent.VK_ALT);
+         } catch (Exception e) {
+        	 Log4jTM.getLogger().warn("Problems executin ALT+R against Chrome Window", e);
+         }
 	 }
-	
-    private static void ejecutarCodigoExtension(WebDriver driver) {
-    	((ChromeDriver) driver).executeScript("chrome.runtime.sendMessage({ action: 'ejecutarHandleExtensionClick', tabId: 123 })");
-    }	
-	
-//	 private void keyPressAltR() {
-//         try {
-//             Robot robot = new Robot();
-//        	 bringChromeToFront();
-//        	 PageObjTM.waitMillis(300);
-//            
-//        	 robot.keyPress(KeyEvent.VK_ALT);
-//        	 robot.keyPress(KeyEvent.VK_P);
-//        	 robot.keyRelease(KeyEvent.VK_P);
-//        	 robot.keyRelease(KeyEvent.VK_ALT);
-//         } catch (Exception e) {
-//        	 Log4jTM.getLogger().warn("Problems executin ALT+R against Chrome Window", e);
-//         }
-//	 }
-//
-//	private void bringChromeToFront() {
-//		var originalSize = driver.manage().window().getSize();
-//	    minimize();
-//		maximize();
-//		driver.manage().window().setSize(originalSize);
-//	}
-	
-	private void minimize() {
-		try {
-			driver.manage().window().minimize();
-		} catch (Exception e) {}
-	}
-	
-	private void maximize() {
-		try {
-			driver.manage().window().maximize();
-		} catch (Exception e) {}
-	}
-	
+	 
+	 private void bringChromeToFront() {
+		 String windowHandle = driver.getWindowHandle();
+		 driver.switchTo().newWindow(WindowType.TAB);
+		 driver.close();
+		 driver.switchTo().window(windowHandle);
+	 }
+
 }
