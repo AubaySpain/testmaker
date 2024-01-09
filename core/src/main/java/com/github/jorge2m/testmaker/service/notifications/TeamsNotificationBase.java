@@ -58,7 +58,7 @@ public class TeamsNotificationBase {
     	
 		message.append("    \"sections\": [{\r\n");
 		message.append("        \"activityTitle\": \"TestMaker has detected problems\",\r\n");
-		message.append("        \"activitySubtitle\": \"On suite " + JSONValue.escape(dataAlert.getSuiteName()) + " execution\",\r\n");
+		message.append("        \"activitySubtitle\": \"On suite " + JSONValue.escape(dataAlert.getSuiteName() + " (" + dataAlert.getChannel() + " - " + dataAlert.getApp() + " - " + dataAlert.getUrlBase()) + ") execution\",\r\n");
 		message.append("        \"activityImage\": \"https://teamsnodesample.azurewebsites.net/static/img/image5.png\",\r\n");
 		message.append("        \"facts\": [");
 		if (!isVoid(dataAlert.getTestCaseName())) {
@@ -110,5 +110,5 @@ public class TeamsNotificationBase {
     protected boolean isVoid(String value) {
     	return value==null || "".compareTo(value)==0;
     }
-
+    
 }

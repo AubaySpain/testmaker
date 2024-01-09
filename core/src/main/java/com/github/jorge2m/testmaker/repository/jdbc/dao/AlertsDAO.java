@@ -115,6 +115,9 @@ public class AlertsDAO {
 		return new DataAlert(
 			rowSuite.getString("IDEXECSUITE"),
 			rowSuite.getString("SUITE"),
+			rowSuite.getString("CHANNEL"),
+			rowSuite.getString("APP"),
+			rowSuite.getString("URLBASE"),
 			rowSuite.getString("METHOD"),
 			rowSuite.getInt("STEP_NUMBER"),
 			rowSuite.getInt("VALIDATION_NUMBER"),

@@ -139,6 +139,7 @@ public class TestMaker {
 		var validStates = Arrays.asList(STOPPED, FINISHED);
 		return (waitForSuiteInState(suite, validStates, 15));
 	}
+	
 	private static boolean waitForSuiteInState(SuiteTM suite, List<StateExecution> validStates, int maxSeconds) {
 		for (int i=0; i<maxSeconds; i++) {
 			var suiteState = suite.getStateExecution();

@@ -37,6 +37,7 @@ public class TestCaseTM  {
 	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
 	private boolean exceptionInExecution = true;
+	private String video;
 	private String logs;
 
 	public TestCaseTM(ITestResult result) {
@@ -113,6 +114,13 @@ public class TestCaseTM  {
 	public void setLogs(String logs) {
 		this.logs = logs;
 	}
+	
+	public String getVideo() {
+		return video;
+	}
+	public void setVideo(String video) {
+		this.video = video;
+	}	
 	
 	public void end(State state) {
 		finish();
@@ -305,12 +313,13 @@ public class TestCaseTM  {
 		testCaseBean.setResult(getStateResult());
 		testCaseBean.setStatusTng(getResult().getStatus());
 		testCaseBean.setLogs(getLogs());
+		testCaseBean.setVideo(getVideo());
 		
 		Date inicio = new Date(getResult().getStartMillis());
 		Date fin = new Date(getResult().getEndMillis());
 		testCaseBean.setInicioDate(inicio);
 		testCaseBean.setFinDate(fin); 
-		testCaseBean.setDurationMillis((float)(fin.getTime() - inicio.getTime()));
+		testCaseBean.setDurationMillis((fin.getTime() - inicio.getTime()));
 		testCaseBean.setTestPathDirectory(getTestPathDirectory());
 		
 		testCaseBean.setNumberSteps(getListStep().size());

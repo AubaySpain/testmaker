@@ -18,6 +18,9 @@ public class DataAlert {
 	
 	private final String idExecSuite;
 	private final String suiteName;
+	private final String channel;
+	private final String app;
+	private final String urlBase;
 	private final String testCaseName;
 	private final int stepNumber;
 	private final int validationNumber;
@@ -30,12 +33,17 @@ public class DataAlert {
 	private final Date fecha;
 	private final String urlReportSuite;
 	
-	public DataAlert(String idExecSuite, String suiteName, String testCaseName, int stepNumber, int validationNumber,
-			Boolean resultado, State levelCheck, String stepDescription, String checkDescription, String infoExecution,
+	public DataAlert(
+			String idExecSuite, String suiteName, String channel, String app, String urlBase, 
+			String testCaseName, int stepNumber, int validationNumber, Boolean resultado, 
+			State levelCheck, String stepDescription, String checkDescription, String infoExecution,
 			String methodValidation, Date fecha, String urlReportSuite) {
 		super();
 		this.idExecSuite = idExecSuite;
 		this.suiteName = suiteName;
+		this.channel = channel;
+		this.app = app;
+		this.urlBase = urlBase;
 		this.testCaseName = testCaseName;
 		this.stepNumber = stepNumber;
 		this.validationNumber = validationNumber;
@@ -57,6 +65,9 @@ public class DataAlert {
 		
 		this.idExecSuite = suite.getIdExecSuite();
     	this.suiteName = suite.getName();
+    	this.channel = suite.getChannel().name();
+    	this.app = suite.getApp();
+    	this.urlBase = suite.getUrlBase();    	
     	this.testCaseName = testCase.getNameUnique();
     	this.stepNumber = step.getNumber();
     	this.validationNumber = getPositionValidationInStep(parentChecks);
@@ -77,6 +88,9 @@ public class DataAlert {
 		
 		this.idExecSuite = suite.getIdExecSuite();
     	this.suiteName = suite.getName();
+    	this.channel = suite.getChannel().name();
+    	this.app = suite.getApp();
+    	this.urlBase = suite.getUrlBase();    	
     	this.testCaseName = testCase.getNameUnique();
     	this.stepNumber = step.getNumber();
     	this.validationNumber = 0;
@@ -97,6 +111,9 @@ public class DataAlert {
 		
 		this.idExecSuite = suite.getIdExecSuite();
     	this.suiteName = suite.getName();
+    	this.channel = suite.getChannel().name();
+    	this.app = suite.getApp();
+    	this.urlBase = suite.getUrlBase();    	
     	this.testCaseName = testCase.getNameUnique();
     	this.stepNumber = step.getNumber();
     	this.validationNumber = 0;
@@ -116,6 +133,9 @@ public class DataAlert {
 		
 		this.idExecSuite = suiteBean.getIdExecSuite();
     	this.suiteName = suiteBean.getName();
+    	this.channel = suiteBean.getChannel().name();
+    	this.app = suiteBean.getApp();
+    	this.urlBase = suiteBean.getUrlBase();    	
     	this.testCaseName = "Undefined";
     	this.stepNumber = 0;
     	this.validationNumber = 0;
@@ -149,7 +169,7 @@ public class DataAlert {
 	public String getSuiteName() {
 		return suiteName;
 	}
-
+	
 	public String getTestCaseName() {
 		return testCaseName;
 	}
@@ -217,5 +237,17 @@ public class DataAlert {
 			position = parentChecks.getStepParent().getListChecksTM().size() + 1;
 		}
 		return position;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public String getApp() {
+		return app;
+	}
+
+	public String getUrlBase() {
+		return urlBase;
 	}	
 }

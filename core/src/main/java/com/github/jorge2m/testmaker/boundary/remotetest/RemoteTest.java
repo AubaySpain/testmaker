@@ -13,6 +13,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.client.Invocation;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -23,9 +24,11 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
+import com.github.jorge2m.testmaker.testreports.testcasestore.VideoStorer;
 
 public class RemoteTest extends JaxRsClient {
 	
+	private static final int TIMEOUT_MILLIS = 15 * 60 * 1000; // 15 minutes
 	private static final int MAX_RETRY_TEST = 3;
 	private final ServerSubscriber server;
 	
@@ -92,6 +95,9 @@ public class RemoteTest extends JaxRsClient {
 		testCase.getResult().setStatus(testCaseRemote.getStatusTng());
 		testCase.addSufixToName(testCaseRemote.getSpecificInputData());
 		testCase.setLogs(testCaseRemote.getLogs());
+		if (testCaseRemote.getVideo()!=null) {
+			new VideoStorer(testCase).storeInFile(testCaseRemote.getVideo());
+		}
 		
 		var listStepsRemote = testCaseRemote.getListStep();
 		for (var stepRemote : listStepsRemote) {
@@ -148,7 +154,7 @@ public class RemoteTest extends JaxRsClient {
 			}
 			catch (Exception e) {
 				Log4jTM.getLogger().warn(
-						"Exception in Remote Test execution (retry " + i + "), retry in 10 seconds...", e);
+					"Exception in Remote Test execution (retry " + i + "), retry in 10 seconds...", e);
 				Thread.sleep(10000);
 			}
 		}
@@ -156,11 +162,13 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private SuiteBean execRemoteSuiteRun(Client client, Form formParams) {
-		return 
-			client
+		Invocation.Builder builder = client 
 				.target(server.getUrl() + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
-				.post(Entity.form(formParams), SuiteBean.class);
+				.property("javax.xml.ws.client.receiveTimeout", TIMEOUT_MILLIS)
+                .property("javax.xml.ws.client.connectionTimeout", TIMEOUT_MILLIS);
+		
+		return builder.post(Entity.form(formParams), SuiteBean.class);
 	}
 	
 	private Form getFormParams(Map<String,String> params) {
@@ -170,7 +178,7 @@ public class RemoteTest extends JaxRsClient {
 		}
 		return formParams;
 	}
-	
+
 	/** Read the object from Base64 string. */
 	private static Object fromStringB64(String s) {
 		try {

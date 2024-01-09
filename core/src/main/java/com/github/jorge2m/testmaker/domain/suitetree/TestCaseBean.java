@@ -26,6 +26,7 @@ public class TestCaseBean {
 	private String classSignature;
 	private String throwable;
 	private String logs;
+	private String video;
 
 	public List<StepTM> getListStep() {
 		return listStep;
@@ -141,6 +142,12 @@ public class TestCaseBean {
 	}
 	public void setLogs(String logs) {
 		this.logs = logs;
+	}	
+	public String getVideo() {
+		return video;
+	}
+	public void setVideo(String video) {
+		this.video = video;
 	}	
 
 }
