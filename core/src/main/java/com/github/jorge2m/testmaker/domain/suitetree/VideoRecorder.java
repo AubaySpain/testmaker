@@ -9,8 +9,8 @@ public interface VideoRecorder {
 	public void start();
 	public void stop();
 	
-	public static VideoRecorder make(WebDriver driver) {
-		return PluginSgreenRecorder.makeRecorder(driver);
+	public static VideoRecorder make(TestCaseTM testcase) {
+		return PluginSgreenRecorder.makeRecorder(testcase);
 	}
 	
 }

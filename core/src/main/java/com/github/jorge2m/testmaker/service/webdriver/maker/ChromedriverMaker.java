@@ -84,7 +84,7 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("enable-automation");
 		if (isStartRecord) {
 			createPathForEvidencesStore();
-			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+			HashMap<String, Object> chromePrefs = new HashMap<>();
 			chromePrefs.put("download.default_directory", pathTestCase);
 			options.setExperimentalOption("prefs", chromePrefs);
 		}

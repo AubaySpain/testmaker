@@ -26,7 +26,7 @@ public class InitTestObjects {
 		case WebDriver:
 			this.driver = getWebDriverForTestCase();
 			if (testCase.isStartRecordNeeded()) {
-				VideoRecorder.make(driver).start();
+				VideoRecorder.make(testCase).start();
 			}
 			break;
 		case None:

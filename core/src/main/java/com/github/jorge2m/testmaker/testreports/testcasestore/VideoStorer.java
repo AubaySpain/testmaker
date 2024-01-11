@@ -11,6 +11,7 @@ import java.util.Base64;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.VideoRecorder;
+import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
 
 public class VideoStorer extends TestCaseEvidenceStorerBase {
 
@@ -22,17 +23,19 @@ public class VideoStorer extends TestCaseEvidenceStorerBase {
 	protected void store() {
 		if (testcase.isStopRecordNeeded()) {
 			if (isRemote()) {
-				VideoRecorder.make(testcase.getDriver()).stop();
-				testcase.setVideo(getVideoBase64FromFile());
+				VideoRecorder.make(testcase).stop();
+				String video = getVideoBase64FromFile(5);
+				testcase.setVideo(video);
 				deleteFileVideo();
 			} else {
 				if (testcase.getDriver()!=null) {
-					VideoRecorder.make(testcase.getDriver()).stop();
+					VideoRecorder.make(testcase).stop();
 				}
 			}
 		}
 	}
 	
+	@Override
 	public void storeInFile(String video) {
 		String pathFile = TestCaseEvidence.VIDEO.getPathFile(testcase);
 		byte[] bytesMp4 = Base64.getMimeDecoder().decode(video);
@@ -50,15 +53,27 @@ public class VideoStorer extends TestCaseEvidenceStorerBase {
 		}
 	}
 	
-	private String getVideoBase64FromFile() {
+	private String getVideoBase64FromFile(int seconds) {
+		for (int i=0; i<seconds; i++) {
+			try {
+				return getVideoBase64FromFile();
+			} catch (IOException e) {
+				PageObjTM.waitMillis(1000);
+			}
+		}
+		Log4jTM.getLogger().error("Not recovered file video");
+		return "";
+	}
+	
+	private String getVideoBase64FromFile() throws IOException {
 		String filePath = TestCaseEvidence.VIDEO.getPathFile(testcase);
         File file = new File(filePath);
         try {
         	byte[] videoBytes = Files.readAllBytes(file.toPath());
         	return Base64.getEncoder().encodeToString(videoBytes);
 	    } catch (IOException e) {
-	    	Log4jTM.getLogger().warn("Problem recovering file video {}", filePath, e);
-	        return "";
+	    	Log4jTM.getLogger().info("Problem recovering file video {} {}", filePath, e.toString());
+	    	throw e;
 	    }
 	}
 	

@@ -10,8 +10,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.domain.suitetree.VideoRecorder;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.PageObjTM;
+import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
+import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidenceStorerBase;
 
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
@@ -23,23 +26,26 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
     private static final int RETRY_STOP = 3;
     
     private final PageObjTM page;
+    private final TestCaseTM testcase;
     private final WebDriver driver;
     
     public static PluginChrome makePlugin() {
     	return new PluginSgreenRecorder();
     }
-    public static VideoRecorder makeRecorder(WebDriver driver) {
-    	return new PluginSgreenRecorder(driver);
+    public static VideoRecorder makeRecorder(TestCaseTM testcase) {
+    	return new PluginSgreenRecorder(testcase);
     }
     
     private PluginSgreenRecorder() {
+    	testcase = null;
     	page = null;
     	driver = null;
     }
     
-    private PluginSgreenRecorder(WebDriver driver) {
+    private PluginSgreenRecorder(TestCaseTM testcase) {
+    	this.testcase = testcase;
+    	this.driver = testcase.getDriver();
     	this.page = new PageObjTM(driver);
-    	this.driver = driver;
     }    
     
     @Override
@@ -65,14 +71,14 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
     @Override
 	public void stop() {
     	Log4jTM.getLogger().info("Saving testcase video recorded with Sgreen Chrome...");
-    	String xpDownload = "//a[@download]";
 		for (int i=0; i<RETRY_STOP; i++) {
 			keyPressAltRSynchronized();
 			if (isSwitchToSgreenTab(5)) {
-				page.state(PRESENT, xpDownload).wait(3).check();
-				page.click(xpDownload).exec();
-				PageObjTM.waitMillis(2000);
-				Log4jTM.getLogger().info("Saved testcase video recorded with Sgreen Chrome!");
+				if (downloadVideoAndCheck()) {
+					Log4jTM.getLogger().info("Saved testcase video recorded with Sgreen Chrome!");
+				} else {
+					Log4jTM.getLogger().warn("Not saved testcase video recorded with Sgreen Chrome!");
+				}
 				return;
 			} else {
 				PageObjTM.waitMillis(500);
@@ -81,6 +87,24 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
 		Log4jTM.getLogger().warn("Problems saving video after " + RETRY_STOP + " attempts");
 	}
 	
+    private boolean downloadVideoAndCheck() {
+    	for (int i=0; i<5; i++) {
+    		clickDownload(3);
+    		if (TestCaseEvidenceStorerBase.existFileEvidence(TestCaseEvidence.VIDEO, testcase)) {
+    			return true;
+    		}
+    		Log4jTM.getLogger().info("Not saved video downloaded...");    		
+    		PageObjTM.waitMillis(3000);
+    	}
+    	return false;
+    }
+    
+    private void clickDownload(int seconsWait) {
+    	String xpDownload = "//a[@download]";
+    	page.state(PRESENT, xpDownload).wait(seconsWait).check();
+    	page.click(xpDownload).exec();
+    }
+    
 	private boolean isSwitchToSgreenTab(int seconds) {
 		for (int i=0; i<seconds; i++) {
 			if (isSwitchToSgreenTab()) {

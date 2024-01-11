@@ -32,6 +32,11 @@ public abstract class TestCaseEvidenceStorerBase {
 		this.testcase = testcase;
 	}
 	
+	public static boolean existFileEvidence(TestCaseEvidence evidenceType, TestCaseTM testcase) {
+		String pathFile = evidenceType.getPathFile(testcase);
+		return new File(pathFile).exists();
+	}
+	
 	protected boolean existsFileEvidence() {
 		String pathFile = getPathFile();
 		return new File(pathFile).exists();
