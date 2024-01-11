@@ -49,9 +49,11 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
     
 	@Override
 	public void start() {
+		Log4jTM.getLogger().info("Starting Sgreen Chrome plugin...");
 		for (int i=0; i<RETRY_START; i++) {
 			keyPressAltR();
 			if (selectStartButton(1)) {
+				Log4jTM.getLogger().info("Started Sgreen Chrome plugin!");
 				return;
 			} else {
 				PageObjTM.waitMillis(500);
@@ -62,6 +64,7 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
     
     @Override
 	public void stop() {
+    	Log4jTM.getLogger().info("Saving testcase video recorded with Sgreen Chrome...");
     	String xpDownload = "//a[@download]";
 		for (int i=0; i<RETRY_STOP; i++) {
 			keyPressAltRSynchronized();
@@ -69,12 +72,13 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
 				page.state(PRESENT, xpDownload).wait(3).check();
 				page.click(xpDownload).exec();
 				PageObjTM.waitMillis(2000);
+				Log4jTM.getLogger().info("Saved testcase video recorded with Sgreen Chrome!");
 				return;
 			} else {
 				PageObjTM.waitMillis(500);
 			}
 		}
-		Log4jTM.getLogger().warn("Problems stopping Sgreen Chrome plugin after " + RETRY_STOP + " attempts");
+		Log4jTM.getLogger().warn("Problems saving video after " + RETRY_STOP + " attempts");
 	}
 	
 	private boolean isSwitchToSgreenTab(int seconds) {

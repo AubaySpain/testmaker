@@ -20,7 +20,7 @@ public class VideoStorer extends TestCaseEvidenceStorerBase {
 	
 	@Override
 	protected void store() {
-		if (testcase.getInputParamsSuite().isAvailableRecord()) {
+		if (testcase.isStopRecordNeeded()) {
 			if (isRemote()) {
 				VideoRecorder.make(testcase.getDriver()).stop();
 				testcase.setVideo(getVideoBase64FromFile());
@@ -71,10 +71,4 @@ public class VideoStorer extends TestCaseEvidenceStorerBase {
         }
 	}
 	
-	private boolean isRecordNeeded() {
-		return 
-			testcase.getInputParamsSuite().isAvailableRecord() &&
-			testcase.getDriver()!=null;
-	}
-    
 }

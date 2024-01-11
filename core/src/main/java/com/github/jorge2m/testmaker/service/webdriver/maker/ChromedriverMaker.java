@@ -27,13 +27,17 @@ class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
 	private final boolean isHeadless;
-	private final boolean isRecord;
+	private final boolean isStartRecord;
 	private final String pathTestCase;
 	private ChromeOptions options = new ChromeOptions();
 	
-	public ChromedriverMaker(boolean isHeadless, boolean isRecord, String pathTestCase) {
-		this.isHeadless = isHeadless;
-		this.isRecord = isRecord;
+	public ChromedriverMaker(boolean isHeadless, boolean isStartRecord, String pathTestCase) {
+		if (isStartRecord) {
+			this.isHeadless = false;
+		} else {
+			this.isHeadless = isHeadless;
+		}
+		this.isStartRecord = isStartRecord;
 		this.pathTestCase = pathTestCase;
 	}
 	
@@ -78,7 +82,7 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("--privileged");
 		options.addArguments("--remote-allow-origins=*");
 		options.addArguments("enable-automation");
-		if (isRecord) {
+		if (isStartRecord) {
 			createPathForEvidencesStore();
 			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
 			chromePrefs.put("download.default_directory", pathTestCase);
@@ -119,7 +123,7 @@ class ChromedriverMaker extends DriverMaker {
 	private void addPlugins(boolean isHeadless) {
 		if (!isHeadless) {
 			List<PluginChrome.TypePluginChrome> listPlugins = new ArrayList<>();
-			if (isRecord) {
+			if (isStartRecord) {
 				listPlugins.add(TypePluginChrome.MOVAVI_SCREEN_RECORDER);
 			}
 			for (var typePlugin : listPlugins) {

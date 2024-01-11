@@ -21,6 +21,7 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
+import com.github.jorge2m.testmaker.domain.TypeRecord;
 import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidencesStorer;
 
@@ -30,6 +31,7 @@ public class TestCaseTM  {
 	private List<StepTM> listSteps = new ArrayList<>();
 	private StateExecution stateRun = StateExecution.STARTED;
 	private State state = State.OK;
+	private boolean retried;
 	private final SuiteTM suiteParent;
 	private final TestRunTM testRunParent;
 	private final ITestResult result;
@@ -359,6 +361,22 @@ public class TestCaseTM  {
 	
 	private void storeEvidences() {
 		new TestCaseEvidencesStorer(this).captureAndStore();
+	}
+	
+	public boolean isStartRecordNeeded() {
+		return TypeRecord.isStartRecordNeeded(this);
+	}
+	
+	public boolean isStopRecordNeeded() {
+		return TypeRecord.isStopRecordNeeded(this);
+	}
+
+	public boolean isRetried() {
+		return retried || getInputParamsSuite().isRetried();
+	}
+
+	public void setRetried(boolean retried) {
+		this.retried = retried;
 	}
 	
 }

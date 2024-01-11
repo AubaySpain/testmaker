@@ -44,6 +44,7 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String TCASE_EXCLUDED_NAME_PARAM = "tcasesexcluded";
 	public static final String GROUPS_NAME_PARAM = "groups";
 	public static final String RETRY_PARAM = "retry";
+	public static final String RETRIED_PARAM = "retried";
 	public static final String THREADS_PARAM = "threads";
 	public static final String THREADS_RAMP_PARAM = "threadsramp";
 	public static final String SERVER_DNS_NAME_PARAM = "serverDNS";
@@ -120,6 +121,9 @@ public abstract class InputParamsTM implements Serializable {
 	
 	@FormParam(RETRY_PARAM)
 	String retry;	
+	
+	@FormParam(RETRIED_PARAM)
+	String retried;
 	
 	@FormParam(THREADS_PARAM)
 	String threads;
@@ -311,6 +315,13 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Number or retrys of a TestCase with problems")
 			.build());		
 		
+		optionsTM.add(OptionTMaker.builder(RETRIED_PARAM)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Indicates if the testcase is retried")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(THREADS_PARAM)
 			.required(false)
 			.hasArgs()
@@ -366,17 +377,17 @@ public abstract class InputParamsTM implements Serializable {
 			.build());
 
 		optionsTM.add(OptionTMaker.builder(RECORD_PARAM)
-				.required(false)
-				.hasArgs()
-				.possibleValues(Arrays.asList("true", "false"))
-				.desc("Record Video (true, false)")
-				.build());		
+			.required(false)
+			.hasArgs()
+			.possibleValues(TypeRecord.getAllParamValues())
+			.desc("Record Video (" + TypeRecord.getAllParamValues() + ")")
+			.build());		
 
 		optionsTM.add(OptionTMaker.builder(NOTIFICATION_PARAM)
 			.required(false)
 			.hasArgs()
 			.possibleValues(Arrays.asList("true", "false"))
-			.desc("Teams Notification Suite with problems (true, false)")
+			.desc("Teams Notification Suite with problems (true, false, whenretry, whendefect)")
 			.build());		
 		
 		optionsTM.add(OptionTMaker.builder(ALARM_PARAM)
@@ -528,6 +539,7 @@ public abstract class InputParamsTM implements Serializable {
 		}
 
 		retry = cmdLine.getOptionValue(RETRY_PARAM);
+		retried = cmdLine.getOptionValue(RETRIED_PARAM);
 		threads = cmdLine.getOptionValue(THREADS_PARAM);
 		threadsramp = cmdLine.getOptionValue(THREADS_RAMP_PARAM);
 		reciclewd = cmdLine.getOptionValue(RECICLE_WD_PARAM);
@@ -571,6 +583,7 @@ public abstract class InputParamsTM implements Serializable {
 		TCASES(TCASE_NAME_PARAM),
 		TCASES_EXCLUDED(TCASE_EXCLUDED_NAME_PARAM),
 		RETRY(RETRY_PARAM),
+		RETRIED(RETRIED_PARAM),
 		THREADS(THREADS_PARAM),
 		THREADS_RAMP(THREADS_RAMP_PARAM),
 		SERVER_DNS(SERVER_DNS_NAME_PARAM),
@@ -643,6 +656,8 @@ public abstract class InputParamsTM implements Serializable {
 			return this.tcasesexcludedCommaSeparated;			
 		case RETRY:
 			return this.retry;
+		case RETRIED:
+			return this.retried;
 		case THREADS:
 			return this.threads;
 		case THREADS_RAMP:
@@ -779,14 +794,6 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	
 	public String getDriver() {
-		if (isRecord()) {
-			if (driver.compareTo(EmbeddedDriver.chromehless.name())==0) {
-				return EmbeddedDriver.chrome.name();
-			}
-			if (driver.compareTo(EmbeddedDriver.firefoxhless.name())==0) {
-				return EmbeddedDriver.firefox.name();
-			}			
-		}
 		return this.driver;
 	}
 	public void setDriver(String driver) {
@@ -867,7 +874,7 @@ public abstract class InputParamsTM implements Serializable {
 		String[] tcases = listTestCasesExcluded.toArray(new String[listTestCasesExcluded.size()]);
 		tcasesexcludedCommaSeparated = String.join(",", tcases);
 	}
-	
+
 	public String getRetry() {
 		return retry;
 	}
@@ -893,6 +900,16 @@ public abstract class InputParamsTM implements Serializable {
 		}
 		
 		return Optional.of(retryParams);
+	}
+
+	public boolean isRetried() {
+		if (retried!=null) {
+	    	return ("true".compareTo(retried)==0);
+		}
+		return false;
+	}
+	public void setRetried(String retried) {
+		this.retried = retried;
 	}
 	
 	public String getThreads() {
@@ -964,15 +981,9 @@ public abstract class InputParamsTM implements Serializable {
 	public void setRecord(String record) {
 		this.record = record;
 	}
-	public boolean isRecord() {
-		if (record!=null) {
-			return ("true".compareTo(record)==0);
-		}
-		return false;
+	public String getRecord() {
+		return record;
 	}	
-	public boolean isAvailableRecord() {
-		return isRecord() && getDriverType().supportsVideo();
-	}
 	
 	public void setNotification(String notification) {
 		this.notification = notification;

@@ -8,7 +8,7 @@ public class FactoryWebdriverMaker {
 		firefox(false, false), 
 		firefoxhless(true, false), 
 		chrome(false, true), 
-		chromehless(true, false),
+		chromehless(true, true),
 		edge(false, false),
 		browserstack(false, false);
 		
@@ -52,8 +52,8 @@ public class FactoryWebdriverMaker {
 		case chromehless:
 		default:
 			boolean isHeadless = driverType.isHeadless();
-			boolean isRecord = testCase.getSuiteParent().getInputParams().isAvailableRecord();
-			return new ChromedriverMaker(isHeadless, isRecord, testCase.getTestPathDirectory());
+			boolean isStartRecord = testCase.isStartRecordNeeded();
+			return new ChromedriverMaker(isHeadless, isStartRecord, testCase.getTestPathDirectory());
 		}
 	}
 	

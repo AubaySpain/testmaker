@@ -39,7 +39,8 @@ public class RemoteTest extends JaxRsClient {
 	public Optional<SuiteBean> execute(TestCaseTM testCase, Object testObject) 
 			throws Exception {
 		var inputParams = testCase.getInputParamsSuite();
-		setIdExecSuite(inputParams, testCase);
+		setIdExecSuite(inputParams, testCase); 
+		inputParams.setRetried(String.valueOf(testCase.isRetried()));
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
 			Log4jTM.getLogger().info("Factory Test (%s) -> Remote", testCase.getName());
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);

@@ -106,6 +106,7 @@ public class TestAspect {
 			throws Throwable {
 		testCaseActual.end(State.RETRY);
 		var testCaseNew = new TestCaseTM(testCaseActual.getResult());
+		testCaseNew.setRetried(true);
 		TestMaker.skipTestsIfSuiteEnded(testCaseNew.getSuiteParent());
 		testCaseActual.getTestRunParent().addTestCase(testCaseNew);
 		
