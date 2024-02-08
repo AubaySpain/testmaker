@@ -90,11 +90,13 @@ public class PluginSgreenRecorder extends PluginChrome implements VideoRecorder 
     private boolean downloadVideoAndCheck() {
     	for (int i=0; i<5; i++) {
     		clickDownload(3);
+    		PageObjTM.waitMillis(3000);
     		if (TestCaseEvidenceStorerBase.existFileEvidence(TestCaseEvidence.VIDEO, testcase)) {
     			return true;
     		}
-    		Log4jTM.getLogger().info("Not saved video downloaded...");    		
-    		PageObjTM.waitMillis(3000);
+    		Log4jTM.getLogger().info("Not saved video downloaded...");
+    		driver.navigate().refresh();
+    		PageObjTM.waitMillis(1000);
     	}
     	return false;
     }

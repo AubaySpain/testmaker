@@ -82,6 +82,7 @@ class ChromedriverMaker extends DriverMaker {
 		options.addArguments("--privileged");
 		options.addArguments("--remote-allow-origins=*");
 		options.addArguments("enable-automation");
+
 		if (isStartRecord) {
 			createPathForEvidencesStore();
 			HashMap<String, Object> chromePrefs = new HashMap<>();

@@ -9,7 +9,6 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.openqa.selenium.WebDriver;
@@ -294,11 +293,11 @@ public class TestCaseTM  {
 		this.specificInputData = sufix;
 		updateInvocationCount();
 	}
-	public static void addNameSufix(String sufix) throws NoSuchElementException {
-		TestCaseTM.getTestCaseInExecution()
-			.orElseThrow(NoSuchElementException::new)
-			.addSufixToName(sufix);
-	}
+//	public static void addNameSufix(String sufix) throws NoSuchElementException {
+//		TestCaseTM.getTestCaseInExecution()
+//			.orElseThrow(NoSuchElementException::new)
+//			.addSufixToName(sufix);
+//	}
 	
 	public TestCaseBean getTestCaseBean() {
 		var testCaseBean = new TestCaseBean();

@@ -24,7 +24,7 @@ public class VideoStorer extends TestCaseEvidenceStorerBase {
 		if (testcase.isStopRecordNeeded()) {
 			if (isRemote()) {
 				VideoRecorder.make(testcase).stop();
-				String video = getVideoBase64FromFile(5);
+				String video = getVideoBase64FromFile(1);
 				testcase.setVideo(video);
 				deleteFileVideo();
 			} else {

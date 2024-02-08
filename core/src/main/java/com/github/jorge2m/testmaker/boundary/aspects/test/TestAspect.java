@@ -13,6 +13,7 @@ import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.Alarm;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.ServerSubscribers;
+import com.github.jorge2m.testmaker.domain.TestFromFactory;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -40,8 +41,15 @@ public class TestAspect {
 	}
 	
 	private Object manageAroundTest(ProceedingJoinPoint joinPoint) throws Throwable {
+
 		var testCase = TestCaseTM.getTestCaseInExecution()
 				.orElseThrow(NoSuchElementException::new);
+		
+		if (joinPoint.getTarget() instanceof TestFromFactory) {
+			var targetObject = (TestFromFactory) joinPoint.getTarget();
+			String idTestInFactory = targetObject.getIdTestInFactory();
+			testCase.addSufixToName(idTestInFactory);
+		}
 		
 		TestMaker.skipTestsIfSuiteEnded(testCase.getSuiteParent());
 		return manageTestExecution(testCase, joinPoint);

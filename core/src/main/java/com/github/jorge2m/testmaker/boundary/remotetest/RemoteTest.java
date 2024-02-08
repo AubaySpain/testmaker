@@ -28,7 +28,8 @@ import com.github.jorge2m.testmaker.testreports.testcasestore.VideoStorer;
 
 public class RemoteTest extends JaxRsClient {
 	
-	private static final int TIMEOUT_MILLIS = 15 * 60 * 1000; // 15 minutes
+	private static final int TIMEOUT_CONNECTION = 15 * 1000; // 15 seconds
+	private static final int TIMEOUT_RECEIVE = 15 * 60 * 1000; // 15 minutes
 	private static final int MAX_RETRY_TEST = 3;
 	private final ServerSubscriber server;
 	
@@ -40,7 +41,6 @@ public class RemoteTest extends JaxRsClient {
 			throws Exception {
 		var inputParams = testCase.getInputParamsSuite();
 		setIdExecSuite(inputParams, testCase); 
-		inputParams.setRetried(String.valueOf(testCase.isRetried()));
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
 			Log4jTM.getLogger().info("Factory Test (%s) -> Remote", testCase.getName());
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);
@@ -64,6 +64,7 @@ public class RemoteTest extends JaxRsClient {
 		Log4jTM.getLogger().info("Object Serialized: %s", testSerializedStrB64);
 		var suiteRemote = suiteRun(
 				inputParams, 
+				String.valueOf(testCase.isRetried()),
 				Arrays.asList(testCase.getName()), 
 				testSerializedStrB64);
 		
@@ -76,6 +77,7 @@ public class RemoteTest extends JaxRsClient {
 	private Optional<SuiteBean> executeTestStandar(TestCaseTM testCase, InputParamsTM inputParams) throws Exception {
 		var suiteRemote = suiteRun(
 				inputParams, 
+				String.valueOf(testCase.isRetried()),
 				Arrays.asList(testCase.getName()), 
 				null);
 		
@@ -130,8 +132,9 @@ public class RemoteTest extends JaxRsClient {
 		return testToReturn;
 	}
 	
-	public Optional<SuiteBean> suiteRun(InputParamsTM inputParams, List<String> testCases, String testObjectSerialized) 
-	throws Exception {
+	public Optional<SuiteBean> suiteRun(InputParamsTM inputParams, String retried, List<String> testCases, String testObjectSerialized) 
+			throws Exception {
+		
 		Form formParams = getFormParams(inputParams.getAllParamsValues());
 		var mapParams = formParams.asMap();
 		if (testCases!=null) {
@@ -143,6 +146,7 @@ public class RemoteTest extends JaxRsClient {
 		mapParams.putSingle(InputParamsTM.ASYNC_EXEC_PARAM, "false");
 		mapParams.putSingle(InputParamsTM.REMOTE_PARAM, "true");
 		mapParams.putSingle(InputParamsTM.NOTIFICATION_PARAM, "false");
+		mapParams.putSingle(InputParamsTM.RETRIED_PARAM, retried);
 
 		var client = getClientIgnoreCertificates();
 		return execRemoteSuiteRun(client, formParams, MAX_RETRY_TEST);
@@ -163,11 +167,11 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private SuiteBean execRemoteSuiteRun(Client client, Form formParams) {
-		Invocation.Builder builder = client 
+		Invocation.Builder builder = client
 				.target(server.getUrl() + "/suiterun")
 				.request(MediaType.APPLICATION_JSON)
-				.property("javax.xml.ws.client.receiveTimeout", TIMEOUT_MILLIS)
-                .property("javax.xml.ws.client.connectionTimeout", TIMEOUT_MILLIS);
+				.property("jersey.config.client.readTimeout", TIMEOUT_RECEIVE)
+                .property("jersey.config.client.connectTimeout", TIMEOUT_CONNECTION);
 		
 		return builder.post(Entity.form(formParams), SuiteBean.class);
 	}

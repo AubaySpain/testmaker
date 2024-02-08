@@ -2,11 +2,18 @@ package com.github.jorge2m.testmaker.service.webdriver.pool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Sequence;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -78,6 +85,10 @@ public class PoolWebDrivers implements Serializable {
 				.setNettraffic(netAnalysis)
 				.build();
 
+//	    var eventListener = new WebDriverListenerExample();
+//	    EventFiringDecorator<WebDriver> decorator = new EventFiringDecorator<>(eventListener);
+//	    WebDriver driver = decorator.decorate(driverOrigin);
+		
 		storeWebDriver(driver, StoredWebDrv.stateWd.busy, driverId, moreDataWdrv);
 		return driver;
 	}
@@ -202,4 +213,14 @@ public class PoolWebDrivers implements Serializable {
 
 		return moreDataWdrv;
 	}
+	
+	
+//	public class WebDriverListenerExample implements WebDriverListener {
+//
+//		@Override
+//	    public void beforeGet(WebDriver driver, String url) {
+//	        System.out.println("Before navigating to URL: " + url);
+//	    }
+//
+//	}	
 }

@@ -14,8 +14,8 @@ import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 public class CmdRunTests {
 
 	public static void main(String[] args) throws Exception { 
-		InputParamsBasic inputParams = new InputParamsBasic(Suites.class, Apps.class);
-		CmdLineMaker cmdLineAccess = CmdLineMaker.from(args, inputParams);
+		var inputParams = new InputParamsBasic(Suites.class, Apps.class);
+		var cmdLineAccess = CmdLineMaker.from(args, inputParams);
 		if (cmdLineAccess.checkOptionsValue().isOk()) {
 			CreatorSuiteRun creatorSuiteRun = CreatorSuiteRunTestGoogle.getNew(inputParams);
 			creatorSuiteRun.execTestSuite(false);
