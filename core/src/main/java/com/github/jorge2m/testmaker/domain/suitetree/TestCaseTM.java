@@ -60,7 +60,7 @@ public class TestCaseTM  {
 	
 	private int getInvocationCountForTest() {
 		List<Integer> listCounts = new ArrayList<>();
-		var listTestCases = testRunParent.getListTestCases();
+		var listTestCases = new ArrayList<>(testRunParent.getListTestCases()); //Defensive copy for avoid ConcurrentModificationException
 		for (var testCaseTM : listTestCases) {
 			if (testCaseTM.getNameWithInputData().compareTo(getNameWithInputData())==0 &&
 				testCaseTM!=this) {

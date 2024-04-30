@@ -3,12 +3,14 @@ package com.github.jorge2m.testmaker.boundary.remotetest;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
@@ -156,10 +158,17 @@ public class RemoteTest extends JaxRsClient {
 		for (int i=1; i<=numRetries; i++) {
 			try {
 				return Optional.of(execRemoteSuiteRun(client, formParams));
-			}
+        	} catch (ProcessingException pe) {
+        		if (pe.getCause() instanceof SocketTimeoutException) {
+        			Log4jTM.getLogger().warn("SocketTimeoutException in Remote Test execution (retry " + i + "), not retry", pe);
+        			throw pe;
+        		} else {
+    				Log4jTM.getLogger().warn("ProcessingException in Remote Test execution (retry " + i + "), retry in 10 seconds...", pe);
+        			Thread.sleep(10000);
+        		}
+        	}
 			catch (Exception e) {
-				Log4jTM.getLogger().warn(
-					"Exception in Remote Test execution (retry " + i + "), retry in 10 seconds...", e);
+				Log4jTM.getLogger().warn("Exception in Remote Test execution (retry " + i + "), retry in 10 seconds...", e);
 				Thread.sleep(10000);
 			}
 		}
