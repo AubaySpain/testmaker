@@ -10,18 +10,22 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.lang.reflect.Method;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.InitObject;
+import org.testng.internal.ConstructorOrMethod;
+import org.testng.annotations.Test;
+import org.testng.annotations.Factory;
 
 import com.github.jorge2m.testmaker.conf.State;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.domain.TypeRecord;
-import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
+import com.github.jorge2m.testmaker.domain.exceptions.NoSuchAnnotationException;
 import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidencesStorer;
 
 public class TestCaseTM  {
@@ -34,6 +38,7 @@ public class TestCaseTM  {
 	private final SuiteTM suiteParent;
 	private final TestRunTM testRunParent;
 	private final ITestResult result;
+	private final String code;
 	private final long threadId;
 	private final InitTestObjects initTestObjects;
 	private String specificInputData = "";
@@ -45,6 +50,7 @@ public class TestCaseTM  {
 		this.testRunParent = (TestRunTM)result.getTestContext().getCurrentXmlTest();
 		this.suiteParent = (SuiteTM)testRunParent.getSuite();
 		this.result = result;
+		this.code = getCode(result);
 		this.threadId = Thread.currentThread().getId();
 		this.invocationCount = getInvocationCountForTest();
 		this.initTestObjects = new InitTestObjects(this);
@@ -53,6 +59,19 @@ public class TestCaseTM  {
 	public void init(InitObject initObject) {
 		initTestObjects.make(initObject);
 	}
+	
+	private String getCode(ITestResult result) {
+		ConstructorOrMethod consOrMethod = result.getMethod().getConstructorOrMethod();
+		Method method = consOrMethod.getMethod();
+		if (method.isAnnotationPresent(Test.class)) {
+			return method.getAnnotation(Test.class).testName();
+		}
+		if (method.isAnnotationPresent(Factory.class)) {
+			return method.getAnnotation(Factory.class).testName();
+		}
+		throw new NoSuchAnnotationException("Method without Test or Factory annotation");
+	}
+
 	
 	private void updateInvocationCount() {
 		this.invocationCount = getInvocationCountForTest();
@@ -91,14 +110,15 @@ public class TestCaseTM  {
 		return result.getName();
 	}
 	public String getCode() {
-		return TestNameUtils.getCodeFromTestCase(getName());
+		return this.code; 
+//		return TestNameUtils.getCodeFromTestCase(getName());
 	}
 	
-	public String getNameWithInputData() {
+	public String getNameWithInputData() { 
 		if ("".compareTo(getSpecificInputData())!=0) {
-			return getName() + " (" + getSpecificInputData() + ")";
+			return getCode() + " (" + getSpecificInputData() + ")";
 		}
-		return getName();
+		return getCode();
 	}
 	
 	public String getNameUnique() {

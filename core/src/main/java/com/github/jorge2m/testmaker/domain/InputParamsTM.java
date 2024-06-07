@@ -854,9 +854,9 @@ public abstract class InputParamsTM implements Serializable {
         return testCaseData;
     }    
 	
-	public TestCaseParams getTestCaseParams(String nameTestCase) {
+	public TestCaseParams getTestCaseParams(String codeTest) {
 		for (var testCaseData : getListTestCasesIncludedData()) {
-			if (TestNameUtils.isMethodNameTestCase(nameTestCase, testCaseData.getName())) {
+			if (testCaseData.getName().compareTo(codeTest)==0) {
 				return testCaseData;
 			}
 		}

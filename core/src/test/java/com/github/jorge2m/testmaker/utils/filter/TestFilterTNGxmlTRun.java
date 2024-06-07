@@ -32,7 +32,7 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void getListOfTestMethodsFilteredByIncludesAndDesktopShop() {
         InputParamsTM inputData = getInputDataBasic();
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITHOUT_METHOS_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         testStub.getTestRun();
@@ -42,9 +42,9 @@ public class TestFilterTNGxmlTRun {
         testMethodsNames.add(testStub.getListTests().get(0).getData().getTestCaseName());
         testMethodsNames.add(testStub.getListTests().get(1).getData().getTestCaseName());
         testMethodsNames.add(testStub.getListTests().get(2).getData().getTestCaseName());
-        String method1 = "MIC001_Opciones_Mi_Cuenta";
-        String method2 = "GPO001_Galeria_Camisas";
-        String method3 = "BOR001_AddBolsaFromGaleria_NoReg";
+        String method1 = "Opciones_Mi_Cuenta"; //MIC001
+        String method2 = "Galeria_Camisas"; //GPO001
+        String method3 = "AddBolsaFromGaleria_NoReg"; //BOR001
         assertTrue("The method " + method1 + " is present", testMethodsNames.contains(method1));
         assertTrue("The method " + method2 + " is present", testMethodsNames.contains(method2));
         assertTrue("The method " + method3 + " is present", testMethodsNames.contains(method3));
@@ -53,7 +53,7 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void getListOfTestMethodsFilteredByIncludes() {
         InputParamsTM inputData = getInputDataBasic();
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.OnlyMethodGpo001includedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.ONLY_METHOD_GPO001_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         testStub.getTestRun();
@@ -70,7 +70,7 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void getListOfTestMethodsNotFilteredByIncludes() {
         InputParamsTM inputData = getInputDataBasic();
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITHOUT_METHOS_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         testStub.getTestRun();
@@ -81,7 +81,7 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void filterListOfTestCasesVoidWithInclude() {
         InputParamsTM inputData = getInputDataBasic();
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.OnlyMethodMic001includedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.ONLY_METHOD_MIC001_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         XmlTest testRun = testStub.getTestRun();
@@ -95,26 +95,26 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void filterListOfTestCasesVoidWithoutInclude() {
         InputParamsTM inputData = getInputDataBasic();
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITHOUT_METHOS_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         XmlTest testRun = testStub.getTestRun();
         
         assertEquals("The number of dependencies-group is " + 1, 1, testRun.getXmlDependencyGroups().size());
-        assertEquals("The number of methods is " + TestNGxmlStub.numberTestsCasesDesktopShop, TestNGxmlStub.numberTestsCasesDesktopShop, getIncludedMethodsCount(testRun.getXmlClasses()));
+        assertEquals("The number of methods is " + TestNGxmlStub.NUMBER_TEST_CASES_DESKTOP_SHOP, TestNGxmlStub.NUMBER_TEST_CASES_DESKTOP_SHOP, getIncludedMethodsCount(testRun.getXmlClasses()));
     }
     
     @Test
     public void filterIncludeNewTestCase() {
         InputParamsTM inputData = getInputDataBasic();
-        String testExpectedToBeIncluded = TestNGxmlStub.methodGroupGaleriaProductoToInclude;
-        inputData.setListTestCaseItems(Arrays.asList(testExpectedToBeIncluded));
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        String testExpectedToBeIncluded = TestNGxmlStub.GPO001_TO_INCLUDE;
+        inputData.setListTestCaseItems(Arrays.asList("GPO001"));
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITHOUT_METHOS_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         XmlTest testRun = testStub.getTestRun();
         
-        String textExpectedToNotBeIncluded = TestNGxmlStub.methodGroupMiCuentaToInclude;
+        String textExpectedToNotBeIncluded = TestNGxmlStub.MIC001_TO_INCLUDE;
         assertTrue("The new method " + testExpectedToBeIncluded + " is included", classIncludesMethod(testRun.getXmlClasses().get(0), testExpectedToBeIncluded));
         assertTrue("The old method " + textExpectedToNotBeIncluded + " disappear", !classIncludesMethod(testRun.getXmlClasses().get(0), textExpectedToNotBeIncluded));
         assertEquals("No remains dependencies-group", 0, testRun.getXmlDependencyGroups().size());
@@ -123,14 +123,14 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void filterExcludeTestCases() {
         InputParamsTM inputData = getInputDataBasic();
-        String testExpectedToBeExcluded = TestNGxmlStub.methodGroupGaleriaProductoToInclude;
-        inputData.setListTestCaseExcludedItems(Arrays.asList(testExpectedToBeExcluded));
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithoutMethodsIncludedInClass, inputData);
+        String testExpectedToBeExcluded = TestNGxmlStub.GPO001_TO_INCLUDE;
+        inputData.setListTestCaseExcludedItems(Arrays.asList("GPO001"));
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITHOUT_METHOS_INCLUDED_IN_CLASS, inputData);
         
         //Code to test
         XmlTest testRun = testStub.getTestRun();
         
-        String textExpectedToBeIncluded = TestNGxmlStub.methodGroupMiCuentaToInclude;
+        String textExpectedToBeIncluded = TestNGxmlStub.MIC001_TO_INCLUDE;
         assertTrue("The new method " + testExpectedToBeExcluded + " is not included", !classIncludesMethod(testRun.getXmlClasses().get(0), testExpectedToBeExcluded));
         assertTrue("The old method " + textExpectedToBeIncluded + " is included", classIncludesMethod(testRun.getXmlClasses().get(0), textExpectedToBeIncluded));
         assertEquals("No remains dependencies-group", 0, testRun.getXmlDependencyGroups().size());
@@ -139,12 +139,13 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void filterIncludeTwoTestCaseByName_1groupRemains() {
         InputParamsTM inputData = getInputDataBasic();
-        inputData.setListTestCaseItems(
-        	Arrays.asList(
-        		TestNGxmlStub.methodGroupGaleriaProductoToInclude, 
-        		TestNGxmlStub.methodGroupMiCuentaToInclude));
+//        inputData.setListTestCaseItems(
+//        	Arrays.asList(
+//        		TestNGxmlStub.methodGroupGaleriaProductoToInclude, 
+//        		TestNGxmlStub.methodGroupMiCuentaToInclude));
+        inputData.setListTestCaseItems(Arrays.asList("GPO001", "MIC001"));        
         
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithTwoMethodsIncludedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITH_TWO_METHODS_INCLUDED_IN_CLASS, inputData);
         
         checkAfterIncludeTwoMethods(testStub);
     }
@@ -152,12 +153,13 @@ public class TestFilterTNGxmlTRun {
     @Test
     public void filterIncludeTwoTestCasesByCode_1groupRemains() {
         InputParamsTM inputData = getInputDataBasic();
-        inputData.setListTestCaseItems(
-        	Arrays.asList(
-        		TestNGxmlStub.methodGroupGaleriaProductoToInclude.substring(0,6), 
-        		TestNGxmlStub.methodGroupMiCuentaToInclude.substring(0,6)));
+//        inputData.setListTestCaseItems(
+//        	Arrays.asList(
+//        		TestNGxmlStub.methodGroupGaleriaProductoToInclude.substring(0,6), 
+//        		TestNGxmlStub.methodGroupMiCuentaToInclude.substring(0,6)));
+      inputData.setListTestCaseItems(Arrays.asList("GPO001", "MIC001"));                
         
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WithTwoMethodsIncludedInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.WITH_TWO_METHODS_INCLUDED_IN_CLASS, inputData);
         
         checkAfterIncludeTwoMethods(testStub);
     }
@@ -169,16 +171,17 @@ public class TestFilterTNGxmlTRun {
         assertEquals("Remains only 1 dependency-group ", 1, testRun.getXmlDependencyGroups().size());
         assertTrue("Is present the group \"GaleriaProducto\"", isGroupInDependencies(testRun, "GaleriaProducto", GroupDep.to));
         assertTrue("Is present the dependency \"Micuenta\"", isGroupInDependencies(testRun, "Micuenta", GroupDep.from));
-        assertTrue("The new method " + TestNGxmlStub.methodGroupGaleriaProductoToInclude + " is included", classIncludesMethod(testRun.getXmlClasses().get(0), TestNGxmlStub.methodGroupGaleriaProductoToInclude));
-        assertTrue("The old method " + TestNGxmlStub.methodGroupMiCuentaToInclude + " remains included", classIncludesMethod(testRun.getXmlClasses().get(0), TestNGxmlStub.methodGroupMiCuentaToInclude));        
+        assertTrue("The new method " + TestNGxmlStub.GPO001_TO_INCLUDE + " is included", classIncludesMethod(testRun.getXmlClasses().get(0), TestNGxmlStub.GPO001_TO_INCLUDE));
+        assertTrue("The old method " + TestNGxmlStub.MIC001_TO_INCLUDE + " remains included", classIncludesMethod(testRun.getXmlClasses().get(0), TestNGxmlStub.MIC001_TO_INCLUDE));        
     }
     
     @Test
     public void includeTestCaseThatDoesnotExists() {
         InputParamsTM inputData = getInputDataBasic();
-        inputData.setListTestCaseItems(Arrays.asList(TestNGxmlStub.methodThatDoesNotExistsInClass));
+//        inputData.setListTestCaseItems(Arrays.asList(TestNGxmlStub.methodThatDoesNotExistsInClass));
+        inputData.setListTestCaseItems(Arrays.asList("COM001"));        
         
-        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.OnlyMethodThatDoesntExistInClass, inputData);
+        TestNGxmlStub testStub = TestNGxmlStub.getNew(TypeStubTest.ONLY_METHOD_THAT_DOESNT_EXISTS_IN_CLASS, inputData);
         
         //Code to test
         XmlTest testRun = testStub.getTestRun();

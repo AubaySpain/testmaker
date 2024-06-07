@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.CONSTRUCTOR})
 public @interface Factory {
 	
+  public String testName() default "";
   public String[] groups() default {"Canal:all_App:all"};
   public String description() default "";
   

@@ -13,7 +13,8 @@ public class MyTransformer implements IAnnotationTransformer {
 	@Override
 	public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
 		SuiteTM suite = SuiteTM.getSuiteCreatedInPresentThread();
-		var testCaseData = suite.getInputParams().getTestCaseParams(testMethod.getName());
+		//var testCaseData = suite.getInputParams().getTestCaseParams(testMethod.getName());
+		var testCaseData = suite.getInputParams().getTestCaseParams(annotation.getTestName());
 		if (testCaseData!=null) {
 			Integer invocationCount = testCaseData.getInvocationCount(); 
 			if (invocationCount!=null) {

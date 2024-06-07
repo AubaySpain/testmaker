@@ -44,7 +44,7 @@ public class RemoteTest extends JaxRsClient {
 		var inputParams = testCase.getInputParamsSuite();
 		setIdExecSuite(inputParams, testCase); 
 		if (testCase.getSuiteParent().isTestFromFactory(testObject)) {
-			Log4jTM.getLogger().info("Factory Test (%s) -> Remote", testCase.getName());
+			Log4jTM.getLogger().info("Factory Test (%s) -> Remote", testCase.getCode());
 			return executeTestFromFactory(testCase, inputParams, (Serializable)testObject);
 		}
 		Log4jTM.getLogger().info("Standar Test -> Remote");
@@ -80,7 +80,7 @@ public class RemoteTest extends JaxRsClient {
 		var suiteRemote = suiteRun(
 				inputParams, 
 				String.valueOf(testCase.isRetried()),
-				Arrays.asList(testCase.getName()), 
+				Arrays.asList(testCase.getCode()), 
 				null);
 		
 		if (!suiteRemote.isPresent()) {

@@ -13,27 +13,27 @@ import com.github.jorge2m.testmaker.domain.TestRunMaker;
 public class TestNGxmlStub extends SuiteMaker {
 
     public enum TypeStubTest {
-    	WithoutMethodsIncludedInClass,
-    	OnlyMethodGpo001includedInClass,
-    	OnlyMethodMic001includedInClass,
-    	WithTwoMethodsIncludedInClass,
-    	OnlyMethodThatDoesntExistInClass;
+    	WITHOUT_METHOS_INCLUDED_IN_CLASS,
+    	ONLY_METHOD_GPO001_INCLUDED_IN_CLASS,
+    	ONLY_METHOD_MIC001_INCLUDED_IN_CLASS,
+    	WITH_TWO_METHODS_INCLUDED_IN_CLASS,
+    	ONLY_METHOD_THAT_DOESNT_EXISTS_IN_CLASS;
     }
 	
-    public final static Class<?> classWithTestAnnotations = ClassWithTCasesStub.class;
-    public final static String methodGroupGaleriaProductoToInclude = "GPO001_Galeria_Camisas";
-    public final static String methodGroupMiCuentaToInclude = "MIC001_Opciones_Mi_Cuenta";
-    public final static String methodThatDoesNotExistsInClass = "COM001_Compra_TrjSaved_Empl";
-    public final static int numberTestsCasesDesktopShop = 3;
+    public final static Class<?> CLASS_WITH_TEST_ANNOTATIONS = ClassWithTCasesStub.class;
+    public final static String GPO001_TO_INCLUDE = "Galeria_Camisas";
+    public final static String MIC001_TO_INCLUDE = "Opciones_Mi_Cuenta";
+    public final static String COM001_NOT_EXISTS_IN_CLASS = "Compra_TrjSaved_Empl";
+    public final static int NUMBER_TEST_CASES_DESKTOP_SHOP = 3;
     
     TypeStubTest typeTest;
 
     private TestNGxmlStub(TypeStubTest typeTest, InputParamsTM inputData) {
     	super(inputData);
     	this.typeTest = typeTest;
-    	TestRunMaker testRun = TestRunMaker.from("TestRun Test", classWithTestAnnotations);
+    	TestRunMaker testRun = TestRunMaker.from("TestRun Test", CLASS_WITH_TEST_ANNOTATIONS);
     	testRun.addDependencyGroups(getDependencyGroups());
-    	testRun.includeMethodsInClass(classWithTestAnnotations, getMethodsIncludedInClass());
+    	testRun.includeMethodsInClass(CLASS_WITH_TEST_ANNOTATIONS, getMethodsIncludedInClass());
     	addTestRun(testRun);
     }
     
@@ -56,26 +56,26 @@ public class TestNGxmlStub extends SuiteMaker {
     
     public List<String> getMethodsIncludedInClass() {
     	switch (typeTest) {
-    	case OnlyMethodGpo001includedInClass:
+    	case ONLY_METHOD_GPO001_INCLUDED_IN_CLASS:
     		return (
-    			Arrays.asList(methodGroupGaleriaProductoToInclude)
+    			Arrays.asList(GPO001_TO_INCLUDE)
     		);
-    	case OnlyMethodMic001includedInClass:
+    	case ONLY_METHOD_MIC001_INCLUDED_IN_CLASS:
     		return (
-    			Arrays.asList(methodGroupMiCuentaToInclude)
+    			Arrays.asList(MIC001_TO_INCLUDE)
     		);
-    	case WithTwoMethodsIncludedInClass:
+    	case WITH_TWO_METHODS_INCLUDED_IN_CLASS:
     		return (
     			Arrays.asList(
-    				methodGroupGaleriaProductoToInclude,
-    				methodGroupMiCuentaToInclude)
+    				GPO001_TO_INCLUDE,
+    				MIC001_TO_INCLUDE)
     		);
-    	case OnlyMethodThatDoesntExistInClass:
+    	case ONLY_METHOD_THAT_DOESNT_EXISTS_IN_CLASS:
     		return (
-    			Arrays.asList(methodThatDoesNotExistsInClass)
+    			Arrays.asList(COM001_NOT_EXISTS_IN_CLASS)
     	    );
     	default:
-    	case WithoutMethodsIncludedInClass:
+    	case WITHOUT_METHOS_INCLUDED_IN_CLASS:
     		return (new ArrayList<String>());
     	}
     }

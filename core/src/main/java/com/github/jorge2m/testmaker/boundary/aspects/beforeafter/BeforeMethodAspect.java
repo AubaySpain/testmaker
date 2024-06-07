@@ -41,7 +41,7 @@ public class BeforeMethodAspect {
 
 		TestRunTM testRun = getTestRun(methodParam);
 		InputParamsTM inputParams = testRun.getSuiteParent().getInputParams();
-		boolean executeTest = TestAspect.executeTestLocal(inputParams, methodParam);
+		boolean executeTest = TestAspect.executeTestLocal(inputParams, joinPoint);
 		if (executeTest) {
 			return joinPoint.proceed();
 		}

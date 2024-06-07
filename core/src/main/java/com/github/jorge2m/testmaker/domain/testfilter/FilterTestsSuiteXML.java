@@ -18,7 +18,6 @@ import org.testng.xml.XmlTest;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunTM;
-import com.github.jorge2m.testmaker.domain.util.TestNameUtils;
 
 public class FilterTestsSuiteXML {
     
@@ -127,8 +126,10 @@ public class FilterTestsSuiteXML {
         List<TestMethod> filteredList = new ArrayList<>(listToFilter);
 
         filteredList.removeIf(testMethod -> {
-            String methodName = testMethod.getData().getTestCaseName();
-            return !TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesIncludedFilter());
+            //String methodName = testMethod.getData().getTestCaseName();
+        	String testCaseName = testMethod.getTestName();
+        	return !dFilter.getTestCasesIncludedFilter().contains(testCaseName); 
+            //return !TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesIncludedFilter());
         });
 
         return filteredList;
@@ -142,8 +143,10 @@ public class FilterTestsSuiteXML {
         List<TestMethod> filteredList = new ArrayList<>(listToFilter);
 
         filteredList.removeIf(testMethod -> {
-            String methodName = testMethod.getData().getTestCaseName();
-            return TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesExcludedFilter());
+        	String testCaseName = testMethod.getTestName();
+        	return dFilter.getTestCasesExcludedFilter().contains(testCaseName);        	
+//            String methodName = testMethod.getData().getTestCaseName();
+//            return TestNameUtils.isMethodNameInTestCaseList(methodName, dFilter.getTestCasesExcludedFilter());
         });
 
         return filteredList;
@@ -228,26 +231,54 @@ public class FilterTestsSuiteXML {
         testRun.setGroups(xmlGroups);
     }
     
-    private void includeOnlyTestCasesInXmlClass(XmlClass xmlClass, List<TestMethod> testCasesToInclude) 
-    throws ClassNotFoundException {
+//    private void includeOnlyTestCasesInXmlClass(XmlClass xmlClass, List<TestMethod> testCasesToInclude) throws ClassNotFoundException {
+//        xmlClass.getIncludedMethods().clear();
+//        List<XmlInclude> includeMethods = new ArrayList<>();
+//        List<Method> methodList = new ArrayList<>(Arrays.asList(Class.forName(xmlClass.getName()).getMethods()));
+//        for (var method : methodList) {
+//            List<Annotation> annotationsList = new ArrayList<>(Arrays.asList(method.getDeclaredAnnotations()));
+//            for (var annotation : annotationsList) {
+//                if (annotation.annotationType()==org.testng.annotations.Test.class && 
+//                   ((Test)annotation).enabled() &&
+//                   testMethodsContainsTestName(testCasesToInclude, ((Test)annotation).testName())) {
+//                	includeMethods.add(new XmlInclude(method.getName()));
+//                	break;
+//                }
+//                
+//                if (annotation.annotationType()==org.testng.annotations.Factory.class && 
+//                   ((Factory)annotation).enabled() &&
+//                   testMethodsContainsTestName(testCasesToInclude, ((Factory)annotation).testName())) {
+//                	includeMethods.add(new XmlInclude(method.getName()));
+//                	break;
+//                }
+//            }
+//        }              
+//        
+//        xmlClass.setIncludedMethods(includeMethods);
+//    }
+    
+    private void includeOnlyTestCasesInXmlClass(XmlClass xmlClass, List<TestMethod> testCasesToInclude) throws ClassNotFoundException {
         xmlClass.getIncludedMethods().clear();
         List<XmlInclude> includeMethods = new ArrayList<>();
-        List<Method> methodList = new ArrayList<>(Arrays.asList(Class.forName(xmlClass.getName()).getMethods()));
-        for (var method : methodList) {
-            List<Annotation> annotationsList = new ArrayList<>(Arrays.asList(method.getDeclaredAnnotations()));
-            for (var annotation : annotationsList) {
-                if (((annotation.annotationType()==org.testng.annotations.Test.class && ((Test)annotation).enabled()) ||
-                	 (annotation.annotationType()==org.testng.annotations.Factory.class && ((Factory)annotation).enabled())) &&
-                	testMethodsContainsMethod(testCasesToInclude, method.getName())) {
-                	includeMethods.add(new XmlInclude(method.getName()));
-                	break;
+        Class<?> clazz = Class.forName(xmlClass.getName());
+        for (Method method : clazz.getMethods()) {
+            for (Annotation annotation : method.getDeclaredAnnotations()) {
+                if (annotation.annotationType() == Test.class && ((Test) annotation).enabled() &&
+                    testMethodsContainsTestName(testCasesToInclude, ((Test) annotation).testName())) {
+                    includeMethods.add(new XmlInclude(method.getName()));
+                    break;
+                } else {
+                	if (annotation.annotationType() == Factory.class && ((Factory) annotation).enabled() &&
+                        testMethodsContainsTestName(testCasesToInclude, ((Factory) annotation).testName())) {
+                		includeMethods.add(new XmlInclude(method.getName()));
+                		break;
+                	}
                 }
             }
-        }              
-        
+        }
         xmlClass.setIncludedMethods(includeMethods);
     }
-    
+
     private HashSet<String> getListOfGroupsWithTestCasesToExecute(XmlTest testRun) {
         HashSet<String> listOfGropusWithTestCases = new HashSet<>();
         var listOfTestAnnotations = getTestCasesToExecute(testRun);
@@ -293,14 +324,23 @@ public class FilterTestsSuiteXML {
     	return false;
     }
 
-    private boolean testMethodsContainsMethod(List<TestMethod> testCasesToInclude, String methodName) {
-        for (var testMethod : testCasesToInclude) {
-            if (testMethod.getData().getTestCaseName().compareTo(methodName)==0 ||  
-                methodName.indexOf(TestNameUtils.getCodeFromTestCase(testMethod.getData().getTestCaseName()))==0) {
-                return true;
-            }
-        }
-        return false;
+    private boolean testMethodsContainsTestName(List<TestMethod> testCasesToInclude, String testName) {
+    	for (var testMethod : testCasesToInclude) {
+    		if (testMethod.getTestName().compareTo(testName)==0) {
+    			return true;
+    		}
+    	}
+    	return false;    	
     }
+    
+//    private boolean testMethodsContainsMethod(List<TestMethod> testCasesToInclude, String methodName) {
+//        for (var testMethod : testCasesToInclude) {
+//            if (testMethod.getData().getTestCaseName().compareTo(methodName)==0 ||  
+//                methodName.indexOf(TestNameUtils.getCodeFromTestCase(testMethod.getData().getTestCaseName()))==0) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     
 }

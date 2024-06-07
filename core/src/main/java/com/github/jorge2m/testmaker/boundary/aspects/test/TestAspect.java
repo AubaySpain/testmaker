@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.github.jorge2m.testmaker.conf.SendType;
@@ -220,13 +221,17 @@ public class TestAspect {
 	
 	private Object executeTest(TestCaseTM testCase, ProceedingJoinPoint joinPoint) throws Throwable {
 		var inputParams = testCase.getInputParamsSuite();
-		var methodSignature = (MethodSignature)joinPoint.getSignature();
-		if (executeTestLocal(inputParams, methodSignature.getMethod())) {
+		if (executeTestLocal(inputParams, joinPoint)) {
 			Test testAnnotation = getTestAnnotation(joinPoint);
 			testCase.init(testAnnotation.create());
 			return joinPoint.proceed();
 		}
 		return null;
+	}
+	
+	private static Method getMethod(ProceedingJoinPoint joinPoint) {
+		var methodSignature = (MethodSignature)joinPoint.getSignature();
+		return methodSignature.getMethod();
 	}
 	
 	private Test getTestAnnotation(ProceedingJoinPoint joinPoint) {
@@ -239,7 +244,7 @@ public class TestAspect {
 			!inputParams.isTestExecutingInRemote() && 
 			ServerSubscribers.isSome());
 	}
-	public static boolean executeTestLocal(InputParamsTM inputParams, Method presentTestCaseMethod) {
+	public static boolean executeTestLocal(InputParamsTM inputParams, ProceedingJoinPoint joinPoint/*Method presentTestCaseMethod*/) {
 		if (executeTestRemote(inputParams)) {
 			return false;
 		}
@@ -248,7 +253,14 @@ public class TestAspect {
 			listTestCaseFilter.isEmpty()) {
 			return true;
 		}
-		return (presentTestCaseMethod.getName().compareTo(listTestCaseFilter.get(0))==0);
+		
+		var method = getMethod(joinPoint);
+		if (method.isAnnotationPresent(Test.class)) {
+			return 
+				(method.getAnnotation(Test.class).testName().compareTo(listTestCaseFilter.get(0))==0) || //Test
+				(method.getName().compareTo(listTestCaseFilter.get(0))==0); //Factory
+		}
+		return (method.isAnnotationPresent(BeforeMethod.class));
 	}
 
 	private boolean isTestExecutingInRemote(TestCaseTM testCase) {
