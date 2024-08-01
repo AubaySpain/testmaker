@@ -152,9 +152,9 @@ public class SuiteTM extends XmlSuite {
 	public void sendAlarmsIfNeeded() {
 		result = getResultFromTestsRun();
 		if (result.isMoreCriticThan(State.WARN)) {
-			var suiteAlarm = SuiteNotificationSender.make();
-			if (suiteAlarm.canSend(this)) {
-				suiteAlarm.send(this);
+			var suiteAlarm = SuiteNotificationSender.make(this);
+			if (suiteAlarm.canSend()) {
+				suiteAlarm.send();
 			}
 		}
 	}

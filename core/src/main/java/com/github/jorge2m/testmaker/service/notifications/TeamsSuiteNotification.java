@@ -12,21 +12,29 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.service.notifications.exceptions.UnsendNotification;
 
-public class TeamsSuiteNotification extends TeamsNotificationBase implements SuiteNotificationSender {
+public class TeamsSuiteNotification implements SuiteNotificationSender {
 
+	private final TeamsNotification teamsNotification;
+	private final SuiteTM suite;
+	
+	public TeamsSuiteNotification(SuiteTM suite) {
+		this.teamsNotification = TeamsNotification.make(suite);
+		this.suite = suite;
+	}
+	
 	@Override
-	public boolean canSend(SuiteTM suite) {
+	public boolean canSend() {
 		var inputParams = suite.getInputParams();
 		return 
-			!isVoid(inputParams.getTeamsChannel()) &&
+			!isVoid(teamsNotification.getTeamsURL(suite)) &&
 			inputParams.isNotification();
 	}
 	
 	@Override
-	public void send(SuiteTM suite) throws UnsendNotification {
-		sendToTeams(
+	public void send() throws UnsendNotification {
+		teamsNotification.sendToTeams(
 				getDataAlert(suite),
-				getTeamsChanelURL(suite));
+				teamsNotification.getTeamsURL(suite));
 	}	
 	
     private DataAlert getDataAlert(SuiteTM suite) {
@@ -77,6 +85,10 @@ public class TeamsSuiteNotification extends TeamsNotificationBase implements Sui
     		.flatMap(List::stream)
     		.filter(c -> c.getLevelResult()==state)
     		.collect(Collectors.toList());
+    }
+    
+    private boolean isVoid(String value) {
+    	return value==null || "".compareTo(value)==0;
     }
     
 }

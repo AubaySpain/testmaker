@@ -15,13 +15,14 @@ public class Alarm {
 	private final Check check;
 	private final ChecksTM checksParent;
 	private final InputParamsTM inputParams;
-	private final CheckAlarmSender alarmSender = CheckAlarmSender.instance();
+	private final CheckAlarmSender alarmSender;
 	private final RepositoryI repository = TestMaker.getRepository();
 	
 	public Alarm(Check check, ChecksTM checksParent) {
 		this.check = check;
 		this.checksParent = checksParent;
 		this.inputParams = checksParent.getSuiteParent().getInputParams();
+		this.alarmSender = CheckAlarmSender.instance(checksParent.getSuiteParent());
 	}
 	
 	public void send() {
