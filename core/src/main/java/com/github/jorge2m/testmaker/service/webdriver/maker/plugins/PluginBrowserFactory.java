@@ -2,6 +2,7 @@ package com.github.jorge2m.testmaker.service.webdriver.maker.plugins;
 
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginHTML5AutoplayBlocker;
+import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginMangoHeaders;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginSgreenRecorder;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.PluginFirefox;
@@ -9,6 +10,8 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.firefox.Plug
 
 
 public class PluginBrowserFactory {
+	
+	private PluginBrowserFactory() {}
     
     public static PluginChrome makePluginChrome(TypePluginChrome typePlugin) {
         switch (typePlugin) {
@@ -16,6 +19,8 @@ public class PluginBrowserFactory {
             return new PluginHTML5AutoplayBlocker();
         case MOVAVI_SCREEN_RECORDER:
         	return PluginSgreenRecorder.makePlugin();
+        case MANGO_HEADERS:
+        	return new PluginMangoHeaders();
         default:
         	return null;
         }

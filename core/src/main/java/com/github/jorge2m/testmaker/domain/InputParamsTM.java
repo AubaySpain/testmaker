@@ -59,7 +59,6 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String MAX_ALARMS_PARAM = "maxalarms";
 	public static final String PERIOD_ALARMS_PARAM = "periodalarms";
 	public static final String TEAMS_CHANNEL_PARAM = "teamschannel";
-	public static final String TEAMS_WORKFLOW_PARAM = "teamsworkflow";
 	
 	public static final String STORE_BD_PARAM = "storebd";
 	public static final String MAILS_PARAM = "mails";
@@ -167,9 +166,6 @@ public abstract class InputParamsTM implements Serializable {
 	@FormParam(TEAMS_CHANNEL_PARAM)
 	String teamschannel;
 	
-	@FormParam(TEAMS_WORKFLOW_PARAM)
-	String teamsworkflow;	
-
 	@FormParam(STORE_BD_PARAM)
 	String storebd;
 
@@ -427,12 +423,6 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("URL of the Teams Webhook")
 			.build());		
 		
-		optionsTM.add(OptionTMaker.builder(TEAMS_WORKFLOW_PARAM)
-			.required(false)
-			.hasArgs()
-			.desc("URL of the Teams Workflow")
-			.build());		
-
 		optionsTM.add(OptionTMaker.builder(STORE_BD_PARAM)
 			.required(false)
 			.hasArgs()
@@ -563,7 +553,6 @@ public abstract class InputParamsTM implements Serializable {
 		maxalarms = cmdLine.getOptionValue(MAX_ALARMS_PARAM);
 		periodalarms = cmdLine.getOptionValue(PERIOD_ALARMS_PARAM);
 		teamschannel = cmdLine.getOptionValue(TEAMS_CHANNEL_PARAM);
-		teamsworkflow = cmdLine.getOptionValue(TEAMS_WORKFLOW_PARAM);
 		
 		storebd = cmdLine.getOptionValue(STORE_BD_PARAM);
 		typeAccess = cmdLine.getOptionValue(TYPE_ACCESS_PARAM);
@@ -608,7 +597,6 @@ public abstract class InputParamsTM implements Serializable {
 		MAX_ALARMS(MAX_ALARMS_PARAM),
 		PERIOD_ALARMS(PERIOD_ALARMS_PARAM),		
 		TEAMS_CHANNEL(TEAMS_CHANNEL_PARAM),
-		TEAMS_WORKFLOW(TEAMS_WORKFLOW_PARAM),
 		STORE_BD(STORE_BD_PARAM),
 		MAILS(MAILS_PARAM),
 		MAIL_USER(MAIL_USER_PARAM),
@@ -697,8 +685,6 @@ public abstract class InputParamsTM implements Serializable {
 			return this.periodalarms;
 		case TEAMS_CHANNEL:
 			return this.teamschannel;
-		case TEAMS_WORKFLOW:
-			return this.teamsworkflow;
 		case STORE_BD:
 			return this.storebd;
 		case TYPE_ACCESS:
@@ -1047,12 +1033,6 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	public String getTeamsChannel() {
 		return teamschannel;
-	}	
-	public void setTeamsWorkflow(String teamsworkflow) {
-		this.teamsworkflow = teamsworkflow;
-	}
-	public String getTeamsWorkflow() {
-		return teamsworkflow;
 	}	
 	
 	public void setStoreBd(StoreUntil storeUntil) {

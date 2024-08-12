@@ -16,7 +16,11 @@ public abstract class PluginChrome {
 
     public static final String FLODER_IN_RESOURCES = "pluginsBrowser"; 
     
-    public enum TypePluginChrome { HTML5_AUTOPLAY_BLOCKER, MOVAVI_SCREEN_RECORDER }
+    public enum TypePluginChrome { 
+    	HTML5_AUTOPLAY_BLOCKER, 
+    	MOVAVI_SCREEN_RECORDER,
+    	MANGO_HEADERS    	
+    }
     
     protected abstract String getCrxFileName();
     

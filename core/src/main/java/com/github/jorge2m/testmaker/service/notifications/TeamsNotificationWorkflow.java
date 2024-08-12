@@ -5,15 +5,12 @@ import java.util.regex.Matcher;
 
 import org.json.simple.JSONValue;
 
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
-
 public class TeamsNotificationWorkflow extends TeamsNotification {
 
 	private static final String CRLF = "\r\n";
 	
-	@Override
-	public String getTeamsURL(SuiteTM suite) {
-		return suite.getInputParams().getTeamsWorkflow();
+	public static boolean isUrlChannelOk(String url) {
+		return url.contains("workflow");
 	}
 	
 	@Override
@@ -60,7 +57,7 @@ public class TeamsNotificationWorkflow extends TeamsNotification {
 	    message.append("               \"items\": [" + CRLF);
 	    message.append("                  {" + CRLF);
 	    message.append("                     \"type\": \"Image\"," + CRLF);
-	    message.append("                     \"url\": \"https://cookies-manejoderedes.com/wp-content/uploads/2020/09/bot-e1664451412540.png\"," + CRLF);
+	    message.append("                     \"url\": \"" + ICON_TESTMAKER + "\"," + CRLF);
 	    message.append("                     \"size\": \"Medium\"," + CRLF);
 	    message.append("                     \"altText\": \"TextMaker Image\"" + CRLF);
 	    message.append("                  }" + CRLF);

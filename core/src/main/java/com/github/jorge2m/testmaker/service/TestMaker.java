@@ -43,26 +43,13 @@ public class TestMaker {
 	public static void run(SuiteTM suite, boolean async) {
 		File path = new File(suite.getPathDirectory());
 		path.mkdir();
-		//logIniTestSuite(suite);
 		if (async) {
 			runInTestNgAsync(suite);
 		} else {
 			runInTestNgSync(suite);
 		}
-		//logFinTestSuite(suite);
 	}
 	
-	private static void logIniTestSuite(SuiteTM suite) {
-		String message = "Init TestSuite " + suite.getIdExecution();
-		suite.getLogger().info(message);
-		System.out.println(message);
-	}
-	private static void logFinTestSuite(SuiteTM suite) {
-		String message = "End TestSuite " + suite.getIdExecution();
-		suite.getLogger().info(message);
-		System.out.println(message);
-	}
-
 	public static void finishSuite(String idExecution) {
 		finish(getSuiteExecuted(idExecution));
 	}

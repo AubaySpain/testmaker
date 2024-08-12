@@ -2,13 +2,10 @@ package com.github.jorge2m.testmaker.service.notifications;
 
 import org.json.simple.JSONValue;
 
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
-
 public class TeamsNotificationWebhook extends TeamsNotification {
 
-	@Override
-	public String getTeamsURL(SuiteTM suite) {
-		return suite.getInputParams().getTeamsWorkflow();
+	public static boolean isUrlChannelOk(String url) {
+		return url.contains("webhook");
 	}
 	
 	@Override
@@ -36,7 +33,7 @@ public class TeamsNotificationWebhook extends TeamsNotification {
 		message.append("    \"sections\": [{\r\n");
 		message.append("        \"activityTitle\": \"TestMaker has detected problems\",\r\n");
 		message.append("        \"activitySubtitle\": \"On suite " + JSONValue.escape(dataAlert.getSuiteName() + " (" + dataAlert.getChannel() + " - " + dataAlert.getApp() + " - " + dataAlert.getUrlBase()) + ") execution\",\r\n");
-		message.append("        \"activityImage\": \"https://teamsnodesample.azurewebsites.net/static/img/image5.png\",\r\n");
+		message.append("        \"activityImage\": \"" + ICON_TESTMAKER + "\",\r\n");
 		message.append("        \"facts\": [");
 		if (!isVoid(dataAlert.getTestCaseName())) {
 			message.append("{\r\n");
@@ -83,7 +80,5 @@ public class TeamsNotificationWebhook extends TeamsNotification {
 		  + "        }]\r\n"
 		  + "    }]\r\n";
     }
-    
-    
 
 }

@@ -23,6 +23,8 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowse
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome;
 
+import static com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome.*;
+
 class ChromedriverMaker extends DriverMaker {
 	
 	//La versión de ChromeDriver ha de soportar la versión de Chrome instalada en el servidor donde se ejecute TestMaker
@@ -124,8 +126,9 @@ class ChromedriverMaker extends DriverMaker {
 	private void addPlugins(boolean isHeadless) {
 		if (!isHeadless) {
 			List<PluginChrome.TypePluginChrome> listPlugins = new ArrayList<>();
+			listPlugins.add(MANGO_HEADERS);
 			if (isStartRecord) {
-				listPlugins.add(TypePluginChrome.MOVAVI_SCREEN_RECORDER);
+				listPlugins.add(MOVAVI_SCREEN_RECORDER);
 			}
 			for (var typePlugin : listPlugins) {
 				PluginChrome pluginChrome = PluginBrowserFactory.makePluginChrome(typePlugin);
