@@ -15,13 +15,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.v125.network.Network;
+import org.openqa.selenium.devtools.v125.network.model.Headers;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.PluginBrowserFactory;
 import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome;
-import com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome;
 
 import static com.github.jorge2m.testmaker.service.webdriver.maker.plugins.chrome.PluginChrome.TypePluginChrome.*;
 
@@ -63,27 +63,36 @@ class ChromedriverMaker extends DriverMaker {
 				chromeDriver.manage().window().maximize();
 			}
 		}
+
+		var devTools = chromeDriver.getDevTools();
+		devTools.createSession();
+		setUserAgent(chromeDriver, devTools);
+//		setHeader(chromeDriver, devTools);
 		
-		setUserAgent(chromeDriver);
 		deleteCookiesAndSetTimeouts(chromeDriver);
 		return chromeDriver;
 	}
 	
-	private void setUserAgent(ChromeDriver driver) {
+	private void setUserAgent(ChromeDriver driver, DevTools devTools) {
         String currentUserAgent = (String) ((JavascriptExecutor)driver).executeScript("return navigator.userAgent;");
 		String modifiedUserAgent =  currentUserAgent + " (MangoRobotest)";
-
-        DevTools devTools = driver.getDevTools();
-        devTools.createSession();
 		devTools.send(Network.setUserAgentOverride(modifiedUserAgent, Optional.empty(), Optional.empty(), Optional.empty()));
 	}
-
+	
+//	private void setHeader(ChromeDriver driver, DevTools devTools) {
+//        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+//        Map<String, Object> headers = new HashMap<>();
+//        headers.put("X-Qa", "true");
+//        devTools.send(Network.setExtraHTTPHeaders(new Headers(headers)));
+//    }
+		
 	private void initialConfig() {
 		options.addArguments("--ignore-certificate-errors");	
 		options.addArguments("--no-proxy-server");
 		options.addArguments("--privileged");
 		options.addArguments("--remote-allow-origins=*");
 		options.addArguments("enable-automation");
+		options.addArguments("--disable-search-engine-choice-screen");
 
 		if (isStartRecord) {
 			createPathForEvidencesStore();

@@ -1,11 +1,12 @@
 package org.testng.annotations;
 
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import org.testng.IRetryAnalyzer;
+import org.testng.internal.annotations.DisabledRetryAnalyzer;
 
 /**
  * Mark a class or a method as part of the test.
@@ -13,7 +14,7 @@ import java.lang.annotation.Target;
  * @author Cedric Beust, Apr 26, 2004
  */
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target({METHOD, TYPE, CONSTRUCTOR})
+@Target({METHOD, TYPE})
 public @interface Test {
 
   /**
@@ -30,15 +31,6 @@ public @interface Test {
    * Whether methods on this class/method are enabled.
    */
   public boolean enabled() default true;
-
-  /**
-   * The list of variables used to fill the parameters of this method.
-   * These variables must be defined in the property file.
-   *
-   * @deprecated Use @Parameters
-   */
-  @Deprecated
-  public String[] parameters() default {};
 
   public boolean retry() default true;
   
@@ -109,6 +101,8 @@ public @interface Test {
    * needs to be static on the specified class.
    */
   public Class<?> dataProviderClass() default Object.class;
+  
+  public String dataProviderDynamicClass() default "";
 
   /**
    * If set to true, this test method will always be run even if it depends
@@ -149,11 +143,6 @@ public @interface Test {
   public String testName() default "";
 
   /**
-   * @deprecated Use singleThreaded
-   */
-  public boolean sequential() default false;
-
-  /**
    * If set to true, all the methods on this test class are guaranteed to run
    * in the same thread, even if the tests are currently being run with parallel="true".
    *
@@ -168,7 +157,7 @@ public @interface Test {
    * @return String The name of the class that will test if a test method
    * should be retried.
    */
-  public Class retryAnalyzer() default Class.class;
+  public Class<? extends IRetryAnalyzer> retryAnalyzer() default DisabledRetryAnalyzer.class;
 
   /**
    * If true and invocationCount is specified with a value > 1,
@@ -187,5 +176,11 @@ public @interface Test {
    * The scheduling priority. Lower priorities will be scheduled first.
    */
   int priority() default 0;
+  
+  /**
+   * @return - An array of {@link CustomAttribute} that represents a set of custom attributes for a
+   *     test method.
+   */
+  CustomAttribute[] attributes() default {};  
 
 }

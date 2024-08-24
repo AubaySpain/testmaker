@@ -31,7 +31,8 @@ public class PriorityInterceptor implements IMethodInterceptor {
                     f = m.getMethod().getRealClass().getField("prioridad");
                     
                     //Get the object instance of the method object              
-                    array_index = f.getInt(m.getInstances()[0]);
+                    //array_index = f.getInt(m.getInstances()[0]);
+                    array_index = f.getInt(m.getInstance());
                 }
                 catch (NoSuchFieldException e) {
                     //Si no tiene prioridad lo vamos situando al final (prioridad mínima)

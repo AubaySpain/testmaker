@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.testng.ISuite;
-import org.testng.reporters.EmailableReporter;
+import org.testng.reporters.EmailableReporter2;
 import org.testng.xml.XmlSuite;
 
 import com.github.jorge2m.testmaker.conf.Channel;
@@ -35,7 +35,7 @@ import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
 
 import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
-public class GenerateReports extends EmailableReporter {
+public class GenerateReports extends EmailableReporter2 {
 	
 	private SuiteBean suite;
 	private SuiteTM suiteTM;
