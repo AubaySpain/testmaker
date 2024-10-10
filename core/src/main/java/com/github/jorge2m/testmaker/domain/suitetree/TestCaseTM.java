@@ -327,6 +327,7 @@ public class TestCaseTM  {
 		testCaseBean.setSuiteName(suite.getName());
 		testCaseBean.setTestRunName(getTestRunParent().getName());
 		testCaseBean.setName(getNameUnique());
+		testCaseBean.setCode(getCode());
 		testCaseBean.setSpecificInputData(getSpecificInputData());
 		testCaseBean.setNameUnique(getNameUnique());
 		testCaseBean.setDescription(getResult().getMethod().getDescription());

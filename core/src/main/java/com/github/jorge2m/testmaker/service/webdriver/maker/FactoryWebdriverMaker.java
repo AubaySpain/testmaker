@@ -53,7 +53,12 @@ public class FactoryWebdriverMaker {
 		default:
 			boolean isHeadless = driverType.isHeadless();
 			boolean isStartRecord = testCase.isStartRecordNeeded();
-			return new ChromedriverMaker(isHeadless, isStartRecord, testCase.getTestPathDirectory());
+			return new ChromedriverMaker(
+					isHeadless, 
+					isStartRecord, 
+					testCase.getTestPathDirectory(), 
+					testCase.getSuiteParent().getIdExecution(),
+					testCase.getCode());
 		}
 	}
 	

@@ -68,6 +68,8 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String TEST_OBJECT_PARAM = "testobject";
 	public static final String ID_EXEC_SUITE_PARAM = "idexecsuite";
 	
+	public static final String DYNATRACESD_PARAM = "dynatracesd";
+	
 	//BrowserStack
 	public static final String BSTACK_USER_PARAM = "bstack_user"; //Mobil & Desktop
 	public static final String BSTACK_PASSWORD_PARAM = "bstack_password"; //Mobil & Desktop
@@ -177,6 +179,9 @@ public abstract class InputParamsTM implements Serializable {
 	
 	@FormParam(TEST_OBJECT_PARAM)
 	String testObject;
+	
+	@FormParam(DYNATRACESD_PARAM)
+	String dynatracesd;
 	
 	//Browser Stack
 	@FormParam(BSTACK_USER_PARAM)
@@ -453,6 +458,12 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Id of SuiteTest Execution. For the case where you want to specify your own instead of the automatically generated one")
 			.build());		
 		
+		optionsTM.add(OptionTMaker.builder(DYNATRACESD_PARAM)
+			.required(false)
+			.hasArgs()
+			.desc("Dynatrace subdomain")
+			.build());		
+		
 		//BrowserStack
 		optionsTM.add(OptionTMaker.builder(BSTACK_USER_PARAM)
 			.required(false)
@@ -558,6 +569,8 @@ public abstract class InputParamsTM implements Serializable {
 		typeAccess = cmdLine.getOptionValue(TYPE_ACCESS_PARAM);
 		idExecSuite = cmdLine.getOptionValue(ID_EXEC_SUITE_PARAM);
 		
+		dynatracesd = cmdLine.getOptionValue(DYNATRACESD_PARAM);
+		
 		//BrowserStack
 		bStackUser = cmdLine.getOptionValue(BSTACK_USER_PARAM);
 		bStackPassword = cmdLine.getOptionValue(BSTACK_PASSWORD_PARAM);
@@ -604,6 +617,7 @@ public abstract class InputParamsTM implements Serializable {
 		TYPE_ACCESS(TYPE_ACCESS_PARAM),
 		ID_EXEC_SUITE(ID_EXEC_SUITE_PARAM),
 		TEST_OBJECT(TEST_OBJECT_PARAM),
+		DYNATRACESD(DYNATRACESD_PARAM),
 		BSTACK_USER(BSTACK_USER_PARAM),
 		BSTACK_PASSWORD(BSTACK_PASSWORD_PARAM),
 		BSTACK_OS(BSTACK_OS_PARAM),
@@ -691,6 +705,8 @@ public abstract class InputParamsTM implements Serializable {
 			return this.typeAccess;
 		case ID_EXEC_SUITE:
 			return this.idExecSuite;
+		case DYNATRACESD:
+			return this.dynatracesd;			
 		case BSTACK_USER:
 			return bStackUser;
 		case BSTACK_PASSWORD:
@@ -1076,6 +1092,13 @@ public abstract class InputParamsTM implements Serializable {
 	public void setIdExecSuite(String idExecSuite) {
 		this.idExecSuite = idExecSuite;
 	}
+	
+	public String getDynatracesd() {
+		return this.dynatracesd;
+	}
+	public void setDynatracesd(String dynatracesd) {
+		this.dynatracesd = dynatracesd;
+	}	
 	
 	public String getTestObject() {
 		return testObject;

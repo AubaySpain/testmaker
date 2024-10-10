@@ -11,6 +11,7 @@ public class TestCaseBean {
 	private String idExecSuite;
 	private String suiteName;
 	private String testRunName;
+	private String code;
 	private String name;
 	private String specificInputData;
 	private String nameUnique;
@@ -39,6 +40,12 @@ public class TestCaseBean {
 	}
 	public void setIdExecSuite(String idExecSuite) {
 		this.idExecSuite = idExecSuite;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	public String getSuiteName() {
 		return suiteName;

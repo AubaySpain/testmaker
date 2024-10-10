@@ -5,17 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.DevTools;
-import org.openqa.selenium.devtools.v125.network.Network;
-import org.openqa.selenium.devtools.v125.network.model.Headers;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.github.jorge2m.testmaker.conf.Channel;
@@ -31,9 +25,12 @@ class ChromedriverMaker extends DriverMaker {
 	private final boolean isHeadless;
 	private final boolean isStartRecord;
 	private final String pathTestCase;
+	private final String idExecSuite;
+	private final String testCase;
 	private ChromeOptions options = new ChromeOptions();
 	
-	public ChromedriverMaker(boolean isHeadless, boolean isStartRecord, String pathTestCase) {
+	public ChromedriverMaker(
+			boolean isHeadless, boolean isStartRecord, String pathTestCase, String idExecSuite, String testCase) {
 		if (isStartRecord) {
 			this.isHeadless = false;
 		} else {
@@ -41,6 +38,8 @@ class ChromedriverMaker extends DriverMaker {
 		}
 		this.isStartRecord = isStartRecord;
 		this.pathTestCase = pathTestCase;
+		this.idExecSuite = idExecSuite;
+		this.testCase = testCase;
 	}
 	
 	@Override
@@ -55,7 +54,7 @@ class ChromedriverMaker extends DriverMaker {
 	public WebDriver build() {
 		initialConfig();
 		preBuildConfig();
-		var chromeDriver = new ChromeDriver(options);
+		var chromeDriver = new ChromeDriverTM(options, idExecSuite, testCase);
 		if (channel==Channel.desktop) {
 			if (isHeadless) {
 				chromeDriver.manage().window().setSize(new Dimension(1920, 1080));
@@ -64,27 +63,9 @@ class ChromedriverMaker extends DriverMaker {
 			}
 		}
 
-		var devTools = chromeDriver.getDevTools();
-		devTools.createSession();
-		setUserAgent(chromeDriver, devTools);
-//		setHeader(chromeDriver, devTools);
-		
 		deleteCookiesAndSetTimeouts(chromeDriver);
 		return chromeDriver;
 	}
-	
-	private void setUserAgent(ChromeDriver driver, DevTools devTools) {
-        String currentUserAgent = (String) ((JavascriptExecutor)driver).executeScript("return navigator.userAgent;");
-		String modifiedUserAgent =  currentUserAgent + " (MangoRobotest)";
-		devTools.send(Network.setUserAgentOverride(modifiedUserAgent, Optional.empty(), Optional.empty(), Optional.empty()));
-	}
-	
-//	private void setHeader(ChromeDriver driver, DevTools devTools) {
-//        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
-//        Map<String, Object> headers = new HashMap<>();
-//        headers.put("X-Qa", "true");
-//        devTools.send(Network.setExtraHTTPHeaders(new Headers(headers)));
-//    }
 		
 	private void initialConfig() {
 		options.addArguments("--ignore-certificate-errors");	
@@ -165,4 +146,5 @@ class ChromedriverMaker extends DriverMaker {
 		}
 		options.setExperimentalOption("mobileEmulation", mobileEmulation);
 	}
+	
 }

@@ -45,6 +45,7 @@ public class GenerateReports extends EmailableReporter2 {
 	private String reportHtml = "";
 	private String outputLibrary = "../..";
 	private String pathStatics = outputLibrary + "/static";
+	private DynatraceLinks dynatraceLinks; 
 
 	@Override
 	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
@@ -54,6 +55,7 @@ public class GenerateReports extends EmailableReporter2 {
 		this.inputParamsSuite = suiteTM.getInputParams();
 		this.treeTable = getMapTree(suite);
 		this.outputDirectory = outputDirectory;
+		this.dynatraceLinks = new DynatraceLinks(suiteTM);
 		try {
 			deployStaticsIfNotExist();
 			generateReportHTML();
@@ -90,6 +92,7 @@ public class GenerateReports extends EmailableReporter2 {
             "        <span id=\"browser\">" + suite.getDriver() + "</span>" + 
             "        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>" + 
             "      </div>" + 
+                   getDivDynatrace() + 
                    getDivBrowserStack() +
             "    </th>\n" + 
             "  </tr>\n" +
@@ -110,6 +113,22 @@ public class GenerateReports extends EmailableReporter2 {
         	"   </thead>\n";
     }
 
+	private String getDivDynatrace() {
+		var dynatraceSd = inputParamsSuite.getDynatracesd();
+		if (dynatraceSd==null || "".compareTo(dynatraceSd)==0) {
+			return "";
+		}
+		
+		return  
+			"<div style=\"float:right;\">" +
+			"	<a id=\"linkDynatrace\" href=\"" + dynatraceLinks.getMultidimensionalAnalisisForSuiteURL() + "\" target=\"_blank\">" +		
+			"		<div style=\"float:left;\">" +
+			"			<img width=\"53\" src=\"../../static/images/dynatrace-logo.png\" title=\"Dynatrace Traffic\">" +
+			"		</div>" +
+			"	</a>" +
+			"</div>";
+	}
+	
 	private String getDivBrowserStack() {
 		String urlBuildBrowserStack = getUrlBuildBrowserStack();
 		if ("".compareTo(urlBuildBrowserStack)!=0) {
@@ -270,7 +289,7 @@ public class GenerateReports extends EmailableReporter2 {
 	}
 	
 	private String getLinksEvidencesTestCase(TestCaseBean testCase) {
-		String linksTest = "";
+		String linksTest = getHtmlDynatraceLink(testCase);
 		for (var testCaseEvidence : TestCaseEvidence.values()) {
 			linksTest+=getHtmlLink(testCase, testCaseEvidence);
 		}
@@ -282,14 +301,33 @@ public class GenerateReports extends EmailableReporter2 {
 		return linksTest; 
 	}
 	
+	private String getHtmlDynatraceLink(TestCaseBean testCase) {
+		var dynatraceSd = inputParamsSuite.getDynatracesd();
+		if (dynatraceSd==null || "".compareTo(dynatraceSd)==0) {
+			return "";
+		}
+
+		return getHtmlLink(
+			dynatraceLinks.getDistributedTracesForTestCaseURL(testCase),
+			"dynatrace-icon.svg",
+			"Dynatrace distributed traces");
+	}
+	
 	private String getHtmlLink(TestCaseBean testCase, TestCaseEvidence testCaseEvidence) {
 		if (!testCaseEvidence.fileExists(testCase)) {
 			return "";
 		}
+		return getHtmlLink(
+				getRelativePathEvidencia(testCase, testCaseEvidence),
+				testCaseEvidence.getNameIcon(),
+				testCaseEvidence.getTagInfo());			
+	}
+	
+	private String getHtmlLink(String path, String nameIcon, String tagInfo) {
 		return
-			"<a href=\"" + getRelativePathEvidencia(testCase, testCaseEvidence) + "\" target=\"_blank\">" + 
-			"<img width=\"25\" style=\"padding:3\" src=\"" + pathStatics + "/images/" + testCaseEvidence.getNameIcon() + "\" title=\"" + testCaseEvidence.getTagInfo() + "\"/>" +
-			"</a>";			
+			"<a href=\"" + path + "\" target=\"_blank\">" + 
+			"<img width=\"25\" style=\"padding:3\" src=\"" + pathStatics + "/images/" + nameIcon + "\" title=\"" + tagInfo + "\"/>" +
+			"</a>";		
 	}
 
 	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {
