@@ -43,7 +43,7 @@ public class DynatraceLinks {
 			"gtf=" + getDynatraceGftValue(testCase.getInicioDate(), testCase.getFinDate()) + "&" +
 			"servicefilter=" + 
 			FILTER_ROBOTEST_EXECUTION + idExecSuite + 
-			FILTER_ROBOTEST_TESTCASE + testCase.getCode();
+			FILTER_ROBOTEST_TESTCASE + testCase.getNameUniqueNormalized();
 	}
 	
 	private String getDynatraceGftValue(Date startDateI, Date endDateI) {
@@ -66,23 +66,40 @@ public class DynatraceLinks {
         return start + "+to+" + end;
 	}
 	
-    private Pair<Date, Date> adjustToDynatraceInterval(Date startDateIni, Date endDateIni) {
-        Date startDate = startDateIni;
-        Date endDate = getRoundDateToSequentMinute(endDateIni);
+    private Pair<Date, Date> adjustToDynatraceInterval(Date startDateI, Date endDateI) {
+    	Date startDate = startDateI;
+    	Date endDate;
+    	if (!dateIsBeforeCurrentMinus1hour(endDateI)) {
+    		endDate = getRoundDateToSequentMinute(endDateI);
+    	} else {
+    		endDate = new Date();
+    	}
 
-        long differenceInMillis = endDate.getTime() - startDateIni.getTime();
-        long thirtyMinutesInMillis = 30 * 60 * 1000;
+        long differenceInMillis = endDate.getTime() - startDateI.getTime();
+        long twoHoursInMillis = 360 * 60 * 1000;
 
-        if (differenceInMillis < thirtyMinutesInMillis) {
-            long additionalMillis = (thirtyMinutesInMillis - differenceInMillis);
+        if (differenceInMillis < twoHoursInMillis) {
+            long additionalMillis = (twoHoursInMillis - differenceInMillis);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startDateIni);
+            calendar.setTime(startDate);
             calendar.add(Calendar.MILLISECOND, (int) -additionalMillis);
             startDate = calendar.getTime();
         }
 
         return Pair.of(startDate, endDate);
     }	
+    
+    private boolean dateIsBeforeCurrentMinus1hour(Date dateToCheck) {
+        Date currentDate = new Date();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+
+        calendar.add(Calendar.HOUR_OF_DAY, -1);
+        Date oneHourAgo = calendar.getTime();
+
+        return dateToCheck.before(oneHourAgo);    	
+    }
     
     private Date getRoundDateToSequentMinute(Date date) {
         Calendar calendar = Calendar.getInstance();

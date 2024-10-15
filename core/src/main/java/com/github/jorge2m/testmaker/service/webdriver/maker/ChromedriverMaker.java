@@ -30,7 +30,8 @@ class ChromedriverMaker extends DriverMaker {
 	private ChromeOptions options = new ChromeOptions();
 	
 	public ChromedriverMaker(
-			boolean isHeadless, boolean isStartRecord, String pathTestCase, String idExecSuite, String testCase) {
+			boolean isHeadless, boolean isStartRecord, String pathTestCase, 
+			String idExecSuiteParent, String idExecSuite, String testCase) {
 		if (isStartRecord) {
 			this.isHeadless = false;
 		} else {
@@ -38,8 +39,15 @@ class ChromedriverMaker extends DriverMaker {
 		}
 		this.isStartRecord = isStartRecord;
 		this.pathTestCase = pathTestCase;
-		this.idExecSuite = idExecSuite;
+		this.idExecSuite = getIdExecSuite(idExecSuiteParent, idExecSuite);
 		this.testCase = testCase;
+	}
+	
+	private String getIdExecSuite(String idExecSuiteParent, String idExecSuite) {
+		if (idExecSuiteParent!=null && "".compareTo(idExecSuiteParent)!=0) {
+			return idExecSuiteParent;
+		}
+		return idExecSuite;
 	}
 	
 	@Override

@@ -74,6 +74,9 @@ public class TestCaseBean {
 	public String getNameUnique() {
 		return nameUnique;
 	}
+	public String getNameUniqueNormalized() {
+		return getNormalized(getNameUnique());
+	}
 	public void setNameUnique(String nameUnique) {
 		this.nameUnique = nameUnique;
 	}
@@ -156,5 +159,20 @@ public class TestCaseBean {
 	public void setVideo(String video) {
 		this.video = video;
 	}	
+	
+    public static String getNormalized(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char currentChar = text.charAt(i);
+            if (currentChar > 255) {
+                char replacementChar = (char) (currentChar % 255);
+                result.append(replacementChar);
+            } else {
+                result.append(currentChar);
+            }
+        }
+        
+        return result.toString();
+    }
 
 }

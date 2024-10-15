@@ -52,9 +52,10 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private void setIdExecSuite(InputParamsTM inputParams, TestCaseTM testCase) {
-		//We need to unify idexecsuite in all testcases for send all to BrowserStack gathered under the same id
-		//Don't activate for cases where the slave nodes are permanent because will generate SQL constraint violation
+		inputParams.setIdExecSuiteParent(testCase.getSuiteParent().getIdExecution());
 		if (inputParams.getDriver().compareTo(EmbeddedDriver.browserstack.name())==0) {
+			//We need to unify idexecsuite in all testcases for send all to BrowserStack gathered under the same id
+			//Don't activate for cases where the slave nodes are permanent because will generate SQL constraint violation
 			inputParams.setIdExecSuite(testCase.getSuiteParent().getIdExecution());
 		}
 	}

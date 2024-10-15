@@ -57,8 +57,9 @@ public class FactoryWebdriverMaker {
 					isHeadless, 
 					isStartRecord, 
 					testCase.getTestPathDirectory(), 
+					testCase.getSuiteParent().getInputParams().getIdExecSuiteParent(),
 					testCase.getSuiteParent().getIdExecution(),
-					testCase.getCode());
+					testCase.getNameUnique());
 		}
 	}
 	
