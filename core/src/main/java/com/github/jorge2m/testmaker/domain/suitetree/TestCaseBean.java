@@ -160,19 +160,30 @@ public class TestCaseBean {
 		this.video = video;
 	}	
 	
-    public static String getNormalized(String text) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            char currentChar = text.charAt(i);
-            if (currentChar > 255) {
-                char replacementChar = (char) (currentChar % 255);
-                result.append(replacementChar);
-            } else {
-                result.append(currentChar);
-            }
-        }
-        
-        return result.toString();
-    }
+	public static String getNormalized(String text) {
+	    StringBuilder result = new StringBuilder();
+	    String allowedChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ()[]-_";
+	    
+	    for (int i = 0; i < text.length(); i++) {
+	        char currentChar = text.charAt(i);
+
+	        // Permitir números, letras, espacio, y los caracteres específicos
+	        if ((currentChar >= 48 && currentChar <= 57) ||  // Números
+	            (currentChar >= 65 && currentChar <= 90) ||  // Letras mayúsculas
+	            (currentChar >= 97 && currentChar <= 122) || // Letras minúsculas
+	            currentChar == 32 ||                         // Espacio
+	            currentChar == 40 || currentChar == 41 ||    // ( )
+	            currentChar == 91 || currentChar == 93 ||    // [ ]
+	            currentChar == 45 ||                         // -
+	            currentChar == 95) {                         // _
+	            result.append(currentChar);
+	        } else {
+	            int index = currentChar % allowedChars.length();
+	            result.append(allowedChars.charAt(index));
+	        }
+	    }
+	    
+	    return result.toString().replace(" ", "");
+	}
 
 }

@@ -78,6 +78,7 @@ public class RemoteTest extends JaxRsClient {
 	}
 	
 	private Optional<SuiteBean> executeTestStandar(TestCaseTM testCase, InputParamsTM inputParams) throws Exception {
+		inputParams.setTestCaseNameParent(testCase.getNameUnique());
 		var suiteRemote = suiteRun(
 				inputParams, 
 				String.valueOf(testCase.isRetried()),

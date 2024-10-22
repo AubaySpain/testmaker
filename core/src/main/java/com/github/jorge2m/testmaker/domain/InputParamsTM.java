@@ -68,6 +68,7 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String TEST_OBJECT_PARAM = "testobject";
 	public static final String ID_EXEC_SUITE_PARAM = "idexecsuite";
 	public static final String ID_EXEC_SUITE_PARENT_PARAM = "idexecsuiteparent";
+	public static final String TESTCASE_NAME_PARENT_PARAM = "testcasenameparent";
 	
 	public static final String DYNATRACESD_PARAM = "dynatracesd";
 	
@@ -181,6 +182,9 @@ public abstract class InputParamsTM implements Serializable {
 	@FormParam(ID_EXEC_SUITE_PARENT_PARAM)
 	String idExecSuiteParent;
 	
+	@FormParam(TESTCASE_NAME_PARENT_PARAM)
+	String testcasenameparent;
+
 	@FormParam(TEST_OBJECT_PARAM)
 	String testObject;
 	
@@ -468,6 +472,12 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Id of SuiteTest Execution. For the case where you want to specify your own instead of the automatically generated one")
 			.build());		
 		
+		optionsTM.add(OptionTMaker.builder(TESTCASE_NAME_PARENT_PARAM)
+			.required(false)
+			.hasArgs()
+			.desc("Testcase name parent for the remote execution")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(DYNATRACESD_PARAM)
 			.required(false)
 			.hasArgs()
@@ -579,6 +589,7 @@ public abstract class InputParamsTM implements Serializable {
 		typeAccess = cmdLine.getOptionValue(TYPE_ACCESS_PARAM);
 		idExecSuite = cmdLine.getOptionValue(ID_EXEC_SUITE_PARAM);
 		idExecSuiteParent = cmdLine.getOptionValue(ID_EXEC_SUITE_PARENT_PARAM);
+		testcasenameparent = cmdLine.getOptionValue(TESTCASE_NAME_PARENT_PARAM);
 		
 		dynatracesd = cmdLine.getOptionValue(DYNATRACESD_PARAM);
 		
@@ -628,6 +639,7 @@ public abstract class InputParamsTM implements Serializable {
 		TYPE_ACCESS(TYPE_ACCESS_PARAM),
 		ID_EXEC_SUITE(ID_EXEC_SUITE_PARAM),
 		ID_EXEC_SUITE_PARENT(ID_EXEC_SUITE_PARENT_PARAM),
+		TESTCASE_NAME_PARENT(TESTCASE_NAME_PARENT_PARAM),
 		TEST_OBJECT(TEST_OBJECT_PARAM),
 		DYNATRACESD(DYNATRACESD_PARAM),
 		BSTACK_USER(BSTACK_USER_PARAM),
@@ -718,7 +730,9 @@ public abstract class InputParamsTM implements Serializable {
 		case ID_EXEC_SUITE:
 			return this.idExecSuite;
 		case ID_EXEC_SUITE_PARENT:
-			return this.idExecSuiteParent;			
+			return this.idExecSuiteParent;
+		case TESTCASE_NAME_PARENT:
+			return this.testcasenameparent;
 		case DYNATRACESD:
 			return this.dynatracesd;			
 		case BSTACK_USER:
@@ -1112,6 +1126,13 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	public void setIdExecSuiteParent(String idExecSuiteParent) {
 		this.idExecSuiteParent = idExecSuiteParent;
+	}	
+	
+	public String getTestCaseNameParent() {
+		return this.testcasenameparent;
+	}
+	public void setTestCaseNameParent(String testcasenameparent) {
+		this.testcasenameparent = testcasenameparent;
 	}	
 	
 	public String getDynatracesd() {

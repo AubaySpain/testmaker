@@ -59,8 +59,16 @@ public class FactoryWebdriverMaker {
 					testCase.getTestPathDirectory(), 
 					testCase.getSuiteParent().getInputParams().getIdExecSuiteParent(),
 					testCase.getSuiteParent().getIdExecution(),
-					testCase.getNameUnique());
+					getNameTestInReport(testCase));
 		}
+	}
+	
+	private static String getNameTestInReport(TestCaseTM testCase) {
+		String testCaseParent = testCase.getSuiteParent().getInputParams().getTestCaseNameParent();
+		if (testCaseParent!=null && "".compareTo(testCaseParent)!=0) {
+			return testCaseParent;
+		}
+		return testCase.getNameUnique();
 	}
 	
 }

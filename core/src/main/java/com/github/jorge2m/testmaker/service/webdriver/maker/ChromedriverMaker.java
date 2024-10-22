@@ -70,7 +70,6 @@ class ChromedriverMaker extends DriverMaker {
 				chromeDriver.manage().window().maximize();
 			}
 		}
-
 		deleteCookiesAndSetTimeouts(chromeDriver);
 		return chromeDriver;
 	}
