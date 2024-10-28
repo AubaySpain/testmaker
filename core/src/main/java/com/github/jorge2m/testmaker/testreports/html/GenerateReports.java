@@ -89,8 +89,14 @@ public class GenerateReports extends EmailableReporter2 {
             "    <th colspan=\"13\" class=\"head\">" + 
             "      <div id=\"titleReport\">" + suite.getName() + " - " + suite.getApp() + ", " + suite.getChannel() + " (Id: " + suite.getIdExecSuite() + ")" +
             "        <span id=\"descrVersion\">" + suite.getVersion() + "</span>" +
-            "        <span id=\"browser\">" + suite.getDriver() + "</span>" + 
-            "        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>" + 
+            "        <span id=\"browser\">" + suite.getDriver() + "</span>";
+    	
+            if (suite.getUrlBase()!=null) {
+            	reportHtml+=
+            	"        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>";
+            }
+            
+            reportHtml+= 
             "      </div>" + 
                    getDivDynatrace() + 
                    getDivBrowserStack() +

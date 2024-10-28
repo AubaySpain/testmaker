@@ -2,6 +2,7 @@ package com.github.jorge2m.testmaker.domain.suitetree;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.State;
@@ -28,6 +29,7 @@ public class SuiteBean {
 	private String pathLogFile;
 	private String pathReportHtml;
 	private String urlReportHtml;
+	private Map<String, String> parameters;
 	
 	public List<TestRunBean> getListTestRun() {
 		return listTestRun;
@@ -146,6 +148,12 @@ public class SuiteBean {
 	}
 	public void setStateExecution(StateExecution stateExecution) {
 		this.stateExecution = stateExecution;
+	}
+	public Map<String,String> getParameters() {
+		return parameters;
+	}
+	public void setParameters(Map<String,String> parameters) {
+		this.parameters = parameters;
 	}
 	
 	@Override

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>2.9.17</version>
+		<version>3.0</version>
 	</parent>
 	<artifactId>testmaker-core</artifactId>
 	<packaging>jar</packaging>
@@ -165,7 +165,7 @@
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.28.0</version>
+			<version>3.47.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>

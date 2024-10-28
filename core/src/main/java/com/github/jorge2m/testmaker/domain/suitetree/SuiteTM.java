@@ -292,6 +292,7 @@ public class SuiteTM extends XmlSuite {
 		suiteBean.setUrlReportHtml(getDnsReportHtml());
 		suiteBean.setPathLogFile(getPathLogFile());
 		suiteBean.setStateExecution(getStateExecution());
+		suiteBean.setParameters(inputParams.getAllParamsValues());
 		
 		List<TestRunBean> listTestRun = new ArrayList<>();
 		for (TestRunTM testRun : getListTestRuns()) {

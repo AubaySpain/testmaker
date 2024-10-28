@@ -15,18 +15,23 @@
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
         </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/distribution</directory>
-        </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>.gitignore</include>
-                <!-- <include>README.md</include>-->
-                <include>Dockerfile</include>
-                <!-- <include>server.xml</include>-->
-                <!-- <include>myScript.sh</include>-->
-            </includes>
-        </fileSet>
+		<fileSet filtered="true" encoding="UTF-8">
+		    <directory>src/main/assembly</directory>
+		    <includes>
+		        <include>distribution.xml</include>
+		    </includes>
+		</fileSet>
+		<fileSet filtered="true" encoding="UTF-8">
+		    <directory></directory>
+		    <includes>
+		        <include>.gitignore</include>
+		    </includes>
+		</fileSet>
+		<fileSet filtered="true" encoding="UTF-8">
+		    <directory></directory>
+		    <includes>
+		        <include>README.md</include>
+		    </includes>
+		</fileSet>
     </fileSets>
 </archetype-descriptor>

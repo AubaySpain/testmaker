@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -247,14 +248,38 @@ public abstract class InputParamsTM implements Serializable {
 		return paramsValuesTM;
 	}
 	
+	public String[] mapSystemParametersToArgs() {
+		ArrayList<String> listParams = new ArrayList<>();
+        Properties properties = System.getProperties();
+        
+		for (var parameter : getTmParameters()) {
+			var nameParam = parameter.getOption().getOpt();
+	        if (properties.getProperty(nameParam) != null) {
+	            listParams.add("-" + nameParam);
+	            listParams.add(properties.getProperty(nameParam));
+	        }
+		}
+		
+		return listParams.toArray(new String[0]);
+	}
+	
 	private List<OptionTMaker> getTmParameters() {
 		List<OptionTMaker> optionsTM = new ArrayList<>();
-		optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
-			.required(true)
-			.hasArg()
-			.possibleValues(suiteEnum)
-			.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
-			.build());
+
+		if (suiteEnum!=null) {
+			optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.possibleValues(suiteEnum)
+				.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
+				.build());
+		} else {
+			optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.desc("Test Suite to execute")
+				.build());
+		}
 
 		optionsTM.add(OptionTMaker.builder(DRIVER_NAME_PARAM)
 			.required(true)
@@ -270,12 +295,20 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Channel on which to run the webdriver. Possible values: " + Arrays.toString(Channel.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
-			.required(true)
-			.hasArg()
-			.possibleValues(appEnum)
-			.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
-			.build());
+		if (appEnum!=null) {
+			optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.possibleValues(appEnum)
+				.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
+				.build());
+		} else {
+			optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.desc("Application Web to test")
+				.build());			
+		}
 
 		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)

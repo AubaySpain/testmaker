@@ -31,6 +31,14 @@ public abstract class CreatorSuiteRun {
 		return suiteMaker.getSuite();
 	}
 	
+	public boolean isSuite(Enum<?> suite) {
+		if (inputParams==null ||
+			inputParams.getSuite()==null) {
+			return false;
+		}
+		return suite.name().compareTo(inputParams.getSuite().name())==0;
+	}
+	
 	public SuiteTM execTestSuite(boolean async) throws Exception {
 		makeSuiteMakerIfNull();
 		var suite = suiteMaker.getSuite();

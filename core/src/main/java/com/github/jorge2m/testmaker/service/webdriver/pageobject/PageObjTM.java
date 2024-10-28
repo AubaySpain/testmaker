@@ -28,7 +28,10 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
+import com.github.jorge2m.testmaker.domain.InputParamsTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestCaseTM;
 import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.pageobject.ClickElement.BuilderClick;
@@ -40,13 +43,41 @@ public class PageObjTM {
 
 	public final WebDriver driver;
 	
+	protected final Channel channel;
+	protected final InputParamsTM inputParamsSuite;
+	
 	public PageObjTM(WebDriver driver) {
 		this.driver = driver;
+		if (TestCaseTM.getTestCaseInExecution().isPresent()) {
+			this.inputParamsSuite = TestMaker.getInputParamsSuite();
+			this.channel = inputParamsSuite.getChannel();
+		} else {
+			this.inputParamsSuite = null;
+			this.channel = Channel.desktop;			
+		}		
 	}
+	
 	public PageObjTM() {
 		this.driver = TestMaker.getDriverTestCase();
+		if (TestCaseTM.getTestCaseInExecution().isPresent()) {
+			this.inputParamsSuite = TestMaker.getInputParamsSuite();
+			this.channel = inputParamsSuite.getChannel();
+		} else {
+			this.inputParamsSuite = null;
+			this.channel = Channel.desktop;			
+		}		
 	}
-
+	
+	protected boolean isMobile() {
+		return channel==Channel.mobile;
+	}
+	protected boolean isDevice() {
+		return channel.isDevice();
+	}
+	protected boolean isDesktop() {
+		return channel==Channel.desktop;
+	}
+	
 	//Click
 	public BuilderClick click(By by) {
 		return new BuilderClick(by, driver);

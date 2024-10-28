@@ -14,6 +14,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 
 /**
@@ -43,7 +44,7 @@ public class CmdLineMaker {
 	}
 	
 	public static CmdLineMaker from(String[] args) throws ParseException {
-		return new CmdLineMaker(args, null);
+		return new CmdLineMaker(args, new InputParamsBasic());
 	}	
 	public static CmdLineMaker from(InputParamsTM inputParams) throws Exception {
 		String [] args = getArgs(inputParams);
