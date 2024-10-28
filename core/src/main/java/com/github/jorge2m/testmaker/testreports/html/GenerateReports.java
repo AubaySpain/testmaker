@@ -38,7 +38,6 @@ import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 public class GenerateReports extends EmailableReporter2 {
 	
 	private SuiteBean suite;
-	private SuiteTM suiteTM;
 	private InputParamsTM inputParamsSuite;
 	private List<Integer> treeTable;
 	private String outputDirectory = "";
@@ -50,7 +49,7 @@ public class GenerateReports extends EmailableReporter2 {
 	@Override
 	public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
 		super.generateReport(xmlSuites, suites, outputDirectory);
-		this.suiteTM = ((SuiteTM)xmlSuites.get(0));
+		var suiteTM = ((SuiteTM)xmlSuites.get(0));
 		this.suite = suiteTM.getSuiteBean();
 		this.inputParamsSuite = suiteTM.getInputParams();
 		this.treeTable = getMapTree(suite);
@@ -73,7 +72,7 @@ public class GenerateReports extends EmailableReporter2 {
 			outputDirectory + "/../../" + pathDirectoryInFromResources);
 	}
 
-	private void generateReportHTML() {
+	private void generateReportHTML() throws Exception {
 		pintaCabeceraHTML();
 		pintaHeadersTableMain();	
 		pintaTestRunsOfSuite();
@@ -471,13 +470,10 @@ public class GenerateReports extends EmailableReporter2 {
 			"</html>\n";
 	}
 
-    public void createFileReportHTML() {
+    public void createFileReportHTML() throws Exception {
         String fileReport = suite.getPathReportHtml();;
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileReport), "UTF8"))) {
             out.write(reportHtml.toString());
-        } 
-        catch (Exception e) {
-        	suiteTM.getLogger().fatal("Problem creating file ReportHTML", e);
         } 
     }
 
