@@ -29,7 +29,8 @@ public class TestCasesDAO {
         	"TIME_MS, " + 
         	"NUMBER_STEPS, " + 
         	"CLASS_SIGNATURE, " + 
-        	"PATH " +
+        	"PATH, " +
+        	"TESTCASE_NUMBER " +
         "FROM TESTCASES " + 
         "WHERE IDEXECSUITE = ?";
     
@@ -46,8 +47,9 @@ public class TestCasesDAO {
 	        "TIME_MS, " + 
 	        "NUMBER_STEPS, " + 
 	        "CLASS_SIGNATURE, " + 
-	        "PATH) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+	        "PATH, " +
+	        "TESTCASE_NUMBER) " +
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     public static final String SQL_DELETE_TESTCASES = 
         "DELETE FROM TESTCASES " +
@@ -97,6 +99,7 @@ public class TestCasesDAO {
     	testCaseData.setNumberSteps(rowTestRun.getInt("NUMBER_STEPS"));  
     	testCaseData.setClassSignature(rowTestRun.getString("CLASS_SIGNATURE"));
     	testCaseData.setTestPathDirectory(rowTestRun.getString("PATH"));
+    	testCaseData.setIndexInTestRun(rowTestRun.getInt("TESTCASE_NUMBER"));
     	
     	StepsDAO stepsDAO = new StepsDAO(connector);
     	testCaseData.setListStep(stepsDAO.getListSteps(
@@ -123,6 +126,7 @@ public class TestCasesDAO {
     	        insert.setInt(10,  testCase.getNumberSteps());
     	        insert.setString(11,  testCase.getClassSignature());
     	        insert.setString(12, testCase.getTestPathDirectory());
+    	        insert.setInt(13, testCase.getIndexInTestRun());
                 insert.executeUpdate();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
