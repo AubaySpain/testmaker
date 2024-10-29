@@ -15,7 +15,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 
-public class GenerateReportsTest {
+public class GenerateReportTMTest {
 
 	@Test
 	public void testGetMapTree() {
@@ -39,7 +39,7 @@ public class GenerateReportsTest {
 		when(step3.getListChecksTM()).thenReturn(Arrays.asList(val3));
 		
 		//When
-		List<Integer> mapTree = GenerateReports.getMapTree(suite);
+		List<Integer> mapTree = GenerateReportTM.getMapTree(suite);
 		
 		//Then
 		String arrayStringExpected = "[0, 1, 2, 2, 4, 4, 1, 7, 8]";

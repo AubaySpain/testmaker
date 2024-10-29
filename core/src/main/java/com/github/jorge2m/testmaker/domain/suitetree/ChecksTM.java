@@ -17,6 +17,9 @@ public class ChecksTM {
 	private String title="";
 	private boolean avoidEvidences;
 	private String pathMethod;
+	private Integer positionInStep = null;
+	private String nameClass = null;
+	private String nameMethod = null;
 
 	@JsonIgnore
 	private SuiteTM suiteParent;
@@ -122,10 +125,22 @@ public class ChecksTM {
 		return ParsePathClass.getPathClass(getPathMethod());
 	}
 	public String getNameClass() {
+		if (nameClass!=null) {
+			return nameClass;
+		}
 		return ParsePathClass.getNameClass(getPathClass());
 	}
+	public void setNameClass(String nameClass) {
+		this.nameClass = nameClass;
+	}
 	public String getNameMethod() {
+		if (nameMethod!=null) {
+			return nameMethod;
+		}
 		return ParsePathClass.getNameMethod(getPathMethod());
+	}
+	public void setNameMethod(String nameMethod) {
+		this.nameMethod = nameMethod;
 	}
 	public int size() {
 		return listChecks.size();
@@ -215,6 +230,10 @@ public class ChecksTM {
 	}
 
 	public int getPositionInStep() {
+		if (positionInStep!=null) {
+			return positionInStep;
+		}
+		
 		List<ChecksTM> listChecksResultInStep = stepParent.getListChecksTM();
 		for (int i=0; i<listChecksResultInStep.size(); i++) {
 			ChecksTM checksResult = listChecksResultInStep.get(i);
@@ -223,6 +242,10 @@ public class ChecksTM {
 			}
 		}
 		return -1;
+	}
+	
+	public void setPositionInStep(int positionInStep) {
+		this.positionInStep = positionInStep;
 	}
 	
 	public State calculateStateValidation() {

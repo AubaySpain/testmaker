@@ -82,7 +82,7 @@ public class TestRunsDAO {
         String inicioDate = rowTestRun.getString("INICIO");
         testRunData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
         String finDate = rowTestRun.getString("FIN");
-        testRunData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
+        testRunData.setFinDate(Utils.getDateFormat(ToSeconds).parse(finDate));
     	
     	testRunData.setDurationMillis(rowTestRun.getFloat("TIME_MS"));
     	testRunData.setNumberTestCases(rowTestRun.getInt("NUMBER_TESTCASES"));

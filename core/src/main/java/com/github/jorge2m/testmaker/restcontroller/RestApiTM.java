@@ -19,6 +19,7 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -51,6 +52,7 @@ import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethodData;
 import com.github.jorge2m.testmaker.service.TestMaker;
+import com.github.jorge2m.testmaker.testreports.html.GenerateReportTM;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 
 @Path("/")
@@ -151,6 +153,18 @@ public class RestApiTM {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
+	
+	@PUT
+	@Path("/suiterun/{idexecution}/report")
+	public Response putReport(@PathParam("idexecution") String idExecSuite) throws Exception {
+		var suite = TestMaker.getSuite(idExecSuite);
+		if (suite!=null) {
+			new GenerateReportTM(suite).generate();
+			return Response.ok().build();
+		} else {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+	}	
 	
 	@DELETE
 	@Path("/suiterun/report")

@@ -1,6 +1,7 @@
 package com.github.jorge2m.testmaker.domain;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.apache.commons.cli.CommandLine;
 import com.github.jorge2m.testmaker.boundary.access.OptionTMaker;
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
@@ -221,6 +223,10 @@ public abstract class InputParamsTM implements Serializable {
 	String bStackResolution;
 
 	protected InputParamsTM() {}
+	
+	protected InputParamsTM(Map<String,String> parameters) {
+		setFromMapParameters(parameters);
+	}
 
 	protected InputParamsTM(Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) {
 		this.suiteEnum = suiteEnum;
@@ -242,7 +248,7 @@ public abstract class InputParamsTM implements Serializable {
 		setSpecificDataFromCommandLine(cmdLine);
 	}
 	
-	public Map<String, String> getAllParamsValues() {
+	public Map<String,String> getAllParamsValues() {
 		var paramsValuesTM = getTmParamsValues();
 		paramsValuesTM.putAll(getSpecificParamsValues());
 		return paramsValuesTM;
@@ -950,6 +956,43 @@ public abstract class InputParamsTM implements Serializable {
 		String[] tcases = listTestCasesExcluded.toArray(new String[listTestCasesExcluded.size()]);
 		tcasesexcludedCommaSeparated = String.join(",", tcases);
 	}
+	
+    private void setFromMapParameters(Map<String, String> parameters) {
+        parameters.forEach(this::setFieldFromParameter);
+    }
+
+    private void setFieldFromParameter(String formParamValue, String newValue) {
+        Class<?> clazz = this.getClass();
+        while (clazz != null) {
+            setFieldInClass(clazz, formParamValue, newValue);
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private void setFieldInClass(Class<?> clazz, String formParamValue, String newValue) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (isMatchingFormParam(field, formParamValue)) {
+                assignFieldValue(field, newValue);
+            }
+        }
+    }
+
+    private boolean isMatchingFormParam(Field field, String formParamValue) {
+        if (!field.isAnnotationPresent(FormParam.class)) {
+            return false;
+        }
+        FormParam formParam = field.getAnnotation(FormParam.class);
+        return formParam.value().equals(formParamValue);
+    }
+
+    private void assignFieldValue(Field field, String newValue) {
+        try {
+            field.setAccessible(true);
+            field.set(this, newValue);
+        } catch (IllegalAccessException e) {
+            Log4jTM.getLogger().error("Exception setting field value: ", e);
+        }
+    }
 
 	public String getRetry() {
 		return retry;

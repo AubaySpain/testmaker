@@ -143,6 +143,14 @@ public class SuiteBean {
 	public String getPathDirectory() {
 		return getPathReportHtml();
 	}
+	public String getOutputDirectory() {
+		int index = getPathReportHtml().indexOf(getIdExecSuite());
+        if (index != -1) {
+            return getPathReportHtml().substring(0, index + getIdExecSuite().length());
+        } 
+        return getPathReportHtml();
+	}
+	
 	public void setUrlReportHtml(String urlReportHtml) {
 		this.urlReportHtml = urlReportHtml;
 	}

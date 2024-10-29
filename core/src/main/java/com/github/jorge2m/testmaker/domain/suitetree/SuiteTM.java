@@ -21,7 +21,7 @@ import com.github.jorge2m.testmaker.domain.SuitesExecuted;
 import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.service.notifications.SuiteNotificationSender;
 import com.github.jorge2m.testmaker.service.webdriver.pool.PoolWebDrivers;
-import com.github.jorge2m.testmaker.testreports.html.GenerateReports;
+import com.github.jorge2m.testmaker.testreports.html.GenerateReportTM;
 
 public class SuiteTM extends XmlSuite {
 	
@@ -255,7 +255,7 @@ public class SuiteTM extends XmlSuite {
 	
 	public String getDnsReportHtml() {
 		String pathFileReport = getPathReportHtml();
-		return (GenerateReports.getDnsOfFileReport(
+		return (GenerateReportTM.getDnsOfFileReport(
 				pathFileReport.replace("\\", "/"), 
 				inputParams.getWebAppDNS(), 
 				inputParams.getTypeAccess()));

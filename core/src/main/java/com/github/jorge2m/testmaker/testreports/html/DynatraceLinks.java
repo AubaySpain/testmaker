@@ -8,7 +8,9 @@ import java.util.Date;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
+import com.github.jorge2m.testmaker.domain.InputParamsBasic;
+import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public class DynatraceLinks {
@@ -20,11 +22,12 @@ public class DynatraceLinks {
 	
 	private final String dynatraceSubdomain;
 	private final String idExecSuite;
-	private final SuiteTM suite; 
+	private final SuiteBean suite; 
 	
-	public DynatraceLinks(SuiteTM suite) {
-		this.dynatraceSubdomain = suite.getInputParams().getDynatracesd();
-		this.idExecSuite = suite.getIdExecution();
+	public DynatraceLinks(SuiteBean suite) {
+		var inputParams = new InputParamsBasic(suite.getParameters());
+		this.dynatraceSubdomain = inputParams.getDynatracesd();
+		this.idExecSuite = suite.getIdExecSuite();
 		this.suite = suite;
 	}
 	
@@ -33,7 +36,7 @@ public class DynatraceLinks {
 			"https://" + dynatraceSubdomain + PATH_MULTIDIMENSIONAL_ANALYSIS + 
 			"metric=FAILURE_RATE&" + 
 			"mergeServices=true&" + 
-			"gtf=" + getDynatraceGftValue(suite.getInicio(), suite.getFin()) + "&" +
+			"gtf=" + getDynatraceGftValue(suite.getInicioDate(), suite.getFinDate()) + "&" +
 			"servicefilter=" + FILTER_ROBOTEST_EXECUTION + idExecSuite;
 	}
 	
@@ -60,7 +63,7 @@ public class DynatraceLinks {
             start = URLEncoder.encode(start, "UTF-8");
             end = URLEncoder.encode(end, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-        	suite.getLogger().fatal("Problem formatting data for url dynatrace generation", e);
+        	Log4jTM.getLogger().fatal("Problem formatting data for url dynatrace generation", e);
         }
 
         return start + "+to+" + end;
