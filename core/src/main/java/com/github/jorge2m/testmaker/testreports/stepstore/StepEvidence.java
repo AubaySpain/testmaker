@@ -6,7 +6,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public enum StepEvidence {
-	IMAGEN("png", "icon-hardcopy.png", "Page Hardcopy"), 
+	IMAGEN("png", "icon-hardcopy.png", "Page Hardcopy"),
 	HTML("html", "icon-html.png", "Page Html"), 
 	ERROR_PAGE("-error.html", "icon-error.png", "Information Error"), 
 	HAR("har", "icon-nettraffic-har.png", "Http Nettraffic Har format (JSON)"), 

@@ -28,6 +28,7 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMake
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
 import com.github.jorge2m.testmaker.testreports.browserstack.BrowserStackRestClient;
+import com.github.jorge2m.testmaker.testreports.stepstore.ComparatorImages;
 import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
 import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
 
@@ -124,7 +125,9 @@ public class GenerateReportTM {
             "    <th rowspan=\"2\">Evidences</th>";
             
             if (isCompare()) {
-            	reportHtml+= "    <th rowspan=\"2\">Evidences2</th>";
+            	reportHtml+= 
+            		"    <th rowspan=\"2\" class=\"compare\">Evidences2</th>" +
+            		"    <th rowspan=\"2\" class=\"compare\">Compare</th>";
             }
             
             reportHtml+=
@@ -271,16 +274,20 @@ public class GenerateReportTM {
 				"  <td class=\"nowrap\">" + testRun1.getName() + deviceInfo + "</td>" + 
 				"  <td>" + testRun1.getNumberTestCases() + "</td>" + 
 				"  <td><div class=\"result" + testRun1.getResult() + "\">" + testRun1.getResult() + "</div></td>" + 
-				"  <td>" + toSeconds(testRun1.getDurationMillis()) + "</td>" + "               <td></td>" + 
-				"  <td></td>";
+				"  <td>" + toSeconds(testRun1.getDurationMillis()) + "</td>" + 
+				"  <td></td>"; 
 			
 			Optional<TestRunBean> testRun2Opt = Optional.empty();
 			if (isCompare()) {
-				reportHtml+="  <td></td>";
+				reportHtml+=
+					"  <td class=\"compare\"></td>" +
+					"  <td class=\"compare\"></td>";
+				
 				testRun2Opt = getSameTestRun(suite2, testRun1);
 			}
 				
 			reportHtml+=
+				"  <td></td>" +					
 				"  <td></td>" +
 				"  <td>" + format.format(testRun1.getInicioDate()) + "</td>" + 
 				"  <td>" + format.format(testRun1.getFinDate()) + "</td>" +
@@ -319,7 +326,7 @@ public class GenerateReportTM {
 			
 			Optional<TestCaseBean> testCase2Opt = Optional.empty();
 			if (isCompare()) {
-				reportHtml+="  <td>";
+				reportHtml+="  <td class=\"compare\">";
 				if (testRun2Opt.isPresent()) {
 					testCase2Opt = getSameTestCase(testRun2Opt.get(), testCase1);
 					if (testCase2Opt.isPresent()) {
@@ -327,6 +334,7 @@ public class GenerateReportTM {
 					}
 				}
 				reportHtml+="</td>";
+				reportHtml+="<td class=\"compare\"></td>";
 			}
 			
 			reportHtml+=
@@ -427,11 +435,23 @@ public class GenerateReportTM {
 			
 			Optional<StepTM> step2Opt = Optional.empty();
 			if (isCompare()) {
-				reportHtml+="     <td class=\"nowrap\">";
+				reportHtml+="     <td class=\"nowrap compare\">";
 				if (testCase2Opt.isPresent()) {
 					step2Opt = getSameStep(testCase2Opt.get(), step1);
 					if (step2Opt.isPresent()) {
 						reportHtml+=getLinksStepEvidences(testCase2Opt.get(), step2Opt.get());
+					}
+				}
+				reportHtml+="</td>";
+				reportHtml+="<td class=\"compare\">";
+				if (testCase2Opt.isPresent() && step2Opt.isPresent()) {
+					var comparatorImages = new ComparatorImages(testCase1, step1, testCase2Opt.get(), step2Opt.get());
+					if (comparatorImages.compareAndSave()) {
+						var pathComparation = comparatorImages.getPathImageCompared();
+						reportHtml+=
+							"<a href=\"" + pathComparation + "\" target=\"_blank\">" + 
+							"<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorImages.getNameIcon() + "\">" +
+							"</a>";
 					}
 				}
 				reportHtml+="</td>";
@@ -554,7 +574,9 @@ public class GenerateReportTM {
 				"    <td></td>";
 			
 			if (isCompare()) {
-				reportHtml+="    <td></td>";
+				reportHtml+=
+					"    <td class=\"compare\"></td>" +
+					"    <td class=\"compare\"></td>";
 			}
 			
 			reportHtml+=

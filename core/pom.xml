@@ -58,13 +58,7 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-devtools-v125</artifactId>
 			<version>${selenium.version}</version>
-		</dependency>	
-		<!--	
-		<dependency>
-    		<groupId>org.seleniumhq.selenium</groupId>
-    		<artifactId>selenium-devtools</artifactId>
-    		<version>4.0.0-rc-1</version> 
-		</dependency>-->
+		</dependency>
 		
 		<!-- Jersey/Jetty -->
 		<dependency>
