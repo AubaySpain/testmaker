@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import com.github.jorge2m.testmaker.conf.Channel;
@@ -34,30 +35,43 @@ import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
 
 public class GenerateReportTM {
 	
-	private SuiteBean suite;
-	private InputParamsTM inputParams;
-	private List<Integer> treeTable;
-	private String outputDirectory = "";
+	private final SuiteBean suite1;
+	private final SuiteBean suite2;
+	private final InputParamsTM inputParams;
+	private final List<Integer> treeTable;
+	private final String outputDirectory;
+	private final DynatraceLinks dynatraceLinks;
+	
 	private String reportHtml = "";
 	private String outputLibrary = "../..";
 	private String pathStatics = outputLibrary + "/static";
-	private DynatraceLinks dynatraceLinks; 
 
 	public GenerateReportTM(SuiteTM suiteTM, String outputDirectory) throws Exception {
-		this.suite = suiteTM.getSuiteBean();
+		this.suite1 = suiteTM.getSuiteBean();
+		this.suite2 = null;
 		this.inputParams = suiteTM.getInputParams();
 		this.outputDirectory = outputDirectory;
-		this.treeTable = getMapTree(suite);
-		this.dynatraceLinks = new DynatraceLinks(suite);
+		this.treeTable = getMapTree(suite1);
+		this.dynatraceLinks = new DynatraceLinks(suite1);
 	}
 	
 	public GenerateReportTM(SuiteBean suite) throws Exception {
-		this.suite = suite;
+		this.suite1 = suite;
+		this.suite2 = null;
 		this.inputParams = new InputParamsBasic(suite.getParameters());
 		this.treeTable = getMapTree(suite);
 		this.outputDirectory = suite.getOutputDirectory();
 		this.dynatraceLinks = new DynatraceLinks(suite);
 	}
+	
+	public GenerateReportTM(SuiteBean suite1, SuiteBean suite2) throws Exception {
+		this.suite1 = suite1;
+		this.suite2 = suite2;
+		this.inputParams = new InputParamsBasic(suite1.getParameters());
+		this.treeTable = getMapTree(suite1);
+		this.outputDirectory = suite1.getOutputDirectory();
+		this.dynatraceLinks = new DynatraceLinks(suite1);
+	}	
 	
 	public void generate() throws Exception {
 		deployStaticsIfNotExist();
@@ -86,13 +100,13 @@ public class GenerateReportTM {
             "<thead>\n" + 
             "  <tr id=\"header1\">\n" + 
             "    <th colspan=\"13\" class=\"head\">" + 
-            "      <div id=\"titleReport\">" + suite.getName() + " - " + suite.getApp() + ", " + suite.getChannel() + " (Id: " + suite.getIdExecSuite() + ")" +
-            "        <span id=\"descrVersion\">" + suite.getVersion() + "</span>" +
-            "        <span id=\"browser\">" + suite.getDriver() + "</span>";
+            "      <div id=\"titleReport\">" + suite1.getName() + " - " + suite1.getApp() + ", " + suite1.getChannel() + " (Id: " + suite1.getIdExecSuite() + ")" +
+            "        <span id=\"descrVersion\">" + suite1.getVersion() + "</span>" +
+            "        <span id=\"browser\">" + suite1.getDriver() + "</span>";
     	
-            if (suite.getUrlBase()!=null) {
+            if (suite1.getUrlBase()!=null) {
             	reportHtml+=
-            	"        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite.getUrlBase() + "\">" + suite.getUrlBase() + "</a></span>";
+            	"        <span id=\"url\"><a id=\"urlLink\" href=\"" + suite1.getUrlBase() + "\">" + suite1.getUrlBase() + "</a></span>";
             }
             
             reportHtml+= 
@@ -107,7 +121,13 @@ public class GenerateReportTM {
             "    <th rowspan=\"2\">Sons</th>" + 
             "    <th rowspan=\"2\">Result</th>" + 
             "    <th rowspan=\"2\">Time</th>" + 
-            "    <th rowspan=\"2\">Evidences</th>" + 
+            "    <th rowspan=\"2\">Evidences</th>";
+            
+            if (isCompare()) {
+            	reportHtml+= "    <th rowspan=\"2\">Evidences2</th>";
+            }
+            
+            reportHtml+=
             "    <th class=\"size20\" rowspan=\"2\">Description / Action / Validation</th>" + 
             "    <th class=\"size15\" rowspan=\"2\">Result expected</th>" +
             "    <th rowspan=\"2\">Init</th>" + 
@@ -183,7 +203,7 @@ public class GenerateReportTM {
 			String user = inputParams.getBStackUser();
 			String password = inputParams.getBStackPassword();
 			var client = new BrowserStackRestClient(user, password);
-			return client.getUrlBuild(suite.getIdExecSuite());
+			return client.getUrlBuild(suite1.getIdExecSuite());
 		}
 		return "";
 	}
@@ -239,58 +259,99 @@ public class GenerateReportTM {
 
 	void pintaTestRunsOfSuite() {
 		reportHtml+="<tbody id=\"treet2\">\n";
-		for (var testRun : suite.getListTestRun()) {
+		for (var testRun1 : suite1.getListTestRun()) {
 			var format = DateFormat.getDateTimeInstance();
 			String deviceInfo = "";
-			if (testRun.getDevice()!=null && "".compareTo(testRun.getDevice())!=0) {
-				deviceInfo = " [" + testRun.getDevice() + "]";
+			if (testRun1.getDevice()!=null && "".compareTo(testRun1.getDevice())!=0) {
+				deviceInfo = " [" + testRun1.getDevice() + "]";
 			}
 			reportHtml+= 
 				"<tr class=\"testrun\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
-				"  <td class=\"nowrap\">" + testRun.getName() + deviceInfo + "</td>" + 
-				"  <td>" + testRun.getNumberTestCases() + "</td>" + 
-				"  <td><div class=\"result" + testRun.getResult() + "\">" + testRun.getResult() + "</div></td>" + 
-				"  <td>" + toSeconds(testRun.getDurationMillis()) + "</td>" + "               <td></td>" + 
-				"  <td></td>" + 
+				"  <td class=\"nowrap\">" + testRun1.getName() + deviceInfo + "</td>" + 
+				"  <td>" + testRun1.getNumberTestCases() + "</td>" + 
+				"  <td><div class=\"result" + testRun1.getResult() + "\">" + testRun1.getResult() + "</div></td>" + 
+				"  <td>" + toSeconds(testRun1.getDurationMillis()) + "</td>" + "               <td></td>" + 
+				"  <td></td>";
+			
+			Optional<TestRunBean> testRun2Opt = Optional.empty();
+			if (isCompare()) {
+				reportHtml+="  <td></td>";
+				testRun2Opt = getSameTestRun(suite2, testRun1);
+			}
+				
+			reportHtml+=
 				"  <td></td>" +
-				"  <td>" + format.format(testRun.getInicioDate()) + "</td>" + 
-				"  <td>" + format.format(testRun.getFinDate()) + "</td>" +
+				"  <td>" + format.format(testRun1.getInicioDate()) + "</td>" + 
+				"  <td>" + format.format(testRun1.getFinDate()) + "</td>" +
 				"  <td></td>" + 
 				"</tr>\n";
 
-			pintaTestCasesOfTestRun(testRun);
+			pintaTestCasesOfTestRun(testRun1, testRun2Opt);
 		}
 	}
 	
-	void pintaTestCasesOfTestRun(TestRunBean testRun) {
-		var listTestCases = testRun.getListTestCase();
+	private Optional<TestRunBean> getSameTestRun(SuiteBean suite2, TestRunBean testRun1) {
+		for (var testRun2 : suite2.getListTestRun()) {
+			if (testRun2.getName().compareTo(testRun1.getName())==0) {
+				return Optional.of(testRun2);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	void pintaTestCasesOfTestRun(TestRunBean testRun1, Optional<TestRunBean> testRun2Opt) {
 		String TagTimeout = "@TIMEOUTSTEP";
-		for (int i=0; i<listTestCases.size(); i++) {
-			var testCase = listTestCases.get(i);
+		var listTestCases1 = testRun1.getListTestCase();
+		
+		for (int i=0; i<listTestCases1.size(); i++) {
+			var testCase1 = listTestCases1.get(i);
 			var format = new SimpleDateFormat("HH:mm:ss");
 			
 			reportHtml+= 
-				"<tr class=\"method\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
+				"<tr class=\"method\"" + " met=\"" + testCase1.getIndexInTestRun() + "\">" +
 				"  <td style=\"display:none;\"></td>\n" + 
-				"  <td class=\"nowrap\">" + testCase.getNameUnique() + "</td>" + 
-				"  <td>" + testCase.getNumberSteps() + "</td>" + 
-				"  <td><div class=\"result" + testCase.getResult() + "\">" + testCase.getResult() + "</div></td>" + 
-				"  <td>" + toSeconds(testCase.getDurationMillis()) + "</td>" +
-				"  <td>" + getLinksEvidencesTestCase(testCase) + "</td>" +
-				"  <td colspan=2>" + testCase.getDescription() + "</td>" + 
-				"  <td>" + TagTimeout + format.format(testCase.getInicioDate()) + "</td>" + 
-				"  <td>" + TagTimeout + format.format(testCase.getFinDate()) + "</td>" +
-				"  <td>" + testCase.getClassSignature() + "</td>" + 
+				"  <td class=\"nowrap\">" + testCase1.getNameUnique() + "</td>" + 
+				"  <td>" + testCase1.getNumberSteps() + "</td>" + 
+				"  <td><div class=\"result" + testCase1.getResult() + "\">" + testCase1.getResult() + "</div></td>" + 
+				"  <td>" + toSeconds(testCase1.getDurationMillis()) + "</td>" +
+				"  <td>" + getLinksEvidencesTestCase(testCase1) + "</td>";
+			
+			Optional<TestCaseBean> testCase2Opt = Optional.empty();
+			if (isCompare()) {
+				reportHtml+="  <td>";
+				if (testRun2Opt.isPresent()) {
+					testCase2Opt = getSameTestCase(testRun2Opt.get(), testCase1);
+					if (testCase2Opt.isPresent()) {
+						reportHtml+=getLinksEvidencesTestCase(testCase2Opt.get());
+					}
+				}
+				reportHtml+="</td>";
+			}
+			
+			reportHtml+=
+				"  <td colspan=2>" + testCase1.getDescription() + "</td>" + 
+				"  <td>" + TagTimeout + format.format(testCase1.getInicioDate()) + "</td>" + 
+				"  <td>" + TagTimeout + format.format(testCase1.getFinDate()) + "</td>" +
+				"  <td>" + testCase1.getClassSignature() + "</td>" + 
 				"</tr>\n";
 
-			boolean timeoutStep = pintaStepsOfTestCase(testCase);
+			boolean timeoutStep = pintaStepsOfTestCase(testCase1, testCase2Opt);
 			String font = "<font>";
 			if (timeoutStep) {
 				font = "<font class=\"timeout\">";
 			}
 			reportHtml = reportHtml.replace(TagTimeout, font);
 		}
+	}
+	
+	private Optional<TestCaseBean> getSameTestCase(TestRunBean testRun2, TestCaseBean testCase1) {
+		for (var testCase2 : testRun2.getListTestCase()) {
+			if (testCase2.getNameUnique().compareTo(testCase1.getNameUnique())==0) {
+				return Optional.of(testCase2);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	private String getLinksEvidencesTestCase(TestCaseBean testCase) {
@@ -323,7 +384,7 @@ public class GenerateReportTM {
 			return "";
 		}
 		return getHtmlLink(
-				getRelativePathEvidencia(testCase, testCaseEvidence),
+				getPathEvidencia(testCase, testCaseEvidence),
 				testCaseEvidence.getNameIcon(),
 				testCaseEvidence.getTagInfo());			
 	}
@@ -335,14 +396,13 @@ public class GenerateReportTM {
 			"</a>";		
 	}
 
-	private boolean pintaStepsOfTestCase(TestCaseBean testCase) {
+	private boolean pintaStepsOfTestCase(TestCaseBean testCase1, Optional<TestCaseBean> testCase2Opt) {
 		boolean timeout = false;
 		int stepNumber = 0;
-		for (var step : testCase.getListStep()) {
+		for (var step1 : testCase1.getListStep()) {
 			stepNumber+=1;
-			String linkStepEvidences = getLinksStepEvidences(testCase, step);
 			
-			long diffInMillies = step.getHoraFin().getTime() - step.getHoraInicio().getTime();
+			long diffInMillies = step1.getHoraFin().getTime() - step1.getHoraInicio().getTime();
 			String tdClassDate = "<td>";
 			if (diffInMillies > 30000) {
 				tdClassDate = "<td><font class=\"timeout\">";
@@ -350,38 +410,72 @@ public class GenerateReportTM {
 			}
 			var format = new SimpleDateFormat("HH:mm:ss");
 			String diffInSecondsStr = toSeconds(diffInMillies);
-			String fechaFinStr = format.format(step.getHoraFin());
+			String fechaFinStr = format.format(step1.getHoraFin());
 			if (diffInMillies < 0) {
 				diffInSecondsStr = "?";
 				fechaFinStr = "?";
 			}
 
 			reportHtml+=
-				"<tr class=\"step collapsed\"" + " met=\"" + testCase.getIndexInTestRun() + "\">" +
+				"<tr class=\"step collapsed\"" + " met=\"" + testCase1.getIndexInTestRun() + "\">" +
 				"     <td style=\"display:none;\"></td>\n" +
 				"     <td class=\"nowrap\">Step " + stepNumber + "</td>" + 
-				"     <td>" + step.getNumChecksTM() + "</td>" + 
-				"     <td><div class=\"result" + step.getResultSteps() + "\">" + step.getResultSteps() + "</div></td>" + 
+				"     <td>" + step1.getNumChecksTM() + "</td>" + 
+				"     <td><div class=\"result" + step1.getResultSteps() + "\">" + step1.getResultSteps() + "</div></td>" + 
 				"     <td>" + diffInSecondsStr + "</td>" + 
-				"     <td class=\"nowrap\">" + linkStepEvidences + "</td>" + 
-				"     <td>" + step.getDescripcion() + "</td>" + 
-				"     <td>" + step.getResExpected() + "</td>" +
-				tdClassDate + format.format(step.getHoraInicio()) + "</td>" + 
+				"     <td class=\"nowrap\">" + getLinksStepEvidences(testCase1, step1) + "</td>";
+			
+			Optional<StepTM> step2Opt = Optional.empty();
+			if (isCompare()) {
+				reportHtml+="     <td class=\"nowrap\">";
+				if (testCase2Opt.isPresent()) {
+					step2Opt = getSameStep(testCase2Opt.get(), step1);
+					if (step2Opt.isPresent()) {
+						reportHtml+=getLinksStepEvidences(testCase2Opt.get(), step2Opt.get());
+					}
+				}
+				reportHtml+="</td>";
+			}
+				
+			reportHtml+=
+				"     <td>" + step1.getDescripcion() + "</td>" + 
+				"     <td>" + step1.getResExpected() + "</td>" +
+				tdClassDate + format.format(step1.getHoraInicio()) + "</td>" + 
 				tdClassDate + fechaFinStr + "</td>" +
-				"     <td>" + step.getNameClass() + " / " + step.getNameMethod() + "</td>" +
+				"     <td>" + step1.getNameClass() + " / " + step1.getNameMethod() + "</td>" +
 				"</tr>\n";
 
-			pintaValidacionesStep(testCase, step);
+			pintaValidacionesStep(testCase1, step1, step2Opt);
 		}
 
 		return timeout;
+	}
+	
+	private Optional<StepTM> getSameStep(TestCaseBean testCase2, StepTM step1) {
+		for (var step2 : testCase2.getListStep()) {
+			if (step2.getNumber().equals(step1.getNumber()) &&
+				step2.getDescripcion().equals(step1.getDescripcion())) {
+				return Optional.of(step2);
+			}
+		}
+		for (var step2 : testCase2.getListStep()) {
+			if (step2.getDescripcion().equals(step1.getDescripcion())) {
+				return Optional.of(step2);
+			}
+		}
+		for (var step2 : testCase2.getListStep()) {
+			if (step2.getNumber().equals(step1.getNumber())) {
+				return Optional.of(step2);
+			}
+		}
+		return Optional.empty();
 	}
 
 	private String getLinksStepEvidences(TestCaseBean testCase, StepTM step) {
 		String linkHardcopy = "";
 		if (IMAGEN.fileExists(testCase, step)) {
 			linkHardcopy = 
-				"<a href=\"" + getRelativePathEvidencia(testCase, step, IMAGEN) + "\" target=\"_blank\">" + 
+				"<a href=\"" + getPathEvidencia(testCase, step, IMAGEN) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + IMAGEN.getNameIcon() + "\" title=\"" + IMAGEN.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -389,7 +483,7 @@ public class GenerateReportTM {
 		String linkHtml = "";
 		if (HTML.fileExists(testCase, step)) {
 			linkHtml = 
-				"<a href=\"" + getRelativePathEvidencia(testCase, step, HTML) + "\" target=\"_blank\">" + 
+				"<a href=\"" + getPathEvidencia(testCase, step, HTML) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + HTML.getNameIcon() + "\" title=\"" + HTML.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -397,7 +491,7 @@ public class GenerateReportTM {
 		String linkError = "";
 		if (ERROR_PAGE.fileExists(testCase, step)) {
 			linkError = 
-				"<a href=\"" + getRelativePathEvidencia(testCase, step, ERROR_PAGE) + "\" target=\"_blank\">" + 
+				"<a href=\"" + getPathEvidencia(testCase, step, ERROR_PAGE) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + ERROR_PAGE.getNameIcon() + "\" title=\"" + ERROR_PAGE.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -422,7 +516,7 @@ public class GenerateReportTM {
 		indexFile = new File(harFileStep);
 		if (indexFile.exists()) {
 			linkHar = 
-				" \\ <a href=\"" + getRelativePathEvidencia(testCase, step, HAR) + "\" target=\"_blank\">" +
+				" \\ <a href=\"" + getPathEvidencia(testCase, step, HAR) + "\" target=\"_blank\">" +
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + HAR.getNameIcon() + "\" title=\"" + HAR.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -430,23 +524,25 @@ public class GenerateReportTM {
 		return linkHardcopy + linkHtml + linkError + linkHarp + linkHar;
 	}
 
-	private String getRelativePathEvidencia(TestCaseBean testcase, StepTM step, StepEvidence evidence) {
+	private String getPathEvidencia(TestCaseBean testcase, StepTM step, StepEvidence evidence) {
+		String idSuite = testcase.getIdExecSuite();
 		String fileName = evidence.getNameFileEvidence(step);
 		String testRunName = testcase.getTestRunName();
 		String testCaseNameUnique = testcase.getNameUnique();
-		return ("./" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
+		return ("../" + idSuite + "/" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
 	}
 	
-	private String getRelativePathEvidencia(TestCaseBean testcase, TestCaseEvidence evidence) {
+	private String getPathEvidencia(TestCaseBean testcase, TestCaseEvidence evidence) {
+		String idSuite = testcase.getIdExecSuite();
 		String fileName = evidence.getNameFileEvidence();
 		String testRunName = testcase.getTestRunName();
 		String testCaseNameUnique = testcase.getNameUnique();
-		return ("./" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
+		return ("../" + idSuite + "/" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
 	}	
 
-	private void pintaValidacionesStep(TestCaseBean testCase, StepTM step) {
+	private void pintaValidacionesStep(TestCaseBean testCase, StepTM step1, Optional<StepTM> step2Opt) {
 
-		var listChecksResult = step.getListChecksTM();
+		var listChecksResult = step1.getListChecksTM();
 		for (var checksResult : listChecksResult) {
 			String descriptValid = checksResult.getHtmlValidationsBrSeparated();
 			reportHtml+= 
@@ -455,7 +551,13 @@ public class GenerateReportTM {
 				"    <td class=\"nowrap\">Validation " + checksResult.getPositionInStep() + "</td>" +
 				"    <td></td>" + 
 				"    <td><div class=\"result" + checksResult.getStateValidation() + "\">" + checksResult.getStateValidation() + "</div></td>" + 
-				"    <td></td>" + 
+				"    <td></td>";
+			
+			if (isCompare()) {
+				reportHtml+="    <td></td>";
+			}
+			
+			reportHtml+=
 				"    <td></td>" + 
 				"    <td>" + descriptValid + "</td>" + 
 				"    <td></td>" + 
@@ -475,7 +577,7 @@ public class GenerateReportTM {
 	}
 
     public void createFileReportHTML() throws Exception {
-        String fileReport = suite.getPathReportHtml();;
+        String fileReport = suite1.getPathReportHtml();;
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileReport), "UTF8"))) {
             out.write(reportHtml.toString());
         } 
@@ -537,6 +639,10 @@ public class GenerateReportTM {
 	private String toSeconds(float millis) {
 	    float seconds = Math.round(millis / 100.0f) / 10.0f;
 	    return seconds + "s";
+	}
+	
+	private boolean isCompare() {
+		return suite2!=null;
 	}
 	
 }

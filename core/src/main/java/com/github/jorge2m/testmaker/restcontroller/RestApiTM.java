@@ -166,6 +166,24 @@ public class RestApiTM {
 		}
 	}	
 	
+	@PUT
+	@Path("/suiterun/{idexecution1}/{idexecution2}/report")
+	public Response putComparation(
+			@PathParam("idexecution1") String idExecSuite1, 
+			@PathParam("idexecution2") String idExecSuite2) throws Exception {
+		
+		var suite1 = TestMaker.getSuite(idExecSuite1);
+		if (suite1!=null) {
+			var suite2 = TestMaker.getSuite(idExecSuite2);
+			if (suite2!=null) {
+				new GenerateReportTM(suite1,suite2).generate();
+				return Response.ok().build();
+			}
+		} 
+
+		throw new WebApplicationException(Response.Status.NOT_FOUND);
+	}	
+	
 	@DELETE
 	@Path("/suiterun/report")
 	public Response deleteSuiteReports(
