@@ -33,8 +33,6 @@ public class ComparatorImages {
 		Path imageStep1path = Paths.get(IMAGEN.getPathFile(testCase1, step1));
 		Path imageStep2path = Paths.get(IMAGEN.getPathFile(testCase2, step2));
 		
-		//TODO Aquí hemos de ejecutar la librería para la comparativa de imágenes
-		
 		Path getPathImageCompared = Paths.get(getPathImageCompared());
         try {
             Files.copy(imageStep1path, getPathImageCompared, StandardCopyOption.REPLACE_EXISTING);
@@ -59,18 +57,5 @@ public class ComparatorImages {
 	public static String getNameIcon() {
 		return ICON_NAME_REPORT;
 	}
-	
-//	public void saveContentEvidenceInFile(String content, String pathFile) {
-//		//TODO esto quizás finalmente se pueda unificar con el saveContent d'una hardcopy
-//		byte[] bytesPng = Base64.getMimeDecoder().decode(content);
-//		File file = new File(pathFile);
-//		try (
-//			OutputStream stream = new FileOutputStream(file)) {
-//			stream.write(bytesPng);
-//		} 
-//		catch (Exception e) {
-//			Log4jTM.getLogger().warn("Problem saving File " + pathFile, e);
-//		}
-//	}
 
 }

@@ -19,6 +19,7 @@ import com.github.jorge2m.testmaker.conf.ConstantesTM;
 import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.InputParamsTM;
 import com.github.jorge2m.testmaker.domain.InputParamsTM.TypeAccess;
+import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
@@ -125,7 +126,9 @@ public class GenerateReportTM {
             "    <th rowspan=\"2\">Evidences</th>";
             
             if (isCompare()) {
-            	reportHtml+= 
+            	reportHtml+=
+            		"    <th rowspan=\"2\" class=\"compare\">Result2</th>" +
+            		"    <th rowspan=\"2\" class=\"compare\">Time2</th>" +            	
             		"    <th rowspan=\"2\" class=\"compare\">Evidences2</th>" +
             		"    <th rowspan=\"2\" class=\"compare\">Compare</th>";
             }
@@ -277,14 +280,7 @@ public class GenerateReportTM {
 				"  <td>" + toSeconds(testRun1.getDurationMillis()) + "</td>" + 
 				"  <td></td>"; 
 			
-			Optional<TestRunBean> testRun2Opt = Optional.empty();
-			if (isCompare()) {
-				reportHtml+=
-					"  <td class=\"compare\"></td>" +
-					"  <td class=\"compare\"></td>";
-				
-				testRun2Opt = getSameTestRun(suite2, testRun1);
-			}
+			var testRun2Opt = pintaTestRunComparation(testRun1);
 				
 			reportHtml+=
 				"  <td></td>" +					
@@ -296,6 +292,31 @@ public class GenerateReportTM {
 
 			pintaTestCasesOfTestRun(testRun1, testRun2Opt);
 		}
+	}
+
+	private Optional<TestRunBean> pintaTestRunComparation(TestRunBean testRun1) {
+		Optional<TestRunBean> testRun2Opt = Optional.empty();
+		if (!isCompare()) {
+			return testRun2Opt;
+		}
+		
+		testRun2Opt = getSameTestRun(suite2, testRun1);
+		if (testRun2Opt.isPresent()) {
+			var testRun2 = testRun2Opt.get();
+			reportHtml+=
+				"  <td class=\"compare\"><div class=\"result" + testRun2.getResult() + "\">" + testRun1.getResult() + "</div></td>" + 
+				"  <td class=\"compare\">" + toSeconds(testRun2.getDurationMillis()) + "</td>";
+		} else {
+			reportHtml+=
+				"  <td class=\"compare\"></td>" +
+				"  <td class=\"compare\"></td>";					
+		}
+		
+		reportHtml+=
+			"  <td class=\"compare\"></td>" +
+			"  <td class=\"compare\"></td>";
+
+		return testRun2Opt;
 	}
 	
 	private Optional<TestRunBean> getSameTestRun(SuiteBean suite2, TestRunBean testRun1) {
@@ -324,18 +345,7 @@ public class GenerateReportTM {
 				"  <td>" + toSeconds(testCase1.getDurationMillis()) + "</td>" +
 				"  <td>" + getLinksEvidencesTestCase(testCase1) + "</td>";
 			
-			Optional<TestCaseBean> testCase2Opt = Optional.empty();
-			if (isCompare()) {
-				reportHtml+="  <td class=\"compare\">";
-				if (testRun2Opt.isPresent()) {
-					testCase2Opt = getSameTestCase(testRun2Opt.get(), testCase1);
-					if (testCase2Opt.isPresent()) {
-						reportHtml+=getLinksEvidencesTestCase(testCase2Opt.get());
-					}
-				}
-				reportHtml+="</td>";
-				reportHtml+="<td class=\"compare\"></td>";
-			}
+			var testCase2Opt = pintaTestCaseComparation(testRun2Opt, testCase1);
 			
 			reportHtml+=
 				"  <td colspan=2>" + testCase1.getDescription() + "</td>" + 
@@ -351,6 +361,39 @@ public class GenerateReportTM {
 			}
 			reportHtml = reportHtml.replace(TagTimeout, font);
 		}
+	}
+
+	private Optional<TestCaseBean> pintaTestCaseComparation(Optional<TestRunBean> testRun2Opt, TestCaseBean testCase1) {
+		Optional<TestCaseBean> testCase2Opt = Optional.empty();
+		if (!isCompare()) {
+			return testCase2Opt;
+		}
+		
+		if (testRun2Opt.isPresent()) {
+			testCase2Opt = getSameTestCase(testRun2Opt.get(), testCase1);
+			if (testCase2Opt.isPresent()) {
+				var testCase2 = testCase2Opt.get();
+				reportHtml+=
+					"  <td class=\"compare\"><div class=\"result" + testCase2.getResult() + "\">" + testCase2.getResult() + "</div></td>" + 
+					"  <td class=\"compare\">" + toSeconds(testCase2.getDurationMillis()) + "</td>";
+
+				reportHtml+=
+					"<td class=\"compare\">" +
+					getLinksEvidencesTestCase(testCase2Opt.get()) +
+					"</td>";
+			}
+		}
+		
+		if (testCase2Opt.isEmpty()) {
+			reportHtml+=
+				"  <td class=\"compare\"></td>" + 
+				"  <td class=\"compare\"></td>" +
+				"  <td class=\"compare\"></td>";			
+		}
+		
+		reportHtml+="<td class=\"compare\"></td>";
+		
+		return testCase2Opt;
 	}
 	
 	private Optional<TestCaseBean> getSameTestCase(TestRunBean testRun2, TestCaseBean testCase1) {
@@ -433,29 +476,7 @@ public class GenerateReportTM {
 				"     <td>" + diffInSecondsStr + "</td>" + 
 				"     <td class=\"nowrap\">" + getLinksStepEvidences(testCase1, step1) + "</td>";
 			
-			Optional<StepTM> step2Opt = Optional.empty();
-			if (isCompare()) {
-				reportHtml+="     <td class=\"nowrap compare\">";
-				if (testCase2Opt.isPresent()) {
-					step2Opt = getSameStep(testCase2Opt.get(), step1);
-					if (step2Opt.isPresent()) {
-						reportHtml+=getLinksStepEvidences(testCase2Opt.get(), step2Opt.get());
-					}
-				}
-				reportHtml+="</td>";
-				reportHtml+="<td class=\"compare\">";
-				if (testCase2Opt.isPresent() && step2Opt.isPresent()) {
-					var comparatorImages = new ComparatorImages(testCase1, step1, testCase2Opt.get(), step2Opt.get());
-					if (comparatorImages.compareAndSave()) {
-						var pathComparation = comparatorImages.getPathImageCompared();
-						reportHtml+=
-							"<a href=\"" + pathComparation + "\" target=\"_blank\">" + 
-							"<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorImages.getNameIcon() + "\">" +
-							"</a>";
-					}
-				}
-				reportHtml+="</td>";
-			}
+			var step2Opt = pintaStepComparation(testCase1, testCase2Opt, step1);
 				
 			reportHtml+=
 				"     <td>" + step1.getDescripcion() + "</td>" + 
@@ -470,6 +491,57 @@ public class GenerateReportTM {
 
 		return timeout;
 	}
+
+	private Optional<StepTM> pintaStepComparation(
+			TestCaseBean testCase1, Optional<TestCaseBean> testCase2Opt, StepTM step1) {
+
+		Optional<StepTM> step2Opt = Optional.empty();
+		if (!isCompare()) {
+			return step2Opt;
+		}
+
+		if (testCase2Opt.isPresent()) {
+			step2Opt = getSameStep(testCase2Opt.get(), step1);
+			if (step2Opt.isPresent()) {
+				var step2 = step2Opt.get();
+				long diffInMillies = step2.getHoraFin().getTime() - step2.getHoraInicio().getTime();
+				String diffInSecondsStr = toSeconds(diffInMillies);
+				
+				reportHtml+=
+					"     <td class=\"compare\"><div class=\"result" + step2.getResultSteps() + "\">" + step2.getResultSteps() + "</div></td>" + 
+					"     <td class=\"compare\">" + diffInSecondsStr + "</td>";
+
+				reportHtml+="     <td class=\"nowrap compare\">";
+				reportHtml+=getLinksStepEvidences(testCase2Opt.get(), step2Opt.get());
+				reportHtml+="     </td>";
+			}
+		}
+		
+		if (step2Opt.isEmpty()) {
+			reportHtml+=
+				"<td class=\"compare\"></td>" + 
+				"<td class=\"compare\"></td>";
+		}
+		
+		reportHtml+="<td class=\"compare\">";
+		
+		if (step2Opt.isPresent()) {
+			var comparatorImages = new ComparatorImages(testCase1, step1, testCase2Opt.get(), step2Opt.get());
+			if (comparatorImages.compareAndSave()) {
+				reportHtml+=createComparisonLink(comparatorImages);
+			}
+		}
+		reportHtml+="</td>";
+			
+		return step2Opt;
+	}
+	
+	private String createComparisonLink(ComparatorImages comparatorImages) {
+	    var pathComparation = comparatorImages.getPathImageCompared();
+	    return "<a href=\"" + pathComparation + "\" target=\"_blank\">" +
+	           "<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorImages.getNameIcon() + "\">" +
+	           "</a>";
+	}	
 	
 	private Optional<StepTM> getSameStep(TestCaseBean testCase2, StepTM step1) {
 		for (var step2 : testCase2.getListStep()) {
@@ -571,16 +643,12 @@ public class GenerateReportTM {
 				"    <td class=\"nowrap\">Validation " + checksResult.getPositionInStep() + "</td>" +
 				"    <td></td>" + 
 				"    <td><div class=\"result" + checksResult.getStateValidation() + "\">" + checksResult.getStateValidation() + "</div></td>" + 
-				"    <td></td>";
+				"    <td></td>" +
+				"    <td></td>";			
 			
-			if (isCompare()) {
-				reportHtml+=
-					"    <td class=\"compare\"></td>" +
-					"    <td class=\"compare\"></td>";
-			}
+			pintaValidationComparation(step2Opt, checksResult);
 			
 			reportHtml+=
-				"    <td></td>" + 
 				"    <td>" + descriptValid + "</td>" + 
 				"    <td></td>" + 
 				"    <td></td>" + 
@@ -588,6 +656,56 @@ public class GenerateReportTM {
 				"    <td>" + checksResult.getNameClass() + " / " + checksResult.getNameMethod() + "</td>" + 
 				"</tr>\n";
 		}
+	}
+
+	private void pintaValidationComparation(Optional<StepTM> step2Opt, ChecksTM check1) {
+		
+		Optional<ChecksTM> check2Opt = Optional.empty();
+		if (!isCompare()) {
+			return;
+		}
+		
+		if (step2Opt.isPresent()) {
+			var step2 = step2Opt.get();
+			check2Opt = getSameValidation(step2, check1);
+			if (check2Opt.isPresent()) {
+				var check2 = check2Opt.get();
+				reportHtml+=
+					"    <td class=\"compare\"><div class=\"result" + check2.getStateValidation() + "\">" + check2.getStateValidation() + "</div></td>";
+			}
+		}
+		
+		if (check2Opt.isEmpty()) {
+			reportHtml+="    <td class=\"compare\"></td>";
+		}
+		
+		reportHtml+=
+			"    <td class=\"compare\"></td>" +
+			"    <td class=\"compare\"></td>" +
+			"    <td class=\"compare\"></td>";
+	}
+	
+	private Optional<ChecksTM> getSameValidation(StepTM step2, ChecksTM check1) {
+		for (var check2 : step2.getListChecksTM()) {
+			if (check2.getPositionInStep()==check1.getPositionInStep() &&
+				check2.getTextValidationsBrSeparated().equals(check1.getTextValidationsBrSeparated())) {
+				return Optional.of(check2);
+			}
+		}
+		
+		for (var check2 : step2.getListChecksTM()) {
+			if (check2.getTextValidationsBrSeparated().equals(check1.getTextValidationsBrSeparated())) {
+				return Optional.of(check2);
+			}
+		}
+
+		for (var check2 : step2.getListChecksTM()) {
+			if (check2.getPositionInStep()==check1.getPositionInStep()) {
+				return Optional.of(check2);
+			}
+		}
+		
+		return Optional.empty();
 	}
 
 	public void pintaCierreHTML() {
