@@ -1,5 +1,6 @@
 package com.github.jorge2m.testmaker.domain.suitetree;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -85,9 +86,19 @@ public class SuiteBean {
 	public String getPathReportHtml() {
 		return pathReportHtml;
 	}
+	public String getPathComparativeReport(String idSuite2) {
+		String directory = getPathReportHtml().substring(0, getPathReportHtml().lastIndexOf(File.separator) + 1);
+		return directory + idSuite2 + "_compared.html";
+	}
+	
 	public String getUrlReportHtml() {
 		return urlReportHtml;
 	}
+	public String getUrlComparativeReportHtml(String idSuite2) {
+		String directory = getUrlReportHtml().substring(0, getUrlReportHtml().lastIndexOf("/") + 1);
+		return directory + idSuite2 + "_compared.html";
+	}
+	
 	public StateExecution getStateExecution() {
 		return stateExecution;
 	}

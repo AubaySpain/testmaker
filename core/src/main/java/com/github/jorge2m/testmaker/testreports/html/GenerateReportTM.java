@@ -25,15 +25,17 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
+import com.github.jorge2m.testmaker.service.TestMaker;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
 import com.github.jorge2m.testmaker.testreports.browserstack.BrowserStackRestClient;
-import com.github.jorge2m.testmaker.testreports.stepstore.ComparatorImages;
-import com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence;
+import com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorAshot;
+import com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorImages;
 import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
 
 import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
+import static com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorImages.Comparator_Images.*;
 
 public class GenerateReportTM {
 	
@@ -78,6 +80,9 @@ public class GenerateReportTM {
 	public void generate() throws Exception {
 		deployStaticsIfNotExist();
 		generateReportHTML();
+		if (isCompare()) {
+        	TestMaker.getRepository().insertComparedSuites(suite1, suite2);
+		}
 	}
 
 	private void deployStaticsIfNotExist() throws Exception {
@@ -97,12 +102,18 @@ public class GenerateReportTM {
 	}
 
     void pintaHeadersTableMain() {
+    	int colsPan=13;
+    	if (isCompare()) {
+    		colsPan+=4;
+    	}
+    	
     	reportHtml+=
         	"<table id=\"tableMain\" class=\"tablemain\">" + 
             "<thead>\n" + 
             "  <tr id=\"header1\">\n" + 
-            "    <th colspan=\"13\" class=\"head\">" + 
-            "      <div id=\"titleReport\">" + suite1.getName() + " - " + suite1.getApp() + ", " + suite1.getChannel() + " (Id: " + suite1.getIdExecSuite() + ")" +
+            "    <th colspan=\"" + colsPan + "\" class=\"head\">" + 
+            "<div id=\"titleReport\">" +
+            getTitleReport() + 
             "        <span id=\"descrVersion\">" + suite1.getVersion() + "</span>" +
             "        <span id=\"browser\">" + suite1.getDriver() + "</span>";
     	
@@ -142,6 +153,23 @@ public class GenerateReportTM {
             "  </tr>\n" + 
             "  <tr></tr>\n" +
         	"   </thead>\n";
+    }
+    
+    private String getTitleReport() {
+    	String title =  
+    		suite1.getName() + " - " + 
+    		suite1.getApp() + ", " + 
+    		suite1.getChannel();
+    	
+    	if (isCompare()) {
+    		title+=
+       			" (Id: "  + 
+       			"<a id=\"suitenew\" href=\"" + suite1.getUrlReportHtml() + "\">" + suite1.getIdExecSuite() + "</a> vs " +
+       			"<a id=\"suiteorig\" href=\"" + suite2.getUrlReportHtml() + "\">" + suite2.getIdExecSuite() + "</a>)";
+    	} else {
+    		title+=" (Id: " + suite1.getIdExecSuite() + ")";
+    	}
+    	return title;
     }
 
 	private String getDivDynatrace() {
@@ -520,15 +548,16 @@ public class GenerateReportTM {
 		if (step2Opt.isEmpty()) {
 			reportHtml+=
 				"<td class=\"compare\"></td>" + 
+				"<td class=\"compare\"></td>" +
 				"<td class=\"compare\"></td>";
 		}
 		
 		reportHtml+="<td class=\"compare\">";
 		
 		if (step2Opt.isPresent()) {
-			var comparatorImages = new ComparatorImages(testCase1, step1, testCase2Opt.get(), step2Opt.get());
+			var comparatorImages = ComparatorImages.make(OVERLAY, testCase1, step1, testCase2Opt.get(), step2Opt.get());
 			if (comparatorImages.compareAndSave()) {
-				reportHtml+=createComparisonLink(comparatorImages);
+				reportHtml+=createComparisonLink(comparatorImages, testCase1, step1);
 			}
 		}
 		reportHtml+="</td>";
@@ -536,11 +565,12 @@ public class GenerateReportTM {
 		return step2Opt;
 	}
 	
-	private String createComparisonLink(ComparatorImages comparatorImages) {
-	    var pathComparation = comparatorImages.getPathImageCompared();
-	    return "<a href=\"" + pathComparation + "\" target=\"_blank\">" +
-	           "<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorImages.getNameIcon() + "\">" +
-	           "</a>";
+	private String createComparisonLink(ComparatorImages comparatorImages, TestCaseBean testCase1, StepTM step1) {
+		String pathImageCompared = comparatorImages.getPathImageCompared(testCase1, step1);
+	    return 
+	    	"<a href=\"" + pathImageCompared + "\" target=\"_blank\">" +
+	        "<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorAshot.getNameIcon() + "\">" +
+	        "</a>";
 	}	
 	
 	private Optional<StepTM> getSameStep(TestCaseBean testCase2, StepTM step1) {
@@ -567,7 +597,7 @@ public class GenerateReportTM {
 		String linkHardcopy = "";
 		if (IMAGEN.fileExists(testCase, step)) {
 			linkHardcopy = 
-				"<a href=\"" + getPathEvidencia(testCase, step, IMAGEN) + "\" target=\"_blank\">" + 
+				"<a href=\"" + IMAGEN.getPathEvidencia(testCase, step) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + IMAGEN.getNameIcon() + "\" title=\"" + IMAGEN.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -575,7 +605,7 @@ public class GenerateReportTM {
 		String linkHtml = "";
 		if (HTML.fileExists(testCase, step)) {
 			linkHtml = 
-				"<a href=\"" + getPathEvidencia(testCase, step, HTML) + "\" target=\"_blank\">" + 
+				"<a href=\"" + HTML.getPathEvidencia(testCase, step) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + HTML.getNameIcon() + "\" title=\"" + HTML.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -583,7 +613,7 @@ public class GenerateReportTM {
 		String linkError = "";
 		if (ERROR_PAGE.fileExists(testCase, step)) {
 			linkError = 
-				"<a href=\"" + getPathEvidencia(testCase, step, ERROR_PAGE) + "\" target=\"_blank\">" + 
+				"<a href=\"" + ERROR_PAGE.getPathEvidencia(testCase, step) + "\" target=\"_blank\">" + 
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + ERROR_PAGE.getNameIcon() + "\" title=\"" + ERROR_PAGE.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -608,7 +638,7 @@ public class GenerateReportTM {
 		indexFile = new File(harFileStep);
 		if (indexFile.exists()) {
 			linkHar = 
-				" \\ <a href=\"" + getPathEvidencia(testCase, step, HAR) + "\" target=\"_blank\">" +
+				" \\ <a href=\"" + HAR.getPathEvidencia(testCase, step) + "\" target=\"_blank\">" +
 				"<img width=\"22\" src=\"" + pathStatics + "/images/" + HAR.getNameIcon() + "\" title=\"" + HAR.getTagInfo() + "\"/>" +
 				"</a>";
 		}
@@ -616,14 +646,6 @@ public class GenerateReportTM {
 		return linkHardcopy + linkHtml + linkError + linkHarp + linkHar;
 	}
 
-	private String getPathEvidencia(TestCaseBean testcase, StepTM step, StepEvidence evidence) {
-		String idSuite = testcase.getIdExecSuite();
-		String fileName = evidence.getNameFileEvidence(step);
-		String testRunName = testcase.getTestRunName();
-		String testCaseNameUnique = testcase.getNameUnique();
-		return ("../" + idSuite + "/" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
-	}
-	
 	private String getPathEvidencia(TestCaseBean testcase, TestCaseEvidence evidence) {
 		String idSuite = testcase.getIdExecSuite();
 		String fileName = evidence.getNameFileEvidence();
@@ -717,10 +739,17 @@ public class GenerateReportTM {
 	}
 
     public void createFileReportHTML() throws Exception {
-        String fileReport = suite1.getPathReportHtml();;
+        String fileReport = getPathReportHtml();
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileReport), "UTF8"))) {
             out.write(reportHtml.toString());
         } 
+    }
+    
+    private String getPathReportHtml() {
+    	if (!isCompare()) {
+    		return suite1.getPathReportHtml();
+    	}
+    	return suite1.getPathComparativeReport(suite2.getIdExecSuite());
     }
 
     static List<Integer> getMapTree(SuiteBean suite) {

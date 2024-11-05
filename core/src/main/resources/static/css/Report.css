@@ -10,6 +10,8 @@ br.clear {clear:left;}
 .tablemain {width: 100%; font: normal 8pt Arial; margin: -8px 0px 0px 0px; background-color:#000000;border-collapse: collapse; border: solid 3px #000000; text-align: left; float:left;}
 .tablemain th.head {text-align:center; font: bold 10pt Arial;border:solid 1px; background-color:#04B486; color:white;}
 .tablemain div#titleReport {font-size:1.30em; float:left;}
+.tablemain div#titleReport #suitenew {color: softgreen; font-size:1.00em;}
+.tablemain div#titleReport #suiteorig {color: orange; font-size:1.00em;}
 .tablemain tr#header2 {background-color:#088A68; color:white;}
 .tablemain tr#header2 th.compare {background-color:#AB7821; color:white;}
 .tablemain th {font: bold 9pt Arial; padding: 10px 4px 10px 4px; border: solid 1px;}

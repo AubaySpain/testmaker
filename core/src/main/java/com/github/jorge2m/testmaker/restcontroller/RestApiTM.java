@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -166,18 +168,32 @@ public class RestApiTM {
 		}
 	}	
 	
-	@PUT
+	@GET
 	@Path("/suiterun/{idexecution1}/{idexecution2}/report")
-	public Response putComparation(
+	public Response getComparation(
 			@PathParam("idexecution1") String idExecSuite1, 
 			@PathParam("idexecution2") String idExecSuite2) throws Exception {
+		
+		var comparedSuiteOpt = 
+				TestMaker.getRepository().getComparedSuite(idExecSuite1, idExecSuite2);
+		
+		if (comparedSuiteOpt.isPresent()) {
+			var comparedSuite = comparedSuiteOpt.get();
+        	if (Files.exists(Paths.get(comparedSuite.getPathReport()))) {
+        		String urlReport = comparedSuite.getUrlReport();
+        		URI uriReport = UriBuilder.fromUri(urlReport).build();
+        		return Response.temporaryRedirect(uriReport).build();
+        	}
+		}
 		
 		var suite1 = TestMaker.getSuite(idExecSuite1);
 		if (suite1!=null) {
 			var suite2 = TestMaker.getSuite(idExecSuite2);
 			if (suite2!=null) {
 				new GenerateReportTM(suite1,suite2).generate();
-				return Response.ok().build();
+	        	String urlReport = suite1.getUrlComparativeReportHtml(suite2.getIdExecSuite());
+				URI uriReport = UriBuilder.fromUri(urlReport).build();
+				return Response.temporaryRedirect(uriReport).build();
 			}
 		} 
 

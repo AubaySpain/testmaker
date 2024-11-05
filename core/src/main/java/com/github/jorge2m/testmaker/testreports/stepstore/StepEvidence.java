@@ -61,4 +61,12 @@ public enum StepEvidence {
 		return tagInfo;
 	}
 	
+	public String getPathEvidencia(TestCaseBean testcase, StepTM step) {
+		String idSuite = testcase.getIdExecSuite();
+		String fileName = this.getNameFileEvidence(step);
+		String testRunName = testcase.getTestRunName();
+		String testCaseNameUnique = testcase.getNameUnique();
+		return ("../" + idSuite + "/" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
+	}
+	
 }
