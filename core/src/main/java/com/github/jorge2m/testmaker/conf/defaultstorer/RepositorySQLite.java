@@ -8,12 +8,14 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteConfig.LockingMode;
 
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
+import com.github.jorge2m.testmaker.domain.ComparedSuite;
 import com.github.jorge2m.testmaker.domain.RepositoryI;
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
@@ -22,6 +24,7 @@ import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestRunBean;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.AlertsDAO;
+import com.github.jorge2m.testmaker.repository.jdbc.dao.ComparedSuitesDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.ConnectorBD;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.StepsDAO;
 import com.github.jorge2m.testmaker.repository.jdbc.dao.SuitesDAO;
@@ -36,6 +39,7 @@ public class RepositorySQLite implements RepositoryI {
 	private boolean sqliteBdGrabed = false;
 	private final ConnectorBD connector = getConnectorBD(); 
 	private final SuitesDAO suitesDAO = new SuitesDAO(connector);
+	private final ComparedSuitesDAO comparedSuitesDAO = new ComparedSuitesDAO(connector);
 	private final TestRunsDAO testRunsDAO = new TestRunsDAO(connector);
 	private final TestCasesDAO testCasesDAO = new TestCasesDAO(connector);
 	private final StepsDAO stepsDAO = new StepsDAO(connector);
@@ -87,6 +91,16 @@ public class RepositorySQLite implements RepositoryI {
 	}
 	
 	@Override
+	public synchronized void insertComparedSuites(SuiteBean suite1, SuiteBean suite2) {
+		comparedSuitesDAO.insertComparedSuite(suite1, suite2);
+	}
+	
+	@Override
+	public synchronized Optional<ComparedSuite> getComparedSuite(String idSuite1, String idSuite2) {
+		return comparedSuitesDAO.getComparedSuite(idSuite1, idSuite2);
+	}
+	
+	@Override
 	public boolean removeBD() {
 		String pathBD = getSQLiteFilePathAutomaticTestingSchema();
 		return new File(pathBD).delete();
@@ -115,7 +129,7 @@ public class RepositorySQLite implements RepositoryI {
 			}
 		);
 	}
-		
+	
 	private synchronized void storeSuiteAndChildren(SuiteBean suite, StoreUntil until) {
 		if (!until.storeSuite()) {
 			return;
@@ -150,6 +164,7 @@ public class RepositorySQLite implements RepositoryI {
 		testCasesDAO.deleteTestCases(suiteIdExec);
 		stepsDAO.deleteSteps(suiteIdExec);
 		validationsDAO.deleteValidations(suiteIdExec);
+		comparedSuitesDAO.delete(suiteIdExec);
 	}
 
 	@Override

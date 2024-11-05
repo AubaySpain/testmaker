@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.github.jorge2m.testmaker.conf.Channel;
 import com.github.jorge2m.testmaker.conf.State;
@@ -38,22 +43,18 @@ public class SuitesDAO {
 		"URL_REPORT, " + 
 		"MORE_INFO, " + 
 		"URLBASE, " + 
-		"STATE_EXECUTION ";
+		"STATE_EXECUTION, " +
+		"PARAMETERS ";
 
 	private static final String SQL_INSERT_OR_REPLACE_SUITE = 
 		"INSERT OR REPLACE INTO SUITES (" + LIST_FIELDS_SUITE_TABLE + ")" +
-		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	private static final String SQL_SELECT_SUITE = 
 		"SELECT " + LIST_FIELDS_SUITE_TABLE  +
 		"  FROM SUITES " +
 		"WHERE IDEXECSUITE = ? " +
 		"ORDER BY IDEXECSUITE DESC";
-
-//	private static final String SQLSelectSuitesFromId = 
-//		"SELECT " + ListFieldsSuiteTable + 
-//		"  FROM SUITES " +
-//		"WHERE IDEXECSUITE >= ?";
 
 	private static final String SQL_DELETE_SUITE = 
 		"DELETE FROM SUITES " +
@@ -129,6 +130,11 @@ public class SuitesDAO {
 		suiteData.setUrlReportHtml(rowSuite.getString("URL_REPORT"));
 		suiteData.setStateExecution(StateExecution.from(rowSuite.getString("STATE_EXECUTION")));
 		
+		var jsonString = rowSuite.getString("PARAMETERS");
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> parameters = mapper.readValue(jsonString, new TypeReference<Map<String, String>>() {});
+		suiteData.setParameters(parameters);
+		
 		TestRunsDAO testRunsDAO = new TestRunsDAO(connector);
 		suiteData.setListTestRun(testRunsDAO.getListTestRuns(rowSuite.getString("IDEXECSUITE")));
 		
@@ -158,8 +164,13 @@ public class SuitesDAO {
 				insert.setString(14, suiteData.getMoreInfo());
 				insert.setString(15, suiteData.getUrlBase());
 				insert.setString(16, suiteData.getStateExecution().name());
+				
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonParameters = mapper.writeValueAsString(suiteData.getParameters()); 
+				insert.setString(17, jsonParameters);
+				
 				insert.executeUpdate();
-			} catch (SQLException ex) {
+			} catch (SQLException | JsonProcessingException ex) {
 				throw new RuntimeException(ex);
 			}
 		}

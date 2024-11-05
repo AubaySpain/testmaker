@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -19,6 +21,7 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -51,6 +54,7 @@ import com.github.jorge2m.testmaker.domain.StateExecution;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.testfilter.TestMethodData;
 import com.github.jorge2m.testmaker.service.TestMaker;
+import com.github.jorge2m.testmaker.testreports.html.GenerateReportTM;
 import com.github.jorge2m.testmaker.service.FilterSuites.SetSuiteRun;
 
 @Path("/")
@@ -151,6 +155,50 @@ public class RestApiTM {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
+	
+	@PUT
+	@Path("/suiterun/{idexecution}/report")
+	public Response putReport(@PathParam("idexecution") String idExecSuite) throws Exception {
+		var suite = TestMaker.getSuite(idExecSuite);
+		if (suite!=null) {
+			new GenerateReportTM(suite).generate();
+			return Response.ok().build();
+		} else {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+	}	
+	
+	@GET
+	@Path("/suiterun/{idexecution1}/{idexecution2}/report")
+	public Response getComparation(
+			@PathParam("idexecution1") String idExecSuite1, 
+			@PathParam("idexecution2") String idExecSuite2) throws Exception {
+		
+		var comparedSuiteOpt = 
+				TestMaker.getRepository().getComparedSuite(idExecSuite1, idExecSuite2);
+		
+		if (comparedSuiteOpt.isPresent()) {
+			var comparedSuite = comparedSuiteOpt.get();
+        	if (Files.exists(Paths.get(comparedSuite.getPathReport()))) {
+        		String urlReport = comparedSuite.getUrlReport();
+        		URI uriReport = UriBuilder.fromUri(urlReport).build();
+        		return Response.temporaryRedirect(uriReport).build();
+        	}
+		}
+		
+		var suite1 = TestMaker.getSuite(idExecSuite1);
+		if (suite1!=null) {
+			var suite2 = TestMaker.getSuite(idExecSuite2);
+			if (suite2!=null) {
+				new GenerateReportTM(suite1,suite2).generate();
+	        	String urlReport = suite1.getUrlComparativeReportHtml(suite2.getIdExecSuite());
+				URI uriReport = UriBuilder.fromUri(urlReport).build();
+				return Response.temporaryRedirect(uriReport).build();
+			}
+		} 
+
+		throw new WebApplicationException(Response.Status.NOT_FOUND);
+	}	
 	
 	@DELETE
 	@Path("/suiterun/report")

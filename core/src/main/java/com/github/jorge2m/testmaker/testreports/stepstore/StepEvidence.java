@@ -3,9 +3,10 @@ package com.github.jorge2m.testmaker.testreports.stepstore;
 import java.io.File;
 
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
+import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public enum StepEvidence {
-	IMAGEN("png", "icon-hardcopy.png", "Page Hardcopy"), 
+	IMAGEN("png", "icon-hardcopy.png", "Page Hardcopy"),
 	HTML("html", "icon-html.png", "Page Html"), 
 	ERROR_PAGE("-error.html", "icon-error.png", "Information Error"), 
 	HAR("har", "icon-nettraffic-har.png", "Http Nettraffic Har format (JSON)"), 
@@ -24,6 +25,17 @@ public enum StepEvidence {
 	public String getPathFile(StepTM step) {
 		String fileName = getNameFileEvidence(step);
 		return (step.getPathDirectory() + File.separator + fileName);
+	}
+	
+	public String getPathFile(TestCaseBean testCase, StepTM step) {
+		String fileName = getNameFileEvidence(step);
+		return (testCase.getTestPathDirectory() + File.separator + fileName);
+	}
+	
+	public boolean fileExists(TestCaseBean testCase, StepTM step) {
+		String pathFileStep = getPathFile(testCase, step);
+		File indexFile = new File(pathFileStep);
+		return indexFile.exists();
 	}
 	
 	public boolean fileExists(StepTM step) {
@@ -47,6 +59,14 @@ public enum StepEvidence {
 	
 	public String getTagInfo() {
 		return tagInfo;
+	}
+	
+	public String getPathEvidencia(TestCaseBean testcase, StepTM step) {
+		String idSuite = testcase.getIdExecSuite();
+		String fileName = this.getNameFileEvidence(step);
+		String testRunName = testcase.getTestRunName();
+		String testCaseNameUnique = testcase.getNameUnique();
+		return ("../" + idSuite + "/" + testRunName + "/" + testCaseNameUnique + "/" + fileName);
 	}
 	
 }

@@ -48,7 +48,7 @@ public class TestAspect {
 		
 		if (joinPoint.getTarget() instanceof TestFromFactory) {
 			var targetObject = (TestFromFactory) joinPoint.getTarget();
-			String idTestInFactory = targetObject.getIdTestInFactory();
+			String idTestInFactory = targetObject.getIdTest();
 			testCase.addSufixToName(idTestInFactory);
 		}
 		

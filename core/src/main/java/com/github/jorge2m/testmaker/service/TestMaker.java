@@ -66,7 +66,7 @@ public class TestMaker {
 		var suiteData = getSuiteStored(idExecution);
 		if (suiteData!=null &&
 		   !suiteData.getStateExecution().isFinished()) {
-				suiteData.setStateExecution(ABORTED);
+			suiteData.setStateExecution(ABORTED);
 		}
 		return suiteData;
 	}

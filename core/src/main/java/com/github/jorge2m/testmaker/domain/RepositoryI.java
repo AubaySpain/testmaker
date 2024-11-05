@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.jorge2m.testmaker.domain.suitetree.Check;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
@@ -22,6 +23,8 @@ public interface RepositoryI {
 	public List<SuiteBean> getListSuitesBetween(Date fechaDesde, Date fechaHasta) throws Exception;
 	public List<SuiteBean> getListSuites() throws Exception;
 	public List<TestCaseBean> getListTestCases(String suiteExecId) throws Exception;
+	public void insertComparedSuites(SuiteBean suite1, SuiteBean suite2);
+	public Optional<ComparedSuite> getComparedSuite(String idSuite1, String idSuite2);
 	public boolean removeBD();
 
 	public enum StoreUntil {

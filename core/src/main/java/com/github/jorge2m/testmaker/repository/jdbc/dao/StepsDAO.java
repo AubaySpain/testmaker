@@ -34,7 +34,9 @@ public class StepsDAO {
 			"INICIO, " + 
 			"FIN, " + 
 			"TIME_MS, " + 
-			"STATE " +
+			"STATE, " +
+			"NAME_CLASS, " +
+			"NAME_METHOD " +
 		"FROM STEPS " + 
 		"WHERE IDEXECSUITE = ? AND " +
 			"TEST=? AND " +
@@ -54,8 +56,10 @@ public class StepsDAO {
 			"INICIO, " + 
 			"FIN, " + 
 			"TIME_MS, " + 
-			"STATE ) " + 
-		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			"STATE, " +
+			"NAME_CLASS, " + 
+			"NAME_METHOD ) " +
+		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String SQL_DELETE_STEPS = 
 		"DELETE FROM STEPS " + 
@@ -87,15 +91,18 @@ public class StepsDAO {
 
 	private StepTM getStep(ResultSet rowStep, String idSuite, String testRun, String testCase) throws Exception {
 		StepTM stepData = new StepTM();
+		stepData.setNumber(rowStep.getInt("STEP_NUMBER"));
 		stepData.setDescripcion(rowStep.getString("DESCRIPTION"));
 		stepData.setResExpected(rowStep.getString("RES_EXPECTED"));
 		stepData.setResultSteps(State.from(rowStep.getString("RESULTADO")));
 		stepData.setExcepExists(rowStep.getBoolean("EXCEPCION"));
+		stepData.setNameClass(rowStep.getString("NAME_CLASS"));
+		stepData.setNameMethod(rowStep.getString("NAME_METHOD"));
 		
 		Date dateInicio = Utils.getDateFormat(ToMillis).parse(rowStep.getString("INICIO"));
 		stepData.setTimeInicio(dateInicio.getTime());
 		Date dateFin = Utils.getDateFormat(ToMillis).parse(rowStep.getString("FIN"));
-		stepData.setTimeInicio(dateFin.getTime());
+		stepData.setTimeFin(dateFin.getTime());
 		
 		stepData.setState(StateExecution.from(rowStep.getString("STATE")));
 		
@@ -126,6 +133,8 @@ public class StepsDAO {
 				insert.setString(11, Utils.getDateFormat(ToMillis).format(step.getHoraFin()));
 				insert.setFloat(12, step.getTimeFin() - step.getTimeInicio());
 				insert.setString(13, step.getState().toString());
+				insert.setString(14, step.getNameClass());
+				insert.setString(15, step.getNameMethod());
 				insert.executeUpdate();
 			} catch (SQLException ex) {
 				throw new RuntimeException(ex);
