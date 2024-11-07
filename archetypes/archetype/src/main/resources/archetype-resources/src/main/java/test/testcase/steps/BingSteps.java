@@ -1,12 +1,12 @@
-package ${package}.test.testcase.steps;
+package com.aubay.qa.testaubay.test.testcase.steps;
 
-import ${package}.test.testcase.pageobject.PageBingResults;
-import ${package}.test.testcase.pageobject.PageBingSearch;
+import com.aubay.qa.testaubay.test.testcase.pageobject.PageBingResults;
+import com.aubay.qa.testaubay.test.testcase.pageobject.PageBingSearch;
 import com.github.jorge2m.testmaker.boundary.aspects.step.Step;
 import com.github.jorge2m.testmaker.boundary.aspects.validation.Validation;
 import com.github.jorge2m.testmaker.domain.suitetree.ChecksTM;
 
-import static ${package}.test.testcase.pageobject.PageBingSearch.URL_BING;
+import static com.aubay.qa.testaubay.test.testcase.pageobject.PageBingSearch.URL_BING;
 import static com.github.jorge2m.testmaker.boundary.aspects.step.SaveWhen.*;
 import static com.github.jorge2m.testmaker.conf.State.INFO;
 
@@ -22,12 +22,12 @@ public class BingSteps {
 		expected="Aparece la página de búsqueda de Bing")
 	public void goToBing() {
 		pageBingSearch.goToPage();
-		checkIsPage();
+		checkIsPage(2);
 	}	
 	
-	@Validation (description="Aparece la página con el buscador de Bing")
-	public boolean checkIsPage() {
-		return pageBingSearch.checkIsPage();
+	@Validation (description="Aparece la página con el buscador de Bing (la esperamos hasta #{seconds} segundos)")
+	public boolean checkIsPage(int seconds) {
+		return pageBingSearch.checkIsPage(seconds);
 	}
 	
 	@Step (

@@ -1,4 +1,4 @@
-package ${package}.test.testcase.pageobject;
+package com.aubay.qa.testaubay.test.testcase.pageobject;
 
 import static com.github.jorge2m.testmaker.service.webdriver.pageobject.StateElement.State.*;
 
@@ -19,8 +19,8 @@ public class PageBingSearch extends PageObjTM {
 		driver.get(URL_BING);
 	}
 	
-	public boolean checkIsPage() {
-		return state(VISIBLE, XP_FORM_SEARCH).check();
+	public boolean checkIsPage(int seconds) {
+		return state(VISIBLE, XP_FORM_SEARCH).wait(seconds).check();
 	}
 	
 	public void searchText(String textToSearch) {

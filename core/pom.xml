@@ -7,14 +7,14 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>3.0</version>
+		<version>3.0.5</version>
 	</parent>
 	<artifactId>testmaker-core</artifactId>
 	<packaging>jar</packaging>
 	
 	<properties> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<selenium.version>4.23.1</selenium.version>
+		<selenium.version>4.26.0</selenium.version>
 		<jetty.version>9.2.14.v20151106</jetty.version>
 		<jersey.version>2.25.1</jersey.version>
 		<!-- <jetty.version>9.4.27.v20200227</jetty.version> -->
@@ -54,25 +54,12 @@
 			<artifactId>selenium-firefox-driver</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-devtools-v125</artifactId>
+			<artifactId>selenium-devtools-v130</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
-		
-		<dependency>
-    		<groupId>ru.yandex.qatools.ashot</groupId>
-    		<artifactId>ashot</artifactId>
-    		<version>1.5.4</version>
-		</dependency>
-		<!-- 
-		<dependency>
-    		<groupId>com.github.romankh3</groupId>
-    		<artifactId>image-comparison</artifactId>
-    		<version>4.4.0</version>
-		</dependency>
-		-->
-		
 		
 		<!-- Jersey/Jetty -->
 		<dependency>

@@ -30,12 +30,10 @@ import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMake
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataDesktop;
 import com.github.jorge2m.testmaker.service.webdriver.maker.brwstack.BrowserStackDataMobil;
 import com.github.jorge2m.testmaker.testreports.browserstack.BrowserStackRestClient;
-import com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorAshot;
 import com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorImages;
 import com.github.jorge2m.testmaker.testreports.testcasestore.TestCaseEvidence;
 
 import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.*;
-import static com.github.jorge2m.testmaker.testreports.stepstore.compareimages.ComparatorImages.Comparator_Images.*;
 
 public class GenerateReportTM {
 	
@@ -555,7 +553,7 @@ public class GenerateReportTM {
 		reportHtml+="<td class=\"compare\">";
 		
 		if (step2Opt.isPresent()) {
-			var comparatorImages = ComparatorImages.make(OVERLAY, testCase1, step1, testCase2Opt.get(), step2Opt.get());
+			var comparatorImages = ComparatorImages.make(testCase1, step1, testCase2Opt.get(), step2Opt.get());
 			if (comparatorImages.compareAndSave()) {
 				reportHtml+=createComparisonLink(comparatorImages, testCase1, step1);
 			}
@@ -569,7 +567,7 @@ public class GenerateReportTM {
 		String pathImageCompared = comparatorImages.getPathImageCompared(testCase1, step1);
 	    return 
 	    	"<a href=\"" + pathImageCompared + "\" target=\"_blank\">" +
-	        "<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorAshot.getNameIcon() + "\">" +
+	        "<img width=\"22\" src=\"" + pathStatics + "/images/" + ComparatorImages.getNameIcon() + "\">" +
 	        "</a>";
 	}	
 	

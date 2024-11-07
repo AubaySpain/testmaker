@@ -16,8 +16,6 @@ public abstract class ComparatorImages {
 
 	public abstract boolean compareAndSave();
 
-	public enum Comparator_Images { ASHOT, /*IMAGE_COMPARISON,*/ OVERLAY }
-	
 	protected final TestCaseBean testCase1;
 	protected final TestCaseBean testCase2;
 	protected final StepTM step1;
@@ -32,19 +30,10 @@ public abstract class ComparatorImages {
 		this.step2 = step2;
 	}
 	
-	public static ComparatorImages make(
-			Comparator_Images comparator, 
+	public static ComparatorImages make( 
 			TestCaseBean testCase1, StepTM step1, TestCaseBean testCase2, StepTM step2) {
 		
-		switch (comparator) {
-		case ASHOT:
-			return new ComparatorAshot(testCase1, step1, testCase2, step2);
-//		case IMAGE_COMPARISON:
-//			return new ComparatorImageComparison(testCase1, step1, testCase2, step2);
-		case OVERLAY:
-		default:
-			return new ComparatorImageOverlay(testCase1, step1, testCase2, step2);
-		}
+		return new ComparatorImageOverlay(testCase1, step1, testCase2, step2);
 	}
 	
 	protected boolean imagesExists() {
