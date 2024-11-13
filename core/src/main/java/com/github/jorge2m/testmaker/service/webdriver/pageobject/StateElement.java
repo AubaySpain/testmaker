@@ -17,14 +17,16 @@ public class StateElement {
 	private final WebDriver driver;
 	private final WebElement webelement;
 	private final State state;
+	private final boolean inScreen;
 	private final By by;
 	private final By byShadow;
 	private final int seconds;
 	
-	private StateElement(State state, WebDriver driver, WebElement webelement, By by, By byShadow, int seconds) {
+	private StateElement(State state, boolean inScreen, WebDriver driver, WebElement webelement, By by, By byShadow, int seconds) {
 		this.driver = driver;
 		this.webelement = webelement;
 		this.state = state;
+		this.inScreen = inScreen;
 		this.by = by;
 		this.byShadow = byShadow;
 		this.seconds = seconds;
@@ -81,18 +83,18 @@ public class StateElement {
 	private ExpectedCondition<WebElement> getConditionForElementVisible() {
 		if (webelement==null) {
 			if (byShadow==null) {
-				return ExpectedConditionsTM.visibilityOfElementLocated(by);
+				return ExpectedConditionsTM.visibilityOfElementLocated(by, inScreen);
 			}
 			return ExpectedConditionsTM.visibilityOfShadowElementLocated(by, byShadow);			
 		} else {
 			if (by==null) {
-				return ExpectedConditionsTM.visibilityOf(webelement);
+				return ExpectedConditionsTM.visibilityOf(webelement, inScreen);
 			} else {
 				WebElement childElement = getChildElement(webelement, by);
 				if (childElement==null) {
 					return null;
 				}
-				return ExpectedConditionsTM.visibilityOf(childElement);
+				return ExpectedConditionsTM.visibilityOf(childElement, inScreen);
 			}
 		}
 	}
@@ -166,6 +168,7 @@ public class StateElement {
 	
 	public static class BuilderState {
 		private final State state;
+		private boolean inScreen = false;
 		private final WebDriver driver;
 		private WebElement webelement;
 		private By by;
@@ -181,6 +184,11 @@ public class StateElement {
 			this.state = state;
 			this.driver = driver;
 			this.webelement = webelement;
+		}
+		
+		public BuilderState inScreen() {
+			this.inScreen = true;
+			return this;
 		}
 		
 		public BuilderState webelement(WebElement webelement) {
@@ -201,7 +209,7 @@ public class StateElement {
 		}
 		
 		public StateElement build() {
-			return new StateElement(state, driver, webelement, by, byShadow, seconds);
+			return new StateElement(state, inScreen, driver, webelement, by, byShadow, seconds);
 		}
 		public boolean check() {
 			return build().check();

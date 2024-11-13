@@ -25,6 +25,7 @@ public abstract class SuiteMaker {
 	private final String idSuiteExecution;
 	private final InputParamsTM inputData;
 	private final FilterTestsSuiteXML filterSuiteXML;
+	private final boolean isApiRestExecution;
 
 	private Map<String,String> parameters = new HashMap<>();
 
@@ -34,9 +35,14 @@ public abstract class SuiteMaker {
 	private SuiteTM suite;
 	
 	protected SuiteMaker(InputParamsTM inputData) {
+		this(inputData, false);
+	}
+	
+	protected SuiteMaker(InputParamsTM inputData, boolean isApiRestExecution) {
 		this.idSuiteExecution = getIdSuiteExecution(inputData);
 		this.inputData = inputData;
 		this.filterSuiteXML = FilterTestsSuiteXML.getNew(inputData.getDataFilter());
+		this.isApiRestExecution = isApiRestExecution;
 	}
 	
 	private String getIdSuiteExecution(InputParamsTM inputData) {
@@ -113,7 +119,7 @@ public abstract class SuiteMaker {
 	}
 
 	private SuiteTM createSuite() {
-		SuiteTM suite = new SuiteTM(idSuiteExecution, inputData);
+		SuiteTM suite = new SuiteTM(idSuiteExecution, inputData, isApiRestExecution);
 		String suiteName = inputData.getSuiteName();
 		suite.setFileName(suiteName + ".xml");
 		suite.setName(suiteName);

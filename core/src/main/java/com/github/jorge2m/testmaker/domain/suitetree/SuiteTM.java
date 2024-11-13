@@ -35,15 +35,20 @@ public class SuiteTM extends XmlSuite {
 	private String infoExecution;
 	private long timeInicio = 0;
 	private long timeFin = 0;
+	private boolean apiRestExecution;
 	private final PoolWebDrivers poolWebDrivers;
 	private List<Object> factoryTests = new ArrayList<>();
 	
 	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams) {
+		this(idSuiteExecution, inputParams, false);
+	}
+	
+	public SuiteTM(String idSuiteExecution, InputParamsTM inputParams, boolean apiRestExecution) {
 		this.idSuiteExecution = idSuiteExecution;
 		this.inputParams = inputParams;
 		this.poolWebDrivers = new PoolWebDrivers(this);
 	}
-	
+
 	public Logger getLogger() {
 		return Log4jTM.getSuiteLogger(idSuiteExecution, getPathLogFile());
 	}
@@ -246,6 +251,15 @@ public class SuiteTM extends XmlSuite {
 			ConstantesTM.DIRECTORY_OUTPUT_TESTS);
 	}
 	
+//	private static String getDataPath() {
+//		var configLoader = new ConfigLoader();
+//		var dataPathProperty = configLoader.getProperty("testmaker.datapath"); 
+//		if (dataPathProperty!=null) {
+//			return dataPathProperty;
+//		}
+//		return System.getProperty("user.dir");
+//	}
+	
 	public String getPathReportHtml() {
 		return (getPathDirectory() + File.separator + ConstantesTM.NAME_REPORT_HTML_TSUITE);
 	}
@@ -319,6 +333,14 @@ public class SuiteTM extends XmlSuite {
 
 	public void incrementTestCaseRetries() {
 		this.numTestCaseRetries+=1;
+	}
+
+	public boolean isApiRestExecution() {
+		return apiRestExecution;
+	}
+
+	public void setApiRestExecution(boolean isApiRestExecution) {
+		this.apiRestExecution = isApiRestExecution;
 	}
 	
 }

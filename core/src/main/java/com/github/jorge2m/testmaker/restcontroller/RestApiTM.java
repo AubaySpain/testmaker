@@ -87,7 +87,7 @@ public class RestApiTM {
 			var resultCheck = cmdLineAccess.checkOptionsValue();
 			if (resultCheck.isOk()) {
 				var creatorSuiteRunService = new CreatorSuiteRunService(inputParams, creatorSuiteRun);
-				var suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec());
+				var suite = TestMaker.execSuite(creatorSuiteRunService, inputParams.isAsyncExec(), true);
 				return Response
 						.status(Response.Status.OK) 
 						.entity(suite.getSuiteBean())

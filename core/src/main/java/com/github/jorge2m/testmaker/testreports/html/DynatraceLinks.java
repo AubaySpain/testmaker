@@ -8,45 +8,57 @@ import java.util.Date;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.github.jorge2m.testmaker.conf.ConfigLoader;
 import com.github.jorge2m.testmaker.conf.Log4jTM;
-import com.github.jorge2m.testmaker.domain.InputParamsBasic;
 import com.github.jorge2m.testmaker.domain.suitetree.SuiteBean;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
 public class DynatraceLinks {
 
-	private static final String PATH_MULTIDIMENSIONAL_ANALYSIS = "/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?";
-	private static final String PATH_DISTRIBUTED_TRACES = "/ui/apps/dynatrace.classic.distributed.traces/ui/diagnostictools/purepaths?";
-	private static final String FILTER_ROBOTEST_EXECUTION = "0%1E15%11744d0067-137d-4acc-8b0f-e6093512721c%14";
-	private static final String FILTER_ROBOTEST_TESTCASE = "%1015%11a5c87655-79bb-4c0c-bd0b-1348dddb5820%14";
-	
-	private final String dynatraceSubdomain;
+	private final boolean active; 
+	private final String subdomain;
+	private final String pathMultidimensionalAnalysis;
+	private final String pathDistributedTraces;
+	private final String filterRobotestExecution;
+	private final String filterRobotestTestcase;
+
 	private final String idExecSuite;
 	private final SuiteBean suite; 
 	
 	public DynatraceLinks(SuiteBean suite) {
-		var inputParams = new InputParamsBasic(suite.getParameters());
-		this.dynatraceSubdomain = inputParams.getDynatracesd();
+		var configLoader = new ConfigLoader();
+		
+		this.active = Boolean.parseBoolean(configLoader.getProperty("testmaker.dynatrace.active"));
+		this.subdomain = configLoader.getProperty("testmaker.dynatrace.sd");
+		this.pathMultidimensionalAnalysis = configLoader.getProperty("testmaker.dynatrace.multidimensional.path");
+		this.pathDistributedTraces = configLoader.getProperty("testmaker.dynatrace.distributedtraces.path");
+		this.filterRobotestExecution = configLoader.getProperty("testmaker.dynatrace.multidimensional.filter");
+		this.filterRobotestTestcase = configLoader.getProperty("testmaker.dynatrace.distributedtraces.filter");
+		
 		this.idExecSuite = suite.getIdExecSuite();
 		this.suite = suite;
 	}
 	
+	public boolean isActive() {
+		return active;
+	}
+	
 	public String getMultidimensionalAnalisisForSuiteURL() {
 		return 
-			"https://" + dynatraceSubdomain + PATH_MULTIDIMENSIONAL_ANALYSIS + 
+			"https://" + subdomain + pathMultidimensionalAnalysis + 
 			"metric=FAILURE_RATE&" + 
 			"mergeServices=true&" + 
 			"gtf=" + getDynatraceGftValue(suite.getInicioDate(), suite.getFinDate()) + "&" +
-			"servicefilter=" + FILTER_ROBOTEST_EXECUTION + idExecSuite;
+			"servicefilter=" + filterRobotestExecution + idExecSuite;
 	}
 	
 	public String getDistributedTracesForTestCaseURL(TestCaseBean testCase) {
 		return
-			"https://" + dynatraceSubdomain + PATH_DISTRIBUTED_TRACES + 
+			"https://" + subdomain + pathDistributedTraces + 
 			"gtf=" + getDynatraceGftValue(testCase.getInicioDate(), testCase.getFinDate()) + "&" +
 			"servicefilter=" + 
-			FILTER_ROBOTEST_EXECUTION + idExecSuite + 
-			FILTER_ROBOTEST_TESTCASE + testCase.getNameUniqueNormalized();
+			filterRobotestExecution + idExecSuite + 
+			filterRobotestTestcase + testCase.getNameUniqueNormalized();
 	}
 	
 	private String getDynatraceGftValue(Date startDateI, Date endDateI) {

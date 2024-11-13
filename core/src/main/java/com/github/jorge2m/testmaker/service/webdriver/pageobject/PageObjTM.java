@@ -370,6 +370,10 @@ public class PageObjTM {
     public static void waitForPageLoaded(WebDriver driver) {
         waitForPageLoaded(driver, 30/*waitSeconds*/);
     }
+    
+    public void waitForPageLoaded(int waitSeconds) {
+    	waitForPageLoaded(driver, waitSeconds);
+    }
 
     /**
      * Espera a que la página esté cargada (en algunas condiciones ¿AJAX? parece que no acaba de funcionar del todo bien)

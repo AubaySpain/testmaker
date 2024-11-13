@@ -121,115 +121,135 @@ public class ExpectedConditionsTM {
 		return ExpectedConditions.presenceOfElementLocated(locator);
 	}
 
-	  public static ExpectedCondition<WebElement> visibilityOfElementLocated(final By locator) {
-		  return ExpectedConditions.visibilityOfElementLocated(locator);
-	  }
+	public static ExpectedCondition<WebElement> visibilityOfElementLocated(final By locator, boolean inScreen) {
+        if (!inScreen) {
+            return ExpectedConditions.visibilityOfElementLocated(locator);
+        } else {
+            return new ExpectedCondition<>() {
+                @Override
+                public WebElement apply(WebDriver driver) {
+                    var element = ExpectedConditions.visibilityOfElementLocated(locator).apply(driver);
+                    var screenVisibility = new ScreenVisibility(driver);
+                    return (element != null && screenVisibility.isVisibleInScreen(element)) ? element : null;
+                }
 
-	  public static ExpectedCondition<List<WebElement>> visibilityOfAllElementsLocatedBy(
-	    final By locator) {
+                @Override
+                public String toString() {
+                    return "visibility of element located by " + locator + " and visible on screen";
+                }
+            };
+        }
+	}
+
+	public static ExpectedCondition<List<WebElement>> visibilityOfAllElementsLocatedBy(final By locator) {
 		  return ExpectedConditions.visibilityOfAllElementsLocatedBy(locator);
-	  }
+	}
 
-	  public static ExpectedCondition<List<WebElement>> visibilityOfAllElements(
-	    final WebElement... elements) {
-		  return ExpectedConditions.visibilityOfAllElements(elements);
-	  }
+	public static ExpectedCondition<List<WebElement>> visibilityOfAllElements(
+	  final WebElement... elements) {
+		return ExpectedConditions.visibilityOfAllElements(elements);
+	}
 
-	  public static ExpectedCondition<List<WebElement>> visibilityOfAllElements(
-	    final List<WebElement> elements) {
-		  return ExpectedConditions.visibilityOfAllElements(elements);
-	  }
+	public static ExpectedCondition<List<WebElement>> visibilityOfAllElements(final List<WebElement> elements) {
+		return ExpectedConditions.visibilityOfAllElements(elements);
+	}
 
-	  public static ExpectedCondition<WebElement> visibilityOf(final WebElement element) {
-		  return ExpectedConditions.visibilityOf(element);
-	  }
+	public static ExpectedCondition<WebElement> visibilityOf(final WebElement element, boolean inScreen) {
+        if (!inScreen) {
+            return ExpectedConditions.visibilityOf(element);
+        } else {
+            return new ExpectedCondition<>() {
+                @Override
+                public WebElement apply(WebDriver driver) {
+                    var visibleElement = ExpectedConditions.visibilityOf(element).apply(driver);
+                    var screenVisibility = new ScreenVisibility(driver);
+                    return (visibleElement != null && screenVisibility.isVisibleInScreen(visibleElement)) ? visibleElement : null;
+                }
 
-	  public static ExpectedCondition<List<WebElement>> presenceOfAllElementsLocatedBy(
-	    final By locator) {
-		  return ExpectedConditions.presenceOfAllElementsLocatedBy(locator);
-	  }
+                @Override
+                public String toString() {
+                    return "visibility of element and visible on screen";
+                }
+            };
+        }		
+		
+	}
 
-	  public static ExpectedCondition<Boolean> textToBePresentInElement(final WebElement element,
-	                                                                    final String text) {
-		  return ExpectedConditions.textToBePresentInElement(element, text);
-	  }
+	public static ExpectedCondition<List<WebElement>> presenceOfAllElementsLocatedBy(final By locator) {
+		return ExpectedConditions.presenceOfAllElementsLocatedBy(locator);
+	}
 
-	  public static ExpectedCondition<Boolean> textToBePresentInElementLocated(final By locator,
-	                                                                           final String text) {
-		  return ExpectedConditions.textToBePresentInElementLocated(locator, text);
-	  }
+	public static ExpectedCondition<Boolean> textToBePresentInElement(final WebElement element, final String text) {
+		return ExpectedConditions.textToBePresentInElement(element, text);
+	}
 
-	  public static ExpectedCondition<Boolean> textToBePresentInElementValue(final WebElement element,
-	                                                                         final String text) {
-		  return ExpectedConditions.textToBePresentInElementValue(element, text);
-	  }
+	public static ExpectedCondition<Boolean> textToBePresentInElementLocated(final By locator, final String text) {
+		return ExpectedConditions.textToBePresentInElementLocated(locator, text);
+	}
 
-	  public static ExpectedCondition<Boolean> textToBePresentInElementValue(final By locator,
-	                                                                         final String text) {
-		  return ExpectedConditions.textToBePresentInElementValue(locator, text);
-	  }
+	public static ExpectedCondition<Boolean> textToBePresentInElementValue(final WebElement element, final String text) {
+		return ExpectedConditions.textToBePresentInElementValue(element, text);
+	}
 
-	  public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(
-	    final String frameLocator) {
-		  return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
-	  }
+	public static ExpectedCondition<Boolean> textToBePresentInElementValue(final By locator, final String text) {
+		return ExpectedConditions.textToBePresentInElementValue(locator, text);
+	}
 
-	  public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(final By locator) {
-	    	return ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator);
-	  }
+	public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(final String frameLocator) {
+		return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
+	}
 
-	  public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(
-	    final int frameLocator) {
-		  return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
-	  }
+	public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(final By locator) {
+		return ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator);
+	}
 
-	  public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(
-	    final WebElement frameLocator) {
-		  return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
-	  }
+	public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(final int frameLocator) {
+		return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
+	}
 
-	  public static ExpectedCondition<Boolean> invisibilityOfElementLocated(final By locator) {
-		  return ExpectedConditions.invisibilityOfElementLocated(locator);
-	  }
+	public static ExpectedCondition<WebDriver> frameToBeAvailableAndSwitchToIt(final WebElement frameLocator) {
+		return ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator);
+	}
 
-	  public static ExpectedCondition<Boolean> invisibilityOfElementWithText(final By locator,
-	                                                                         final String text) {
-		  return ExpectedConditions.invisibilityOfElementWithText(locator, text);
-	  }
+	public static ExpectedCondition<Boolean> invisibilityOfElementLocated(final By locator) {
+		return ExpectedConditions.invisibilityOfElementLocated(locator);
+	}
 
-	  public static ExpectedCondition<WebElement> elementToBeClickable(final By locator) {
-		  return ExpectedConditions.elementToBeClickable(locator);
-	  }
+	public static ExpectedCondition<Boolean> invisibilityOfElementWithText(final By locator, final String text) {
+		return ExpectedConditions.invisibilityOfElementWithText(locator, text);
+	}
 
-	  public static ExpectedCondition<WebElement> elementToBeClickable(final WebElement element) {
-		  return ExpectedConditions.elementToBeClickable(element);
-	  }
+	public static ExpectedCondition<WebElement> elementToBeClickable(final By locator) {
+		return ExpectedConditions.elementToBeClickable(locator);
+	}
 
-	  public static ExpectedCondition<Boolean> stalenessOf(final WebElement element) {
-		  return ExpectedConditions.stalenessOf(element);
-	  }
+	public static ExpectedCondition<WebElement> elementToBeClickable(final WebElement element) {
+		return ExpectedConditions.elementToBeClickable(element);
+	}
 
-	  public static <T> ExpectedCondition<T> refreshed(final ExpectedCondition<T> condition) {
-		  return ExpectedConditions.refreshed(condition);
-	  }
+	public static ExpectedCondition<Boolean> stalenessOf(final WebElement element) {
+		return ExpectedConditions.stalenessOf(element);
+	}
 
-	  public static ExpectedCondition<Boolean> elementToBeSelected(final WebElement element) {
-	    return ExpectedConditions.elementSelectionStateToBe(element, true);
-	  }
+	public static <T> ExpectedCondition<T> refreshed(final ExpectedCondition<T> condition) {
+		return ExpectedConditions.refreshed(condition);
+	}
 
-	  public static ExpectedCondition<Boolean> elementSelectionStateToBe(final WebElement element,
-	                                                                     final boolean selected) {
-		  return ExpectedConditions.elementSelectionStateToBe(element, selected);
-	  }
+	public static ExpectedCondition<Boolean> elementToBeSelected(final WebElement element) {
+		return ExpectedConditions.elementSelectionStateToBe(element, true);
+	}
 
-	  public static ExpectedCondition<Boolean> elementToBeSelected(final By locator) {
-	    return ExpectedConditions.elementSelectionStateToBe(locator, true);
-	  }
+	public static ExpectedCondition<Boolean> elementSelectionStateToBe(final WebElement element, final boolean selected) {
+		return ExpectedConditions.elementSelectionStateToBe(element, selected);
+	}
 
-	  public static ExpectedCondition<Boolean> elementSelectionStateToBe(final By locator,
-	                                                                     final boolean selected) {
-	    return ExpectedConditions.elementSelectionStateToBe(locator, selected);
-	  }
+	public static ExpectedCondition<Boolean> elementToBeSelected(final By locator) {
+		return ExpectedConditions.elementSelectionStateToBe(locator, true);
+	}
+
+	public static ExpectedCondition<Boolean> elementSelectionStateToBe(final By locator, final boolean selected) {
+		return ExpectedConditions.elementSelectionStateToBe(locator, selected);
+	}
 
 	  public static ExpectedCondition<Alert> alertIsPresent() {
 		  return ExpectedConditions.alertIsPresent();

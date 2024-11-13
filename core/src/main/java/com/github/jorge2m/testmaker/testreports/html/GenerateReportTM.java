@@ -171,8 +171,7 @@ public class GenerateReportTM {
     }
 
 	private String getDivDynatrace() {
-		var dynatraceSd = inputParams.getDynatracesd();
-		if (dynatraceSd==null || "".compareTo(dynatraceSd)==0) {
+		if (!dynatraceLinks.isActive()) {
 			return "";
 		}
 		
@@ -445,8 +444,7 @@ public class GenerateReportTM {
 	}
 	
 	private String getHtmlDynatraceLink(TestCaseBean testCase) {
-		var dynatraceSd = inputParams.getDynatracesd();
-		if (dynatraceSd==null || "".compareTo(dynatraceSd)==0) {
+		if (!dynatraceLinks.isActive()) {
 			return "";
 		}
 

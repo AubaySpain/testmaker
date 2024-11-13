@@ -32,12 +32,12 @@ public class HardcopyStorer extends StepEvidenceStorer {
 	
 	@Override
 	protected String captureContent(StepTM step) {
-		try {
-			return new FullScreenshotCapturer(getDriver(step)).captureFullScreen();
-		} catch (Exception e) {
-			step.getSuiteParent().getLogger().warn("Problem capturing Full screen", e);
+//		try {
+//			return new FullScreenshotCapturer(getDriver(step)).captureFullScreen();
+//		} catch (Exception e) {
+//			step.getSuiteParent().getLogger().warn("Problem capturing Full screen", e);
 			return captureVisibleScreen(step);
-		}		
+//		}		
 	}
 	
 
