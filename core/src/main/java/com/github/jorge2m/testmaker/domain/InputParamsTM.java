@@ -57,6 +57,8 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String NET_ANALYSIS_PARAM = "net";
 	public static final String RECORD_PARAM = "record";
 	
+	public static final String APPLITOOLS_PARAM = "applitools";
+	
 	public static final String NOTIFICATION_PARAM = "notification";
 	public static final String ALARM_PARAM = "alarm";
 	public static final String ALARMS_TO_CHECK_PARAM = "alarmstocheck";	
@@ -155,6 +157,9 @@ public abstract class InputParamsTM implements Serializable {
 	
 	@FormParam(RECORD_PARAM)
 	String record;	
+	
+	@FormParam(APPLITOOLS_PARAM)
+	String applitools;	
 	
 	@FormParam(NOTIFICATION_PARAM)
 	String notification;	
@@ -432,6 +437,13 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Record Video (" + TypeRecord.getAllParamValues() + ")")
 			.build());		
 
+		optionsTM.add(OptionTMaker.builder(APPLITOOLS_PARAM)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Activation checking images with AppliTools (true, false)")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(NOTIFICATION_PARAM)
 			.required(false)
 			.hasArgs()
@@ -609,6 +621,8 @@ public abstract class InputParamsTM implements Serializable {
 		net = cmdLine.getOptionValue(NET_ANALYSIS_PARAM);
 		record = cmdLine.getOptionValue(RECORD_PARAM);
 		
+		applitools = cmdLine.getOptionValue(APPLITOOLS_PARAM);
+		
 		notification = cmdLine.getOptionValue(NOTIFICATION_PARAM);
 		alarm = cmdLine.getOptionValue(ALARM_PARAM);
 		alarmsToCheck = cmdLine.getOptionValue(ALARMS_TO_CHECK_PARAM);
@@ -655,6 +669,7 @@ public abstract class InputParamsTM implements Serializable {
 		REMOTE(REMOTE_PARAM),
 		NET_ANALYSIS(NET_ANALYSIS_PARAM),
 		RECORD(RECORD_PARAM),
+		APPLITOOLS(APPLITOOLS_PARAM),
 		NOTIFICATION(NOTIFICATION_PARAM),
 		ALARM(ALARM_PARAM),
 		ALARMS_TO_CHECK(ALARMS_TO_CHECK_PARAM),
@@ -738,7 +753,9 @@ public abstract class InputParamsTM implements Serializable {
 		case NET_ANALYSIS:
 			return this.net;
 		case RECORD:
-			return this.record;			
+			return this.record;
+		case APPLITOOLS:
+			return this.applitools;			
 		case NOTIFICATION:
 			return getNotification();
 		case ALARM:
@@ -1089,6 +1106,16 @@ public abstract class InputParamsTM implements Serializable {
 	}
 	public String getRecord() {
 		return record;
+	}	
+	
+	public void setApplitools(String applitools) {
+		this.applitools = applitools;
+	}
+	public boolean isApplitools() {
+		if (applitools!=null) {
+			return ("true".compareTo(applitools)==0);
+		}
+		return false;
 	}	
 	
 	public String getNotification() {

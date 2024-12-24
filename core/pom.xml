@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.github.jorge2m</groupId>
 		<artifactId>testmaker</artifactId>
-		<version>3.1.1</version>
+		<version>3.2.0</version>
 	</parent>
 	<artifactId>testmaker-core</artifactId>
 	<packaging>jar</packaging>
@@ -60,6 +60,14 @@
 			<artifactId>selenium-devtools-v130</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
+		
+		<!-- AppliTools -->
+		<dependency>
+			<groupId>com.applitools</groupId>
+			<artifactId>eyes-images-java5</artifactId>
+			<version>5.72.0</version>
+		</dependency>
+		<!-- End AppliTools -->
 		
 		<!-- Jersey/Jetty -->
 		<dependency>

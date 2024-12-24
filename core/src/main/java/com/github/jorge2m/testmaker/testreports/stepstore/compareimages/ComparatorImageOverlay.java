@@ -3,11 +3,7 @@ package com.github.jorge2m.testmaker.testreports.stepstore.compareimages;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
 
@@ -23,15 +19,13 @@ public class ComparatorImageOverlay extends ComparatorImages {
 			return false;
 		}
 
-		BufferedImage image1 = null;
-		BufferedImage image2 = null;
-		try {
-			image1 = ImageIO.read(getFileImage1());
-			image2 = ImageIO.read(getFileImage2());
-        } catch (IOException e) {
-        	Log4jTM.getLogger().error("Error comparing images: " + e.getMessage());
-            return false;
-        }
+		var imagesOpt = getImagesFromSteps();
+		if (imagesOpt.isEmpty()) {
+			return false;
+		}
+		
+		var image1 = imagesOpt.get().getLeft();
+		var image2 = imagesOpt.get().getRight();
 		
         BufferedImage combinedImage = new BufferedImage(
                 image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);

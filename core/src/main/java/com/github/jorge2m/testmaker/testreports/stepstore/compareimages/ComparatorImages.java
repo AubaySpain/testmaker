@@ -4,13 +4,18 @@ import static com.github.jorge2m.testmaker.testreports.stepstore.StepEvidence.IM
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.StepTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
+import com.github.jorge2m.testmaker.testreports.stepstore.compareimages.applitools.ComparatorImageApplitools;
 
 public abstract class ComparatorImages {
 
@@ -33,7 +38,7 @@ public abstract class ComparatorImages {
 	public static ComparatorImages make( 
 			TestCaseBean testCase1, StepTM step1, TestCaseBean testCase2, StepTM step2) {
 		
-		return new ComparatorImageOverlay(testCase1, step1, testCase2, step2);
+		return new ComparatorImageApplitools(testCase1, step1, testCase2, step2);
 	}
 	
 	protected boolean imagesExists() {
@@ -49,14 +54,27 @@ public abstract class ComparatorImages {
 	protected File getFileImage2() {
 		return Paths.get(IMAGEN.getPathFile(testCase2, step2)).toFile();
 	}
-	
+
+	protected Optional<Pair<BufferedImage, BufferedImage>> getImagesFromSteps() {
+		BufferedImage image1 = null;
+		BufferedImage image2 = null;
+		try {
+			image1 = ImageIO.read(getFileImage1());
+			image2 = ImageIO.read(getFileImage2());
+			return Optional.of(Pair.of(image1, image2));
+	    } catch (IOException e) {
+	    	Log4jTM.getLogger().error("Error comparing images: {}", e.getMessage());
+	        return Optional.empty();
+	    }
+	}
+
 	protected boolean saveImageCompared(BufferedImage bufferedImage) {
 		var pathImageCompared = Paths.get(getPathFileCompared(testCase1, step1));
         try {
         	ImageIO.write(bufferedImage, "png", pathImageCompared.toFile());
         	return true;
         } catch (Exception e) {
-        	Log4jTM.getLogger().error("Error saving compared image: " + e.getMessage());
+        	Log4jTM.getLogger().error("Error saving image: {}", e.getMessage());
             return false;
         }
 	}
