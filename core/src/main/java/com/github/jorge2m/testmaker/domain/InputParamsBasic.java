@@ -17,6 +17,10 @@ public class InputParamsBasic extends InputParamsTM {
 		super();
 		this.specificOptions = new ArrayList<>();
 	}
+	public InputParamsBasic(Map<String,String> parameters) {
+		super(parameters);
+		this.specificOptions = new ArrayList<>();
+	}
 	public InputParamsBasic(Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) {
 		super(suiteEnum, appEnum);
 		this.specificOptions = new ArrayList<>();

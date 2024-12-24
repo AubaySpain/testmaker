@@ -7,6 +7,12 @@ import org.json.simple.JSONValue;
 
 public class TeamsNotificationWorkflow extends TeamsNotification {
 
+//	Configuración:
+//		1) 3 puntos a la derecha del canal y selección de "Workflows"
+//		2) Selecciona el Workflow “Publicar en un canal cuando se reciba una solicitud de webhook”:
+//		3) Darle un nombre y pulsar Continuar
+//		4) Copiar la URL asociada al flujo de trabajo y pulsar el botón "Listo"
+
 	private static final String CRLF = "\r\n";
 	
 	public static boolean isUrlChannelOk(String url) {

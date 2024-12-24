@@ -1,11 +1,13 @@
 package com.github.jorge2m.testmaker.service.webdriver.maker;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.v125.network.Network;
+import org.openqa.selenium.devtools.v130.network.Network;
 
 import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.suitetree.TestCaseBean;
@@ -22,6 +24,8 @@ public class ChromeDriverTM extends ChromeDriver {
 		super(options);
 		this.idExecSuite = idExecSuite;
 		this.testCase = testCase;
+		
+		Logger.getLogger("org.openqa.selenium.devtools.Connection").setLevel(Level.WARNING);
 		
 		devTools = getDevTools();
 		devTools.createSession();

@@ -21,7 +21,7 @@ public class ValidationsDAO {
 	
 	private static final String LINE_SEPARATOR = System.lineSeparator();
 	
-	public static String SQLSelectValidationsStep =
+	public static final String SQL_SELECT_VALIDATIONS_STEPS =
 		"SELECT " +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -32,14 +32,16 @@ public class ValidationsDAO {
 			"RESULTADO, " +
 			"LIST_CHECKS, " + 
 			"LIST_LEVELS, " +
-			"LIST_OVERCOMED " +
+			"LIST_OVERCOMED, " +
+			"NAME_CLASS, " +
+			"NAME_METHOD " +
 		"FROM VALIDATIONS " + 
 		"WHERE IDEXECSUITE = ? AND " +
 			"TEST=? AND " +
 			"METHOD=? AND " + 
 			"STEP_NUMBER = ?";
 
-	public static String SQLInsertValidation = 
+	public static final String SQL_INSERT_VALIDATION = 
 		"INSERT INTO VALIDATIONS (" +
 			"IDEXECSUITE, " + 
 			"SUITE, " +
@@ -50,10 +52,12 @@ public class ValidationsDAO {
 			"RESULTADO, " +
 			"LIST_CHECKS, " + 
 			"LIST_LEVELS, " +
-			"LIST_OVERCOMED ) " +
-		"VALUES (?,?,?,?,?,?,?,?,?,?)";
+			"LIST_OVERCOMED, " +
+			"NAME_CLASS, " +
+			"NAME_METHOD ) " +
+		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     
-    public static String SQLDeleteValidations = 
+    public static final String SQL_DELETE_VALIDATIONS = 
         "DELETE FROM VALIDATIONS " +
         "WHERE IDEXECSUITE = ?;";
 
@@ -65,7 +69,7 @@ public class ValidationsDAO {
 	throws Exception {
 		List<ChecksTM> listValidations = new ArrayList<>();
 		try (Connection conn = connector.getConnection();
-			PreparedStatement select = conn.prepareStatement(SQLSelectValidationsStep)) {
+			PreparedStatement select = conn.prepareStatement(SQL_SELECT_VALIDATIONS_STEPS)) {
 			select.setString(1, idSuite);
 			select.setString(2, testRun);
 			select.setString(3, testCase);
@@ -88,6 +92,9 @@ public class ValidationsDAO {
 	private ChecksTM getValidation(ResultSet rowValidation) throws Exception {
 		ChecksTM validationData = new ChecksTM();
 		validationData.setStateValidation(State.from(rowValidation.getString("RESULTADO")));
+		validationData.setPositionInStep(rowValidation.getInt("VALIDATION_NUMBER"));
+		validationData.setNameClass(rowValidation.getString("NAME_CLASS"));
+		validationData.setNameMethod(rowValidation.getString("NAME_METHOD"));
 		
 		List<Check> listChecks = getListChecks(
 				rowValidation.getString("LIST_CHECKS"), 
@@ -100,7 +107,7 @@ public class ValidationsDAO {
 	
 	public void insertValidation(ChecksTM validations) {
 		try (Connection conn = connector.getConnection()) {
-			try (PreparedStatement insert = conn.prepareStatement(SQLInsertValidation)) {
+			try (PreparedStatement insert = conn.prepareStatement(SQL_INSERT_VALIDATION)) {
 				SuiteBean suite = validations.getSuiteParent().getSuiteBean(); 
 				insert.setString(1, suite.getIdExecSuite());
 				insert.setString(2, suite.getName()); 
@@ -118,6 +125,9 @@ public class ValidationsDAO {
 				
 				List<Boolean> listOvercomedChecks = validations.getListOvercomedValidations();
 				insert.setString(10, listOvercomedChecks.stream().map(e -> e.toString()).collect(Collectors.joining(LINE_SEPARATOR)));
+				
+				insert.setString(11, validations.getNameClass());
+				insert.setString(12, validations.getNameMethod());
 				
 				insert.executeUpdate();
 			} catch (SQLException ex) {
@@ -172,7 +182,7 @@ public class ValidationsDAO {
 
 	public void deleteValidations(String idSuite) {
 		try (Connection conn = connector.getConnection();
-			PreparedStatement delete = conn.prepareStatement(SQLDeleteValidations)) {
+			PreparedStatement delete = conn.prepareStatement(SQL_DELETE_VALIDATIONS)) {
 			delete.setString(1, idSuite);
 			delete.executeUpdate();
 		} 

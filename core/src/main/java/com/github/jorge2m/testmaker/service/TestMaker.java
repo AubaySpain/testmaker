@@ -66,7 +66,7 @@ public class TestMaker {
 		var suiteData = getSuiteStored(idExecution);
 		if (suiteData!=null &&
 		   !suiteData.getStateExecution().isFinished()) {
-				suiteData.setStateExecution(ABORTED);
+			suiteData.setStateExecution(ABORTED);
 		}
 		return suiteData;
 	}
@@ -101,8 +101,8 @@ public class TestMaker {
 		return (repository.getSuite(idExecution));
 	}
 	
-	public static SuiteTM execSuite(CreatorSuiteRun executorSuite, boolean async) throws Exception {
-		return (executorSuite.execTestSuite(async));
+	public static SuiteTM execSuite(CreatorSuiteRun executorSuite, boolean async, boolean isApiRestExecution) throws Exception {
+		return (executorSuite.execTestSuite(async, isApiRestExecution));
 	}
 	
 	public static void stopSuite(String idExecSuite) {

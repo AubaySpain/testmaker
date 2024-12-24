@@ -10,7 +10,10 @@ br.clear {clear:left;}
 .tablemain {width: 100%; font: normal 8pt Arial; margin: -8px 0px 0px 0px; background-color:#000000;border-collapse: collapse; border: solid 3px #000000; text-align: left; float:left;}
 .tablemain th.head {text-align:center; font: bold 10pt Arial;border:solid 1px; background-color:#04B486; color:white;}
 .tablemain div#titleReport {font-size:1.30em; float:left;}
+.tablemain div#titleReport #suitenew {color: softgreen; font-size:1.00em;}
+.tablemain div#titleReport #suiteorig {color: orange; font-size:1.00em;}
 .tablemain tr#header2 {background-color:#088A68; color:white;}
+.tablemain tr#header2 th.compare {background-color:#AB7821; color:white;}
 .tablemain th {font: bold 9pt Arial; padding: 10px 4px 10px 4px; border: solid 1px;}
 .tablemain span#browser {margin-left:10px; color:#FFBF00;}
 .tablemain a#urlLink {margin-left:10px; color:#00FFFF; text-decoration:none;}
@@ -30,10 +33,14 @@ br.clear {clear:left;}
 #treet2 td div.diffsSi {color:red;}
 #treet2 td div.diffsNo {}
 #treet2 tr.testrun {font: normal 8pt Arial; background-color:#11f411; border:solid 1px;}
+#treet2 tr.testrun td.compare {font: normal 8pt Arial; background-color:#F7B33E; border:solid 1px;}
 #treet2 tr.method {font: normal 8pt Arial; background-color:#91ff91; border:solid 1px;}
+#treet2 tr.method td.compare {font: normal 8pt Arial; background-color:#FACB7A; border:solid 1px;}
 #treet2 tr.step {font: normal 8pt Arial; background-color:#d5ffd5; border:solid 1px;}
+#treet2 tr.step td.compare {font: normal 8pt Arial; background-color:#F4DAAD; border:solid 1px;}
 #treet2 font.timeout {color:darkOrange;}
 #treet2 tr.validation {font: normal 8pt Arial; background-color:#f3fff3; border:solid 1px;}
+#treet2 tr.validation td.compare {font: normal 8pt Arial; background-color:#FBF6ED; border:solid 1px;}
 #treet2 tr td.row {color: #00c100; font: normal 8pt Arial; border-color:#000000;}
 #treet2 td {padding: 0px 5px 0px 5px; cursor: pointer; border:solid 1px;}
 #treet2 td.nowrap {white-space:nowrap;}

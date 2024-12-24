@@ -34,6 +34,9 @@ public class StepTM {
 	private SaveWhen saveNettraffic= SaveWhen.NEVER;
 	private StepEvidencesWarehouse evidencesWarehouse;
 
+	private Integer number = null;
+	private String nameClass = null;
+	private String nameMethod = null;
 	private String pathMethod;
 	private int typePage; 
 	private long timeInicio = 0;
@@ -76,7 +79,10 @@ public class StepTM {
 		return getTestRunParent().getTestNgContext().getOutputDirectory();
 	}
 	
-	public int getNumber() {
+	public Integer getNumber() {
+		if (number!=null) {
+			return number;
+		}
 		List<StepTM> listSteps = getTestCaseParent().getListStep();
 		for (int i=0; i<listSteps.size(); i++) {
 			if (listSteps.get(i)==this) {
@@ -84,6 +90,10 @@ public class StepTM {
 			}
 		}
 		return -1;
+	}
+	
+	public void setNumber(int number) {
+		this.number = number;
 	}
 	
 	public void end(boolean exceptionReceived) {
@@ -272,11 +282,25 @@ public class StepTM {
 		return ParsePathClass.getPathClass(getPathMethod());
 	}
 	public String getNameClass() {
+		if (nameClass!=null) {
+			return nameClass;
+		}
 		return ParsePathClass.getNameClass(getPathClass());
 	}
+	public void setNameClass(String nameClass) {
+		this.nameClass = nameClass;
+	}
+	
 	public String getNameMethod() {
+		if (nameMethod!=null) {
+			return nameMethod;
+		}
 		return ParsePathClass.getNameMethod(getPathMethod());
 	}
+	public void setNameMethod(String nameMethod) {
+		this.nameMethod = nameMethod;
+	}
+	
 	public void setKOstateByDefault() {
 		setExcepExists(true); 
 	}

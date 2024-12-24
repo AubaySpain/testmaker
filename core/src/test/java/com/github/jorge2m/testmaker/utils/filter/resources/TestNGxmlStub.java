@@ -28,8 +28,8 @@ public class TestNGxmlStub extends SuiteMaker {
     
     TypeStubTest typeTest;
 
-    private TestNGxmlStub(TypeStubTest typeTest, InputParamsTM inputData) {
-    	super(inputData);
+    private TestNGxmlStub(TypeStubTest typeTest, InputParamsTM inputData, boolean isApiRestExecution) {
+    	super(inputData, isApiRestExecution);
     	this.typeTest = typeTest;
     	TestRunMaker testRun = TestRunMaker.from("TestRun Test", CLASS_WITH_TEST_ANNOTATIONS);
     	testRun.addDependencyGroups(getDependencyGroups());
@@ -38,7 +38,11 @@ public class TestNGxmlStub extends SuiteMaker {
     }
     
     public static TestNGxmlStub getNew(TypeStubTest typeTest, InputParamsTM inputData) {
-    	TestNGxmlStub test = new TestNGxmlStub(typeTest, inputData); 
+    	return getNew(typeTest, inputData, false);
+    }
+    
+    public static TestNGxmlStub getNew(TypeStubTest typeTest, InputParamsTM inputData, boolean isApiRestExecution) {
+    	TestNGxmlStub test = new TestNGxmlStub(typeTest, inputData, isApiRestExecution); 
     	return test;
     }
     

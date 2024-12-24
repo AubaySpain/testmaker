@@ -1,6 +1,7 @@
 package com.github.jorge2m.testmaker.domain;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,7 +21,9 @@ import org.apache.commons.cli.CommandLine;
 
 import com.github.jorge2m.testmaker.boundary.access.OptionTMaker;
 import com.github.jorge2m.testmaker.conf.Channel;
+import com.github.jorge2m.testmaker.conf.ConfigLoader;
 import com.github.jorge2m.testmaker.conf.ConstantesTM;
+import com.github.jorge2m.testmaker.conf.Log4jTM;
 import com.github.jorge2m.testmaker.domain.RepositoryI.StoreUntil;
 import com.github.jorge2m.testmaker.domain.testfilter.DataFilterTCases;
 import com.github.jorge2m.testmaker.service.webdriver.maker.FactoryWebdriverMaker.EmbeddedDriver;
@@ -53,6 +57,8 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String NET_ANALYSIS_PARAM = "net";
 	public static final String RECORD_PARAM = "record";
 	
+	public static final String APPLITOOLS_PARAM = "applitools";
+	
 	public static final String NOTIFICATION_PARAM = "notification";
 	public static final String ALARM_PARAM = "alarm";
 	public static final String ALARMS_TO_CHECK_PARAM = "alarmstocheck";	
@@ -69,8 +75,6 @@ public abstract class InputParamsTM implements Serializable {
 	public static final String ID_EXEC_SUITE_PARAM = "idexecsuite";
 	public static final String ID_EXEC_SUITE_PARENT_PARAM = "idexecsuiteparent";
 	public static final String TESTCASE_NAME_PARENT_PARAM = "testcasenameparent";
-	
-	public static final String DYNATRACESD_PARAM = "dynatracesd";
 	
 	//BrowserStack
 	public static final String BSTACK_USER_PARAM = "bstack_user"; //Mobil & Desktop
@@ -89,6 +93,8 @@ public abstract class InputParamsTM implements Serializable {
 	public enum ManagementWebdriver { RECYCLE, DISCARD }
 	private Class<? extends Enum<?>> suiteEnum;
 	private Class<? extends Enum<?>> appEnum;
+	
+	private final ConfigLoader configLoader = new ConfigLoader();
 	
 	public enum TypeAccess {Rest, CmdLine, Bat}
 
@@ -152,6 +158,9 @@ public abstract class InputParamsTM implements Serializable {
 	@FormParam(RECORD_PARAM)
 	String record;	
 	
+	@FormParam(APPLITOOLS_PARAM)
+	String applitools;	
+	
 	@FormParam(NOTIFICATION_PARAM)
 	String notification;	
 	
@@ -188,9 +197,6 @@ public abstract class InputParamsTM implements Serializable {
 	@FormParam(TEST_OBJECT_PARAM)
 	String testObject;
 	
-	@FormParam(DYNATRACESD_PARAM)
-	String dynatracesd;
-	
 	//Browser Stack
 	@FormParam(BSTACK_USER_PARAM)
 	String bStackUser;
@@ -220,6 +226,10 @@ public abstract class InputParamsTM implements Serializable {
 	String bStackResolution;
 
 	protected InputParamsTM() {}
+	
+	protected InputParamsTM(Map<String,String> parameters) {
+		setFromMapParameters(parameters);
+	}
 
 	protected InputParamsTM(Class<? extends Enum<?>> suiteEnum, Class<? extends Enum<?>> appEnum) {
 		this.suiteEnum = suiteEnum;
@@ -241,20 +251,44 @@ public abstract class InputParamsTM implements Serializable {
 		setSpecificDataFromCommandLine(cmdLine);
 	}
 	
-	public Map<String, String> getAllParamsValues() {
+	public Map<String,String> getAllParamsValues() {
 		var paramsValuesTM = getTmParamsValues();
 		paramsValuesTM.putAll(getSpecificParamsValues());
 		return paramsValuesTM;
 	}
 	
+	public String[] mapSystemParametersToArgs() {
+		ArrayList<String> listParams = new ArrayList<>();
+        Properties properties = System.getProperties();
+        
+		for (var parameter : getTmParameters()) {
+			var nameParam = parameter.getOption().getOpt();
+	        if (properties.getProperty(nameParam) != null) {
+	            listParams.add("-" + nameParam);
+	            listParams.add(properties.getProperty(nameParam));
+	        }
+		}
+		
+		return listParams.toArray(new String[0]);
+	}
+	
 	private List<OptionTMaker> getTmParameters() {
 		List<OptionTMaker> optionsTM = new ArrayList<>();
-		optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
-			.required(true)
-			.hasArg()
-			.possibleValues(suiteEnum)
-			.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
-			.build());
+
+		if (suiteEnum!=null) {
+			optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.possibleValues(suiteEnum)
+				.desc("Test Suite to execute. Possible values: " + Arrays.asList(suiteEnum.getEnumConstants()))
+				.build());
+		} else {
+			optionsTM.add(OptionTMaker.builder(SUITE_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.desc("Test Suite to execute")
+				.build());
+		}
 
 		optionsTM.add(OptionTMaker.builder(DRIVER_NAME_PARAM)
 			.required(true)
@@ -270,12 +304,20 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Channel on which to run the webdriver. Possible values: " + Arrays.toString(Channel.values()))
 			.build());
 
-		optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
-			.required(true)
-			.hasArg()
-			.possibleValues(appEnum)
-			.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
-			.build());
+		if (appEnum!=null) {
+			optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.possibleValues(appEnum)
+				.desc("Application Web to test. Possible values: " + Arrays.toString(getNames(appEnum.getEnumConstants())))
+				.build());
+		} else {
+			optionsTM.add(OptionTMaker.builder(APP_NAME_PARAM)
+				.required(true)
+				.hasArg()
+				.desc("Application Web to test")
+				.build());			
+		}
 
 		optionsTM.add(OptionTMaker.builder(URL_NAME_PARAM)
 			.required(false)
@@ -395,6 +437,13 @@ public abstract class InputParamsTM implements Serializable {
 			.desc("Record Video (" + TypeRecord.getAllParamValues() + ")")
 			.build());		
 
+		optionsTM.add(OptionTMaker.builder(APPLITOOLS_PARAM)
+			.required(false)
+			.hasArgs()
+			.possibleValues(Arrays.asList("true", "false"))
+			.desc("Activation checking images with AppliTools (true, false)")
+			.build());		
+		
 		optionsTM.add(OptionTMaker.builder(NOTIFICATION_PARAM)
 			.required(false)
 			.hasArgs()
@@ -476,12 +525,6 @@ public abstract class InputParamsTM implements Serializable {
 			.required(false)
 			.hasArgs()
 			.desc("Testcase name parent for the remote execution")
-			.build());		
-		
-		optionsTM.add(OptionTMaker.builder(DYNATRACESD_PARAM)
-			.required(false)
-			.hasArgs()
-			.desc("Dynatrace subdomain")
 			.build());		
 		
 		//BrowserStack
@@ -578,6 +621,8 @@ public abstract class InputParamsTM implements Serializable {
 		net = cmdLine.getOptionValue(NET_ANALYSIS_PARAM);
 		record = cmdLine.getOptionValue(RECORD_PARAM);
 		
+		applitools = cmdLine.getOptionValue(APPLITOOLS_PARAM);
+		
 		notification = cmdLine.getOptionValue(NOTIFICATION_PARAM);
 		alarm = cmdLine.getOptionValue(ALARM_PARAM);
 		alarmsToCheck = cmdLine.getOptionValue(ALARMS_TO_CHECK_PARAM);
@@ -590,8 +635,6 @@ public abstract class InputParamsTM implements Serializable {
 		idExecSuite = cmdLine.getOptionValue(ID_EXEC_SUITE_PARAM);
 		idExecSuiteParent = cmdLine.getOptionValue(ID_EXEC_SUITE_PARENT_PARAM);
 		testcasenameparent = cmdLine.getOptionValue(TESTCASE_NAME_PARENT_PARAM);
-		
-		dynatracesd = cmdLine.getOptionValue(DYNATRACESD_PARAM);
 		
 		//BrowserStack
 		bStackUser = cmdLine.getOptionValue(BSTACK_USER_PARAM);
@@ -626,6 +669,7 @@ public abstract class InputParamsTM implements Serializable {
 		REMOTE(REMOTE_PARAM),
 		NET_ANALYSIS(NET_ANALYSIS_PARAM),
 		RECORD(RECORD_PARAM),
+		APPLITOOLS(APPLITOOLS_PARAM),
 		NOTIFICATION(NOTIFICATION_PARAM),
 		ALARM(ALARM_PARAM),
 		ALARMS_TO_CHECK(ALARMS_TO_CHECK_PARAM),
@@ -641,7 +685,6 @@ public abstract class InputParamsTM implements Serializable {
 		ID_EXEC_SUITE_PARENT(ID_EXEC_SUITE_PARENT_PARAM),
 		TESTCASE_NAME_PARENT(TESTCASE_NAME_PARENT_PARAM),
 		TEST_OBJECT(TEST_OBJECT_PARAM),
-		DYNATRACESD(DYNATRACESD_PARAM),
 		BSTACK_USER(BSTACK_USER_PARAM),
 		BSTACK_PASSWORD(BSTACK_PASSWORD_PARAM),
 		BSTACK_OS(BSTACK_OS_PARAM),
@@ -710,9 +753,11 @@ public abstract class InputParamsTM implements Serializable {
 		case NET_ANALYSIS:
 			return this.net;
 		case RECORD:
-			return this.record;			
+			return this.record;
+		case APPLITOOLS:
+			return this.applitools;			
 		case NOTIFICATION:
-			return this.notification;
+			return getNotification();
 		case ALARM:
 			return this.alarm;
 		case ALARMS_TO_CHECK:
@@ -722,7 +767,7 @@ public abstract class InputParamsTM implements Serializable {
 		case PERIOD_ALARMS:
 			return this.periodalarms;
 		case TEAMS_CHANNEL:
-			return this.teamschannel;
+			return getTeamsChannel();
 		case STORE_BD:
 			return this.storebd;
 		case TYPE_ACCESS:
@@ -733,12 +778,10 @@ public abstract class InputParamsTM implements Serializable {
 			return this.idExecSuiteParent;
 		case TESTCASE_NAME_PARENT:
 			return this.testcasenameparent;
-		case DYNATRACESD:
-			return this.dynatracesd;			
 		case BSTACK_USER:
-			return bStackUser;
+			return getBStackUser();
 		case BSTACK_PASSWORD:
-			return bStackPassword;
+			return getBStackPassword();
 		case BSTACK_OS:
 			return bStackOs;
 		case BSTACK_OS_VERSION:
@@ -917,6 +960,43 @@ public abstract class InputParamsTM implements Serializable {
 		String[] tcases = listTestCasesExcluded.toArray(new String[listTestCasesExcluded.size()]);
 		tcasesexcludedCommaSeparated = String.join(",", tcases);
 	}
+	
+    private void setFromMapParameters(Map<String, String> parameters) {
+        parameters.forEach(this::setFieldFromParameter);
+    }
+
+    private void setFieldFromParameter(String formParamValue, String newValue) {
+        Class<?> clazz = this.getClass();
+        while (clazz != null) {
+            setFieldInClass(clazz, formParamValue, newValue);
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private void setFieldInClass(Class<?> clazz, String formParamValue, String newValue) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (isMatchingFormParam(field, formParamValue)) {
+                assignFieldValue(field, newValue);
+            }
+        }
+    }
+
+    private boolean isMatchingFormParam(Field field, String formParamValue) {
+        if (!field.isAnnotationPresent(FormParam.class)) {
+            return false;
+        }
+        FormParam formParam = field.getAnnotation(FormParam.class);
+        return formParam.value().equals(formParamValue);
+    }
+
+    private void assignFieldValue(Field field, String newValue) {
+        try {
+            field.setAccessible(true);
+            field.set(this, newValue);
+        } catch (IllegalAccessException e) {
+            Log4jTM.getLogger().error("Exception setting field value: ", e);
+        }
+    }
 
 	public String getRetry() {
 		return retry;
@@ -1028,12 +1108,30 @@ public abstract class InputParamsTM implements Serializable {
 		return record;
 	}	
 	
+	public void setApplitools(String applitools) {
+		this.applitools = applitools;
+	}
+	public boolean isApplitools() {
+		if (applitools!=null) {
+			return ("true".compareTo(applitools)==0);
+		}
+		return false;
+	}	
+	
+	public String getNotification() {
+		if (this.notification!=null) {
+			return this.notification;
+		}
+		return configLoader.getProperty("testmaker.notifications.active");
+	}
+	
 	public void setNotification(String notification) {
 		this.notification = notification;
 	}
 	public boolean isNotification() {
-		if (notification!=null) {
-			return ("true".compareTo(notification)==0);
+		var notif = getNotification();
+		if (notif!=null) {
+			return ("true".compareTo(notif)==0);
 		}
 		return false;
 	}	
@@ -1076,7 +1174,10 @@ public abstract class InputParamsTM implements Serializable {
 		this.teamschannel = teamschannel;
 	}
 	public String getTeamsChannel() {
-		return teamschannel;
+		if (this.teamschannel!=null) {
+			return this.teamschannel;
+		}
+		return configLoader.getProperty("testmaker.notifications.teamschannel");
 	}	
 	
 	public void setStoreBd(StoreUntil storeUntil) {
@@ -1135,13 +1236,6 @@ public abstract class InputParamsTM implements Serializable {
 		this.testcasenameparent = testcasenameparent;
 	}	
 	
-	public String getDynatracesd() {
-		return this.dynatracesd;
-	}
-	public void setDynatracesd(String dynatracesd) {
-		this.dynatracesd = dynatracesd;
-	}	
-	
 	public String getTestObject() {
 		return testObject;
 	}
@@ -1151,13 +1245,19 @@ public abstract class InputParamsTM implements Serializable {
 	
 	//BrowserStack
 	public String getBStackUser() {
-		return bStackUser;
+		if (this.bStackUser!=null) {
+			return this.bStackUser;
+		}
+		return configLoader.getProperty("testmaker.browserstack.user");
 	}
 	public void setBStackUser(String bStackUser) {
 		this.bStackUser = bStackUser;
 	}
 	public String getBStackPassword() {
-		return bStackPassword;
+		if (this.bStackPassword!=null) {
+			return this.bStackPassword;
+		}
+		return configLoader.getProperty("testmaker.browserstack.password");		
 	}
 	public void setBStackPassword(String bStackPassword) {
 		this.bStackPassword = bStackPassword;

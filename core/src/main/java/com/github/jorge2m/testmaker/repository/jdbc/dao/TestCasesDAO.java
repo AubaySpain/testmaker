@@ -16,7 +16,7 @@ public class TestCasesDAO {
 	
 	private final ConnectorBD connector;
 	
-    public static String SQLSelectTestCasesSuite =
+    public static final String SQL_SELECT_TESTCASES_SUITE =
         "SELECT " +
         	"IDEXECSUITE, " + 
         	"SUITE, " + 
@@ -28,11 +28,13 @@ public class TestCasesDAO {
         	"FIN, " + 
         	"TIME_MS, " + 
         	"NUMBER_STEPS, " + 
-        	"CLASS_SIGNATURE " + 
+        	"CLASS_SIGNATURE, " + 
+        	"PATH, " +
+        	"TESTCASE_NUMBER " +
         "FROM TESTCASES " + 
         "WHERE IDEXECSUITE = ?";
     
-    public static String SQLInsertMethod = 
+    public static final String SQL_INSERT_METHOD = 
         "INSERT INTO TESTCASES (" +
 	        "IDEXECSUITE, " + 
 	        "SUITE, " + 
@@ -44,10 +46,12 @@ public class TestCasesDAO {
 	        "FIN, " + 
 	        "TIME_MS, " + 
 	        "NUMBER_STEPS, " + 
-	        "CLASS_SIGNATURE) " + 
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+	        "CLASS_SIGNATURE, " + 
+	        "PATH, " +
+	        "TESTCASE_NUMBER) " +
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
-    public static String SQLDeleteTestCases = 
+    public static final String SQL_DELETE_TESTCASES = 
         "DELETE FROM TESTCASES " +
         "WHERE IDEXECSUITE = ?;";
     
@@ -58,7 +62,7 @@ public class TestCasesDAO {
     public List<TestCaseBean> getListTestCases(String idSuite) throws Exception {
     	List<TestCaseBean> listTestCases = new ArrayList<>();
         try (Connection conn = connector.getConnection();
-            PreparedStatement select = conn.prepareStatement(SQLSelectTestCasesSuite)) {
+            PreparedStatement select = conn.prepareStatement(SQL_SELECT_TESTCASES_SUITE)) {
             select.setString(1, idSuite);
             try (ResultSet resultado = select.executeQuery()) {
                 while (resultado.next()) {
@@ -82,17 +86,20 @@ public class TestCasesDAO {
     	testCaseData.setSuiteName(rowTestRun.getString("SUITE")); 
     	testCaseData.setTestRunName(rowTestRun.getString("TESTRUN"));  
     	testCaseData.setName(rowTestRun.getString("NAME"));
+    	testCaseData.setNameUnique(rowTestRun.getString("NAME"));
     	testCaseData.setDescription(rowTestRun.getString("DESCRIPTION"));  
     	testCaseData.setResult(State.from(rowTestRun.getString("RESULT")));
     	
         String inicioDate = rowTestRun.getString("INICIO");
         testCaseData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(inicioDate));
         String finDate = rowTestRun.getString("FIN");
-        testCaseData.setInicioDate(Utils.getDateFormat(ToSeconds).parse(finDate));
+        testCaseData.setFinDate(Utils.getDateFormat(ToSeconds).parse(finDate));
         testCaseData.setDurationMillis(rowTestRun.getFloat("TIME_MS"));
     	
     	testCaseData.setNumberSteps(rowTestRun.getInt("NUMBER_STEPS"));  
     	testCaseData.setClassSignature(rowTestRun.getString("CLASS_SIGNATURE"));
+    	testCaseData.setTestPathDirectory(rowTestRun.getString("PATH"));
+    	testCaseData.setIndexInTestRun(rowTestRun.getInt("TESTCASE_NUMBER"));
     	
     	StepsDAO stepsDAO = new StepsDAO(connector);
     	testCaseData.setListStep(stepsDAO.getListSteps(
@@ -106,7 +113,7 @@ public class TestCasesDAO {
     
     public void insertTestCase(TestCaseBean testCase) {
         try (Connection conn = connector.getConnection()) {
-            try (PreparedStatement insert = conn.prepareStatement(SQLInsertMethod)) {
+            try (PreparedStatement insert = conn.prepareStatement(SQL_INSERT_METHOD)) {
             	insert.setString(1, testCase.getIdExecSuite());
             	insert.setString(2, testCase.getSuiteName()); 
             	insert.setString(3, testCase.getTestRunName()); 
@@ -118,6 +125,8 @@ public class TestCasesDAO {
     	        insert.setFloat(9, testCase.getDurationMillis());
     	        insert.setInt(10,  testCase.getNumberSteps());
     	        insert.setString(11,  testCase.getClassSignature());
+    	        insert.setString(12, testCase.getTestPathDirectory());
+    	        insert.setInt(13, testCase.getIndexInTestRun());
                 insert.executeUpdate();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
@@ -133,7 +142,7 @@ public class TestCasesDAO {
     
     public void deleteTestCases(String idExecSuite) {
         try (Connection conn = connector.getConnection();
-            PreparedStatement delete = conn.prepareStatement(SQLDeleteTestCases)) {
+            PreparedStatement delete = conn.prepareStatement(SQL_DELETE_TESTCASES)) {
             delete.setString(1, idExecSuite);
             delete.executeUpdate();
          } 
